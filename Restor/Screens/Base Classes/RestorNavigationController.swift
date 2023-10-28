@@ -12,7 +12,6 @@ import UIKit
 /// Ability to intercept back button tap to determine if the page should be changed.
 class RestorNavigationController: UINavigationController {
     weak var navDelegate: RestorTableViewController?
-    var shouldPopOnBackButton: (() -> Bool)?
 
     override func viewDidLoad() {
         super.viewDidLoad()
