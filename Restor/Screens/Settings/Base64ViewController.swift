@@ -4,7 +4,7 @@
 //
 //  Created by jsloop on 16/06/20.
 //  Copyright © 2020 EstoApps OÜ. All rights reserved.
-//
+//	
 
 import Foundation
 import UIKit
@@ -16,7 +16,7 @@ class Base64ViewController: UIViewController, UITextViewDelegate {
     private let nc = NotificationCenter.default
     private var keyboardHeight: CGFloat = 0.0
     private var isViewDidOffset = false
-    let font = App.Font.monospace14!
+    let font = App.Font.monospace14
     let bgColor = UIColor(named: "table-view-cell-bg")
     @IBOutlet weak var inputTextLabel: UILabel!
     @IBOutlet weak var outputTextLabel: UILabel!
