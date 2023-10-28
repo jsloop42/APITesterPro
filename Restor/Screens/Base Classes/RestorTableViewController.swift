@@ -28,6 +28,11 @@ class RestorTableViewController: UITableViewController {
         
     }
     
+    /// Override this method to determine if the view controller should be popped when user taps the navigation bar back button or provide some call to action.
+    override func shouldPopOnBackButton() -> Bool {
+        return true
+    }
+    
     override func willMove(toParent parent: UIViewController?) {
         if parent == nil { return }
         super.willMove(toParent: parent)
