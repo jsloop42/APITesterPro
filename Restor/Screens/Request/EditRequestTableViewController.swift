@@ -122,18 +122,22 @@ class EditRequestTableViewController: RestorTableViewController, UITextFieldDele
             self.app.clearEditRequestDeleteObjects()
             self.localdb.saveMainContext { _ in
                 AppState.editRequest = nil
+                self.isDirty = false
                 self.close()
             }
         }
     }
     
-    override func shouldPopOnBackButton() -> Bool {
+    public override func shouldPopOnBackButton() -> Bool {
         self.endEditing()
         if self.isDirty {
             UI.viewActionSheet(vc: self, message: "Are you sure you want to discard your changes?", cancelText: "Keep Editing",
                                otherButtonText: "Discard Changes", cancelStyle: UIAlertAction.Style.cancel, otherStyle: UIAlertAction.Style.destructive,
                                // keep editing
-                               cancelCallback: { Log.debug("cancel callback") },
+                               cancelCallback: {
+                Log.debug("cancel callback")
+                self.enableDoneButton()
+            },
                                // discard changes
                                otherCallback: { self.discardContextChanges() })
             return false
@@ -149,7 +153,7 @@ class EditRequestTableViewController: RestorTableViewController, UITextFieldDele
     // Handle the pop gesture
     override func willMove(toParent parent: UIViewController?) {
         Log.debug("will move")
-        if parent == nil { // When the user swipe to back, the parent is nil
+        if parent == nil { // When the user swipe to back, the parent is nil. When navigating forward, parent is present
             if !self.isDirty { self.destroy() }
             return
         }
@@ -183,6 +187,9 @@ class EditRequestTableViewController: RestorTableViewController, UITextFieldDele
     }
         
     func initUI() {
+        if let nc = self.navigationController as? RestorNavigationController {
+            nc.navDelegate = self
+        }
         self.app.updateViewBackground(self.view)
         self.app.updateNavigationControllerBackground(self.navigationController)
         self.view.backgroundColor = App.Color.tableViewBg

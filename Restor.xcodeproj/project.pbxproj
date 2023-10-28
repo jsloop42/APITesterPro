@@ -73,6 +73,7 @@
 		9E9CFA86246F3C1D009D870E /* EACrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9CFA85246F3C1C009D870E /* EACrypto.swift */; };
 		9E9DE8CC246C7DCD0068F8CE /* RestorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9DE8CB246C7DCD0068F8CE /* RestorViewController.swift */; };
 		9E9E64352492CA6B006B9F5F /* preview.html in Resources */ = {isa = PBXBuildFile; fileRef = 9E9E64342492CA6B006B9F5F /* preview.html */; };
+		9EA345902AED9CA9000B05B4 /* RestorNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA3458F2AED9CA9000B05B4 /* RestorNavigationController.swift */; };
 		9EA8DD972498E66E00D07A3F /* EnvironmentVariableTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA8DD962498E66E00D07A3F /* EnvironmentVariableTableViewController.swift */; };
 		9EA8DD99249917A600D07A3F /* Base64ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA8DD98249917A600D07A3F /* Base64ViewController.swift */; };
 		9EB4DC40246061230077DF2A /* RequestTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB4DC3F246061230077DF2A /* RequestTabBarViewController.swift */; };
@@ -195,6 +196,7 @@
 		9E9CFA85246F3C1C009D870E /* EACrypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EACrypto.swift; sourceTree = "<group>"; };
 		9E9DE8CB246C7DCD0068F8CE /* RestorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestorViewController.swift; sourceTree = "<group>"; };
 		9E9E64342492CA6B006B9F5F /* preview.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = preview.html; sourceTree = "<group>"; };
+		9EA3458F2AED9CA9000B05B4 /* RestorNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestorNavigationController.swift; sourceTree = "<group>"; };
 		9EA8DD962498E66E00D07A3F /* EnvironmentVariableTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentVariableTableViewController.swift; sourceTree = "<group>"; };
 		9EA8DD98249917A600D07A3F /* Base64ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base64ViewController.swift; sourceTree = "<group>"; };
 		9EB4DC3F246061230077DF2A /* RequestTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestTabBarViewController.swift; sourceTree = "<group>"; };
@@ -422,6 +424,7 @@
 			children = (
 				9E9DE8CB246C7DCD0068F8CE /* RestorViewController.swift */,
 				9E18F16C246D9DB1003C888C /* RestorTableViewController.swift */,
+				9EA3458F2AED9CA9000B05B4 /* RestorNavigationController.swift */,
 			);
 			path = "Base Classes";
 			sourceTree = "<group>";
@@ -714,6 +717,7 @@
 				9E1B2DE42427992B00994233 /* EFile.swift in Sources */,
 				9E49EC022402FF1F00DAA260 /* EADocumentPicker.swift in Sources */,
 				9E6298C52497C28C001B68EB /* EEnv.swift in Sources */,
+				9EA345902AED9CA9000B05B4 /* RestorNavigationController.swift in Sources */,
 				9EA8DD99249917A600D07A3F /* Base64ViewController.swift in Sources */,
 				9EEAAEC923EE81410022A72F /* OptionsPickerViewController.swift in Sources */,
 				9E4334842416C4AA002452EB /* EAFileManager.swift in Sources */,
@@ -902,7 +906,7 @@
 				CODE_SIGN_ENTITLEMENTS = Restor/Restor.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
-				DEVELOPMENT_TEAM = J7Q5T569K8;
+				DEVELOPMENT_TEAM = 7S7UE44956;
 				INFOPLIST_FILE = Restor/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -910,7 +914,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.estoapps.ios.restor;
+				PRODUCT_BUNDLE_IDENTIFIER = com.estoapps.ios.restor1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -924,7 +928,7 @@
 				CODE_SIGN_ENTITLEMENTS = Restor/Restor.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
-				DEVELOPMENT_TEAM = J7Q5T569K8;
+				DEVELOPMENT_TEAM = 7S7UE44956;
 				INFOPLIST_FILE = Restor/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -932,7 +936,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.estoapps.ios.restor;
+				PRODUCT_BUNDLE_IDENTIFIER = com.estoapps.ios.restor1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
