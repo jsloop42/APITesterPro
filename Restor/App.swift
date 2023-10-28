@@ -1159,7 +1159,7 @@ extension CKRecord {
 
 extension UIStoryboard {
     static var main: UIStoryboard { UIStoryboard(name: "Main", bundle: nil) }
-    static var rootNav: UINavigationController? { self.main.instantiateViewController(withIdentifier: StoryboardId.rootNav.rawValue) as? UINavigationController }
+    static var rootNav: RestorNavigationController? { self.main.instantiateViewController(withIdentifier: StoryboardId.rootNav.rawValue) as? RestorNavigationController }
     static var workspaceListVC: WorkspaceListViewController? { self.main.instantiateViewController(withIdentifier: StoryboardId.workspaceListVC.rawValue) as? WorkspaceListViewController }
     static var projectListVC: ProjectListViewController? { self.main.instantiateViewController(withIdentifier: StoryboardId.projectListVC.rawValue) as? ProjectListViewController }
     static var requestListVC: RequestListViewController? { self.main.instantiateViewController(withIdentifier: StoryboardId.requestListVC.rawValue) as? RequestListViewController }
