@@ -1010,13 +1010,13 @@ class App {
     }
     
     public struct Font {
-        static let monospace13 = {
+        static let monospace13: UIFont = {
             if #available(iOS 13, *) {
                 return UIFont.monospacedSystemFont(ofSize: 13, weight: .regular)
             }
             return UIFont(name: "Menlo-Regular", size: 13)!
         }()
-        static let monospace14 = {
+        static let monospace14: UIFont = {
             if #available(iOS 13, *) {
                 return UIFont.monospacedSystemFont(ofSize: 14, weight: .regular)
             }
