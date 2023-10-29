@@ -103,10 +103,12 @@ class CoreDataService {
     private var storeType: String! = NSSQLiteStoreType
     lazy var peristentContainerTest: NSPersistentContainer = {
         let model = self.model
+        self.registerTransformers()
         return NSPersistentContainer(name: self.containerName, managedObjectModel: model)
     }()
     lazy var persistentContainer: NSPersistentContainer = {
         let model = self.model
+        self.registerTransformers()
         return NSPersistentContainer(name: self.containerName, managedObjectModel: model)
     }()
     lazy var model: NSManagedObjectModel = {
@@ -142,6 +144,11 @@ class CoreDataService {
         self.bootstrap()
     }
     
+    func registerTransformers() {
+        SecureTransformerString.register()
+        SecureTransformerData.register()
+    }
+
     func bootstrap() {
         let desc = self.persistentContainer.persistentStoreDescriptions.first
         desc?.type = self.storeType

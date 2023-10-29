@@ -25,19 +25,34 @@ fileprivate struct SecureTransformerInfo {
 }
 
 /// A class that can be used for encrypting and decrypting core data `String` values on the fly.
-class SecureTransformerString: ValueTransformer {
+class SecureTransformerString: NSSecureUnarchiveFromDataTransformer {
     private let aes = AES(key: SecureTransformerInfo.key, iv: SecureTransformerInfo.iv)
+    
+    override class var allowedTopLevelClasses: [AnyClass] {
+        return [NSString.self]
+    }
+    
+    override class func transformedValueClass() -> AnyClass {
+        return NSString.self
+    }
     
     override class func allowsReverseTransformation() -> Bool {
         return true
     }
     
+    static let name = NSValueTransformerName(rawValue: String(describing: SecureTransformerString.self))
+    
+    public static func register() {
+        let transformer = SecureTransformerString()
+        ValueTransformer.setValueTransformer(transformer, forName: name)
+    }
+
     /// Encrypt the value.
     override func transformedValue(_ value: Any?) -> Any? {
         guard let text = value as? String else { return nil }
         return self.aes?.encrypt(string: text)
     }
-    
+
     /// Decrypt the value.
     override func reverseTransformedValue(_ value: Any?) -> Any? {
         guard let data = value as? Data else { return nil }
@@ -49,13 +64,28 @@ class SecureTransformerString: ValueTransformer {
 }
 
 /// A class that can be used for encrypting and decrypting core data `Data` values on the fly.
-class SecureTransformerData: ValueTransformer {
+class SecureTransformerData: NSSecureUnarchiveFromDataTransformer {
     private let aes = AES(key: SecureTransformerInfo.key, iv: SecureTransformerInfo.iv)
+    
+    override class var allowedTopLevelClasses: [AnyClass] {
+        return [NSData.self]
+    }
+    
+    override class func transformedValueClass() -> AnyClass {
+        return NSData.self
+    }
     
     override class func allowsReverseTransformation() -> Bool {
         return true
     }
     
+    static let name = NSValueTransformerName(rawValue: String(describing: SecureTransformerData.self))
+    
+    public static func register() {
+        let transformer = SecureTransformerData()
+        ValueTransformer.setValueTransformer(transformer, forName: name)
+    }
+
     /// Decrypt the value.
     /// - Parameter value: A data value
     /// - Returns: Encrypted binary data
@@ -63,7 +93,7 @@ class SecureTransformerData: ValueTransformer {
         guard let data = value as? Data else { return nil }
         return self.aes?.encrypt(data: data)
     }
-    
+
     /// Decrypt the value.
     /// - Parameter value: A transformed data value
     /// - Returns: Decrypted binary data
