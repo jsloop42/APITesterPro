@@ -10,9 +10,11 @@ import Foundation
 import CloudKit
 
 /// Used in caching the server change token for the given zone.
-class ZoneInfo: NSObject, NSCoding {
+class ZoneInfo: NSObject, NSSecureCoding {
     var zoneID: CKRecordZone.ID
     var serverChangeToken: CKServerChangeToken? = nil
+    
+    static var supportsSecureCoding: Bool { return true }
     
     enum CodingKeys: String, CodingKey {
         case zoneID
@@ -25,10 +27,12 @@ class ZoneInfo: NSObject, NSCoding {
     }
     
     required init?(coder: NSCoder) {
-        self.zoneID = CKRecordZone.ID.decode(coder.decodeObject(forKey: CodingKeys.zoneID.rawValue) as! Data)!
-        if let tokenData = coder.decodeObject(forKey: CodingKeys.serverChangeToken.rawValue) as? Data {
-            self.serverChangeToken = CKServerChangeToken.decode(tokenData)
+        if let zoneID = coder.decodeObject(of: CKRecordZone.ID.self, forKey: CodingKeys.zoneID.rawValue) {
+            self.zoneID = zoneID
+        } else {
+            return nil
         }
+        self.serverChangeToken = coder.decodeObject(of: CKServerChangeToken.self, forKey: CodingKeys.serverChangeToken.rawValue)
     }
     
     init(zone: CKRecordZone, serverChangeToken: CKServerChangeToken? = nil) {
