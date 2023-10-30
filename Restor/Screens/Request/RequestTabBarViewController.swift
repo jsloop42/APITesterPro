@@ -52,6 +52,7 @@ class RequestTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     func initUI() {
         // This fixes the issue where in iOS 15 and above the tab bar is transparent by default. This adds back the opaque background so that icons don't overlap with the background content
+        #if swift(>=5.5)
         if #available(iOS 15.0, *) {
             let appearance = UITabBarAppearance()
             appearance.backgroundColor = .systemBackground
@@ -59,6 +60,7 @@ class RequestTabBarController: UITabBarController, UITabBarControllerDelegate {
             self.tabBar.standardAppearance = appearance
             self.tabBar.scrollEdgeAppearance = appearance
         }
+        #endif
     }
     
     func initEvents() {
