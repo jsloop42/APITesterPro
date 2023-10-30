@@ -42,11 +42,23 @@ class RequestTabBarController: UITabBarController, UITabBarControllerDelegate {
        
     override func viewDidLoad() {
         Log.debug("request tab bar controller")
+        self.initUI()
         self.initEvents()
         self.addNavigationBarEditButton()
         self.delegate = self
         self.selectedIndex = 0
         self.viewNavbarSegment()
+    }
+    
+    func initUI() {
+        // This fixes the issue where in iOS 15 and above the tab bar is transparent by default. This adds back the opaque background so that icons don't overlap with the background content
+        if #available(iOS 15.0, *) {
+            let appearance = UITabBarAppearance()
+            appearance.backgroundColor = .systemBackground
+            appearance.configureWithOpaqueBackground()
+            self.tabBar.standardAppearance = appearance
+            self.tabBar.scrollEdgeAppearance = appearance
+        }
     }
     
     func initEvents() {
