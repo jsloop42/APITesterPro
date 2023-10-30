@@ -201,7 +201,7 @@ class UI {
     static func activityIndicator() -> UIActivityIndicatorView {
         let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView.init(style: UIActivityIndicatorView.Style.gray)
         activityIndicator.alpha = 1.0
-        activityIndicator.center = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: UIScreen.main.bounds.size.height / 3)
+        activityIndicator.center = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: UIScreen.main.bounds.size.height / 2)
         activityIndicator.startAnimating()
         return activityIndicator
     }
