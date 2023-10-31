@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import StoreKit
 import MessageUI
+import MobileCoreServices  // For document picker
 
 class SettingsTableViewController: RestorTableViewController {
     private let app = App.shared
@@ -21,6 +22,7 @@ class SettingsTableViewController: RestorTableViewController {
     @IBOutlet weak var aboutTitle: UILabel!
     private lazy var utils = { EAUtils.shared }()
     private var indicatorView: UIView?
+    private var exportFileURL: URL?
     
     enum CellId: Int {
         case spacerAfterTop
@@ -134,13 +136,51 @@ class SettingsTableViewController: RestorTableViewController {
     
     func showLoadingIndicator() {
         if self.indicatorView == nil { self.indicatorView = UIView() }
-        UI.showCustomActivityIndicator(self.indicatorView!, mainView: self.view, shouldDisableInteraction: true)
+        UI.showCustomActivityIndicator(self.indicatorView!, mainView: self.view, shouldDisableInteraction: false)  // TODO: disable interaction
     }
     
     func hideLoadingIndicator() {
         if let indicatorView = self.indicatorView {
             UI.removeCustomActivityIndicator(indicatorView)
             self.indicatorView = nil
+        }
+    }
+    
+    func displayDocumentPicker(url: URL) {
+        var documentPicker: UIDocumentPickerViewController
+        if #available(iOS 14.0, *) {
+            documentPicker = UIDocumentPickerViewController(forExporting: [url])
+        } else {
+            documentPicker = UIDocumentPickerViewController(documentTypes: [String(kUTTypeJSON)], in: .exportToService)
+        }
+        documentPicker.delegate = self
+        documentPicker.allowsMultipleSelection = false
+        present(documentPicker, animated: true, completion: {
+            Log.debug("doc picker complete")
+        })
+    }
+    
+    func writeJSONToTempFile(json: String, ws: EWorkspace) {
+        self.exportFileURL = EAFileManager.getTemporaryURL(ws.getName() + ".json")
+        if self.exportFileURL != nil {
+            EAFileManager.createFileIfNotExists(self.exportFileURL!)
+            let fm = EAFileManager(url: self.exportFileURL!)
+            fm.openFile(for: FileIOMode.write)
+            fm.write(json)
+            fm.close()
+        }
+    }
+    
+    func exportCurrentWorkspace() {
+        self.showLoadingIndicator()
+        let ws = self.app.getSelectedWorkspace()
+        let wsDict = ws.toDictionary()
+        if let data = try? JSONSerialization.data(withJSONObject: wsDict, options: .fragmentsAllowed), let json = String(data: data, encoding: .utf8) {
+            Log.debug("json \(json)")
+            self.writeJSONToTempFile(json: json, ws: ws)
+            if let url = self.exportFileURL {
+                self.displayDocumentPicker(url: url)
+            }
         }
     }
     
@@ -155,12 +195,17 @@ class SettingsTableViewController: RestorTableViewController {
                 self.navigationController?.present(vc, animated: true, completion: nil)
             }
         } else if indexPath.row == CellId.exportData.rawValue {
-            // Display a progress indicator, block the UI to generate the JSON and open files app to save
-            self.showLoadingIndicator()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                // self.removeActivityIndicator()
-                self.hideLoadingIndicator()
-            }
+            UI.viewActionSheet(
+                vc: self, message: "This will export current workspace data which can be saved to a file", cancelText: "Cancel",
+                otherButtonText: "Continue", cancelStyle: UIAlertAction.Style.destructive, otherStyle: UIAlertAction.Style.default,
+                cancelCallback: {
+                    Log.debug("cancel callback")
+                },
+                otherCallback: {
+                    Log.debug("continue to export")
+                    self.exportCurrentWorkspace()
+                }
+            )
         } else if indexPath.row == CellId.rate.rawValue {
             self.rateApp()
         } else if indexPath.row == CellId.feedback.rawValue {
@@ -214,5 +259,24 @@ class SettingsTableViewController: RestorTableViewController {
 extension SettingsTableViewController: MFMailComposeViewControllerDelegate {
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension SettingsTableViewController: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard let fileUrl = urls.first else {
+            Log.debug("No document selected for export")
+            return
+        }
+        Log.debug("fileUrl: \(fileUrl)")
+        // _ = EAFileManager.delete(url: fileUrl)
+        self.hideLoadingIndicator()
+    }
+    
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        if let url = self.exportFileURL {
+            _ = EAFileManager.delete(url: url)  // remove stale export file
+        }
+        self.hideLoadingIndicator()
     }
 }
