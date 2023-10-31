@@ -26,7 +26,7 @@ public final class EAFileManager: NSObject {
     private static let fm = FileManager.default
     private var fileHandle: FileHandle?
     private let queue = EACommon.userInitiatedQueue
-    var isFileOpened = false
+    public var isFileOpened = false
     private let writeLock = NSLock()
 
     deinit {
@@ -34,7 +34,7 @@ public final class EAFileManager: NSObject {
         self.fileHandle?.closeFile()
     }
     
-    init(url: URL) {
+    public init(url: URL) {
         self.url = url
         super.init()
     }
@@ -63,7 +63,7 @@ public final class EAFileManager: NSObject {
             try self.fm.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
             return true
         } catch let err {
-            print("Error creating directory: \(err)")
+            Log.error("Error creating directory: \(err)")
             return false
         }
     }
@@ -120,16 +120,29 @@ public final class EAFileManager: NSObject {
         }
     }
     
-    func write(_ string: String) {
+    public func write(_ string: String) {
         self.write(string.data(using: .utf8))
     }
     
-    func write(_ data: Data?) {
+    public func write(_ data: Data?) {
         if let data = data, let fh = self.fileHandle {
             self.writeLock.lock()
             fh.write(data)
             self.writeLock.unlock()
-            fh.closeFile()
+        }
+    }
+    
+    public func close() {
+        if let fh = self.fileHandle {
+            if #available(iOS 13.0, *) {
+                do {
+                    try fh.close()
+                } catch let error {
+                    Log.error(error)
+                }
+            } else {
+                fh.closeFile()  // deprecated in iOS 13 above
+            }
         }
     }
 }
