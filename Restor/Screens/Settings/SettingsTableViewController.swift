@@ -20,7 +20,7 @@ class SettingsTableViewController: RestorTableViewController {
     private lazy var workspace = { self.app.getSelectedWorkspace() }()
     @IBOutlet weak var aboutTitle: UILabel!
     private lazy var utils = { EAUtils.shared }()
-    private var indicator: UIActivityIndicatorView?
+    private var indicatorView: UIView?
     
     enum CellId: Int {
         case spacerAfterTop
@@ -132,64 +132,16 @@ class SettingsTableViewController: RestorTableViewController {
         self.db.saveWorkspaceToCloud(self.workspace)
     }
     
-    
-    // TODO: refactor to reusable functions and use constraints
-    func showIndicatorView(){
-
-        let loadingIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 50, 50))
-        let backgroundView = UIView()
-
-        backgroundView.layer.cornerRadius = 05
-        backgroundView.clipsToBounds = true
-        backgroundView.isOpaque = false
-        backgroundView.backgroundColor = UIColor(white: 0.0, alpha: 0.6)
-
-        loadingIndicator.style = UIActivityIndicatorView.Style.gray
-        loadingIndicator.color = UIColor.white
-        loadingIndicator.startAnimating()
-
-        let loadingLabel = UILabel()
-        loadingLabel.text = "Loading..."
-        let textSize: CGSize = loadingLabel.text!.size(withAttributes: [NSAttributedString.Key.font: loadingLabel.font as Any ])
-
-        loadingLabel.frame = CGRectMake(50, 0, textSize.width, textSize.height)
-        loadingLabel.center.y = loadingIndicator.center.y
-
-        backgroundView.frame = CGRectMake(0, 0, textSize.width + 70, 50)
-        backgroundView.center = self.view.center;
-
-        self.view.addSubview(backgroundView)
-        backgroundView.addSubview(loadingIndicator)
-        backgroundView.addSubview(loadingLabel)
+    func showLoadingIndicator() {
+        if self.indicatorView == nil { self.indicatorView = UIView() }
+        UI.showCustomActivityIndicator(self.indicatorView!, mainView: self.view, shouldDisableInteraction: true)
     }
     
-    func viewActivityIndicator() {
-        guard let window = UIApplication.shared.windows.first(where: \.isKeyWindow) else { return }
-        self.indicator = UIActivityIndicatorView()
-        if #available(iOS 13.0, *) {
-            self.indicator?.style = .medium
-        } else {
-            self.indicator?.style = .gray
+    func hideLoadingIndicator() {
+        if let indicatorView = self.indicatorView {
+            UI.removeCustomActivityIndicator(indicatorView)
+            self.indicatorView = nil
         }
-        self.indicator?.color = UI.isDarkMode ? .black : .white
-        let navigationBarHeight = navigationController?.navigationBar.frame.height ?? 0
-        let statusBarHeight = UIApplication.shared.statusBarFrame.size.height
-        let centerY = (view.frame.height - (navigationBarHeight + statusBarHeight)) / 2
-        // self.indicator?.center = CGPoint(x: view.center.x, y: centerY)
-        // self.indicator?.center = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: UIScreen.main.bounds.size.height / 2)
-        self.indicator?.startAnimating()
-        self.view.addSubview(self.indicator!)
-        self.indicator?.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.indicator?.centerXAnchor.constraint(equalTo: window.centerXAnchor).isActive = true
-        self.indicator?.centerYAnchor.constraint(equalTo: window.centerYAnchor).isActive = true
-        UI.showLoading(self.indicator)
-        // UIApplication.shared.beginIgnoringInteractionEvents()
-    }
-    
-    func removeActivityIndicator() {
-        UI.hideLoading(self.indicator)
-        // UIApplication.shared.endIgnoringInteractionEvents()
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -204,10 +156,10 @@ class SettingsTableViewController: RestorTableViewController {
             }
         } else if indexPath.row == CellId.exportData.rawValue {
             // Display a progress indicator, block the UI to generate the JSON and open files app to save
-            // self.viewActivityIndicator()
-            self.showIndicatorView()
+            self.showLoadingIndicator()
             DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                 // self.removeActivityIndicator()
+                self.hideLoadingIndicator()
             }
         } else if indexPath.row == CellId.rate.rawValue {
             self.rateApp()
