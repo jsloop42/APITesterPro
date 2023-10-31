@@ -262,6 +262,50 @@ class UI {
         tableView.tableFooterView?.isHidden = true
     }
     
+    
+    /// Display circular progress indicator with a custom background. The default activity indicator is having a white background.
+    /// - Parameters:
+    ///   - bgView: The activity indicator will be added to this view and this view will be added to the main view to display the indicator. This reference is later required to remove the indicator from the view
+    ///   - mainView: The view controller's main view where the activity indicator will be added
+    ///   - shouldDisableInteraction: Whether the UI should not respond until the indicator is removed
+    static func showCustomActivityIndicator(_ bgView: UIView, mainView: UIView, shouldDisableInteraction: Bool = false) {
+        guard let window = UIApplication.shared.windows.first(where: \.isKeyWindow) else { return }
+        let indicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 35, 35))
+
+        bgView.layer.cornerRadius = 5
+        bgView.clipsToBounds = true
+        bgView.isOpaque = false
+        bgView.backgroundColor = App.Color.activityIndicatorBg
+
+        indicator.style = UIActivityIndicatorView.Style.gray
+        indicator.color = App.Color.activityIndicator
+        indicator.startAnimating()
+
+        bgView.frame = CGRectMake(0, 0, 35, 35)
+        bgView.center = mainView.center;
+
+        bgView.addSubview(indicator)
+        mainView.addSubview(bgView)
+        
+        // auto resizing contraint is required to center it to the screen. Other methods are not properly centering
+        bgView.translatesAutoresizingMaskIntoConstraints = false
+        bgView.centerXAnchor.constraint(equalTo: window.centerXAnchor).isActive = true
+        bgView.centerYAnchor.constraint(equalTo: window.centerYAnchor).isActive = true
+        indicator.centerXAnchor.constraint(equalTo: bgView.centerXAnchor).isActive = true
+        indicator.centerYAnchor.constraint(equalTo: bgView.centerYAnchor).isActive = true
+        
+        if shouldDisableInteraction {
+            UIApplication.shared.beginIgnoringInteractionEvents()
+        }
+    }
+    
+    /// Remove the custom activity indicator from the parent view
+    /// - Parameter bgView: The activity indicator view
+    static func removeCustomActivityIndicator(_ bgView: UIView) {
+        bgView.removeFromSuperview()
+        UIApplication.shared.endIgnoringInteractionEvents()
+    }
+        
     static func getTextHeight(_ text: String, width: CGFloat, font: UIFont) -> CGFloat {
         let frame = NSString(string: text)
                         .boundingRect(with: CGSize(width: width, height: .infinity),
