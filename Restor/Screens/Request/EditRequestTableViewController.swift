@@ -139,7 +139,8 @@ class EditRequestTableViewController: RestorTableViewController, UITextFieldDele
                 self.enableDoneButton()
             },
                                // discard changes
-                               otherCallback: { self.discardContextChanges() })
+                               otherCallback: { self.discardContextChanges() }
+            )
             return false
         } else {
             if let data = AppState.editRequest, let url = data.url, url.isEmpty {  // New request and user taps back button without any change, so we discard.

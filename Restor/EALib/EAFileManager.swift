@@ -53,6 +53,7 @@ public final class EAFileManager: NSObject {
         return false
     }
     
+    /// Returns a file URL that's located in the temporary directory. Even if this is a temporary URL this needs cleanup.
     public static func getTemporaryURL(_ name: String) -> URL {
         return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(name)
     }

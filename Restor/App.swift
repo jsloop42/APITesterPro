@@ -256,6 +256,7 @@ class App {
         vc.present(screen, animated: true, completion: completion)
     }
     
+    /// Returns the current workspace
     func getSelectedWorkspace() -> EWorkspace {
         if AppState.currentWorkspace != nil { return AppState.currentWorkspace! }
         let ckWsId = EACloudKit.shared.getValue(key: Const.selectedWorkspaceIdKey) as? String ?? ""
