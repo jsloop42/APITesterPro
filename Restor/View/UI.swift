@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import MobileCoreServices  // For document picker
+import UniformTypeIdentifiers  // For document picker
 
 class UI {
     private static var toastQueue: Set<String> = Set<String>()
@@ -335,10 +336,24 @@ class UI {
     }
     
     /// Display document picker dialog which opens the Files app to export JSON data. In iOS 14 and above we can move the created file to the selected folder. In iOS 12, 13 user needs to first pick a file to write.
-    static func displayDocumentPickerForExporting(url: URL, delegate: UIDocumentPickerDelegate?, tvVc: RestorTableViewController?, vc: RestorViewController?) {
+    static func displayDocumentPickerForExport(url: URL, delegate: UIDocumentPickerDelegate?, tvVc: RestorTableViewController?, vc: RestorViewController?) {
         var documentPicker: UIDocumentPickerViewController
         if #available(iOS 14.0, *) {
             documentPicker = UIDocumentPickerViewController(forExporting: [url])  // the temp file will be moved
+        } else {
+            documentPicker = UIDocumentPickerViewController(documentTypes: [String(kUTTypeJSON)], in: .open)
+        }
+        documentPicker.delegate = delegate
+        documentPicker.allowsMultipleSelection = false
+        if let _vc = tvVc ?? vc {
+            _vc.present(documentPicker, animated: true, completion: nil)
+        }
+    }
+    
+    static func displayDocumentPickerForImport(delegate: UIDocumentPickerDelegate?, tvVc: RestorTableViewController?, vc: RestorViewController?) {
+        var documentPicker: UIDocumentPickerViewController
+        if #available(iOS 14.0, *) {
+            documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.json])
         } else {
             documentPicker = UIDocumentPickerViewController(documentTypes: [String(kUTTypeJSON)], in: .open)
         }
