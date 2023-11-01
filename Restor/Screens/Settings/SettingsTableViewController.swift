@@ -135,7 +135,7 @@ class SettingsTableViewController: RestorTableViewController {
     
     func showLoadingIndicator() {
         if self.indicatorView == nil { self.indicatorView = UIView() }
-        UI.showCustomActivityIndicator(self.indicatorView!, mainView: self.view, shouldDisableInteraction: false)  // TODO: disable interaction
+        UI.showCustomActivityIndicator(self.indicatorView!, mainView: self.view, shouldDisableInteraction: true)
     }
     
     func hideLoadingIndicator() {
@@ -164,7 +164,37 @@ class SettingsTableViewController: RestorTableViewController {
             Log.debug("json \(json)")
             self.writeJSONToTempFile(json: json, ws: ws)
             if let url = self.exportFileURL {
-                UI.displayDocumentPickerForExporting(url: url, delegate: self, tvVc: self, vc: nil)
+                UI.displayDocumentPickerForExport(url: url, delegate: self, tvVc: self, vc: nil)
+            }
+        }
+    }
+    
+    func importWorkspace(_ url: URL) {
+        DispatchQueue.main.async { self.showLoadingIndicator() }
+        let fm = EAFileManager(url: url)
+        fm.openFile(for: FileIOMode.read)
+        fm.readToEOF { result in
+            do {
+                switch result {
+                case .success(let data):
+                    if let dict = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] {
+                        Log.debug(dict)
+                        DispatchQueue.main.async {
+                            if let _ = EWorkspace.fromDictionary(dict) {
+                                self.hideLoadingIndicator()
+                                UI.viewToast("Workspace imported successfully", hideSec: 2, vc: self, completion: nil)
+                            }
+                        }
+                    }
+                case .failure(let err):
+                    DispatchQueue.main.async { self.hideLoadingIndicator() }
+                    Log.error(err)
+                }
+                fm.close()
+            } catch let err {
+                fm.close()
+                DispatchQueue.main.async { self.hideLoadingIndicator() }
+                Log.error(err)
             }
         }
     }
@@ -175,7 +205,7 @@ class SettingsTableViewController: RestorTableViewController {
         } else if indexPath.row == CellId.base64.rawValue {
             UI.pushScreen(self.navigationController!, storyboard: self.storyboard!, storyboardId: StoryboardId.base64VC.rawValue)
         } else if indexPath.row == CellId.importData.rawValue {
-            
+            UI.displayDocumentPickerForImport(delegate: self, tvVc: self, vc: nil)
         } else if indexPath.row == CellId.exportData.rawValue {
             UI.viewActionSheet(
                 vc: self, message: "This will export current workspace data which can be saved to a file", cancelText: "Cancel",
@@ -250,16 +280,21 @@ extension SettingsTableViewController: UIDocumentPickerDelegate {
             Log.debug("No document selected for export")
             return
         }
-        if #available(iOS 14.0, *) {
-            // ignore
+        if self.exportFileURL == nil {  // opened for importing
+            Log.debug("file opened for import")
+            self.importWorkspace(fileUrl)
         } else {
-            // iOS 12 and 13 we need to copy the contents of the temp file and delete it
-            if let url = self.exportFileURL {
-                if EAFileManager.copy(source: url, destination: fileUrl) {
-                    _ = EAFileManager.delete(url: url)
-                    self.exportFileURL = nil
-                } else {
-                    UI.displayToast("Error writing to the selected file")
+            if #available(iOS 14.0, *) {
+                // ignore
+            } else {
+                // iOS 12 and 13 we need to copy the contents of the temp file and delete it
+                if let url = self.exportFileURL {
+                    if EAFileManager.copy(source: url, destination: fileUrl) {
+                        _ = EAFileManager.delete(url: url)
+                        self.exportFileURL = nil
+                    } else {
+                        UI.displayToast("Error writing to the selected file")
+                    }
                 }
             }
         }
@@ -269,6 +304,7 @@ extension SettingsTableViewController: UIDocumentPickerDelegate {
     func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
         if let url = self.exportFileURL {
             _ = EAFileManager.delete(url: url)  // remove stale export file
+            self.exportFileURL = nil
             Log.debug("File deleted")
         }
         self.hideLoadingIndicator()
