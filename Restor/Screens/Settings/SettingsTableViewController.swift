@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 import StoreKit
 import MessageUI
-import MobileCoreServices  // For document picker
 
 class SettingsTableViewController: RestorTableViewController {
     private let app = App.shared
@@ -146,20 +145,6 @@ class SettingsTableViewController: RestorTableViewController {
         }
     }
     
-    func displayDocumentPicker(url: URL) {
-        var documentPicker: UIDocumentPickerViewController
-        if #available(iOS 14.0, *) {
-            documentPicker = UIDocumentPickerViewController(forExporting: [url])  // the temp file will be moved
-        } else {
-            documentPicker = UIDocumentPickerViewController(documentTypes: [String(kUTTypeJSON)], in: .open)
-        }
-        documentPicker.delegate = self
-        documentPicker.allowsMultipleSelection = false
-        present(documentPicker, animated: true, completion: {
-            Log.debug("doc picker complete")
-        })
-    }
-    
     func writeJSONToTempFile(json: String, ws: EWorkspace) {
         self.exportFileURL = EAFileManager.getTemporaryURL(ws.getName() + ".json")
         if self.exportFileURL != nil {
@@ -179,7 +164,7 @@ class SettingsTableViewController: RestorTableViewController {
             Log.debug("json \(json)")
             self.writeJSONToTempFile(json: json, ws: ws)
             if let url = self.exportFileURL {
-                self.displayDocumentPicker(url: url)
+                UI.displayDocumentPickerForExporting(url: url, delegate: self, tvVc: self, vc: nil)
             }
         }
     }
@@ -190,10 +175,7 @@ class SettingsTableViewController: RestorTableViewController {
         } else if indexPath.row == CellId.base64.rawValue {
             UI.pushScreen(self.navigationController!, storyboard: self.storyboard!, storyboardId: StoryboardId.base64VC.rawValue)
         } else if indexPath.row == CellId.importData.rawValue {
-            if let vc = self.storyboard?.instantiateViewController(withIdentifier: StoryboardId.importExportVC.rawValue) as? ImportExportViewController {
-                vc.mode = .import
-                self.navigationController?.present(vc, animated: true, completion: nil)
-            }
+            
         } else if indexPath.row == CellId.exportData.rawValue {
             UI.viewActionSheet(
                 vc: self, message: "This will export current workspace data which can be saved to a file", cancelText: "Cancel",
@@ -287,6 +269,7 @@ extension SettingsTableViewController: UIDocumentPickerDelegate {
     func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
         if let url = self.exportFileURL {
             _ = EAFileManager.delete(url: url)  // remove stale export file
+            Log.debug("File deleted")
         }
         self.hideLoadingIndicator()
     }
