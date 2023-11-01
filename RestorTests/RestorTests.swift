@@ -400,6 +400,40 @@ class RestorTests: XCTestCase {
         waitForExpectations(timeout: 1.0, handler: nil)
     }
     
+    func testWritingToFile() {
+        let exp = expectation(description: "Copy contents of a the source file to destination")
+        let str = "ok"
+        let url = EAFileManager.getTemporaryURL("source.txt")
+        EAFileManager.createFileIfNotExists(url)
+        let fm = EAFileManager(url: url)
+        fm.openFile(for: FileIOMode.write)
+        XCTAssertTrue(fm.isFileOpened)
+        fm.write(str)
+        fm.close()
+        if let docURL = EAFileManager.getDocumentDirectoryURL("dest.txt") {
+            if EAFileManager.copy(source: url, destination: docURL) {
+                XCTAssertTrue(EAFileManager.delete(url: url))
+                let fm = EAFileManager(url: docURL)
+                fm.openFile(for: .read)
+                XCTAssertTrue(fm.isFileOpened)
+                fm.readToEOF { result in
+                    switch result {
+                    case .success(let data):
+                        let content = String(data: data, encoding: .utf8)!
+                        XCTAssertEqual(content, str)
+                    case .failure(let err):
+                        Log.error(err)
+                        XCTFail()
+                    }
+                    fm.close()
+                    XCTAssertTrue(EAFileManager.delete(url: docURL))
+                    exp.fulfill()
+                }
+            }
+        }
+        waitForExpectations(timeout: 2.0, handler: nil)
+    }
+    
     func testTemp() {
         let exp = expectation(description: "test")
         let printerOperation = BlockOperation()
