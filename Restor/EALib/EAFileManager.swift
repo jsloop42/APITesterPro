@@ -58,6 +58,14 @@ public final class EAFileManager: NSObject {
         return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(name)
     }
     
+    /// Returns a file URL that's located in the app's document directory
+    public static func getDocumentDirectoryURL(_ name: String) -> URL? {
+        if let docDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            return docDirectory.appendingPathComponent(name)
+        }
+        return nil
+    }
+    
     /// Create directory at the given path including intermediate directories as well.
     public static func createDirectory(at url: URL) -> Bool {
         do {
@@ -81,6 +89,18 @@ public final class EAFileManager: NSObject {
             if !self.isDirectoryExists(at: dirURL) { _ = self.createDirectory(at: dirURL) }
             self.createFile(url)
         }
+    }
+
+    /// Copy file contents of the source to the destination
+    public static func copy(source: URL, destination: URL) -> Bool {
+        do {
+            let content = try Data(contentsOf: source)
+            try content.write(to: destination, options: .atomic)
+        } catch {
+            Log.error("Error copying file contents: \(error)")
+            return false
+        }
+        return true
     }
     
     /// Delete a file at the given URL.
