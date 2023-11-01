@@ -149,9 +149,9 @@ class SettingsTableViewController: RestorTableViewController {
     func displayDocumentPicker(url: URL) {
         var documentPicker: UIDocumentPickerViewController
         if #available(iOS 14.0, *) {
-            documentPicker = UIDocumentPickerViewController(forExporting: [url])
+            documentPicker = UIDocumentPickerViewController(forExporting: [url])  // the temp file will be moved
         } else {
-            documentPicker = UIDocumentPickerViewController(documentTypes: [String(kUTTypeJSON)], in: .exportToService)
+            documentPicker = UIDocumentPickerViewController(documentTypes: [String(kUTTypeJSON)], in: .open)
         }
         documentPicker.delegate = self
         documentPicker.allowsMultipleSelection = false
@@ -268,8 +268,19 @@ extension SettingsTableViewController: UIDocumentPickerDelegate {
             Log.debug("No document selected for export")
             return
         }
-        Log.debug("fileUrl: \(fileUrl)")
-        // _ = EAFileManager.delete(url: fileUrl)
+        if #available(iOS 14.0, *) {
+            // ignore
+        } else {
+            // iOS 12 and 13 we need to copy the contents of the temp file and delete it
+            if let url = self.exportFileURL {
+                if EAFileManager.copy(source: url, destination: fileUrl) {
+                    _ = EAFileManager.delete(url: url)
+                    self.exportFileURL = nil
+                } else {
+                    UI.displayToast("Error writing to the selected file")
+                }
+            }
+        }
         self.hideLoadingIndicator()
     }
     
