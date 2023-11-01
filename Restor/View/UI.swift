@@ -270,7 +270,7 @@ class UI {
     ///   - shouldDisableInteraction: Whether the UI should not respond until the indicator is removed
     static func showCustomActivityIndicator(_ bgView: UIView, mainView: UIView, shouldDisableInteraction: Bool = false) {
         guard let window = UIApplication.shared.windows.first(where: \.isKeyWindow) else { return }
-        let indicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 35, 35))
+        let indicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 35, height: 35))
 
         bgView.layer.cornerRadius = 5
         bgView.clipsToBounds = true
@@ -281,7 +281,7 @@ class UI {
         indicator.color = App.Color.activityIndicator
         indicator.startAnimating()
 
-        bgView.frame = CGRectMake(0, 0, 35, 35)
+        bgView.frame = CGRect(x: 0, y: 0, width: 35, height: 35)
         bgView.center = mainView.center;
 
         bgView.addSubview(indicator)
