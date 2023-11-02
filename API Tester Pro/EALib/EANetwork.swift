@@ -2,8 +2,8 @@
 //  EANetwork.swift
 //  API Tester Pro
 //
-//  Created by jsloop on 17/04/20.
-//  Copyright © 2020 EstoApps OÜ. All rights reserved.
+//  Created by Jaseem V V on 17/04/20.
+//  Copyright © 2020 Jaseem V V. All rights reserved.
 //
 
 import Foundation
@@ -275,7 +275,7 @@ public protocol EAHTTPClientDelegate: AnyObject {
 public final class EAHTTPClient: NSObject {
     private lazy var queue: OperationQueue = {
         let q = OperationQueue()
-        q.name = "com.estoapps.ios.network-queue"
+        q.name = "net.jsloop.api-tester-pro.network-queue"
         q.qualityOfService = .userInitiated
         return q
     }()

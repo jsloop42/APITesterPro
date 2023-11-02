@@ -2,8 +2,8 @@
 //  EARetryTimerTests.swift
 //  API Tester Pro Tests
 //
-//  Created by jsloop on 17/04/20.
-//  Copyright © 2020 EstoApps OÜ. All rights reserved.
+//  Created by Jaseem V V on 17/04/20.
+//  Copyright © 2020 Jaseem V V. All rights reserved.
 //
 
 import Foundation

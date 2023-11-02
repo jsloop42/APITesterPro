@@ -2,8 +2,8 @@
 //  EAUtils.swift
 //  API Tester Pro
 //
-//  Created by jsloop on 03/12/19.
-//  Copyright © 2019 EstoApps OÜ. All rights reserved.
+//  Created by Jaseem V V on 03/12/19.
+//  Copyright © 2019 Jaseem V V. All rights reserved.
 //
 
 import Foundation
