@@ -604,7 +604,6 @@ class ResponseTableViewController: RestorTableViewController {
     
     func initEvents() {
         self.nc.addObserver(self, selector: #selector(self.segmentDidChange(_:)), name: .responseSegmentDidChange, object: nil)
-        self.nc.addObserver(self, selector: #selector(self.viewRequestHistoryDidTap(_:)), name: .viewRequestHistoryDidTap, object: nil)
         self.nc.addObserver(self, selector: #selector(self.dynamicSizeTableViewHeightDidChange(_:)), name: .dynamicSizeTableViewHeightDidChange, object: nil)
         self.nc.addObserver(self, selector: #selector(self.responseTableViewShouldReload(_:)), name: .responseTableViewShouldReload, object: nil)
     }
@@ -709,13 +708,6 @@ class ResponseTableViewController: RestorTableViewController {
             self.updateUI()
             self.tableView.reloadData()
         }
-    }
-    
-    @available(*, deprecated)
-    @objc func viewRequestHistoryDidTap(_ notif: Notification) {
-        Log.debug("view request history did tap")
-        guard let info = notif.userInfo, let req = info["request"] as? ERequest, let data = self.data, req.getId() == data.request?.getId() else { return }
-        // TODO: display history page
     }
     
     @objc func responseTableViewShouldReload(_ notif: Notification) {
