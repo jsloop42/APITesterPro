@@ -205,6 +205,7 @@ class SettingsTableViewController: RestorTableViewController {
         } else if indexPath.row == CellId.base64.rawValue {
             UI.pushScreen(self.navigationController!, storyboard: self.storyboard!, storyboardId: StoryboardId.base64VC.rawValue)
         } else if indexPath.row == CellId.importData.rawValue {
+            self.exportFileURL = nil  // clear the variable so the document picker delegate can run the import block
             UI.displayDocumentPickerForImport(delegate: self, tvVc: self, vc: nil)
         } else if indexPath.row == CellId.exportData.rawValue {
             UI.viewActionSheet(
