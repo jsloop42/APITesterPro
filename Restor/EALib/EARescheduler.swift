@@ -17,7 +17,7 @@ public enum EAReschedulerType {
     case everyFn
 }
 
-public protocol EAReschedulable: class {
+public protocol EAReschedulable: AnyObject {
     var interval: TimeInterval { get set }
     var type: EAReschedulerType! { get set }
     

@@ -266,7 +266,7 @@ private final class EAReachabilityBridge {
 
 // MARK: - HTTP Client
 
-public protocol EAHTTPClientDelegate: class {
+public protocol EAHTTPClientDelegate: AnyObject {
     /// Returns the certificate data and the password associated with it
     func getClientCertificate() -> (Data, String)
     func shouldValidateSSL() -> Bool

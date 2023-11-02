@@ -168,7 +168,7 @@ public final class EAUtils {
     func md5(data: Data) -> String {
         var digest = Array<UInt8>(repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
         var hex = ""
-        _ = data.withUnsafeBytes { bytes in
+        data.withUnsafeBytes { bytes in
             let buff: UnsafePointer<UInt8> = bytes.baseAddress!.assumingMemoryBound(to: UInt8.self)
             CC_MD5(buff, CC_LONG(data.count), &digest)
             hex = self.toHex(digest)

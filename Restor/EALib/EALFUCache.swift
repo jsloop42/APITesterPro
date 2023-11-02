@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol EACacheValue: class {
+public protocol EACacheValue: AnyObject {
     // Getters
     func value() -> Any
     /// The key pointing to the value in the cache list which can be correlated to the value field.
@@ -23,7 +23,7 @@ public protocol EACacheValue: class {
     func setAccessCount(_ c: Int)
 }
 
-public protocol EACacheListValue: class {
+public protocol EACacheListValue: AnyObject {
     // Getters
     /// The key
     func key() -> String
