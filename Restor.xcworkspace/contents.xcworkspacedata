@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Restor.xcodeproj">
+      location = "group:/Users/jsloop/dev/Restor/API Tester Pro.xcodeproj">
    </FileRef>
 </Workspace>
