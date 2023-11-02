@@ -2,8 +2,8 @@
 //  APITesterProNavigationController.swift
 //  API Tester Pro
 //
-//  Created by jsloop on 29/10/23.
-//  Copyright © 2023 EstoApps OÜ. All rights reserved.
+//  Created by Jaseem V V on 29/10/23.
+//  Copyright © 2023 Jaseem V V. All rights reserved.
 //
 
 import Foundation

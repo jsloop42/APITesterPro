@@ -2,8 +2,8 @@
 //  EAHTTPCookie.swift
 //  API Tester Pro
 //
-//  Created by jsloop on 27/05/20.
-//  Copyright © 2020 EstoApps OÜ. All rights reserved.
+//  Created by Jaseem V V on 27/05/20.
+//  Copyright © 2020 Jaseem V V. All rights reserved.
 //
 
 import Foundation

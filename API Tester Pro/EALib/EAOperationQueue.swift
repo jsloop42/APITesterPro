@@ -2,8 +2,8 @@
 //  EAOperationQueue.swift
 //  API Tester Pro
 //
-//  Created by jsloop on 14/04/20.
-//  Copyright © 2020 EstoApps OÜ. All rights reserved.
+//  Created by Jaseem V V on 14/04/20.
+//  Copyright © 2020 EJaseem V V. All rights reserved.
 //
 
 import Foundation
