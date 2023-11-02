@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9E926F8F23945E78002DF561"
-               BuildableName = "Restor.app"
-               BlueprintName = "Restor"
+               BuildableName = "API Tester Pro.app"
+               BlueprintName = "API Tester Pro"
                ReferencedContainer = "container:Restor.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -71,8 +71,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9E926F8F23945E78002DF561"
-            BuildableName = "Restor.app"
-            BlueprintName = "Restor"
+            BuildableName = "API Tester Pro.app"
+            BlueprintName = "API Tester Pro"
             ReferencedContainer = "container:Restor.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -106,8 +106,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9E926F8F23945E78002DF561"
-            BuildableName = "Restor.app"
-            BlueprintName = "Restor"
+            BuildableName = "API Tester Pro.app"
+            BlueprintName = "API Tester Pro"
             ReferencedContainer = "container:Restor.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

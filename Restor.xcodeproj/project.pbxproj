@@ -175,7 +175,7 @@
 		9E85FE49240E9D23002821F2 /* AppDelegateMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateMock.swift; sourceTree = "<group>"; };
 		9E85FE4E240EDB0A002821F2 /* Restor.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = Restor.xctestplan; path = RestorTests/Restor.xctestplan; sourceTree = SOURCE_ROOT; };
 		9E8759052396C6A700F949D1 /* EAUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EAUtils.swift; sourceTree = "<group>"; };
-		9E926F9023945E78002DF561 /* Restor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Restor.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E926F9023945E78002DF561 /* API Tester Pro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "API Tester Pro.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E926F9323945E79002DF561 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9E926F9523945E79002DF561 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		9E926F9723945E79002DF561 /* WorkspaceListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceListViewController.swift; sourceTree = "<group>"; };
@@ -338,7 +338,7 @@
 		9E926F9123945E78002DF561 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9E926F9023945E78002DF561 /* Restor.app */,
+				9E926F9023945E78002DF561 /* API Tester Pro.app */,
 				9E926FA923945E7D002DF561 /* RestorTests.xctest */,
 				9E926FB423945E7D002DF561 /* RestorUITests.xctest */,
 			);
@@ -509,9 +509,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9E926F8F23945E78002DF561 /* Restor */ = {
+		9E926F8F23945E78002DF561 /* API Tester Pro */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9E926FBD23945E7D002DF561 /* Build configuration list for PBXNativeTarget "Restor" */;
+			buildConfigurationList = 9E926FBD23945E7D002DF561 /* Build configuration list for PBXNativeTarget "API Tester Pro" */;
 			buildPhases = (
 				9E926F8C23945E78002DF561 /* Sources */,
 				9E926F8D23945E78002DF561 /* Frameworks */,
@@ -521,11 +521,11 @@
 			);
 			dependencies = (
 			);
-			name = Restor;
+			name = "API Tester Pro";
 			packageProductDependencies = (
 			);
 			productName = Restor;
-			productReference = 9E926F9023945E78002DF561 /* Restor.app */;
+			productReference = 9E926F9023945E78002DF561 /* API Tester Pro.app */;
 			productType = "com.apple.product-type.application";
 		};
 		9E926FA823945E7D002DF561 /* RestorTests */ = {
@@ -603,7 +603,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9E926F8F23945E78002DF561 /* Restor */,
+				9E926F8F23945E78002DF561 /* API Tester Pro */,
 				9E926FA823945E7D002DF561 /* RestorTests */,
 				9E926FB323945E7D002DF561 /* RestorUITests */,
 			);
@@ -751,12 +751,12 @@
 /* Begin PBXTargetDependency section */
 		9E926FAB23945E7D002DF561 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9E926F8F23945E78002DF561 /* Restor */;
+			target = 9E926F8F23945E78002DF561 /* API Tester Pro */;
 			targetProxy = 9E926FAA23945E7D002DF561 /* PBXContainerItemProxy */;
 		};
 		9E926FB623945E7D002DF561 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9E926F8F23945E78002DF561 /* Restor */;
+			target = 9E926F8F23945E78002DF561 /* API Tester Pro */;
 			targetProxy = 9E926FB523945E7D002DF561 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -902,7 +902,7 @@
 				CODE_SIGN_ENTITLEMENTS = Restor/Restor.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
-				DEVELOPMENT_TEAM = 7S7UE44956;
+				DEVELOPMENT_TEAM = TPAP6QPH98;
 				INFOPLIST_FILE = Restor/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -910,7 +910,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.estoapps.ios.restor1;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.jsloop.api-tester-pro";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -924,7 +924,7 @@
 				CODE_SIGN_ENTITLEMENTS = Restor/Restor.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
-				DEVELOPMENT_TEAM = 7S7UE44956;
+				DEVELOPMENT_TEAM = TPAP6QPH98;
 				INFOPLIST_FILE = Restor/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -932,7 +932,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.estoapps.ios.restor1;
+				PRODUCT_BUNDLE_IDENTIFIER = "net.jsloop.api-tester-pro";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1039,7 +1039,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9E926FBD23945E7D002DF561 /* Build configuration list for PBXNativeTarget "Restor" */ = {
+		9E926FBD23945E7D002DF561 /* Build configuration list for PBXNativeTarget "API Tester Pro" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9E926FBE23945E7D002DF561 /* Debug */,
