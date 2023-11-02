@@ -161,7 +161,6 @@ class SettingsTableViewController: RestorTableViewController {
         let ws = self.app.getSelectedWorkspace()
         let wsDict = ws.toDictionary()
         if let data = try? JSONSerialization.data(withJSONObject: wsDict, options: .fragmentsAllowed), let json = String(data: data, encoding: .utf8) {
-            Log.debug("json \(json)")
             self.writeJSONToTempFile(json: json, ws: ws)
             if let url = self.exportFileURL {
                 UI.displayDocumentPickerForExport(url: url, delegate: self, tvVc: self, vc: nil)
@@ -178,7 +177,6 @@ class SettingsTableViewController: RestorTableViewController {
                 switch result {
                 case .success(let data):
                     if let dict = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] {
-                        Log.debug(dict)
                         DispatchQueue.main.async {
                             if let _ = EWorkspace.fromDictionary(dict) {
                                 self.hideLoadingIndicator()

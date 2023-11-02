@@ -218,7 +218,7 @@ class RestorTests: XCTestCase {
                 XCTAssertEqual(x!.id!, h2.id!)
                 XCTAssertNoThrow(self.localdb.saveBackgroundContext())
                 var id = h1.id!
-                _ = self.localdb.deleteRequestData(dataId: id, req: req, type: .header, ctx: ctx)
+                self.localdb.deleteRequestData(dataId: id, req: req, type: .header, ctx: ctx)
                 XCTAssertEqual(req.headers!.count, 2)
                 x = self.localdb.getRequestData(id: id, ctx: ctx)
                 XCTAssertNil(x)

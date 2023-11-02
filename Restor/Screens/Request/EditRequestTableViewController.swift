@@ -707,7 +707,7 @@ enum KVTableViewType {
     case body
 }
 
-protocol KVEditTableViewDelegate: class {
+protocol KVEditTableViewDelegate: AnyObject {
     func reloadData()
     //func presentOptionsVC(_ data: [String], selected: Int)
 }
@@ -726,7 +726,7 @@ class KVEditHeaderCell: UITableViewCell {
     }
 }
 
-protocol KVEditContentCellDelegate: class {
+protocol KVEditContentCellDelegate: AnyObject {
     func enableEditing(indexPath: IndexPath)
     func disableEditing(indexPath: IndexPath)
     func clearEditing(completion: ((Bool) -> Void)?)
@@ -737,7 +737,7 @@ protocol KVEditContentCellDelegate: class {
     func refreshCell(indexPath: IndexPath, cell: KVEditContentCellType)
 }
 
-protocol KVEditContentCellType: class {
+protocol KVEditContentCellType: AnyObject {
     var isEditingActive: Bool { get set }
     var editingIndexPath: IndexPath? { get set }
     func getDeleteView() -> UIView
@@ -1161,7 +1161,7 @@ class FileCollectionViewCell: UICollectionViewCell {
     }
 }
 
-protocol KVEditBodyFieldTableViewCellDelegate: class {
+protocol KVEditBodyFieldTableViewCellDelegate: AnyObject {
     func updateState(_ data: ERequestData, row: Int)
 }
 

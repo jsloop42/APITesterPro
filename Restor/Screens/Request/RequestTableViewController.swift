@@ -742,7 +742,7 @@ class KVBodyFieldTableView: EADynamicSizeTableView, UITableViewDelegate, UITable
 
 // MARK: - Table view manager
 
-protocol KVTableViewManagerDelegate: class {
+protocol KVTableViewManagerDelegate: AnyObject {
     func getHeaders() -> [ERequestData]
     func getParams() -> [ERequestData]
     func getHeadersCount() -> Int
