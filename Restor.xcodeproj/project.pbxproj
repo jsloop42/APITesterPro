@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		9E0894E224AA7F3D0058153F /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E0894E124AA7F3D0058153F /* WebKit.framework */; };
 		9E0AD513247AC4A50099B9A5 /* ResponseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0AD512247AC4A50099B9A5 /* ResponseData.swift */; };
-		9E0F68CD24AE27F500240970 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9E0F68CC24AE27F500240970 /* Settings.bundle */; };
 		9E145F92241BD9D200962A19 /* EARescheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E145F91241BD9D200962A19 /* EARescheduler.swift */; };
 		9E145F94241C118800962A19 /* EAReschedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E145F93241C118800962A19 /* EAReschedulerTests.swift */; };
 		9E18F16D246D9DB1003C888C /* RestorTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E18F16C246D9DB1003C888C /* RestorTableViewController.swift */; };
@@ -125,7 +124,6 @@
 		9E0894E124AA7F3D0058153F /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		9E0894E324AA7F690058153F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		9E0AD512247AC4A50099B9A5 /* ResponseData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseData.swift; sourceTree = "<group>"; };
-		9E0F68CC24AE27F500240970 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		9E145F91241BD9D200962A19 /* EARescheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EARescheduler.swift; sourceTree = "<group>"; };
 		9E145F93241C118800962A19 /* EAReschedulerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EAReschedulerTests.swift; sourceTree = "<group>"; };
 		9E18F16C246D9DB1003C888C /* RestorTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestorTableViewController.swift; sourceTree = "<group>"; };
@@ -366,7 +364,6 @@
 				9E857F97248296C7008BE3D0 /* Resources */,
 				9E926F9F23945E7D002DF561 /* Assets.xcassets */,
 				9E926FA423945E7D002DF561 /* Info.plist */,
-				9E0F68CC24AE27F500240970 /* Settings.bundle */,
 			);
 			path = Restor;
 			sourceTree = "<group>";
@@ -626,7 +623,6 @@
 				9E96153B248817530098F937 /* styles.css in Resources */,
 				9ED17CC5248805BD0002CA19 /* prism.js in Resources */,
 				9E9E64352492CA6B006B9F5F /* preview.html in Resources */,
-				9E0F68CD24AE27F500240970 /* Settings.bundle in Resources */,
 				9E926F9B23945E79002DF561 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
