@@ -165,7 +165,7 @@
         <attribute name="created" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="desc" attributeType="String" defaultValueString=""/>
         <attribute name="id" attributeType="String" defaultValueString=""/>
-        <attribute name="isSynced" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isSynced" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
@@ -199,12 +199,12 @@
         <attribute name="envId" attributeType="String" defaultValueString=""/>
         <attribute name="id" attributeType="String" defaultValueString=""/>
         <attribute name="isSynced" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="markForDelete" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
         <attribute name="selectedMethodIndex" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="url" attributeType="String" defaultValueString=""/>
-        <attribute name="validateSSL" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="validateSSL" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wsId" attributeType="String" defaultValueString=""/>
         <relationship name="body" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ERequestBodyData" inverseName="request" inverseEntity="ERequestBodyData"/>
@@ -328,9 +328,9 @@
         <attribute name="desc" attributeType="String" defaultValueString=""/>
         <attribute name="id" attributeType="String" defaultValueString=""/>
         <attribute name="isActive" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="isSynced" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="isSyncEnabled" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="isZoneSynced" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isSynced" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isSyncEnabled" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+        <attribute name="isZoneSynced" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
