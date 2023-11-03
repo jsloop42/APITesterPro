@@ -97,6 +97,9 @@
 		9E81D14D2AF452DE004095CF /* EARepeatTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1472AF452DE004095CF /* EARepeatTimerTests.swift */; };
 		9E81D14E2AF452DE004095CF /* EAUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1482AF452DE004095CF /* EAUtilsTests.swift */; };
 		9E81D14F2AF452DE004095CF /* EAQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1492AF452DE004095CF /* EAQueueTests.swift */; };
+		9ED969A42AF5A35F0029E83E /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A32AF5A35F0029E83E /* WebKit.framework */; };
+		9ED969A62AF5A36A0029E83E /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A52AF5A36A0029E83E /* MessageUI.framework */; };
+		9ED969A82AF5A38B0029E83E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A72AF5A38B0029E83E /* CloudKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -214,6 +217,9 @@
 		9E81D1482AF452DE004095CF /* EAUtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAUtilsTests.swift; sourceTree = "<group>"; };
 		9E81D1492AF452DE004095CF /* EAQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAQueueTests.swift; sourceTree = "<group>"; };
 		9E81D1502AF45302004095CF /* APITesterProTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "APITesterProTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		9ED969A32AF5A35F0029E83E /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		9ED969A52AF5A36A0029E83E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		9ED969A72AF5A38B0029E83E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,6 +227,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9ED969A82AF5A38B0029E83E /* CloudKit.framework in Frameworks */,
+				9ED969A62AF5A36A0029E83E /* MessageUI.framework in Frameworks */,
+				9ED969A42AF5A35F0029E83E /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,6 +257,7 @@
 				9E81D0442AF44BE9004095CF /* APITesterProTests */,
 				9E81D04E2AF44BE9004095CF /* APITesterProUITests */,
 				9E81D0292AF44BE7004095CF /* Products */,
+				9ED969A22AF5A35F0029E83E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -478,6 +488,16 @@
 				9E81D1482AF452DE004095CF /* EAUtilsTests.swift */,
 			);
 			path = EALibTests;
+			sourceTree = "<group>";
+		};
+		9ED969A22AF5A35F0029E83E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9ED969A72AF5A38B0029E83E /* CloudKit.framework */,
+				9ED969A52AF5A36A0029E83E /* MessageUI.framework */,
+				9ED969A32AF5A35F0029E83E /* WebKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
