@@ -1,6 +1,6 @@
 //
 //  EAUtilsTests.swift
-//  API Tester Pro Tests
+//  APITesterProTests
 //
 //  Created by Jaseem V V on 29/03/20.
 //  Copyright © 2020 Jaseem V V. All rights reserved.
@@ -8,7 +8,7 @@
 
 import XCTest
 import Foundation
-@testable import API_Tester_Pro
+@testable import APITesterPro
 
 class EAUtilsTests: XCTestCase {
     private let utils = EAUtils.shared

@@ -1,6 +1,6 @@
 //
 //  CloudKitTests.swift
-//  API Tester Pro Tests
+//  APITesterProTests
 //
 //  Created by Jaseem V V on 22/03/20.
 //  Copyright © 2020 Jaseem V V. All rights reserved.
@@ -8,7 +8,7 @@
 
 import Foundation
 import XCTest
-@testable import API_Tester_Pro
+@testable import APITesterPro
 import CloudKit
 
 class CloudKitTests: XCTestCase {

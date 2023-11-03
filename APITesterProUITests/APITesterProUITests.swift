@@ -1,6 +1,6 @@
 //
 //  APITesterProUITests.swift
-//  API Tester Pro UITests
+//  APITesterProUITests
 //
 //  Created by Jaseem V V on 02/12/19.
 //  Copyright © 2019 Jaseem V V. All rights reserved.
