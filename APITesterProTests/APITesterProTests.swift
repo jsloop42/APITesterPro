@@ -488,8 +488,8 @@ class APITesterProTests: XCTestCase {
         }
     }
 
-    // Test Case '-[API_Tester_Pro_Tests.APITesterProTests testArrayHeadRemoveOpPerformance]' measured [Time, seconds] average: 0.007, relative standard deviation: 299.468%, values: [0.070026, 0.000037, 0.000010, 0.000009, 0.000009, 0.000009, 0.000009, 0.000009, 0.000009, 0.000009], performanceMetricID:com.apple.XCTPerformanceMetric_WallClockTime, baselineName: "", baselineAverage: , maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.100, maxStandardDeviation: 0.100
-    // Test Case '-[API_Tester_Pro_Tests.APITesterProTests testArrayHeadRemoveOpPerformance]' passed (0.384 seconds).
+    // Test Case '-[APITesterProTests.APITesterProTests testArrayHeadRemoveOpPerformance]' measured [Time, seconds] average: 0.007, relative standard deviation: 299.468%, values: [0.070026, 0.000037, 0.000010, 0.000009, 0.000009, 0.000009, 0.000009, 0.000009, 0.000009, 0.000009], performanceMetricID:com.apple.XCTPerformanceMetric_WallClockTime, baselineName: "", baselineAverage: , maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.100, maxStandardDeviation: 0.100
+    // Test Case '-[APITesterProTests.APITesterProTests testArrayHeadRemoveOpPerformance]' passed (0.384 seconds).
     // Test Suite 'APITesterProTests' passed at 2020-04-30 00:45:50.401.
     //      Executed 1 test, with 0 failures (0 unexpected) in 0.384 (0.385) seconds
     // Test Suite 'APITesterProTests.xctest' passed at 2020-04-30 00:45:50.401.
