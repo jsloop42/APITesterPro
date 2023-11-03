@@ -1,6 +1,6 @@
 //
 //  EARetryTimerTests.swift
-//  API Tester Pro Tests
+//  APITesterProTests
 //
 //  Created by Jaseem V V on 17/04/20.
 //  Copyright © 2020 Jaseem V V. All rights reserved.
@@ -8,7 +8,7 @@
 
 import Foundation
 import XCTest
-@testable import API_Tester_Pro
+@testable import APITesterPro
 
 class EARepeatTimerTests: XCTestCase {
     var timer: EARepeatTimer!

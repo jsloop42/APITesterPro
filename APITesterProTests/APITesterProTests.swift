@@ -1,13 +1,13 @@
 //
 //  APITesterProTests.swift
-//  API Tester Pro Tests
+//  APITesterProTests
 //
 //  Created by Jaseem V V on 02/12/19.
 //  Copyright © 2019 Jaseem V V. All rights reserved.
 //
 
 import XCTest
-@testable import API_Tester_Pro
+@testable import APITesterPro
 import CoreData
 
 class APITesterProTests: XCTestCase {
