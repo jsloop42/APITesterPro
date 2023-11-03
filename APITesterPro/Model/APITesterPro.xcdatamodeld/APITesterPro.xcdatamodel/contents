@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22G120" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22G120" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="EEnv" representedClassName=".EEnv" syncable="YES" codeGenerationType="category">
         <attribute name="changeTag" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="created" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -34,7 +34,7 @@
         <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
-        <attribute name="value" optional="YES" attributeType="Transformable" valueTransformerName="SecureTransformerString" defaultValueString=""/>
+        <attribute name="value" optional="YES" attributeType="Transformable" valueTransformerName="SecureTransformerString"/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="env" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EEnv" inverseName="variables" inverseEntity="EEnv"/>
         <fetchIndex name="byId">
@@ -76,10 +76,10 @@
     <entity name="EHistory" representedClassName=".EHistory" syncable="YES" codeGenerationType="category">
         <attribute name="changeTag" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="connection" attributeType="String" defaultValueString=""/>
-        <attribute name="connectionTime" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="cookies" optional="YES" attributeType="Transformable" valueTransformerName="SecureTransformerData" allowsExternalBinaryDataStorage="YES"/>
-        <attribute name="created" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="dnsResolutionTime" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="connectionTime" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="cookies" optional="YES" attributeType="Transformable" valueTransformerName="SecureTransformerData"/>
+        <attribute name="created" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="dnsResolutionTime" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="elapsed" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="fetchStartTime" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="hasRequestBody" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
@@ -92,22 +92,22 @@
         <attribute name="isSynced" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="localAddress" attributeType="String" defaultValueString=""/>
         <attribute name="localPort" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="markForDelete" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="method" attributeType="String" defaultValueString=""/>
         <attribute name="modified" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="networkProtocolName" attributeType="String" defaultValueString=""/>
         <attribute name="remoteAddress" attributeType="String" defaultValueString=""/>
         <attribute name="remotePort" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="request" optional="YES" attributeType="String"/>
-        <attribute name="requestBodyBytes" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="requestBodyBytes" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="requestHeaderBytes" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="requestId" optional="YES" attributeType="String"/>
-        <attribute name="requestTime" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="requestId" attributeType="String"/>
+        <attribute name="requestTime" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="responseBodyBytes" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="responseData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="responseHeaderBytes" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="responseHeaders" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
-        <attribute name="responseTime" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="responseTime" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="secureConnectionTime" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="sessionName" optional="YES" attributeType="String"/>
         <attribute name="statusCode" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -141,7 +141,7 @@
         <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
-        <attribute name="type" attributeType="String" defaultValueString="png"/>
+        <attribute name="type" attributeType="String" defaultValueString=""/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wsId" attributeType="String" defaultValueString=""/>
         <relationship name="requestData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequestData" inverseName="image" inverseEntity="ERequestData"/>
@@ -165,7 +165,7 @@
         <attribute name="created" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="desc" attributeType="String" defaultValueString=""/>
         <attribute name="id" attributeType="String" defaultValueString=""/>
-        <attribute name="isSynced" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isSynced" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
@@ -198,13 +198,13 @@
         <attribute name="desc" attributeType="String" defaultValueString=""/>
         <attribute name="envId" attributeType="String" defaultValueString=""/>
         <attribute name="id" attributeType="String" defaultValueString=""/>
-        <attribute name="isSynced" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
-        <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isSynced" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="markForDelete" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
         <attribute name="selectedMethodIndex" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="url" attributeType="String" defaultValueString=""/>
-        <attribute name="validateSSL" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+        <attribute name="validateSSL" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wsId" attributeType="String" defaultValueString=""/>
         <relationship name="body" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ERequestBodyData" inverseName="request" inverseEntity="ERequestBodyData"/>
@@ -212,7 +212,6 @@
         <relationship name="method" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequestMethodData" inverseName="request" inverseEntity="ERequestMethodData"/>
         <relationship name="params" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ERequestData" inverseName="param" inverseEntity="ERequestData"/>
         <relationship name="project" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EProject" inverseName="requests" inverseEntity="EProject"/>
-        <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ETag" inverseName="request" inverseEntity="ETag"/>
         <fetchIndex name="byCreated">
             <fetchIndexElement property="created" type="Binary" order="ascending"/>
         </fetchIndex>
@@ -261,12 +260,12 @@
         <attribute name="changeTag" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="created" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="desc" attributeType="String" defaultValueString=""/>
-        <attribute name="disabled" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
-        <attribute name="fieldFormat" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="disabled" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="fieldFormat" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" attributeType="String" defaultValueString=""/>
-        <attribute name="isSynced" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isSynced" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="key" attributeType="String" defaultValueString=""/>
-        <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="markForDelete" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="type" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="value" attributeType="String" defaultValueString=""/>
@@ -303,37 +302,11 @@
         <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
-        <attribute name="shouldDelete" transient="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="shouldDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wsId" attributeType="String" defaultValueString=""/>
         <relationship name="project" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EProject" inverseName="requestMethods" inverseEntity="EProject"/>
         <relationship name="request" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ERequest" inverseName="method" inverseEntity="ERequest"/>
-        <fetchIndex name="byCreated">
-            <fetchIndexElement property="created" type="Binary" order="ascending"/>
-        </fetchIndex>
-        <fetchIndex name="byId">
-            <fetchIndexElement property="id" type="Binary" order="ascending"/>
-        </fetchIndex>
-        <fetchIndex name="byMarkForDelete">
-            <fetchIndexElement property="markForDelete" type="Binary" order="ascending"/>
-        </fetchIndex>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
-    </entity>
-    <entity name="ETag" representedClassName=".ETag" syncable="YES" codeGenerationType="category">
-        <attribute name="changeTag" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="created" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="id" attributeType="String" defaultValueString=""/>
-        <attribute name="isSynced" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
-        <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="name" attributeType="String" defaultValueString=""/>
-        <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="wsId" attributeType="String" defaultValueString=""/>
-        <relationship name="request" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequest" inverseName="tags" inverseEntity="ERequest"/>
         <fetchIndex name="byCreated">
             <fetchIndexElement property="created" type="Binary" order="ascending"/>
         </fetchIndex>
@@ -354,16 +327,16 @@
         <attribute name="created" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="desc" attributeType="String" defaultValueString=""/>
         <attribute name="id" attributeType="String" defaultValueString=""/>
-        <attribute name="isActive" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
-        <attribute name="isSynced" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
-        <attribute name="isSyncEnabled" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
-        <attribute name="isZoneSynced" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isActive" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isSynced" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isSyncEnabled" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isZoneSynced" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
         <attribute name="saveResponse" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="syncDisabled" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="version" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="projects" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EProject" inverseName="workspace" inverseEntity="EProject"/>
         <fetchIndex name="byCreated">
             <fetchIndexElement property="created" type="Binary" order="ascending"/>

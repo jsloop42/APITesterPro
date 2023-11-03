@@ -42,7 +42,7 @@ struct Const {
     static let appId = "6471152115"
     static let feedbackEmail = "jaseemvv@icloud.com"
     static let appURL = "https://apps.apple.com/us/app/api-tester-pro/id\(Const.appId)"
-    static let cloudKitContainerID = "iCloud.net.jsloop.api-tester-pro"
+    static let cloudKitContainerID = "iCloud.net.jsloop.APITesterPro"
     static let shareText = "API Tester Pro - HTTP API testing on the go"
 }
 

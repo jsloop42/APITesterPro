@@ -275,7 +275,7 @@ public protocol EAHTTPClientDelegate: AnyObject {
 public final class EAHTTPClient: NSObject {
     private lazy var queue: OperationQueue = {
         let q = OperationQueue()
-        q.name = "net.jsloop.api-tester-pro.network-queue"
+        q.name = "net.jsloop.APITesterPro.NetworkQueue"
         q.qualityOfService = .userInitiated
         return q
     }()

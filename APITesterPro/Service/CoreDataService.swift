@@ -112,7 +112,7 @@ class CoreDataService {
         return NSPersistentContainer(name: self.containerName, managedObjectModel: model)
     }()
     lazy var model: NSManagedObjectModel = {
-        let modelPath = Bundle(for: type(of: self)).path(forResource: "API Tester Pro", ofType: "momd")
+        let modelPath = Bundle(for: type(of: self)).path(forResource: "APITesterPro", ofType: "momd")
         let url = URL(fileURLWithPath: modelPath!)
         return NSManagedObjectModel(contentsOf: url)!
     }()
@@ -129,7 +129,7 @@ class CoreDataService {
     }()
     private let fetchBatchSize: Int = 50
     private let utils = EAUtils.shared
-    var containerName = isRunningTests ? "API Tester Pro Test" : "API Tester Pro"
+    var containerName = isRunningTests ? "APITesterProTest" : "APITesterPro"
     let defaultWorkspaceId = "default"
     let defaultWorkspaceName = "Default workspace"
     let defaultWorkspaceDesc = "The default workspace"
