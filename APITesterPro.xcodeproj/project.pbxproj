@@ -119,6 +119,7 @@
 
 /* Begin PBXFileReference section */
 		9E4875E62AF56DD000D624DA /* APITesterPro.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = APITesterPro.xcdatamodel; sourceTree = "<group>"; };
+		9E4875E92AF5889300D624DA /* APITesterPro.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = APITesterPro.entitlements; sourceTree = "<group>"; };
 		9E81D0282AF44BE7004095CF /* APITesterPro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APITesterPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E81D03C2AF44BE8004095CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9E81D0412AF44BE9004095CF /* APITesterProTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APITesterProTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -264,6 +265,7 @@
 		9E81D02A2AF44BE7004095CF /* APITesterPro */ = {
 			isa = PBXGroup;
 			children = (
+				9E4875E92AF5889300D624DA /* APITesterPro.entitlements */,
 				9E81D0A62AF44F85004095CF /* EALib */,
 				9E81D0AA2AF44FC8004095CF /* Service */,
 				9E81D0A72AF44F98004095CF /* Model */,
@@ -873,6 +875,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = APITesterPro/APITesterPro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = TPAP6QPH98;
@@ -906,6 +909,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = APITesterPro/APITesterPro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = TPAP6QPH98;
