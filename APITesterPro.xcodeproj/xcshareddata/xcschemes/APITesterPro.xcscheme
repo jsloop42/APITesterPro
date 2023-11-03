@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1120"
+   LastUpgradeVersion = "1430"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9E926F8F23945E78002DF561"
-               BuildableName = "API Tester Pro.app"
-               BlueprintName = "API Tester Pro"
-               ReferencedContainer = "container:API Tester Pro.xcodeproj">
+               BlueprintIdentifier = "9E81D0272AF44BE7004095CF"
+               BuildableName = "APITesterPro.app"
+               BlueprintName = "APITesterPro"
+               ReferencedContainer = "container:APITesterPro.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -26,32 +26,29 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
-      <TestPlans>
-         <TestPlanReference
-            reference = "container:RestorTests/Restor.xctestplan"
-            default = "YES">
-         </TestPlanReference>
-      </TestPlans>
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      shouldAutocreateTestPlan = "YES">
       <Testables>
          <TestableReference
-            skipped = "NO">
+            skipped = "NO"
+            parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9E926FA823945E7D002DF561"
-               BuildableName = "API Tester Pro Tests.xctest"
-               BlueprintName = "API Tester Pro Tests"
-               ReferencedContainer = "container:API Tester Pro.xcodeproj">
+               BlueprintIdentifier = "9E81D0402AF44BE9004095CF"
+               BuildableName = "APITesterProTests.xctest"
+               BlueprintName = "APITesterProTests"
+               ReferencedContainer = "container:APITesterPro.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "YES">
+            skipped = "NO"
+            parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9E926FB323945E7D002DF561"
-               BuildableName = "API Tester Pro UITests.xctest"
-               BlueprintName = "API Tester Pro UITests"
-               ReferencedContainer = "container:API Tester Pro.xcodeproj">
+               BlueprintIdentifier = "9E81D04A2AF44BE9004095CF"
+               BuildableName = "APITesterProUITests.xctest"
+               BlueprintName = "APITesterProUITests"
+               ReferencedContainer = "container:APITesterPro.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -70,30 +67,12 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9E926F8F23945E78002DF561"
-            BuildableName = "API Tester Pro.app"
-            BlueprintName = "API Tester Pro"
-            ReferencedContainer = "container:API Tester Pro.xcodeproj">
+            BlueprintIdentifier = "9E81D0272AF44BE7004095CF"
+            BuildableName = "APITesterPro.app"
+            BlueprintName = "APITesterPro"
+            ReferencedContainer = "container:APITesterPro.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <CommandLineArguments>
-         <CommandLineArgument
-            argument = "-com.apple.CoreData.Logging.stderr 1"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "-com.apple.CoreData.ConcurrencyDebug 1"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "-com.apple.CoreData.CloudKitDebug 3"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "-com.apple.CoreData.SQLDebug 1"
-            isEnabled = "NO">
-         </CommandLineArgument>
-      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -105,10 +84,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9E926F8F23945E78002DF561"
-            BuildableName = "API Tester Pro.app"
-            BlueprintName = "API Tester Pro"
-            ReferencedContainer = "container:API Tester Pro.xcodeproj">
+            BlueprintIdentifier = "9E81D0272AF44BE7004095CF"
+            BuildableName = "APITesterPro.app"
+            BlueprintName = "APITesterPro"
+            ReferencedContainer = "container:APITesterPro.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
