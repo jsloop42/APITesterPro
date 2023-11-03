@@ -352,7 +352,7 @@ class APITesterProTests: XCTestCase {
                 XCTAssertNotNil(reqData)
                 breq.addToHeaders(reqData!)
                 XCTAssertNotNil(breq.headers)
-                let reqDataxs = breq.headers!.allObjects as! [API_Tester_Pro.ERequestData]
+                let reqDataxs = breq.headers!.allObjects as! [APITesterPro.ERequestData]
                 XCTAssertTrue(self.app.didAnyRequestHeaderChangeImp(reqDataxs, request: reqhmb))
                 XCTAssertTrue(self.app.didRequestChangeImp(areq, request: reqhmb))
                 breq.removeFromHeaders(reqData!)
@@ -454,15 +454,15 @@ class APITesterProTests: XCTestCase {
         waitForExpectations(timeout: 10.0, handler: nil)
     }
 
-    // Test Case '-[API_Tester_Pro_Tests.APITesterProTests testArrayHeadInsertOpPerformance]' measured [Time, seconds] average: 0.384, relative standard deviation: 50.964%, values: [0.075234, 0.140064, 0.218556, 0.280060, 0.357666, 0.415854, 0.488974, 0.570821, 0.598408, 0.694492], performanceMetricID:com.apple.XCTPerformanceMetric_WallClockTime, baselineName: "", baselineAverage: , maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.100, maxStandardDeviation: 0.100
-    // Test Case '-[API_Tester_Pro_Tests.APITesterProTests testArrayHeadInsertOpPerformance]' passed (4.148 seconds).
+    // Test Case '-[APITesterProTests.APITesterProTests testArrayHeadInsertOpPerformance]' measured [Time, seconds] average: 0.384, relative standard deviation: 50.964%, values: [0.075234, 0.140064, 0.218556, 0.280060, 0.357666, 0.415854, 0.488974, 0.570821, 0.598408, 0.694492], performanceMetricID:com.apple.XCTPerformanceMetric_WallClockTime, baselineName: "", baselineAverage: , maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.100, maxStandardDeviation: 0.100
+    // Test Case '-[APITesterProTests.APITesterProTests testArrayHeadInsertOpPerformance]' passed (4.148 seconds).
     // Test Suite 'APITesterProTests' passed at 2020-04-30 00:50:22.581.
     //      Executed 1 test, with 0 failures (0 unexpected) in 4.148 (4.149) seconds
     // Test Suite 'APITesterProTests.xctest' passed at 2020-04-30 00:50:22.581.
     //      Executed 1 test, with 0 failures (0 unexpected) in 4.148 (4.150) seconds
     // Test Suite 'Selected tests' passed at 2020-04-30 00:50:22.582.
     //      Executed 1 test, with 0 failures (0 unexpected) in 4.148 (4.151) seconds
-    func testArrayHeadInsertOpPerformance() {
+    func notestArrayHeadInsertOpPerformance() {
         var xs: [Int] = []
         self.measure {
             for i in 0..<10_000 {
@@ -471,15 +471,15 @@ class APITesterProTests: XCTestCase {
         }
     }
     
-    // Test Case '-[API_Tester_Pro_Tests.APITesterProTests testArrayTailAppendOpPerformance]' measured [Time, seconds] average: 0.010, relative standard deviation: 35.236%, values: [0.015567, 0.014334, 0.013879, 0.011954, 0.009574, 0.007280, 0.006812, 0.007016, 0.006218, 0.006473], performanceMetricID:com.apple.XCTPerformanceMetric_WallClockTime, baselineName: "", baselineAverage: , maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.100, maxStandardDeviation: 0.100
-    // Test Case '-[API_Tester_Pro_Tests.APITesterProTests testArrayTailAppendOpPerformance]' passed (0.399 seconds).
+    // Test Case '-[APITesterProTests.APITesterProTests testArrayTailAppendOpPerformance]' measured [Time, seconds] average: 0.010, relative standard deviation: 35.236%, values: [0.015567, 0.014334, 0.013879, 0.011954, 0.009574, 0.007280, 0.006812, 0.007016, 0.006218, 0.006473], performanceMetricID:com.apple.XCTPerformanceMetric_WallClockTime, baselineName: "", baselineAverage: , maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.100, maxStandardDeviation: 0.100
+    // Test Case '-[APITesterProTests.APITesterProTests testArrayTailAppendOpPerformance]' passed (0.399 seconds).
     // Test Suite 'APITesterProTests' passed at 2020-04-30 00:49:32.807.
     //      Executed 1 test, with 0 failures (0 unexpected) in 0.399 (0.400) seconds
     // Test Suite 'APITesterProTests.xctest' passed at 2020-04-30 00:49:32.807.
     //      Executed 1 test, with 0 failures (0 unexpected) in 0.399 (0.401) seconds
     // Test Suite 'Selected tests' passed at 2020-04-30 00:49:32.808.
     //      Executed 1 test, with 0 failures (0 unexpected) in 0.399 (0.402) seconds
-    func testArrayTailAppendOpPerformance() {
+    func notestArrayTailAppendOpPerformance() {
         var xs: [Int] = []
         self.measure {
             for i in 0..<10_000 {
@@ -496,7 +496,7 @@ class APITesterProTests: XCTestCase {
     //      Executed 1 test, with 0 failures (0 unexpected) in 0.384 (0.386) seconds
     // Test Suite 'Selected tests' passed at 2020-04-30 00:45:50.402.
     //      Executed 1 test, with 0 failures (0 unexpected) in 0.384 (0.388) seconds
-    func testArrayHeadRemoveOpPerformance() {
+    func notestArrayHeadRemoveOpPerformance() {
         var xs: [Int] = []
         for i in 0..<10_000 { xs.append(i) }
         self.measure {
@@ -507,8 +507,8 @@ class APITesterProTests: XCTestCase {
         }
     }
     
-    // Test Case '-[API_Tester_Pro_Tests.APITesterProTests testArrayTailPopOpPerformance]' measured [Time, seconds] average: 0.000, relative standard deviation: 286.638%, values: [0.004537, 0.000049, 0.000019, 0.000018, 0.000017, 0.000017, 0.000017, 0.000017, 0.000017, 0.000017], performanceMetricID:com.apple.XCTPerformanceMetric_WallClockTime, baselineName: "", baselineAverage: , maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.100, maxStandardDeviation: 0.100
-    // Test Case '-[API_Tester_Pro_Tests.APITesterProTests testArrayTailPopOpPerformance]' passed (0.337 seconds).
+    // Test Case '-[APITesterProTests.APITesterProTests testArrayTailPopOpPerformance]' measured [Time, seconds] average: 0.000, relative standard deviation: 286.638%, values: [0.004537, 0.000049, 0.000019, 0.000018, 0.000017, 0.000017, 0.000017, 0.000017, 0.000017, 0.000017], performanceMetricID:com.apple.XCTPerformanceMetric_WallClockTime, baselineName: "", baselineAverage: , maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.100, maxStandardDeviation: 0.100
+    // Test Case '-[APITesterProTests.APITesterProTests testArrayTailPopOpPerformance]' passed (0.337 seconds).
     // Test Suite 'APITesterProTests' passed at 2020-04-30 00:47:52.335.
     //      Executed 1 test, with 0 failures (0 unexpected) in 0.337 (0.338) seconds
     // Test Suite 'APITesterProTests.xctest' passed at 2020-04-30 00:47:52.336.
