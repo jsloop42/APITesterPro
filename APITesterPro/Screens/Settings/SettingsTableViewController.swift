@@ -67,9 +67,9 @@ class SettingsTableViewController: APITesterProTableViewController {
     }
     
     func updateAbout() {
+        let name = Const.appName
         let version = self.utils.appVersion() ?? ""
-        let co = ""
-        self.aboutTitle.text = version.isEmpty ? "" : "v\(version) \(co)"
+        self.aboutTitle.text = version.isEmpty ? "\(name)" : "\(name) v\(version)"
     }
     
     func initEvents() {

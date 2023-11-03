@@ -43,7 +43,8 @@ struct Const {
     static let feedbackEmail = "jaseemvv@icloud.com"
     static let appURL = "https://apps.apple.com/us/app/api-tester-pro/id\(Const.appId)"
     static let cloudKitContainerID = "iCloud.net.jsloop.APITesterPro"
-    static let shareText = "API Tester Pro - HTTP API testing on the go"
+    static let appName = "API Tester Pro"
+    static let shareText = "\(Const.appName) - HTTP API testing on the go" 
 }
 
 extension Notification.Name {
