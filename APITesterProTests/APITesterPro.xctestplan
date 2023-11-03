@@ -1,8 +1,8 @@
 {
   "configurations" : [
     {
-      "id" : "0927EBC4-4AB7-4C02-B7F6-1638109B938E",
-      "name" : "Configuration 1",
+      "id" : "430C5363-1F73-4AB7-8505-0A5A5601F637",
+      "name" : "Test Scheme Action",
       "options" : {
 
       }
@@ -10,34 +10,31 @@
   ],
   "defaultOptions" : {
     "codeCoverage" : false,
-    "commandLineArgumentEntries" : [
-      {
-        "argument" : "-com.apple.CoreData.Logging.stderr 1"
-      },
-      {
-        "argument" : "-com.apple.CoreData.SQLDebug 1"
-      }
-    ],
     "targetForVariableExpansion" : {
-      "containerPath" : "container:API Tester Pro.xcodeproj",
-      "identifier" : "9E926F8F23945E78002DF561",
-      "name" : "API Tester Pro"
+      "containerPath" : "container:APITesterPro.xcodeproj",
+      "identifier" : "9E81D0272AF44BE7004095CF",
+      "name" : "APITesterPro"
     }
   },
   "testTargets" : [
     {
+      "skippedTests" : [
+        "CloudKitTests",
+        "EAQueueTests"
+      ],
       "target" : {
-        "containerPath" : "container:API Tester Pro.xcodeproj",
-        "identifier" : "9E926FA823945E7D002DF561",
-        "name" : "API Tester Pro Tests"
+        "containerPath" : "container:APITesterPro.xcodeproj",
+        "identifier" : "9E81D0402AF44BE9004095CF",
+        "name" : "APITesterProTests"
       }
     },
     {
       "enabled" : false,
+      "parallelizable" : true,
       "target" : {
-        "containerPath" : "container:API Tester Pro.xcodeproj",
-        "identifier" : "9E926FB323945E7D002DF561",
-        "name" : "API Tester Pro UITests"
+        "containerPath" : "container:APITesterPro.xcodeproj",
+        "identifier" : "9E81D04A2AF44BE9004095CF",
+        "name" : "APITesterProUITests"
       }
     }
   ],

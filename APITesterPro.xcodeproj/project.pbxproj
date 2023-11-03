@@ -11,7 +11,6 @@
 		9E4875E82AF5856A00D624DA /* AppDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0812AF44CBF004095CF /* AppDelegateMock.swift */; };
 		9E81D0522AF44BE9004095CF /* APITesterProUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0512AF44BE9004095CF /* APITesterProUITestsLaunchTests.swift */; };
 		9E81D0822AF44CC0004095CF /* APITesterProTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D07D2AF44CBD004095CF /* APITesterProTests.swift */; };
-		9E81D0832AF44CC0004095CF /* APITesterPro.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 9E81D07E2AF44CBD004095CF /* APITesterPro.xctestplan */; };
 		9E81D0842AF44CC0004095CF /* IMG_6109.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 9E81D07F2AF44CBE004095CF /* IMG_6109.jpeg */; };
 		9E81D0862AF44CC0004095CF /* AppDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0812AF44CBF004095CF /* AppDelegateMock.swift */; };
 		9E81D0882AF44CFC004095CF /* APITesterProUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0872AF44CFC004095CF /* APITesterProUITests.swift */; };
@@ -120,13 +119,13 @@
 /* Begin PBXFileReference section */
 		9E4875E62AF56DD000D624DA /* APITesterPro.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = APITesterPro.xcdatamodel; sourceTree = "<group>"; };
 		9E4875E92AF5889300D624DA /* APITesterPro.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = APITesterPro.entitlements; sourceTree = "<group>"; };
+		9E4875EB2AF590A300D624DA /* APITesterPro.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = APITesterPro.xctestplan; sourceTree = "<group>"; };
 		9E81D0282AF44BE7004095CF /* APITesterPro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APITesterPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E81D03C2AF44BE8004095CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9E81D0412AF44BE9004095CF /* APITesterProTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APITesterProTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E81D04B2AF44BE9004095CF /* APITesterProUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APITesterProUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E81D0512AF44BE9004095CF /* APITesterProUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITesterProUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		9E81D07D2AF44CBD004095CF /* APITesterProTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APITesterProTests.swift; sourceTree = "<group>"; };
-		9E81D07E2AF44CBD004095CF /* APITesterPro.xctestplan */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = APITesterPro.xctestplan; sourceTree = "<group>"; };
 		9E81D07F2AF44CBE004095CF /* IMG_6109.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IMG_6109.jpeg; sourceTree = "<group>"; };
 		9E81D0812AF44CBF004095CF /* AppDelegateMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegateMock.swift; sourceTree = "<group>"; };
 		9E81D0872AF44CFC004095CF /* APITesterProUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APITesterProUITests.swift; sourceTree = "<group>"; };
@@ -290,7 +289,7 @@
 			isa = PBXGroup;
 			children = (
 				9E81D1432AF452B3004095CF /* EALibTests */,
-				9E81D07E2AF44CBD004095CF /* APITesterPro.xctestplan */,
+				9E4875EB2AF590A300D624DA /* APITesterPro.xctestplan */,
 				9E81D1502AF45302004095CF /* APITesterProTests-Bridging-Header.h */,
 				9E81D07D2AF44CBD004095CF /* APITesterProTests.swift */,
 				9E81D0812AF44CBF004095CF /* AppDelegateMock.swift */,
@@ -604,7 +603,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E81D0832AF44CC0004095CF /* APITesterPro.xctestplan in Resources */,
 				9E81D0842AF44CC0004095CF /* IMG_6109.jpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

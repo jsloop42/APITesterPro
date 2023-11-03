@@ -10,6 +10,7 @@ import XCTest
 import Foundation
 @testable import APITesterPro
 
+// This test needs to be run individually. Enabling from test plan is causing failure.
 class EAQueueTests: XCTestCase {
     private var timer: Timer?
     private let ck = EACloudKit.shared
