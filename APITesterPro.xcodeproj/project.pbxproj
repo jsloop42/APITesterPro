@@ -899,6 +899,7 @@
 				DEVELOPMENT_TEAM = TPAP6QPH98;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = APITesterPro/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "API Tester Pro";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Capture image for request body attachments";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Select photos for request body attachments";
@@ -935,6 +936,7 @@
 				DEVELOPMENT_TEAM = TPAP6QPH98;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = APITesterPro/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "API Tester Pro";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Capture image for request body attachments";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Select photos for request body attachments";

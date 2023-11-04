@@ -14,7 +14,7 @@
         <!--Popup View Controller-->
         <scene sceneID="ZFa-dE-Mwa">
             <objects>
-                <viewController storyboardIdentifier="popupVC" id="KdM-je-j7A" customClass="PopupViewController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="popupVC" id="KdM-je-j7A" customClass="PopupViewController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Bp9-rb-9q3">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -79,7 +79,7 @@
                                         <rect key="frame" x="0.0" y="50.5" width="414" height="763.5"/>
                                         <color key="backgroundColor" name="table-view-bg"/>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="popupCell" rowHeight="200" id="mfv-nh-5Ih" customClass="PopupCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="popupCell" rowHeight="200" id="mfv-nh-5Ih" customClass="PopupCell" customModule="APITesterPro" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="50" width="414" height="200"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mfv-nh-5Ih" id="ND4-tT-JTn">
@@ -222,7 +222,7 @@
                                                     <outlet property="syncView" destination="lSd-c2-hn6" id="avY-6D-P5K"/>
                                                 </connections>
                                             </tableViewCell>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="popupHelpCell" rowHeight="53" id="LgM-JH-cWu" userLabel="helpTextCell" customClass="PopupHelpCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="popupHelpCell" rowHeight="53" id="LgM-JH-cWu" userLabel="helpTextCell" customClass="PopupHelpCell" customModule="APITesterPro" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="250" width="414" height="53"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LgM-JH-cWu" id="xaJ-vd-ZhH">
@@ -302,7 +302,7 @@
         <!--Workspace List View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="workspaceListVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="WorkspaceListViewController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="workspaceListVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="WorkspaceListViewController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -340,7 +340,7 @@
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="workspaceCell" rowHeight="82" id="OIJ-tE-1pd" customClass="WorkspaceCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="workspaceCell" rowHeight="82" id="OIJ-tE-1pd" customClass="WorkspaceCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="414" height="82"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OIJ-tE-1pd" id="EK2-d6-3SF">
@@ -455,7 +455,7 @@
         <!--Options Picker View Controller-->
         <scene sceneID="Hzf-ID-wGJ">
             <objects>
-                <viewController storyboardIdentifier="optionsPickerVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="9ux-R8-TNX" userLabel="Options Picker View Controller" customClass="OptionsPickerViewController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="optionsPickerVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="9ux-R8-TNX" userLabel="Options Picker View Controller" customClass="OptionsPickerViewController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="izx-Ux-dsx">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -482,7 +482,7 @@
                                     </constraints>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="optionsCell" id="lev-XQ-NjP" customClass="OptionsTableViewCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="optionsCell" id="lev-XQ-NjP" customClass="OptionsTableViewCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lev-XQ-NjP" id="ZWI-SW-H5b">
@@ -594,7 +594,7 @@
         <!--Base64 View Controller-->
         <scene sceneID="FHs-Ft-a4d">
             <objects>
-                <viewController storyboardIdentifier="base64VC" id="Rdf-uz-acX" customClass="Base64ViewController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="base64VC" id="Rdf-uz-acX" customClass="Base64ViewController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="RzZ-C2-Psb">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -688,7 +688,7 @@
         <!--Import Export View Controller-->
         <scene sceneID="VOZ-WG-TN0">
             <objects>
-                <viewController storyboardIdentifier="importExportVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zPS-Uw-ksM" customClass="ImportExportViewController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="importExportVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zPS-Uw-ksM" customClass="ImportExportViewController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="LKO-9P-AFc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -762,7 +762,7 @@
                                     <constraint firstAttribute="height" constant="0.5" id="3jW-KB-H7p"/>
                                 </constraints>
                             </view>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="rI9-KB-Ydv" customClass="EATextView" customModule="API_Tester_Pro" customModuleProvider="target">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="rI9-KB-Ydv" customClass="EATextView" customModule="APITesterPro" customModuleProvider="target">
                                 <rect key="frame" x="16" y="96" width="382" height="758"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="textColor" systemColor="labelColor"/>
@@ -800,7 +800,7 @@
         <!--Settings Table View Controller-->
         <scene sceneID="lAx-ob-ZjF">
             <objects>
-                <tableViewController storyboardIdentifier="settingsVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Vtt-Tf-v4g" customClass="SettingsTableViewController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="settingsVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Vtt-Tf-v4g" customClass="SettingsTableViewController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="kPj-dB-PEO">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -904,7 +904,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="54" id="y0l-A2-M5d" userLabel="Sync Workspace Cell" customClass="ValidateSSLCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="54" id="y0l-A2-M5d" userLabel="Sync Workspace Cell" customClass="ValidateSSLCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="141.5" width="414" height="54"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="y0l-A2-M5d" id="A9V-Gn-zKQ">
@@ -974,7 +974,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="54" id="Dym-DH-SHc" userLabel="Save History Cell" customClass="ValidateSSLCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="54" id="Dym-DH-SHc" userLabel="Save History Cell" customClass="ValidateSSLCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="195.5" width="414" height="54"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Dym-DH-SHc" id="3gG-U9-jQR">
@@ -1522,7 +1522,7 @@
         <!--Environment Group View Controller-->
         <scene sceneID="Gnr-1z-gKP">
             <objects>
-                <viewController storyboardIdentifier="environmentGroupVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="MVr-X2-JsS" customClass="EnvironmentGroupViewController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="environmentGroupVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="MVr-X2-JsS" customClass="EnvironmentGroupViewController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0v2-CS-8VS">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1558,7 +1558,7 @@
                                             </constraints>
                                         </view>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="envGroupCell" id="5nf-N7-WUm" customClass="EnvGroupCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="envGroupCell" id="5nf-N7-WUm" customClass="EnvGroupCell" customModule="APITesterPro" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="50" width="414" height="43.5"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="5nf-N7-WUm" id="V23-bw-xuy">
@@ -1617,7 +1617,7 @@
         <!--Environment Edit View Controller-->
         <scene sceneID="APR-25-WDc">
             <objects>
-                <tableViewController storyboardIdentifier="envEditVC" id="qvv-DG-G6T" customClass="EnvironmentEditViewController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="envEditVC" id="qvv-DG-G6T" customClass="EnvironmentEditViewController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="NSN-hn-jCN">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1693,7 +1693,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="table-view-cell-bg"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="E5I-9W-71L" userLabel="Name Title Cell" customClass="KVHeaderCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="E5I-9W-71L" userLabel="Name Title Cell" customClass="KVHeaderCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="94" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="E5I-9W-71L" id="nUf-tr-VNz">
@@ -1718,7 +1718,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="table-view-bg"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="47" id="gEn-ld-B67" userLabel="Name Cell" customClass="EnvEditCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="47" id="gEn-ld-B67" userLabel="Name Cell" customClass="EnvEditCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="138" width="414" height="47"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gEn-ld-B67" id="MjY-84-h01">
@@ -1735,7 +1735,7 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q7c-ul-796">
                                                     <rect key="frame" x="0.0" y="4" width="414" height="43"/>
                                                     <subviews>
-                                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Staging" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="syJ-rJ-bB0" customClass="EATextField" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Staging" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="syJ-rJ-bB0" customClass="EATextField" customModule="APITesterPro" customModuleProvider="target">
                                                             <rect key="frame" x="16" y="8" width="382" height="27"/>
                                                             <color key="backgroundColor" name="table-view-cell-bg"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -1777,7 +1777,7 @@
                                             <outlet property="textField" destination="syJ-rJ-bB0" id="p99-5f-6dd"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="PIS-OM-pU1" userLabel="Value Title Cell" customClass="KVHeaderCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="PIS-OM-pU1" userLabel="Value Title Cell" customClass="KVHeaderCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="185" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="PIS-OM-pU1" id="Jps-dA-egM">
@@ -1802,7 +1802,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="table-view-bg"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="44" id="fTu-Yc-f7r" userLabel="Value Cell" customClass="EnvEditCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="44" id="fTu-Yc-f7r" userLabel="Value Cell" customClass="EnvEditCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="229" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fTu-Yc-f7r" id="2LK-fc-okX">
@@ -1819,7 +1819,7 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uSS-fM-vKc">
                                                     <rect key="frame" x="0.0" y="4" width="414" height="40"/>
                                                     <subviews>
-                                                        <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="https://staging.example.com" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="qJ5-gX-KqU" customClass="EATextField" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                        <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="https://staging.example.com" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="qJ5-gX-KqU" customClass="EATextField" customModule="APITesterPro" customModuleProvider="target">
                                                             <rect key="frame" x="16" y="8" width="382" height="24"/>
                                                             <color key="backgroundColor" name="table-view-cell-bg"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -1907,14 +1907,14 @@
         <!--Environment Variable Table View Controller-->
         <scene sceneID="Uuj-fR-PoP">
             <objects>
-                <tableViewController storyboardIdentifier="envVarVC" id="GWS-0p-Sov" customClass="EnvironmentVariableTableViewController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="envVarVC" id="GWS-0p-Sov" customClass="EnvironmentVariableTableViewController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Y6d-dw-U7j">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="cwi-rI-Svg">
-                            <rect key="frame" x="0.0" y="327.5" width="414" height="70"/>
+                            <rect key="frame" x="0.0" y="328" width="414" height="70"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Variables used in the form {{variable-name}} will be substituted with its value when sending a request." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="bjB-t0-UJB">
@@ -1937,21 +1937,21 @@
                             </constraints>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="envVarCell" id="mzs-Hc-PDd" customClass="EnvVarCell" customModule="API_Tester_Pro" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="50" width="414" height="249.5"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="envVarCell" id="mzs-Hc-PDd" customClass="EnvVarCell" customModule="APITesterPro" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="50" width="414" height="250"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mzs-Hc-PDd" id="t1d-fp-QTx">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="249.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="250"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wtQ-ZF-3XP" userLabel="Container View">
-                                            <rect key="frame" x="16" y="0.0" width="382" height="249.5"/>
+                                            <rect key="frame" x="16" y="0.0" width="382" height="250"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="cxG-q4-SsV">
-                                                    <rect key="frame" x="0.0" y="0.0" width="382" height="249.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="382" height="250"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zgR-76-wQx" userLabel="KV Container View">
-                                                            <rect key="frame" x="0.0" y="0.0" width="382" height="249.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="382" height="250"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cYG-hb-Fsg" userLabel="name title label">
                                                                     <rect key="frame" x="0.0" y="8" width="382" height="14.5"/>
@@ -1972,7 +1972,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="application/json" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HO9-KH-5Wv" userLabel="value label">
-                                                                    <rect key="frame" x="0.0" y="74" width="382" height="159.5"/>
+                                                                    <rect key="frame" x="0.0" y="74" width="382" height="160"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
@@ -2035,7 +2035,7 @@
         <!--Project List View Controller-->
         <scene sceneID="PjN-rz-0a3">
             <objects>
-                <viewController storyboardIdentifier="projectListVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="p67-zo-gl1" customClass="ProjectListViewController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="projectListVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="p67-zo-gl1" customClass="ProjectListViewController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ne5-qf-7a3">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2068,7 +2068,7 @@
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="projectCell" rowHeight="86" id="iLG-XQ-A0c" customClass="ProjectCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="projectCell" rowHeight="86" id="iLG-XQ-A0c" customClass="ProjectCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="414" height="86"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="iLG-XQ-A0c" id="hqJ-qu-6f6">
@@ -2173,7 +2173,7 @@
         <!--Request List View Controller-->
         <scene sceneID="eE2-qm-c5f">
             <objects>
-                <viewController storyboardIdentifier="requestListVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="F9q-uP-ck0" customClass="RequestListViewController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="requestListVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="F9q-uP-ck0" customClass="RequestListViewController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EAb-QP-pNP">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2200,7 +2200,7 @@
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="requestCell" id="Fpw-PQ-2dj" customClass="RequestCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="requestCell" id="Fpw-PQ-2dj" customClass="RequestCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="414" height="58"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Fpw-PQ-2dj" id="Sh5-Xl-bGx">
@@ -2290,7 +2290,7 @@
         <!--Edit Request Table View Controller-->
         <scene sceneID="dcr-I8-t5h">
             <objects>
-                <tableViewController storyboardIdentifier="editRequestVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Z7t-Zq-hQL" customClass="EditRequestTableViewController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="editRequestVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Z7t-Zq-hQL" customClass="EditRequestTableViewController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="rEl-An-I40">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2431,7 +2431,7 @@
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                         </view>
-                                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="https://example.com" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kQ7-QS-4Qx" customClass="EATextField" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="https://example.com" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kQ7-QS-4Qx" customClass="EATextField" customModule="APITesterPro" customModuleProvider="target">
                                                             <rect key="frame" x="72" y="8" width="326" height="34"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartQuotesType="no" textContentType="url"/>
@@ -2518,7 +2518,7 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ahc-55-E3L">
                                                     <rect key="frame" x="0.0" y="8" width="414" height="147"/>
                                                     <subviews>
-                                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Request name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UTJ-7s-D0j" customClass="EATextField" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Request name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UTJ-7s-D0j" customClass="EATextField" customModule="APITesterPro" customModuleProvider="target">
                                                             <rect key="frame" x="16" y="0.0" width="382" height="34"/>
                                                             <color key="backgroundColor" name="table-view-cell-bg"/>
                                                             <constraints>
@@ -2534,7 +2534,7 @@
                                                                 <constraint firstAttribute="height" constant="0.5" id="I4d-ia-Jjn"/>
                                                             </constraints>
                                                         </view>
-                                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="O27-lY-BTJ" customClass="EATextView" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="O27-lY-BTJ" customClass="EATextView" customModule="APITesterPro" customModuleProvider="target">
                                                             <rect key="frame" x="12" y="38.5" width="392" height="108.5"/>
                                                             <color key="backgroundColor" name="table-view-cell-bg"/>
                                                             <constraints>
@@ -2636,7 +2636,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="414" height="209"/>
                                                             <color key="backgroundColor" name="table-view-cell-bg"/>
                                                             <prototypes>
-                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvEditContentCell" id="NLT-Th-NnG" userLabel="HeaderContentCell" customClass="KVEditContentCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvEditContentCell" id="NLT-Th-NnG" userLabel="HeaderContentCell" customClass="KVEditContentCell" customModule="APITesterPro" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="50" width="414" height="92.5"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="NLT-Th-NnG" id="dci-0y-1se">
@@ -2654,7 +2654,7 @@
                                                                                             <constraint firstAttribute="height" constant="22" id="tg3-D5-cUU"/>
                                                                                         </constraints>
                                                                                         <color key="tintColor" systemColor="systemRedColor"/>
-                                                                                        <state key="normal" image="minus.circle.fill" catalog="system"/>
+                                                                                        <state key="normal" image="delete"/>
                                                                                     </button>
                                                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="25R-2t-4T0">
                                                                                         <rect key="frame" x="34" y="0.0" width="344" height="84.5"/>
@@ -2662,7 +2662,7 @@
                                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mQd-yU-Hwa" userLabel="KV Container View">
                                                                                                 <rect key="frame" x="0.0" y="0.0" width="344" height="84.5"/>
                                                                                                 <subviews>
-                                                                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ywm-hD-uAd" userLabel="Key Text Field" customClass="EATextField" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ywm-hD-uAd" userLabel="Key Text Field" customClass="EATextField" customModule="APITesterPro" customModuleProvider="target">
                                                                                                         <rect key="frame" x="6" y="8" width="336" height="34"/>
                                                                                                         <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                                                         <constraints>
@@ -2678,7 +2678,7 @@
                                                                                                             <constraint firstAttribute="height" constant="0.5" id="OIR-tk-HgI"/>
                                                                                                         </constraints>
                                                                                                     </view>
-                                                                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="value" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4j6-Eo-yJ1" userLabel="Value Text Field" customClass="EATextField" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="value" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4j6-Eo-yJ1" userLabel="Value Text Field" customClass="EATextField" customModule="APITesterPro" customModuleProvider="target">
                                                                                                         <rect key="frame" x="6" y="50.5" width="336" height="34"/>
                                                                                                         <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                                                         <constraints>
@@ -2753,7 +2753,7 @@
                                                                         <outlet property="valueTextField" destination="4j6-Eo-yJ1" id="bqq-Kb-ZZy"/>
                                                                     </connections>
                                                                 </tableViewCell>
-                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvEditHeaderTitleCell" rowHeight="44" id="gKB-A8-Ygq" userLabel="HeaderTitleCell" customClass="KVEditHeaderCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvEditHeaderTitleCell" rowHeight="44" id="gKB-A8-Ygq" userLabel="HeaderTitleCell" customClass="KVEditHeaderCell" customModule="APITesterPro" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="142.5" width="414" height="44"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gKB-A8-Ygq" id="80F-qz-BZK">
@@ -2761,9 +2761,9 @@
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <subviews>
                                                                             <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lps-Oe-F4D">
-                                                                                <rect key="frame" x="20" y="9" width="96" height="19"/>
+                                                                                <rect key="frame" x="20" y="9" width="92" height="16"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                                                <state key="normal" title="  add header" image="plus.circle.fill" catalog="system">
+                                                                                <state key="normal" title="  add header" image="add">
                                                                                     <color key="titleColor" systemColor="systemBlueColor"/>
                                                                                 </state>
                                                                             </button>
@@ -2868,7 +2868,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="414" height="209"/>
                                                             <color key="backgroundColor" name="table-view-cell-bg"/>
                                                             <prototypes>
-                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvEditContentCell" id="GQj-kn-1MJ" userLabel="ParamsContentCell" customClass="KVEditContentCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvEditContentCell" id="GQj-kn-1MJ" userLabel="ParamsContentCell" customClass="KVEditContentCell" customModule="APITesterPro" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="50" width="414" height="92.5"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GQj-kn-1MJ" id="wEa-Ob-U8c">
@@ -2886,7 +2886,7 @@
                                                                                             <constraint firstAttribute="height" constant="22" id="xRB-9B-7Uj"/>
                                                                                         </constraints>
                                                                                         <color key="tintColor" systemColor="systemRedColor"/>
-                                                                                        <state key="normal" image="minus.circle.fill" catalog="system"/>
+                                                                                        <state key="normal" image="delete"/>
                                                                                     </button>
                                                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="41P-Wn-bee">
                                                                                         <rect key="frame" x="34" y="0.0" width="344" height="84.5"/>
@@ -2894,7 +2894,7 @@
                                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NpP-YQ-nhV" userLabel="KV Container View">
                                                                                                 <rect key="frame" x="0.0" y="0.0" width="344" height="84.5"/>
                                                                                                 <subviews>
-                                                                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6Lp-M9-dYq" userLabel="Key Text Field" customClass="EATextField" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6Lp-M9-dYq" userLabel="Key Text Field" customClass="EATextField" customModule="APITesterPro" customModuleProvider="target">
                                                                                                         <rect key="frame" x="6" y="8" width="336" height="34"/>
                                                                                                         <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                                                         <constraints>
@@ -2910,7 +2910,7 @@
                                                                                                             <constraint firstAttribute="height" constant="0.5" id="QxO-wc-cHA"/>
                                                                                                         </constraints>
                                                                                                     </view>
-                                                                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="value" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ssw-kB-Lai" userLabel="Value Text Field" customClass="EATextField" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="value" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ssw-kB-Lai" userLabel="Value Text Field" customClass="EATextField" customModule="APITesterPro" customModuleProvider="target">
                                                                                                         <rect key="frame" x="6" y="50.5" width="336" height="34"/>
                                                                                                         <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                                                         <constraints>
@@ -2985,7 +2985,7 @@
                                                                         <outlet property="valueTextField" destination="ssw-kB-Lai" id="7sf-kN-1yL"/>
                                                                     </connections>
                                                                 </tableViewCell>
-                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvEditParamsTitleCell" rowHeight="44" id="aQe-jY-5xt" userLabel="ParamsTitleCell" customClass="KVEditHeaderCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvEditParamsTitleCell" rowHeight="44" id="aQe-jY-5xt" userLabel="ParamsTitleCell" customClass="KVEditHeaderCell" customModule="APITesterPro" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="142.5" width="414" height="44"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aQe-jY-5xt" id="ENR-EY-BbD">
@@ -2993,9 +2993,9 @@
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <subviews>
                                                                             <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z4t-fv-tke" userLabel="Params Title Btn">
-                                                                                <rect key="frame" x="20" y="9" width="99" height="19"/>
+                                                                                <rect key="frame" x="20" y="9" width="95" height="16"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                                                <state key="normal" title="  add params" image="plus.circle.fill" catalog="system">
+                                                                                <state key="normal" title="  add params" image="add">
                                                                                     <color key="titleColor" systemColor="systemBlueColor"/>
                                                                                 </state>
                                                                             </button>
@@ -3100,7 +3100,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="414" height="209"/>
                                                             <color key="backgroundColor" name="table-view-cell-bg"/>
                                                             <prototypes>
-                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="editBodyContentCell" id="acm-bD-EB9" userLabel="BodyContentCell" customClass="KVEditBodyContentCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="editBodyContentCell" id="acm-bD-EB9" userLabel="BodyContentCell" customClass="KVEditBodyContentCell" customModule="APITesterPro" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="50" width="414" height="93"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="acm-bD-EB9" id="PPF-2y-5M9">
@@ -3118,7 +3118,7 @@
                                                                                             <constraint firstAttribute="width" secondItem="hQz-iS-P24" secondAttribute="height" multiplier="1:1" id="hFL-vE-nnh"/>
                                                                                         </constraints>
                                                                                         <color key="tintColor" systemColor="systemRedColor"/>
-                                                                                        <state key="normal" image="minus.circle.fill" catalog="system"/>
+                                                                                        <state key="normal" image="delete"/>
                                                                                     </button>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OTL-M1-h7p" userLabel="Body Label Container">
                                                                                         <rect key="frame" x="30" y="0.0" width="63" height="93"/>
@@ -3163,7 +3163,7 @@
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8ct-Kk-B1k" userLabel="Raw Text View Container">
                                                                                         <rect key="frame" x="95" y="0.0" width="283" height="93"/>
                                                                                         <subviews>
-                                                                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="r0l-PP-Spy" customClass="EATextView" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="r0l-PP-Spy" customClass="EATextView" customModule="APITesterPro" customModuleProvider="target">
                                                                                                 <rect key="frame" x="0.0" y="2" width="283" height="89"/>
                                                                                                 <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                                                 <constraints>
@@ -3198,7 +3198,7 @@
                                                                                                     </userDefinedRuntimeAttribute>
                                                                                                 </userDefinedRuntimeAttributes>
                                                                                             </imageView>
-                                                                                            <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ea1-UV-Uz4" userLabel="Binary Text Field" customClass="EATextField" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                                            <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ea1-UV-Uz4" userLabel="Binary Text Field" customClass="EATextField" customModule="APITesterPro" customModuleProvider="target">
                                                                                                 <rect key="frame" x="2" y="15" width="281" height="34"/>
                                                                                                 <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -3214,7 +3214,7 @@
                                                                                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                                                                 </collectionViewFlowLayout>
                                                                                                 <cells>
-                                                                                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="fileCell" id="wMO-U8-L3M" customClass="FileCollectionViewCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="fileCell" id="wMO-U8-L3M" customClass="FileCollectionViewCell" customModule="APITesterPro" customModuleProvider="target">
                                                                                                         <rect key="frame" x="0.0" y="7" width="45" height="50"/>
                                                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="ynR-nB-NBM">
@@ -3273,11 +3273,11 @@
                                                                                             <constraint firstItem="ea1-UV-Uz4" firstAttribute="centerY" secondItem="qiz-4N-xlH" secondAttribute="centerY" id="qKg-JY-dbq"/>
                                                                                         </constraints>
                                                                                     </view>
-                                                                                    <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="kvBodyFieldTableView" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Pij-6a-uiW" userLabel="Body Field Table View" customClass="KVEditBodyFieldTableView" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                                    <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="kvBodyFieldTableView" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Pij-6a-uiW" userLabel="Body Field Table View" customClass="KVEditBodyFieldTableView" customModule="APITesterPro" customModuleProvider="target">
                                                                                         <rect key="frame" x="95" y="0.0" width="283" height="93"/>
                                                                                         <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                                         <prototypes>
-                                                                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="editBodyTableViewCell" id="oeM-lP-YEO" customClass="KVEditBodyFieldTableViewCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="editBodyTableViewCell" id="oeM-lP-YEO" customClass="KVEditBodyFieldTableViewCell" customModule="APITesterPro" customModuleProvider="target">
                                                                                                 <rect key="frame" x="0.0" y="50" width="283" height="92.5"/>
                                                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oeM-lP-YEO" id="u7s-hB-aJq">
@@ -3315,7 +3315,7 @@
                                                                                                                         </userDefinedRuntimeAttribute>
                                                                                                                     </userDefinedRuntimeAttributes>
                                                                                                                 </view>
-                                                                                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="form key" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eIB-BK-yWP" userLabel="Key Text Field" customClass="EATextField" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="form key" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eIB-BK-yWP" userLabel="Key Text Field" customClass="EATextField" customModule="APITesterPro" customModuleProvider="target">
                                                                                                                     <rect key="frame" x="6" y="8" width="230" height="34"/>
                                                                                                                     <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                                                                     <constraints>
@@ -3331,7 +3331,7 @@
                                                                                                                         <constraint firstAttribute="height" constant="0.5" id="FyH-pr-TaF"/>
                                                                                                                     </constraints>
                                                                                                                 </view>
-                                                                                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="form value" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="k3J-HW-Rrf" userLabel="Value Text Field" customClass="EATextField" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="form value" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="k3J-HW-Rrf" userLabel="Value Text Field" customClass="EATextField" customModule="APITesterPro" customModuleProvider="target">
                                                                                                                     <rect key="frame" x="6" y="50.5" width="255" height="34"/>
                                                                                                                     <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                                                                     <constraints>
@@ -3363,7 +3363,7 @@
                                                                                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                                                                                     </collectionViewFlowLayout>
                                                                                                                     <cells>
-                                                                                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="fileCell" id="jqv-SR-iYY" customClass="FileCollectionViewCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="fileCell" id="jqv-SR-iYY" customClass="FileCollectionViewCell" customModule="APITesterPro" customModuleProvider="target">
                                                                                                                             <rect key="frame" x="0.0" y="-6" width="50" height="50"/>
                                                                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                                                                             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Jne-hK-IRb">
@@ -3454,17 +3454,17 @@
                                                                                                     <outlet property="valueTextField" destination="k3J-HW-Rrf" id="bGD-Bi-6jf"/>
                                                                                                 </connections>
                                                                                             </tableViewCell>
-                                                                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="editBodyFieldTitleCell" id="6sO-Qg-1lO" userLabel="kvBodyFieldTitleCell" customClass="KVEditHeaderCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="editBodyFieldTitleCell" id="6sO-Qg-1lO" userLabel="kvBodyFieldTitleCell" customClass="KVEditHeaderCell" customModule="APITesterPro" customModuleProvider="target">
                                                                                                 <rect key="frame" x="0.0" y="142.5" width="283" height="44"/>
                                                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6sO-Qg-1lO" id="r5Z-qu-gl4">
                                                                                                     <rect key="frame" x="0.0" y="0.0" width="283" height="44"/>
                                                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                                                     <subviews>
-                                                                                                        <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4JR-jv-NaH" userLabel="Body Field Title Btn">
-                                                                                                            <rect key="frame" x="16" y="12.5" width="87" height="19"/>
+                                                                                                        <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4JR-jv-NaH" userLabel="Body Field Title Btn">
+                                                                                                            <rect key="frame" x="16" y="14" width="83" height="16"/>
                                                                                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                                                                            <state key="normal" title="  add fields" image="plus.circle.fill" catalog="system">
+                                                                                                            <state key="normal" title="  add fields" image="add">
                                                                                                                 <color key="titleColor" systemColor="systemBlueColor"/>
                                                                                                             </state>
                                                                                                             <connections>
@@ -3554,7 +3554,7 @@
                                                                         <outlet property="typeNameBtnTop" destination="np7-fC-XVe" id="qt3-Qh-5Xt"/>
                                                                     </connections>
                                                                 </tableViewCell>
-                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="editBodyTitleCell" rowHeight="44" id="noP-9p-kYp" userLabel="BodyTitleCell" customClass="KVEditHeaderCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="editBodyTitleCell" rowHeight="44" id="noP-9p-kYp" userLabel="BodyTitleCell" customClass="KVEditHeaderCell" customModule="APITesterPro" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="143" width="414" height="44"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="noP-9p-kYp" id="amH-j9-VVm">
@@ -3562,9 +3562,9 @@
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <subviews>
                                                                             <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k1C-Cy-qxJ" userLabel="Body Title Btn">
-                                                                                <rect key="frame" x="20" y="8" width="85" height="19"/>
+                                                                                <rect key="frame" x="20" y="8" width="81" height="16"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                                                <state key="normal" title="  add body" image="plus.circle.fill" catalog="system">
+                                                                                <state key="normal" title="  add body" image="add">
                                                                                     <color key="titleColor" systemColor="systemBlueColor"/>
                                                                                 </state>
                                                                             </button>
@@ -3635,7 +3635,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="24"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="92I-8E-rQi" userLabel="Spacer Cell View">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="92I-8E-rQi" userLabel="Spacer Cell View">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="24"/>
                                                     <color key="backgroundColor" name="table-view-bg"/>
                                                 </view>
@@ -3650,34 +3650,34 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="54" id="zWF-kJ-ET2" userLabel="Validate SSL Cell" customClass="ValidateSSLCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="54" id="zWF-kJ-ET2" userLabel="Validate SSL Cell" customClass="ValidateSSLCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="1110" width="414" height="54"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="zWF-kJ-ET2" id="hpI-zm-Nn7">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="54"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iUV-UH-iFU" userLabel="Top Border View">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iUV-UH-iFU" userLabel="Top Border View">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="0.5"/>
                                                     <color key="backgroundColor" name="cell-separator-bg"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="0.5" id="mLZ-Vf-M87"/>
                                                     </constraints>
                                                 </view>
-                                                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5tK-po-xUi">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5tK-po-xUi">
                                                     <rect key="frame" x="0.0" y="0.5" width="414" height="53"/>
                                                     <subviews>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" distribution="equalCentering" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="JTd-Cf-vic">
+                                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="JTd-Cf-vic">
                                                             <rect key="frame" x="18" y="0.0" width="378" height="53"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Validate SSL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3lP-vq-AhH">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Validate SSL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3lP-vq-AhH">
                                                                     <rect key="frame" x="0.0" y="18" width="81" height="17"/>
                                                                     <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sge-BJ-bO3">
+                                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sge-BJ-bO3">
                                                                     <rect key="frame" x="329" y="11" width="51" height="31"/>
                                                                     <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                     <connections>
@@ -3695,7 +3695,7 @@
                                                         <constraint firstAttribute="bottom" secondItem="JTd-Cf-vic" secondAttribute="bottom" id="sJv-RJ-i0G"/>
                                                     </constraints>
                                                 </view>
-                                                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NV9-h7-LNt" userLabel="Bottom Border View">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NV9-h7-LNt" userLabel="Bottom Border View">
                                                     <rect key="frame" x="0.0" y="53.5" width="414" height="0.5"/>
                                                     <color key="backgroundColor" name="cell-separator-bg"/>
                                                     <constraints>
@@ -3736,7 +3736,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="24"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yfc-oP-pFu" userLabel="Spacer Cell View">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yfc-oP-pFu" userLabel="Spacer Cell View">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="24"/>
                                                     <color key="backgroundColor" name="table-view-bg"/>
                                                 </view>
@@ -3787,16 +3787,16 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FqM-fe-Ecn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="iHt-VJ-ZYp" userLabel="Exit" sceneMemberID="exit"/>
-                <customObject id="a8s-7W-XG1" userLabel="Headers KVTableViewManager" customClass="KVEditTableViewManager" customModule="API_Tester_Pro" customModuleProvider="target"/>
-                <customObject id="oUr-ki-71j" userLabel="Params KVTableViewManager" customClass="KVEditTableViewManager" customModule="API_Tester_Pro" customModuleProvider="target"/>
-                <customObject id="EqF-ao-jzO" userLabel="Body KVTableViewManager" customClass="KVEditTableViewManager" customModule="API_Tester_Pro" customModuleProvider="target"/>
+                <customObject id="a8s-7W-XG1" userLabel="Headers KVTableViewManager" customClass="KVEditTableViewManager" customModule="APITesterPro" customModuleProvider="target"/>
+                <customObject id="oUr-ki-71j" userLabel="Params KVTableViewManager" customClass="KVEditTableViewManager" customModule="APITesterPro" customModuleProvider="target"/>
+                <customObject id="EqF-ao-jzO" userLabel="Body KVTableViewManager" customClass="KVEditTableViewManager" customModule="APITesterPro" customModuleProvider="target"/>
             </objects>
             <point key="canvasLocation" x="4543.4782608695659" y="135.9375"/>
         </scene>
         <!--Request Table View Controller-->
         <scene sceneID="AD1-Rf-lBW">
             <objects>
-                <tableViewController storyboardIdentifier="requestVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="XFn-zo-qCR" userLabel="Request Table View Controller" customClass="RequestTableViewController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="requestVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="XFn-zo-qCR" userLabel="Request Table View Controller" customClass="RequestTableViewController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Rds-VJ-v0Q">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -4073,7 +4073,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="table-view-cell-bg"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="7m0-Pz-xAS" userLabel="HeaderTitleCell" customClass="KVHeaderCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="7m0-Pz-xAS" userLabel="HeaderTitleCell" customClass="KVHeaderCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="339" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7m0-Pz-xAS" id="yi7-1c-IeB">
@@ -4118,26 +4118,26 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D6l-RG-v1c">
                                                     <rect key="frame" x="0.0" y="4" width="414" height="209"/>
                                                     <subviews>
-                                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cEV-Bd-QMh" userLabel="Header Table View" customClass="EADynamicSizeTableView" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cEV-Bd-QMh" userLabel="Header Table View" customClass="EADynamicSizeTableView" customModule="APITesterPro" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="414" height="209"/>
                                                             <color key="backgroundColor" name="table-view-cell-bg"/>
                                                             <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                             <prototypes>
-                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderContentCell" id="V1v-mx-Rd5" userLabel="HeaderContentCell" customClass="KVContentCell" customModule="API_Tester_Pro" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="50" width="414" height="243.5"/>
+                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderContentCell" id="V1v-mx-Rd5" userLabel="HeaderContentCell" customClass="KVContentCell" customModule="APITesterPro" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="50" width="414" height="244"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="V1v-mx-Rd5" id="UIg-mJ-3o0">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="243.5"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="244"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y1v-Lj-Xtd" userLabel="Container View">
-                                                                                <rect key="frame" x="16" y="4" width="382" height="235.5"/>
+                                                                                <rect key="frame" x="16" y="4" width="382" height="236"/>
                                                                                 <subviews>
                                                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="mj9-hf-ZQ7">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="382" height="235.5"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="382" height="236"/>
                                                                                         <subviews>
                                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fm7-J6-DtW" userLabel="KV Container View">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="382" height="235.5"/>
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="382" height="236"/>
                                                                                                 <subviews>
                                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tR-VT-7Ry" userLabel="name title label">
                                                                                                         <rect key="frame" x="0.0" y="8" width="382" height="14.5"/>
@@ -4158,7 +4158,7 @@
                                                                                                         <nil key="highlightedColor"/>
                                                                                                     </label>
                                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="application/json" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zea-0V-nJp" userLabel="value label">
-                                                                                                        <rect key="frame" x="0.0" y="74" width="382" height="145.5"/>
+                                                                                                        <rect key="frame" x="0.0" y="74" width="382" height="146"/>
                                                                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                                         <nil key="textColor"/>
                                                                                                         <nil key="highlightedColor"/>
@@ -4246,7 +4246,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="table-view-cell-bg"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="Wzj-pG-nVP" userLabel="ParamsTitleCell" customClass="KVHeaderCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="Wzj-pG-nVP" userLabel="ParamsTitleCell" customClass="KVHeaderCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="600" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Wzj-pG-nVP" id="0iM-vI-dH0">
@@ -4291,26 +4291,26 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RWn-z7-bxj">
                                                     <rect key="frame" x="0.0" y="4" width="414" height="209"/>
                                                     <subviews>
-                                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="vIx-ox-lFX" userLabel="Params Table View" customClass="EADynamicSizeTableView" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="vIx-ox-lFX" userLabel="Params Table View" customClass="EADynamicSizeTableView" customModule="APITesterPro" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="414" height="209"/>
                                                             <color key="backgroundColor" name="table-view-cell-bg"/>
                                                             <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                             <prototypes>
-                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvParamsContentCell" id="Qrg-DJ-8iE" userLabel="ParamsContentCell" customClass="KVContentCell" customModule="API_Tester_Pro" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="50" width="414" height="245"/>
+                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvParamsContentCell" id="Qrg-DJ-8iE" userLabel="ParamsContentCell" customClass="KVContentCell" customModule="APITesterPro" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="50" width="414" height="245.5"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Qrg-DJ-8iE" id="zAX-uT-oeN">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="245"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="245.5"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ihI-SC-uVD" userLabel="Container View">
-                                                                                <rect key="frame" x="16" y="4" width="382" height="237"/>
+                                                                                <rect key="frame" x="16" y="4" width="382" height="237.5"/>
                                                                                 <subviews>
                                                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="yId-rE-qx2">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="382" height="237"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="382" height="237.5"/>
                                                                                         <subviews>
                                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e5L-TP-rUU" userLabel="KV Container View">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="382" height="237"/>
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="382" height="237.5"/>
                                                                                                 <subviews>
                                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W4V-yM-ioC" userLabel="name title label">
                                                                                                         <rect key="frame" x="0.0" y="8" width="382" height="14.5"/>
@@ -4331,7 +4331,7 @@
                                                                                                         <nil key="highlightedColor"/>
                                                                                                     </label>
                                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="app:api-tester-pro and platform:ios" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="abY-0z-Q1a" userLabel="value label">
-                                                                                                        <rect key="frame" x="0.0" y="74" width="382" height="147"/>
+                                                                                                        <rect key="frame" x="0.0" y="74" width="382" height="147.5"/>
                                                                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                                         <nil key="textColor"/>
                                                                                                         <nil key="highlightedColor"/>
@@ -4419,7 +4419,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="table-view-cell-bg"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="z0f-FA-lCm" userLabel="BodyTitleCell" customClass="KVHeaderCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="z0f-FA-lCm" userLabel="BodyTitleCell" customClass="KVHeaderCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="861" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="z0f-FA-lCm" id="t8U-or-RtH">
@@ -4497,7 +4497,7 @@
                                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                                     </collectionViewFlowLayout>
                                                                     <cells>
-                                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="fileCell" id="YFh-F0-0r1" customClass="FileCollectionViewCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="fileCell" id="YFh-F0-0r1" customClass="FileCollectionViewCell" customModule="APITesterPro" customModuleProvider="target">
                                                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" id="rYg-Ib-VKY">
@@ -4552,12 +4552,12 @@
                                                                 <constraint firstItem="Afw-2O-GTx" firstAttribute="top" secondItem="fM1-RG-2Cw" secondAttribute="top" constant="8" id="zMO-dJ-iLZ"/>
                                                             </constraints>
                                                         </view>
-                                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bEG-iu-BpP" userLabel="Body Field Table View" customClass="KVBodyFieldTableView" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bEG-iu-BpP" userLabel="Body Field Table View" customClass="KVBodyFieldTableView" customModule="APITesterPro" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="414" height="209"/>
                                                             <color key="backgroundColor" name="table-view-cell-bg"/>
                                                             <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                             <prototypes>
-                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="bodyFieldTableViewCell" id="Ntq-wS-9ZX" userLabel="Body Field Table View Cell" customClass="KVBodyFieldTableViewCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="bodyFieldTableViewCell" id="Ntq-wS-9ZX" userLabel="Body Field Table View Cell" customClass="KVBodyFieldTableViewCell" customModule="APITesterPro" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="50" width="414" height="319.5"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ntq-wS-9ZX" id="AOx-Bi-Yfg">
@@ -4650,7 +4650,7 @@
                                                                                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                                                                         </collectionViewFlowLayout>
                                                                                                         <cells>
-                                                                                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="fileCell" id="6V0-Of-ten" customClass="FileCollectionViewCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                                                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="fileCell" id="6V0-Of-ten" customClass="FileCollectionViewCell" customModule="APITesterPro" customModuleProvider="target">
                                                                                                                 <rect key="frame" x="0.0" y="-8" width="50" height="50"/>
                                                                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                                                                 <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" id="TdI-Ah-4FM">
@@ -4856,15 +4856,15 @@
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tjP-kI-0I7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <customObject id="TWU-mz-KJL" userLabel="Headers Table View Manager" customClass="KVTableViewManager" customModule="API_Tester_Pro" customModuleProvider="target"/>
-                <customObject id="Fxf-v8-PO3" userLabel="Params Table View Manager" customClass="KVTableViewManager" customModule="API_Tester_Pro" customModuleProvider="target"/>
+                <customObject id="TWU-mz-KJL" userLabel="Headers Table View Manager" customClass="KVTableViewManager" customModule="APITesterPro" customModuleProvider="target"/>
+                <customObject id="Fxf-v8-PO3" userLabel="Params Table View Manager" customClass="KVTableViewManager" customModule="APITesterPro" customModuleProvider="target"/>
             </objects>
             <point key="canvasLocation" x="6305.7971014492759" y="-189.50892857142856"/>
         </scene>
         <!--Environment Picker View Controller-->
         <scene sceneID="gPh-lA-O7K">
             <objects>
-                <viewController storyboardIdentifier="envPickerVC" id="CtW-iF-Etj" customClass="EnvironmentPickerViewController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="envPickerVC" id="CtW-iF-Etj" customClass="EnvironmentPickerViewController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Uwh-ak-T32">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -4928,7 +4928,7 @@
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="envPickerCell" id="SES-GD-iZq" customClass="EnvPickerCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="envPickerCell" id="SES-GD-iZq" customClass="EnvPickerCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="SES-GD-iZq" id="NZ1-Ca-jzK">
@@ -5006,7 +5006,7 @@
         <!--Request Tab Bar Controller-->
         <scene sceneID="yqR-EI-reR">
             <objects>
-                <tabBarController storyboardIdentifier="requestTabBar" id="UWB-ce-cQe" customClass="RequestTabBarController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="requestTabBar" id="UWB-ce-cQe" customClass="RequestTabBarController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="mGx-uM-Jch">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -5024,7 +5024,7 @@
         <!--Response Table View Controller-->
         <scene sceneID="vKY-A0-4H6">
             <objects>
-                <tableViewController storyboardIdentifier="responseVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y6P-Gh-dHL" userLabel="Response Table View Controller" customClass="ResponseTableViewController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="responseVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y6P-Gh-dHL" userLabel="Response Table View Controller" customClass="ResponseTableViewController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="VyE-Dv-c2d">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -5055,7 +5055,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="table-view-bg"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="81" id="Crb-fg-uyD" userLabel="Info Cell" customClass="ResponseInfoCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="81" id="Crb-fg-uyD" userLabel="Info Cell" customClass="ResponseInfoCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="74" width="414" height="81"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Crb-fg-uyD" id="ogg-VY-u9L">
@@ -5204,7 +5204,7 @@
                                             <outlet property="urlLabel" destination="uPY-9k-tKg" id="Qq7-Ll-W2f"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="sSa-kg-Snx" userLabel="Headers Title Cell" customClass="KVHeaderCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="sSa-kg-Snx" userLabel="Headers Title Cell" customClass="KVHeaderCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="155" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="sSa-kg-Snx" id="CvV-Zd-eM7">
@@ -5229,7 +5229,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="table-view-bg"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="135" id="q1K-Nj-QmL" userLabel="Headers View Cell" customClass="ResponseKVCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="135" id="q1K-Nj-QmL" userLabel="Headers View Cell" customClass="ResponseKVCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="199" width="414" height="135"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="q1K-Nj-QmL" id="fJT-2C-qC3">
@@ -5246,25 +5246,25 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tlX-Ec-MiS" userLabel="tvView">
                                                     <rect key="frame" x="0.0" y="1" width="414" height="133"/>
                                                     <subviews>
-                                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="j8E-gu-Mtm" customClass="EADynamicSizeTableView" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="j8E-gu-Mtm" customClass="EADynamicSizeTableView" customModule="APITesterPro" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="414" height="133"/>
                                                             <color key="backgroundColor" name="table-view-cell-bg"/>
                                                             <prototypes>
-                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvCell" id="P4P-2h-njX" userLabel="Headers kvCell" customClass="KVCell" customModule="API_Tester_Pro" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="50" width="414" height="115"/>
+                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvCell" id="P4P-2h-njX" userLabel="Headers kvCell" customClass="KVCell" customModule="APITesterPro" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="50" width="414" height="115.5"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="P4P-2h-njX" id="U5i-VS-gmv">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="115"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="115.5"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <subviews>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="U0U-KW-3LB">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="414" height="114"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="414" height="114.5"/>
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zcK-UZ-Yz5" userLabel="Key View">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="202.5" height="114"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="202.5" height="114.5"/>
                                                                                         <subviews>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Key" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="DJq-mR-vfb">
-                                                                                                <rect key="frame" x="16" y="48.5" width="170.5" height="17"/>
+                                                                                                <rect key="frame" x="16" y="49" width="170.5" height="17"/>
                                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                                 <nil key="textColor"/>
                                                                                                 <nil key="highlightedColor"/>
@@ -5278,17 +5278,17 @@
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vkh-vU-5ok" userLabel="Center view">
-                                                                                        <rect key="frame" x="206.5" y="0.0" width="1" height="114"/>
+                                                                                        <rect key="frame" x="206.5" y="0.0" width="1" height="114.5"/>
                                                                                         <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="width" constant="1" id="fYd-HQ-0eC"/>
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M9o-EA-liZ" userLabel="Value View">
-                                                                                        <rect key="frame" x="211.5" y="0.0" width="202.5" height="114"/>
+                                                                                        <rect key="frame" x="211.5" y="0.0" width="202.5" height="114.5"/>
                                                                                         <subviews>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Value" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="ENK-B7-m4O">
-                                                                                                <rect key="frame" x="16" y="48.5" width="170.5" height="17"/>
+                                                                                                <rect key="frame" x="16" y="49" width="170.5" height="17"/>
                                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                                 <nil key="textColor"/>
                                                                                                 <nil key="highlightedColor"/>
@@ -5317,7 +5317,7 @@
                                                                                 </constraints>
                                                                             </stackView>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PLQ-8b-dLG" userLabel="Bottom Border View">
-                                                                                <rect key="frame" x="15" y="114.5" width="399" height="0.5"/>
+                                                                                <rect key="frame" x="15" y="115" width="399" height="0.5"/>
                                                                                 <color key="backgroundColor" name="cell-separator-bg"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="0.5" id="hGu-61-3nS"/>
@@ -5381,7 +5381,7 @@
                                             <outlet property="tvView" destination="tlX-Ec-MiS" id="nJq-r4-6OV"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="n1d-3Z-hwu" userLabel="Cookies Title Cell" customClass="KVHeaderCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="n1d-3Z-hwu" userLabel="Cookies Title Cell" customClass="KVHeaderCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="334" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="n1d-3Z-hwu" id="sbk-1E-3Sp">
@@ -5406,7 +5406,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="table-view-bg"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="183" id="OVH-wI-CSQ" userLabel="Cookies View Cell" customClass="ResponseKVCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="183" id="OVH-wI-CSQ" userLabel="Cookies View Cell" customClass="ResponseKVCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="378" width="414" height="183"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OVH-wI-CSQ" id="bvg-2R-uoP">
@@ -5423,25 +5423,25 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tjh-Bg-RST" userLabel="tvView">
                                                     <rect key="frame" x="0.0" y="1" width="414" height="181"/>
                                                     <subviews>
-                                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="V6o-Gz-53P" customClass="EADynamicSizeTableView" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="V6o-Gz-53P" customClass="EADynamicSizeTableView" customModule="APITesterPro" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="414" height="181"/>
                                                             <color key="backgroundColor" name="table-view-cell-bg"/>
                                                             <prototypes>
-                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="kvCell" id="1ic-7L-cAl" userLabel="Cookies kvCell" customClass="KVCell" customModule="API_Tester_Pro" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="50" width="414" height="139"/>
+                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="kvCell" id="1ic-7L-cAl" userLabel="Cookies kvCell" customClass="KVCell" customModule="APITesterPro" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="50" width="414" height="139.5"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="1ic-7L-cAl" id="0Nq-It-S6q">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="139"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="139.5"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <subviews>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="UQP-8I-LBx">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="414" height="138"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="414" height="138.5"/>
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A7e-gR-vMC" userLabel="Key View">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="202.5" height="138"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="202.5" height="138.5"/>
                                                                                         <subviews>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Key" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="LD2-ru-8bS">
-                                                                                                <rect key="frame" x="16" y="60.5" width="170.5" height="17"/>
+                                                                                                <rect key="frame" x="16" y="61" width="170.5" height="17"/>
                                                                                                 <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                                 <nil key="textColor"/>
@@ -5456,17 +5456,17 @@
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mrx-nV-9UI" userLabel="Center view">
-                                                                                        <rect key="frame" x="206.5" y="0.0" width="1" height="138"/>
+                                                                                        <rect key="frame" x="206.5" y="0.0" width="1" height="138.5"/>
                                                                                         <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="width" constant="1" id="T80-dR-BC4"/>
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d9J-MT-syb" userLabel="Value View">
-                                                                                        <rect key="frame" x="211.5" y="0.0" width="202.5" height="138"/>
+                                                                                        <rect key="frame" x="211.5" y="0.0" width="202.5" height="138.5"/>
                                                                                         <subviews>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Value" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="fqf-8N-1zN">
-                                                                                                <rect key="frame" x="16" y="60.5" width="170.5" height="17"/>
+                                                                                                <rect key="frame" x="16" y="61" width="170.5" height="17"/>
                                                                                                 <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                                 <nil key="textColor"/>
@@ -5496,7 +5496,7 @@
                                                                                 </constraints>
                                                                             </stackView>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aoQ-eD-5K3" userLabel="Bottom Border View">
-                                                                                <rect key="frame" x="15" y="138.5" width="399" height="0.5"/>
+                                                                                <rect key="frame" x="15" y="139" width="399" height="0.5"/>
                                                                                 <color key="backgroundColor" name="cell-separator-bg"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="0.5" id="kHH-Oo-bA0"/>
@@ -5560,7 +5560,7 @@
                                             <outlet property="tvView" destination="tjh-Bg-RST" id="fbi-Ie-Eeg"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="qQ0-Lg-ycA" userLabel="Metrics Title Cell" customClass="KVHeaderCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="qQ0-Lg-ycA" userLabel="Metrics Title Cell" customClass="KVHeaderCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="561" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qQ0-Lg-ycA" id="6NN-9c-ohv">
@@ -5585,7 +5585,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="table-view-bg"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="183" id="Oou-cF-WEw" userLabel="Metrics View Cell" customClass="ResponseKVCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="183" id="Oou-cF-WEw" userLabel="Metrics View Cell" customClass="ResponseKVCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="605" width="414" height="183"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Oou-cF-WEw" id="7DY-Rm-fy5">
@@ -5602,25 +5602,25 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rac-EG-jzN" userLabel="tvView">
                                                     <rect key="frame" x="0.0" y="1" width="414" height="181"/>
                                                     <subviews>
-                                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="eNH-w1-0gM" customClass="EADynamicSizeTableView" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="eNH-w1-0gM" customClass="EADynamicSizeTableView" customModule="APITesterPro" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="414" height="181"/>
                                                             <color key="backgroundColor" name="table-view-cell-bg"/>
                                                             <prototypes>
-                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="kvCell" id="2a4-da-Nbb" userLabel="Metrics kvCell" customClass="KVCell" customModule="API_Tester_Pro" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="50" width="414" height="140"/>
+                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="kvCell" id="2a4-da-Nbb" userLabel="Metrics kvCell" customClass="KVCell" customModule="APITesterPro" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="50" width="414" height="140.5"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="2a4-da-Nbb" id="efh-XU-EqF">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="140"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="140.5"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <subviews>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="fTs-t4-R3n">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="414" height="139"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="414" height="139.5"/>
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sDF-6H-fCV" userLabel="Key View">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="202.5" height="139"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="202.5" height="139.5"/>
                                                                                         <subviews>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Key" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="GCn-zo-KbU">
-                                                                                                <rect key="frame" x="16" y="61" width="170.5" height="17"/>
+                                                                                                <rect key="frame" x="16" y="61.5" width="170.5" height="17"/>
                                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                                 <nil key="textColor"/>
                                                                                                 <nil key="highlightedColor"/>
@@ -5634,17 +5634,17 @@
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zCd-9h-YpF" userLabel="Center view">
-                                                                                        <rect key="frame" x="206.5" y="0.0" width="1" height="139"/>
+                                                                                        <rect key="frame" x="206.5" y="0.0" width="1" height="139.5"/>
                                                                                         <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="width" constant="1" id="VbP-dh-Kax"/>
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="muD-1J-7qt" userLabel="Value View">
-                                                                                        <rect key="frame" x="211.5" y="0.0" width="202.5" height="139"/>
+                                                                                        <rect key="frame" x="211.5" y="0.0" width="202.5" height="139.5"/>
                                                                                         <subviews>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Value" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="PHy-Mf-ELk">
-                                                                                                <rect key="frame" x="16" y="61" width="170.5" height="17"/>
+                                                                                                <rect key="frame" x="16" y="61.5" width="170.5" height="17"/>
                                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                                 <nil key="textColor"/>
                                                                                                 <nil key="highlightedColor"/>
@@ -5673,7 +5673,7 @@
                                                                                 </constraints>
                                                                             </stackView>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ezd-ex-Wth" userLabel="Bottom Border View">
-                                                                                <rect key="frame" x="15" y="139.5" width="399" height="0.5"/>
+                                                                                <rect key="frame" x="15" y="140" width="399" height="0.5"/>
                                                                                 <color key="backgroundColor" name="cell-separator-bg"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="0.5" id="aGi-cv-BFC"/>
@@ -5737,7 +5737,7 @@
                                             <outlet property="tvView" destination="Rac-EG-jzN" id="hog-PX-bhM"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="lvp-96-dZT" userLabel="Details Title Cell" customClass="KVHeaderCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="kvHeaderTitleCell" rowHeight="44" id="lvp-96-dZT" userLabel="Details Title Cell" customClass="KVHeaderCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="788" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lvp-96-dZT" id="mPU-R5-rMa">
@@ -5762,7 +5762,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="table-view-bg"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="183" id="UOU-Q4-OhO" userLabel="Details View Cell" customClass="ResponseKVCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="183" id="UOU-Q4-OhO" userLabel="Details View Cell" customClass="ResponseKVCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="832" width="414" height="183"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UOU-Q4-OhO" id="qmg-rU-dSv">
@@ -5779,22 +5779,22 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OFz-KN-Lkk" userLabel="tvView">
                                                     <rect key="frame" x="0.0" y="1" width="414" height="181"/>
                                                     <subviews>
-                                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ofQ-eT-xto" customClass="EADynamicSizeTableView" customModule="API_Tester_Pro" customModuleProvider="target">
+                                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ofQ-eT-xto" customClass="EADynamicSizeTableView" customModule="APITesterPro" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="414" height="181"/>
                                                             <color key="backgroundColor" name="table-view-cell-bg"/>
                                                             <prototypes>
-                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="kvCell" id="NQb-AP-7ak" userLabel="Details kvCell" customClass="KVCell" customModule="API_Tester_Pro" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="50" width="414" height="134.5"/>
+                                                                <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="kvCell" id="NQb-AP-7ak" userLabel="Details kvCell" customClass="KVCell" customModule="APITesterPro" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="50" width="414" height="135"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="NQb-AP-7ak" id="OYh-dz-t2b">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="134.5"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="135"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <subviews>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="c2N-gM-p70">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="414" height="133.5"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="414" height="134"/>
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VGZ-et-S7w" userLabel="Key View">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="202.5" height="133.5"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="202.5" height="134"/>
                                                                                         <subviews>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Key" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="Wx0-EH-bJT">
                                                                                                 <rect key="frame" x="16" y="58.5" width="170.5" height="17"/>
@@ -5811,14 +5811,14 @@
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sLJ-EY-fMu" userLabel="Center view">
-                                                                                        <rect key="frame" x="206.5" y="0.0" width="1" height="133.5"/>
+                                                                                        <rect key="frame" x="206.5" y="0.0" width="1" height="134"/>
                                                                                         <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="width" constant="1" id="9nJ-z9-73k"/>
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Df-8B-9kv" userLabel="Value View">
-                                                                                        <rect key="frame" x="211.5" y="0.0" width="202.5" height="133.5"/>
+                                                                                        <rect key="frame" x="211.5" y="0.0" width="202.5" height="134"/>
                                                                                         <subviews>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Value" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="GMN-RM-s1B">
                                                                                                 <rect key="frame" x="16" y="58.5" width="170.5" height="17"/>
@@ -5850,7 +5850,7 @@
                                                                                 </constraints>
                                                                             </stackView>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lmL-zA-Cv9" userLabel="Bottom Border View">
-                                                                                <rect key="frame" x="15" y="134" width="399" height="0.5"/>
+                                                                                <rect key="frame" x="15" y="134.5" width="399" height="0.5"/>
                                                                                 <color key="backgroundColor" name="cell-separator-bg"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="0.5" id="RBR-bV-1L4"/>
@@ -5937,7 +5937,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="table-view-bg"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="81" id="kYL-Q8-WUg" userLabel="Help Cell" customClass="ResponseInfoCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="81" id="kYL-Q8-WUg" userLabel="Help Cell" customClass="ResponseInfoCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="1039" width="414" height="81"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="kYL-Q8-WUg" id="YRY-vh-GbR">
@@ -5999,7 +5999,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="table-view-bg"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="81" id="p0x-FJ-IYB" userLabel="Raw Cell" customClass="ResponseWebViewCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="81" id="p0x-FJ-IYB" userLabel="Raw Cell" customClass="ResponseWebViewCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="1222" width="414" height="81"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="p0x-FJ-IYB" id="qsK-nx-SEl">
@@ -6082,7 +6082,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="table-view-bg"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="81" id="ojh-ir-PQZ" userLabel="Preview Cell" customClass="ResponseWebViewCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="81" id="ojh-ir-PQZ" userLabel="Preview Cell" customClass="ResponseWebViewCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="1405" width="414" height="81"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ojh-ir-PQZ" id="daU-Sg-pzW">
@@ -6165,7 +6165,7 @@
         <!--History View Controller-->
         <scene sceneID="ZZw-xh-QNo">
             <objects>
-                <viewController storyboardIdentifier="historyVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hdh-kI-s2o" customClass="HistoryViewController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="historyVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hdh-kI-s2o" customClass="HistoryViewController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="fQU-DV-hp5">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -6182,7 +6182,7 @@
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="historyCell" rowHeight="75" id="bL8-E4-aRi" userLabel="History Cell" customClass="HistoryCell" customModule="API_Tester_Pro" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="historyCell" rowHeight="75" id="bL8-E4-aRi" userLabel="History Cell" customClass="HistoryCell" customModule="APITesterPro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="414" height="75"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bL8-E4-aRi" id="vQ5-xr-iGm">
@@ -6351,7 +6351,7 @@
         <!--Tester Pro Navigation Controller-->
         <scene sceneID="UTV-B4-hkT">
             <objects>
-                <navigationController storyboardIdentifier="rootNav" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0VT-ys-k4S" customClass="APITesterProNavigationController" customModule="API_Tester_Pro" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="rootNav" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0VT-ys-k4S" customClass="APITesterProNavigationController" customModule="APITesterPro" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="uWB-bX-8Fc">
                         <rect key="frame" x="0.0" y="48" width="414" height="44"/>
@@ -6373,10 +6373,10 @@
         </designable>
     </designables>
     <resources>
+        <image name="add" width="16" height="16"/>
+        <image name="delete" width="16" height="16"/>
         <image name="greaterthan" catalog="system" width="128" height="108"/>
         <image name="line.horizontal.3.decrease.circle" catalog="system" width="128" height="123"/>
-        <image name="minus.circle.fill" catalog="system" width="128" height="123"/>
-        <image name="plus.circle.fill" catalog="system" width="128" height="123"/>
         <image name="project" width="23" height="23"/>
         <image name="request" width="27" height="22"/>
         <image name="response" width="24" height="22"/>
