@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "arrow.pdf",
+      "filename" : "arrow-light.pdf",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "arrow-dark.pdf",
       "idiom" : "universal"
     }
   ],
