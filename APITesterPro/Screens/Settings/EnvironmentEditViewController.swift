@@ -258,7 +258,7 @@ class EnvironmentEditViewController: UITableViewController, UITextFieldDelegate 
             case .editEnvVar:
                 type == .name ? (self.name = text) : (self.value = text)
                 if self.envVar != nil {
-                    if self.envVar!.name != self.name || self.envVar!.value as! String != self.value {
+                    if self.envVar!.name != self.name || self.envVar!.value as? String != self.value {
                         self.editok = true
                     }
                 }
