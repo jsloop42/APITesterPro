@@ -714,16 +714,6 @@ protocol KVEditTableViewDelegate: AnyObject {
 
 class KVEditHeaderCell: UITableViewCell {
     @IBOutlet weak var headerTitleBtn: UIButton!
-    
-    func updateUI() {
-        if #available(iOS 13.0, *) {
-            Log.debug("using system image")
-        } else {
-            if self.headerTitleBtn != nil {
-                self.headerTitleBtn.setImage(UIImage(named: "add-circle"), for: .normal)
-            }
-        }
-    }
 }
 
 protocol KVEditContentCellDelegate: AnyObject {
@@ -772,11 +762,6 @@ class KVEditContentCell: UITableViewCell, KVEditContentCellType, UITextFieldDele
         self.deleteView.isHidden = true
         self.keyTextField.isColor = false
         self.valueTextField.isColor = false
-        if #available(iOS 13.0, *) {
-            Log.debug("using system image")
-        } else {
-            self.deleteBtn.setImage(UIImage(named: "delete-circle"), for: .normal)
-        }
     }
     
     func initEvents() {
@@ -900,14 +885,6 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
         self.binaryTextField.isColor = false
         self.binaryTextField.placeholder = "select file"
         self.imageFileView.isHidden = true
-        if #available(iOS 13.0, *) {
-            Log.debug("using system image")
-        } else {
-            if self.deleteBtn != nil {
-                self.deleteBtn.setImage(UIImage(named: "delete-circle"), for: .normal)
-            }
-        }
-        
     }
             
     func initEvents() {
@@ -1527,7 +1504,6 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 1 {  // title
             let cell = tableView.dequeueReusableCell(withIdentifier: "editBodyFieldTitleCell", for: indexPath) as! KVEditHeaderCell
-            cell.updateUI()
             return cell
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: self.cellId, for: indexPath) as! KVEditBodyFieldTableViewCell
@@ -2061,17 +2037,16 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
         var title: String = ""
         var titleCellId: String = ""
         if self.tableViewType == .header {
-            title = " add header"
+            title = "  add header"
             titleCellId = "kvEditHeaderTitleCell"
         } else if self.tableViewType == .params {
-            title = " add params"
+            title = "  add params"
             titleCellId = "kvEditParamsTitleCell"
         } else if self.tableViewType == .body {
-            title = " add body"
+            title = "  add body"
             titleCellId = "editBodyTitleCell"
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: titleCellId, for: indexPath) as! KVEditHeaderCell
-        cell.updateUI()
         cell.headerTitleBtn.setTitle(title, for: .normal)
         return cell
     }
