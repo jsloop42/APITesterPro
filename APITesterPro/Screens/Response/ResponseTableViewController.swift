@@ -797,7 +797,7 @@ extension ResponseTableViewController {
             }
             Log.debug("cellViewHeight: metrics cell height: \(height)")
         case .detailsViewCell:
-            let len = data.getMetricsKeys().count
+            let len = data.getDetailsKeys().count
             for i in 0..<len {
                 let key = data.getDetailsKeys()[i]
                 let val = data.getDetailsMap()[key] ?? ""
