@@ -206,11 +206,7 @@ extension RequestListViewController: UITableViewDelegate, UITableViewDataSource 
         } else {
             cell.descLbl.isHidden = false
         }
-        if indexPath.row == self.frc.numberOfRows(in: indexPath.section) - 1 {
-            cell.displayBottomBorder()
-        } else {
-            cell.hideBottomBorder()
-        }
+        cell.displayBottomBorder()
         return cell
     }
     
