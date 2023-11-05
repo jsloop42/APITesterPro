@@ -434,6 +434,41 @@ class APITesterProTests: XCTestCase {
         waitForExpectations(timeout: 2.0, handler: nil)
     }
     
+    func testCoreDataEnvVarSecureTransformer() {
+        let exp = expectation(description: "test core data envvar secure transformer")
+        self.localdb.setup(storeType: NSSQLiteStoreType) {
+            let ctx = self.localdb.mainMOC
+            ctx.perform {
+                let lws = self.localdb.createWorkspace(id: "test-ws", name: "test-ws", desc: "", isSyncEnabled: false, ctx: ctx)
+                XCTAssertNotNil(lws)
+                guard let ws = lws else { return }
+                XCTAssertEqual(ws.name, "test-ws")
+                self.localdb.saveMainContext()
+                let env = self.localdb.createEnv(name: "stag-test", envId: "env-1", wsId: ws.getId(), checkExists: false, ctx: ctx)
+                XCTAssertNotNil(env)
+                self.localdb.saveMainContext()
+                let envVar = self.localdb.createEnvVar(name: "server", value: "example.com", ctx: ctx)
+                XCTAssertNotNil(envVar)
+                envVar?.env = env
+                self.localdb.saveMainContext()
+                let envs = self.localdb.getEnvs(wsId: ws.getId(), ctx: ctx) as [EEnv]
+                XCTAssertNotNil(envs)
+                XCTAssertEqual(envs.count, 1)
+                let envVars = envs[0].variables?.allObjects as? [EEnvVar]
+                XCTAssertNotNil(envVars)
+                XCTAssertEqual(envVars!.count, 1)
+                XCTAssertEqual(envVars![0].value as? NSString, "example.com")
+                self.localdb.deleteEntity(envVar, ctx: ctx)
+                self.localdb.deleteEntity(env, ctx: ctx)
+                self.localdb.deleteEntity(ws, ctx: ctx)
+                let aws = self.localdb.getWorkspace(id: "test-ws", ctx: ctx)
+                XCTAssertNil(aws)
+                exp.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+    
     func testTemp() {
         let exp = expectation(description: "test")
         let printerOperation = BlockOperation()
