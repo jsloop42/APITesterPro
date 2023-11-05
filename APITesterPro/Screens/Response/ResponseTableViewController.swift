@@ -282,6 +282,7 @@ final class ResponseKVCell: UITableViewCell, UITableViewDataSource, UITableViewD
     var metricsKeys: [String] = []
     var details: [String: String] = [:]
     var detailsKeys: [String] = []
+    var nc = NotificationCenter.default
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -315,6 +316,7 @@ final class ResponseKVCell: UITableViewCell, UITableViewDataSource, UITableViewD
         self.tableView.resetMeta()  // so that for a new request, the height for the previous index gets removed.
         self.updateData()
         self.tableView.reloadData()
+        self.nc.post(name: .responseTableViewShouldReload, object: self)
     }
     
     func updateData() {
@@ -333,6 +335,7 @@ final class ResponseKVCell: UITableViewCell, UITableViewDataSource, UITableViewD
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch self.tableType {
         case .header:
+            Log.debug("header keys count \(self.headerKeys.count)")
             return self.headerKeys.count
         case .cookies:
             return self.data?.cookies.count ?? 0
@@ -343,11 +346,25 @@ final class ResponseKVCell: UITableViewCell, UITableViewDataSource, UITableViewD
         }
     }
     
+    func getReuseIdentifier() -> String {
+        switch (self.tableType) {
+        case .header:
+            return "kvCellHeaders"
+        case .cookies:
+            return "kvCellCookies"
+        case .metrics:
+            return "kvCellMetrics"
+        case .details:
+            return "kvCellDetails"
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "kvCell", for: indexPath) as! KVCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: self.getReuseIdentifier(), for: indexPath) as! KVCell
         let row = indexPath.row
         if self.tableType == .header {
             let key = self.headerKeys[row]
+            Log.debug("header key: \(key)")
             cell.keyLabel.text = key
             cell.valueLabel.text = self.headers[key]
             if row == self.headers.count - 1 {
@@ -403,6 +420,7 @@ final class ResponseKVCell: UITableViewCell, UITableViewDataSource, UITableViewD
         if self.tableType == .header {
             key = self.headerKeys[row]
             val = self.headers[key] ?? ""
+            Log.debug("heightForRow header key: \(key) - val: \(val)")
         } else if self.tableType == .cookies {
             if let cookie = self.data?.cookies[row] {
                 key = cookie.name
@@ -763,7 +781,8 @@ extension ResponseTableViewController {
                         self.headersViewCell.tableView.invalidateIntrinsicContentSize()
                         self.headersViewCell.invalidateIntrinsicContentSize()
                         self.headersViewCell.tableView.reloadData()
-                        return self.headerCellHeight == 0 ? UITableView.automaticDimension : self.headerCellHeight
+                        let h = max(self.headersViewCell.tableView.height, self.headerCellHeight)
+                        return h == 0 ? UITableView.automaticDimension : h
                     case .cookiesTitleCell:
                         Log.debug("cookies: \(String(describing: self.data?.cookies))")
                         if data.cookies.isEmpty { return 0 }
@@ -773,21 +792,24 @@ extension ResponseTableViewController {
                         self.cookiesViewCell.tableView.invalidateIntrinsicContentSize()
                         self.cookiesViewCell.invalidateIntrinsicContentSize()
                         self.cookiesViewCell.tableView.reloadData()
-                        return self.cookieCellHeight == 0 ? UITableView.automaticDimension : self.cookieCellHeight
+                        let h = max(self.cookiesViewCell.tableView.height, self.cookieCellHeight)
+                        return h == 0 ? UITableView.automaticDimension : h
                     case .metricsTitleCell:
                         return 44
                     case .metricsViewCell:
                         self.metricsViewCell.tableView.invalidateIntrinsicContentSize()
                         self.metricsViewCell.invalidateIntrinsicContentSize()
                         self.metricsViewCell.tableView.reloadData()
-                        return self.metricsCellHeight == 0 ? UITableView.automaticDimension : self.metricsCellHeight
+                        let h = max(self.metricsViewCell.tableView.height, self.metricsCellHeight)
+                        return h == 0 ? UITableView.automaticDimension : h
                     case .detailsTitleCell:
                         return 44
                     case .detailsViewCell:
                         self.detailsViewCell.tableView.invalidateIntrinsicContentSize()
                         self.detailsViewCell.invalidateIntrinsicContentSize()
                         self.detailsViewCell.tableView.reloadData()
-                        return self.detailsCellHeight == 0 ? UITableView.automaticDimension : self.detailsCellHeight
+                        let h = max(self.detailsViewCell.tableView.height, self.detailsCellHeight)
+                        return h == 0 ? UITableView.automaticDimension : h
                     case .spacerAfterDetailsCell:
                         return 24
                     default:
@@ -801,7 +823,6 @@ extension ResponseTableViewController {
             }
             let h: CGFloat = UIScreen.main.bounds.height - (48 + (self.tabbarController?.tabBar.frame.height ?? 0) + self.navigationController!.navigationBar.frame.height +
                 UIApplication.shared.keyWindow!.safeAreaInsets.top)
-            Log.debug("view height: \(h) - 832?")
             return h
         case 2:  // preview section
             if indexPath.row == PreviewCellId.spacerBeforePreviewCell.rawValue {
