@@ -76,7 +76,6 @@ class ProjectListViewController: APITesterProViewController {
     
     func getFRCPredicate(_ wsId: String) -> NSPredicate {
         return NSPredicate(format: "workspace.id == %@ AND name != %@ AND markForDelete == %hdd", wsId, "", false)
-        //return NSPredicate(format: "workspace.id == %@ AND name != %@", wsId, "")
     }
     
     func initData() {
@@ -192,7 +191,6 @@ class ProjectListViewController: APITesterProViewController {
     
     @objc func addBtnDidTap(_ sender: Any) {
         Log.debug("add button did tap")
-        //self.viewAlert(vc: self, storyboard: self.storyboard!)
         self.viewPopup()
     }
     
@@ -318,11 +316,7 @@ extension ProjectListViewController: UITableViewDelegate, UITableViewDataSource 
         } else {
             cell.descLbl.isHidden = false
         }
-        if indexPath.row == self.frc.numberOfRows(in: indexPath.section) - 1 {
-            cell.displayBottomBorder()
-        } else {
-            cell.hideBottomBorder()
-        }
+        cell.displayBottomBorder()
         return cell
     }
     
