@@ -757,6 +757,62 @@ extension ResponseTableViewController {
         return nil
     }
     
+    func getMaxHeightForText(keyText: String, valueText: String, viewWidth: Double) -> Double {
+        let text = valueText.count >= keyText.count ? valueText : keyText
+        return max(UI.getTextHeight(text, width: viewWidth, font: UIFont.systemFont(ofSize: 14)) + 28, 55)  // For texts greater than the default 55, 28 padding is required for the cell
+    }
+    
+    /// Computes the height for the cell based on the nested table's content height. Each row consists of two column key value text. The sum of max height for half the width of the table view is calculated for each row giving the total height of the table view.
+    func cellViewHeight(_ data: ResponseData, type: InfoCellId) -> Double {
+        var height = 0.0
+        let width = self.tableView.frame.width / 2 - 32
+        switch (type) {
+        case .headersViewCell:
+            let len = data.getResponseHeaderKeys().count
+            for i in 0..<len {
+                let key = data.getResponseHeaderKeys()[i]
+                let val = data.getResponseHeaders()[key] ?? ""
+                let h = self.getMaxHeightForText(keyText: key, valueText: val, viewWidth: width)
+                height += h
+            }
+            Log.debug("cellViewHeight: header cell height: \(height)")
+        case .cookiesViewCell:
+            let len = data.cookies.count
+            for i in 0..<len {
+                let key = data.cookies[i].name
+                let val = data.cookies[i].value
+                let h = self.getMaxHeightForText(keyText: key, valueText: val, viewWidth: width)
+                height += h
+            }
+            Log.debug("cellViewHeight: cookies cell height: \(height)")
+        case .metricsViewCell:
+            let len = data.getMetricsKeys().count
+            for i in 0..<len {
+                let key = data.getMetricsKeys()[i]
+                let val = data.getMetricsMap()[key] ?? ""
+                if !val.isEmpty {
+                    let h = self.getMaxHeightForText(keyText: key, valueText: val, viewWidth: width)
+                    height += h
+                }
+            }
+            Log.debug("cellViewHeight: metrics cell height: \(height)")
+        case .detailsViewCell:
+            let len = data.getMetricsKeys().count
+            for i in 0..<len {
+                let key = data.getDetailsKeys()[i]
+                let val = data.getDetailsMap()[key] ?? ""
+                if !val.isEmpty {
+                    let h = self.getMaxHeightForText(keyText: key, valueText: val, viewWidth: width)
+                    height += h
+                }
+            }
+            Log.debug("cellViewHeight: details cell height: \(height)")
+        default:
+            return UITableView.automaticDimension
+        }
+        return height
+    }
+    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:  // info section
@@ -780,7 +836,7 @@ extension ResponseTableViewController {
                         self.headersViewCell.tableView.invalidateIntrinsicContentSize()
                         self.headersViewCell.invalidateIntrinsicContentSize()
                         self.headersViewCell.tableView.reloadData()
-                        let h = max(self.headersViewCell.tableView.height, self.headerCellHeight)
+                        let h = max(self.cellViewHeight(data, type: .headersViewCell), self.headerCellHeight)
                         return h == 0 ? UITableView.automaticDimension : h
                     case .cookiesTitleCell:
                         if data.cookies.isEmpty { return 0 }
@@ -790,7 +846,7 @@ extension ResponseTableViewController {
                         self.cookiesViewCell.tableView.invalidateIntrinsicContentSize()
                         self.cookiesViewCell.invalidateIntrinsicContentSize()
                         self.cookiesViewCell.tableView.reloadData()
-                        let h = max(self.cookiesViewCell.tableView.height, self.cookieCellHeight)
+                        let h = max(self.cellViewHeight(data, type: .cookiesViewCell), self.cookieCellHeight)
                         return h == 0 ? UITableView.automaticDimension : h
                     case .metricsTitleCell:
                         return 44
@@ -798,7 +854,7 @@ extension ResponseTableViewController {
                         self.metricsViewCell.tableView.invalidateIntrinsicContentSize()
                         self.metricsViewCell.invalidateIntrinsicContentSize()
                         self.metricsViewCell.tableView.reloadData()
-                        let h = max(self.metricsViewCell.tableView.height, self.metricsCellHeight)
+                        let h = max(self.cellViewHeight(data, type: .metricsViewCell), self.metricsCellHeight)
                         return h == 0 ? UITableView.automaticDimension : h
                     case .detailsTitleCell:
                         return 44
@@ -806,7 +862,7 @@ extension ResponseTableViewController {
                         self.detailsViewCell.tableView.invalidateIntrinsicContentSize()
                         self.detailsViewCell.invalidateIntrinsicContentSize()
                         self.detailsViewCell.tableView.reloadData()
-                        let h = max(self.detailsViewCell.tableView.height, self.detailsCellHeight)
+                        let h = max(self.cellViewHeight(data, type: .detailsViewCell), self.detailsCellHeight)
                         return h == 0 ? UITableView.automaticDimension : h
                     case .spacerAfterDetailsCell:
                         return 24
