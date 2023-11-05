@@ -420,7 +420,6 @@ final class ResponseKVCell: UITableViewCell, UITableViewDataSource, UITableViewD
         if self.tableType == .header {
             key = self.headerKeys[row]
             val = self.headers[key] ?? ""
-            Log.debug("heightForRow header key: \(key) - val: \(val)")
         } else if self.tableType == .cookies {
             if let cookie = self.data?.cookies[row] {
                 key = cookie.name
@@ -784,7 +783,6 @@ extension ResponseTableViewController {
                         let h = max(self.headersViewCell.tableView.height, self.headerCellHeight)
                         return h == 0 ? UITableView.automaticDimension : h
                     case .cookiesTitleCell:
-                        Log.debug("cookies: \(String(describing: self.data?.cookies))")
                         if data.cookies.isEmpty { return 0 }
                         return 44
                     case .cookiesViewCell:
