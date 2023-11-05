@@ -21,7 +21,7 @@ struct Zone {
     var created: Int64 = Date().currentTimeNanos()
     var modified: Int64 = Date().currentTimeNanos()
     var changeTag: Int64 = Date().currentTimeNanos()
-    var version: Int64 = 0
+    var version: Int64 = CoreDataService.modelVersion
     
     func updateCKRecord(_ record: CKRecord) {
         record["id"] = self.id as CKRecordValue
