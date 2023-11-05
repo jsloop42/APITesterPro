@@ -171,28 +171,32 @@ class SettingsTableViewController: APITesterProTableViewController {
     func importWorkspace(_ url: URL) {
         DispatchQueue.main.async { self.showLoadingIndicator() }
         let fm = EAFileManager(url: url)
-        fm.openFile(for: FileIOMode.read)
-        fm.readToEOF { result in
-            do {
-                switch result {
-                case .success(let data):
-                    if let dict = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] {
-                        DispatchQueue.main.async {
-                            if let _ = EWorkspace.fromDictionary(dict) {
-                                self.hideLoadingIndicator()
-                                UI.viewToast("Workspace imported successfully", hideSec: 2, vc: self, completion: nil)
+        if EAFileManager.startAccessingSecurityScopedResource(url: url) {
+            fm.openFile(for: FileIOMode.read)
+            fm.readToEOF { result in
+                do {
+                    switch result {
+                    case .success(let data):
+                        if let dict = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] {
+                            DispatchQueue.main.async {
+                                if let _ = EWorkspace.fromDictionary(dict) {
+                                    self.hideLoadingIndicator()
+                                    UI.viewToast("Workspace imported successfully", hideSec: 2, vc: self, completion: nil)
+                                }
                             }
                         }
+                    case .failure(let err):
+                        DispatchQueue.main.async { self.hideLoadingIndicator() }
+                        Log.error(err)
                     }
-                case .failure(let err):
+                    fm.close()
+                    EAFileManager.stopAccessingSecurityScopedResource(url: url)
+                } catch let err {
+                    fm.close()
+                    EAFileManager.stopAccessingSecurityScopedResource(url: url)
                     DispatchQueue.main.async { self.hideLoadingIndicator() }
                     Log.error(err)
                 }
-                fm.close()
-            } catch let err {
-                fm.close()
-                DispatchQueue.main.async { self.hideLoadingIndicator() }
-                Log.error(err)
             }
         }
     }

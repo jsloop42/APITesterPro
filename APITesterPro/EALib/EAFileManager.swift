@@ -115,6 +115,17 @@ public final class EAFileManager: NSObject {
         return true
     }
     
+    /// When a user selects a file from Files app using document picker initiated from the app, the system sets permission to access it. The document picker returns a security-scoped URL. This URL can be saved as a bookmark and later resolve it back
+    /// into a security scoped URL. To begin working with security-scoped URLs this method needs to be called. Once done it needs to be paired with a `stopAccessingSecurityScopedResource()` call.
+    public static func startAccessingSecurityScopedResource(url: URL) -> Bool {
+        return url.startAccessingSecurityScopedResource()
+    }
+    
+    /// Invoke this method once a security scoped URL is no longer needed
+    public static func stopAccessingSecurityScopedResource(url: URL) {
+        return url.stopAccessingSecurityScopedResource()
+    }
+    
     /// Open an existing file with the given mode, which can be for reading, writing or for appending.
     public func openFile(for mode: FileIOMode) {
         switch mode {
