@@ -1360,7 +1360,7 @@ extension CKRecord {
     }
     
     func created() -> Int64 {
-        return self["created"] ?? 0
+        return self["created"] ?? 0  // 0 should not happen as model version is set for all objects
     }
     
     func modified() -> Int64 {

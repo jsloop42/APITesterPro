@@ -134,6 +134,7 @@ class CoreDataService {
     let defaultWorkspaceName = "Default workspace"
     let defaultWorkspaceDesc = "The default workspace"
     let cloudKitContainerId = Const.cloudKitContainerID
+    static let modelVersion: Int64 = 1
     
     init() {
         self.bootstrap()
@@ -1528,7 +1529,7 @@ class CoreDataService {
             ws.created = x == nil ? ts : x!.created
             ws.modified = ts
             ws.changeTag = ts
-            ws.version = x == nil ? 0 : x!.version
+            ws.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = ws
         }
         return x
@@ -1588,7 +1589,7 @@ class CoreDataService {
             proj.created = x == nil ? ts : x!.created
             proj.modified = ts
             proj.changeTag = ts
-            proj.version = x == nil ? 0 : x!.version
+            proj.version = x == nil ? CoreDataService.modelVersion : x!.version
             _ = self.genDefaultRequestMethods(proj, ctx: moc)
             ws?.addToProjects(proj)
             ws?.isActive = true
@@ -1620,7 +1621,7 @@ class CoreDataService {
             req.created = x == nil ? ts : x!.created
             req.modified = ts
             req.changeTag = ts
-            req.version = x == nil ? 0 : x!.version
+            req.version = x == nil ? CoreDataService.modelVersion : x!.version
             project?.addToRequests(req)
             x = req
         }
@@ -1649,7 +1650,7 @@ class CoreDataService {
             data.created = x == nil ? ts : x!.created
             data.modified = ts
             data.changeTag = ts
-            data.version = x == nil ? 0 : x!.version
+            data.version = x == nil ? CoreDataService.modelVersion : x!.version
             data.fieldFormat = fieldFormat.rawValue.toInt64()
             data.type = type.rawValue.toInt64()
             x = data
@@ -1682,7 +1683,7 @@ class CoreDataService {
             data.created = x == nil ? ts : x!.created
             data.modified = ts
             data.changeTag = ts
-            data.version = x == nil ? 0 : x!.version
+            data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
         return x
@@ -1707,7 +1708,7 @@ class CoreDataService {
             data.created = x == nil ? ts : x!.created
             data.modified = ts
             data.changeTag = ts
-            data.version = x == nil ? 0 : x!.version
+            data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
         return x
@@ -1737,7 +1738,7 @@ class CoreDataService {
             image.created = x == nil ? ts : x!.created
             image.modified = ts
             image.changeTag = ts
-            image.version = x == nil ? 0 : x!.version
+            image.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = image
         }
         return x
@@ -1764,7 +1765,7 @@ class CoreDataService {
             file.name = name
             file.path = path
             file.type = type.rawValue.toInt64()
-            file.version = x == nil ? 0 : x!.version
+            file.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = file
         }
         return x
@@ -1794,7 +1795,7 @@ class CoreDataService {
             data.created = x == nil ? ts : x!.created
             data.modified = ts
             data.changeTag = ts
-            data.version = x == nil ? 0 : x!.version
+            data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
         return x
@@ -1812,7 +1813,7 @@ class CoreDataService {
             data.created = x == nil ? ts : x!.created
             data.modified = ts
             data.changeTag = ts
-            data.version = x == nil ? 0 : x!.version
+            data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
         return x
@@ -1831,7 +1832,7 @@ class CoreDataService {
             data.created = x == nil ? ts: x!.created
             data.modified = ts
             data.changeTag = ts
-            data.version = x == nil ? 0 : x!.version
+            data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
         return x
@@ -1851,7 +1852,7 @@ class CoreDataService {
             data.created = x == nil ? ts: x!.created
             data.modified = ts
             data.changeTag = ts
-            data.version = x == nil ? 0 : x!.version
+            data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
         return x
@@ -1869,7 +1870,7 @@ class CoreDataService {
             data.created = x == nil ? ts: x!.created
             data.modified = ts
             data.changeTag = ts
-            data.version = x == nil ? 0 : x!.version
+            data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
         return x
