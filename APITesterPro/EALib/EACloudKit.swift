@@ -1360,7 +1360,7 @@ extension CKRecord {
     }
     
     func created() -> Int64 {
-        return self["created"] ?? 0  // 0 should not happen as model version is set for all objects
+        return self["created"] ?? 0
     }
     
     func modified() -> Int64 {
@@ -1368,7 +1368,7 @@ extension CKRecord {
     }
     
     func version() -> Int64 {
-        return self["version"] ?? 0
+        return self["version"] ?? 0  // 0 should not happen as model version is set for all objects
     }
     
     func isSyncEnabled() -> Bool {
@@ -1388,7 +1388,11 @@ extension CKRecord {
     }
     
     func zoneID() -> CKRecordZone.ID {
-        self.recordID.zoneID
+        return self.recordID.zoneID
+    }
+    
+    func isDisabled () -> Bool {
+        return self["isDisabled"] ?? false
     }
 }
 

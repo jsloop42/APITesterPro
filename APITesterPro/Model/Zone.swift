@@ -18,6 +18,9 @@ struct Zone {
     var name: String
     var desc: String
     var isSyncEnabled: Bool
+    /// If a workspace is deleted if we delete the zone record in the default zone, we cannot propagate the delete change to other devices on sync. So we instead set this flag and keep the zone record.
+    /// The zone will be deleted on deleting the workspace. If this flag is set on sync, all local data can be deleted.
+    var isDisabled: Bool
     var created: Int64 = Date().currentTimeNanos()
     var modified: Int64 = Date().currentTimeNanos()
     var changeTag: Int64 = Date().currentTimeNanos()
@@ -31,6 +34,7 @@ struct Zone {
         record["name"] = self.name as CKRecordValue
         record["desc"] = self.desc as CKRecordValue
         record["isSyncEnabled"] = self.isSyncEnabled as CKRecordValue
+        record["isDisabled"] = self.isDisabled as CKRecordValue
         record["version"] = self.version as CKRecordValue
     }
     
@@ -42,6 +46,7 @@ struct Zone {
         if let x = record["name"] as? String { self.name = x }
         if let x = record["desc"] as? String { self.desc = x }
         if let x = record["isSyncEnabled"] as? Bool { self.isSyncEnabled = x }
+        if let x = record["isDisabled"] as? Bool { self.isDisabled = x }
         if let x = record["version"] as? Int64 { self.version = x }
     }
 }

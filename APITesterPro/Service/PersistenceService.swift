@@ -1120,6 +1120,7 @@ class PersistenceService {
     
     func updateWorkspaceFromCloud(_ record: CKRecord) {
         let wsId = record.id()
+        let isDisabled = record.isDisabled()
         let ctx = self.syncFromCloudCtx!
         ctx.performAndWait {
             var aws = self.localdb.getWorkspace(id: wsId, ctx: ctx)
@@ -1133,6 +1134,10 @@ class PersistenceService {
                 ws.updateFromCKRecord(record)
                 ws.isSynced = true
                 ws.isActive = true
+                if !ws.markForDelete && isDisabled {
+                    ws.markForDelete = true
+                    self.deleteDataMarkedForDelete(ws, isDeleteFromCloud: false, ctx: ctx)
+                }
                 self.localdb.saveMainContext()
                 Log.debug("Workspace synced")
                 self.nc.post(name: .workspaceDidSync, object: self)
@@ -1392,6 +1397,32 @@ class PersistenceService {
     
     // MARK: - Cloud record deleted
     
+    /// Deletes a zone from cloud when a workspace is deleted locally. This must be performed only after the zone record is deleted from the default zone.
+    ///
+    /// - Parameter id: The workspace Id
+    func deleteZoneFromCloud(_ wsId: String) {
+        let zoneID = EACloudKit.shared.zoneID(workspaceId: wsId)
+        self.ck.deleteZone(recordZoneIds: [zoneID]) { result in
+            switch (result) {
+            case .success(_):
+                Log.debug("zone deleted: \(zoneID)")
+            case .failure(let err):
+                Log.error("Error deleting zone: \(err)")
+            }
+        }
+    }
+    
+    /// Delete the zone record corresponding to the workspace when a workspace is deleted. After this succeeds, the zone itself needs to be deleted.
+    func disableZoneRecordFromDefaultZone(_ wsId: String) {
+        let ctx = self.syncToCloudCtx!
+        ctx.perform {
+            if let ws = self.localdb.getWorkspace(id: wsId, includeMarkForDelete: true, ctx: ctx) {
+                self.saveZoneToCloud(ws)
+            }
+        }
+        self.deleteZoneFromCloud(wsId)
+    }
+    
     func workspaceDidDeleteFromCloud(_ id: String) {
         let ctx = self.syncFromCloudCtx!
         ctx.perform {
@@ -1514,8 +1545,9 @@ class PersistenceService {
     /// Delete the record and nested records. Here if a parent entity is marked for delete, the child entites are not marked, but we need to delete them as well.
     /// - Parameters:
     ///   - ws: The workspace.
+    ///   - isDeleteFromCloud: When a workspace is deleted from another device, the zone record is marked as disabled in the default zone. When such zones get synced we need to delete local workspace and associated data. And do not want to make sync the delete it to cloud again.
     ///   - ctx: A managed object context.
-    func deleteDataMarkedForDelete(_ ws: EWorkspace, ctx: NSManagedObjectContext? = nil) {
+    func deleteDataMarkedForDelete(_ ws: EWorkspace, isDeleteFromCloud: Bool = true, ctx: NSManagedObjectContext? = nil) {
         Log.debug("delete data marked for delete - ws")
         let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
         ctx.performAndWait {
@@ -1523,17 +1555,19 @@ class PersistenceService {
             let xs = self.localdb.getProjects(wsId: ws.getId(), includeMarkForDelete: true, ctx: ctx)
             xs.forEach { proj in
                 proj.markForDelete = true
-                self.deleteDataMarkedForDelete(proj, ctx: ctx)
+                self.deleteDataMarkedForDelete(proj, isDeleteFromCloud: isDeleteFromCloud, ctx: ctx)
             }
             let envs = self.localdb.getEnvs(wsId: ws.getId(), includeMarkForDelete: nil, ctx: ctx)
             envs.forEach { env in
                 env.markForDelete = true
-                self.deleteDataMarkedForDelete(env, ctx: ctx)
+                self.deleteDataMarkedForDelete(env, isDeleteFromCloud: isDeleteFromCloud, ctx: ctx)
             }
             ws.markForDelete = true
             acc.append(ws)
             self.localdb.saveMainContext()
-            self.deleteEntitesFromCloud(acc, ctx: ctx)
+            if isDeleteFromCloud {
+                self.deleteEntitesFromCloud(acc, ctx: ctx)
+            }
         }
         //if ws.isInDefaultMode {
 //            ws.markForDelete = false
@@ -1543,15 +1577,27 @@ class PersistenceService {
       //  }
     }
     
-    func deleteDataMarkedForDelete(_ env: EEnv, ctx: NSManagedObjectContext? = nil) {
+    func deleteDataMarkedForDelete(_ env: EEnv, isDeleteFromCloud: Bool = true, ctx: NSManagedObjectContext? = nil) {
         Log.debug("delete data marked for delete - env")
         let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
         ctx.performAndWait {
             let envId = env.getId()
             let xs = self.localdb.getEnvVars(envId: envId, ctx: ctx)
-            self.deleteEntitesFromCloud(xs, ctx: ctx)
+            if isDeleteFromCloud {
+                self.deleteEntitesFromCloud(xs, ctx: ctx)
+            } else {
+                xs.forEach { envVar in
+                    self.localdb.deleteEnvVar(id: envVar.getId(), ctx: ctx)
+                }
+            }
         }
-        self.deleteEntitesFromCloud([env], ctx: ctx)
+        if isDeleteFromCloud {
+            self.deleteEntitesFromCloud([env], ctx: ctx)
+        } else {
+            ctx.perform {
+                self.localdb.deleteEnv(id: env.getId(), ctx: ctx)
+            }
+        }
     }
     
     func deleteDataMarkedForDelete(_ envVar: EEnvVar, ctx: NSManagedObjectContext? = nil) {
@@ -1560,17 +1606,23 @@ class PersistenceService {
         self.deleteEntitesFromCloud([envVar], ctx: ctx)
     }
         
-    func deleteDataMarkedForDelete(_ proj: EProject, ctx: NSManagedObjectContext? = nil) {
+    func deleteDataMarkedForDelete(_ proj: EProject, isDeleteFromCloud: Bool = true, ctx: NSManagedObjectContext? = nil) {
         Log.debug("delete data marked for delete - proj")
         let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
         ctx.performAndWait {
             let xs = self.localdb.getRequests(projectId: proj.getId(), includeMarkForDelete: true, ctx: ctx)
-            xs.forEach { req in self.deleteDataMarkedForDelete(req, ctx: ctx) }
+            xs.forEach { req in self.deleteDataMarkedForDelete(req, isDeleteFromCloud: isDeleteFromCloud, ctx: ctx) }
         }
-        self.deleteEntitesFromCloud([proj], ctx: ctx)
+        if isDeleteFromCloud {
+            self.deleteEntitesFromCloud([proj], ctx: ctx)
+        } else {
+            ctx.perform {
+                self.localdb.deleteProject(id: proj.getId(), ctx: ctx)
+            }
+        }
     }
     
-    func deleteDataMarkedForDelete(_ request: ERequest, ctx: NSManagedObjectContext? = nil) {
+    func deleteDataMarkedForDelete(_ request: ERequest, isDeleteFromCloud: Bool = true, ctx: NSManagedObjectContext? = nil) {
         Log.debug("delete data marked for delete - req")
         let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
         ctx.performAndWait {
@@ -1578,25 +1630,112 @@ class PersistenceService {
             if request.markForDelete {
                 var acc: [Entity] = []
                 acc.append(request)
-                if let xs = request.headers?.allObjects as? [ERequestData] { acc.append(contentsOf: xs) }
-                if let xs = request.params?.allObjects as? [ERequestData] { acc.append(contentsOf: xs) }
+                if let xs = request.headers?.allObjects as? [ERequestData] {
+                    if isDeleteFromCloud {
+                        acc.append(contentsOf: xs)
+                    } else {
+                        ctx.perform {
+                            xs.forEach { reqData in
+                                self.localdb.deleteRequestData(id: reqData.getId(), ctx: ctx)
+                            }
+                        }
+                    }
+                }
+                if let xs = request.params?.allObjects as? [ERequestData] {
+                    if isDeleteFromCloud {
+                        acc.append(contentsOf: xs)
+                    } else {
+                        ctx.perform {
+                            xs.forEach { reqData in
+                                self.localdb.deleteRequestData(id: reqData.getId(), ctx: ctx)
+                            }
+                        }
+                    }
+                }
                 if let body = request.body {
                     if let xs = body.form?.allObjects as? [ERequestData] {
                         xs.forEach { reqData in
-                            if let files = reqData.files?.allObjects as? [EFile] { acc.append(contentsOf: files) }
-                            if let image = reqData.image { acc.append(image) }
-                            acc.append(reqData)
+                            if let files = reqData.files?.allObjects as? [EFile] {
+                                if isDeleteFromCloud {
+                                    acc.append(contentsOf: files)
+                                } else {
+                                    ctx.perform {
+                                        files.forEach { file in
+                                            self.localdb.deleteFileData(id: file.getId(), ctx: ctx)
+                                        }
+                                    }
+                                }
+                            }
+                            if let image = reqData.image {
+                                if isDeleteFromCloud {
+                                    acc.append(image)
+                                } else {
+                                    ctx.perform {
+                                        self.localdb.deleteImageData(id: image.getId(), ctx: ctx)
+                                    }
+                                }
+                                
+                            }
+                            if isDeleteFromCloud {
+                                acc.append(reqData)
+                            } else {
+                                ctx.perform {
+                                    self.localdb.deleteRequestData(id: reqData.getId(), ctx: ctx)
+                                }
+                            }
                         }
                     }
-                    if let xs = body.multipart?.allObjects as? [ERequestData] { acc.append(contentsOf: xs) }
-                    if let bin = body.binary {
-                        if let xs = bin.files?.allObjects as? [EFile] { acc.append(contentsOf: xs) }
-                        if let image = bin.image { acc.append(image) }
-                        acc.append(bin)
+                    if let xs = body.multipart?.allObjects as? [ERequestData] {
+                        if isDeleteFromCloud {
+                            acc.append(contentsOf: xs)
+                        } else {
+                            ctx.perform {
+                                xs.forEach { reqData in
+                                    self.localdb.deleteRequestData(id: reqData.getId(), ctx: ctx)
+                                }
+                            }
+                        }
                     }
-                    acc.append(body)
+                    if let bin = body.binary {
+                        if let xs = bin.files?.allObjects as? [EFile] {
+                            if isDeleteFromCloud {
+                                acc.append(contentsOf: xs)
+                            } else {
+                                ctx.perform {
+                                    xs.forEach { file in
+                                        self.localdb.deleteFileData(id: file.getId(), ctx: ctx)
+                                    }
+                                }
+                            }
+                        }
+                        if let image = bin.image {
+                            if isDeleteFromCloud {
+                                acc.append(image)
+                            } else {
+                                ctx.perform {
+                                    self.localdb.deleteImageData(id: image.getId(), ctx: ctx)
+                                }
+                            }
+                        }
+                        if isDeleteFromCloud {
+                            acc.append(bin)
+                        } else {
+                            ctx.perform {
+                                self.localdb.deleteRequestData(id: bin.getId(), ctx: ctx)
+                            }
+                        }
+                    }
+                    if isDeleteFromCloud {
+                        acc.append(body)
+                    } else {
+                        ctx.perform {
+                            self.localdb.deleteRequestBodyData(id: body.getId(), ctx: ctx)
+                        }
+                    }
                 }
-                self.deleteEntitesFromCloud(acc, ctx: ctx)
+                if isDeleteFromCloud {
+                    self.deleteEntitesFromCloud(acc, ctx: ctx)
+                }
             } else {
                 self.deleteRequestDataMarkedForDelete(reqId: request.getId(), wsId: ws.getId(), ctx: ctx)
                 self.deleteRequestBodyDataMarkedForDelete(request, ctx: ctx)
@@ -1605,7 +1744,7 @@ class PersistenceService {
         self.deleteRequestMethodDataMarkedForDelete(request, ctx: ctx)
     }
     
-    func deleteRequestDataMarkedForDelete(reqId: String, wsId: String, ctx: NSManagedObjectContext? = nil) {
+    func deleteRequestDataMarkedForDelete(reqId: String, wsId: String, isDeleteFromCloud: Bool = true, ctx: NSManagedObjectContext? = nil) {
         Log.debug("delete request data marked for delete: reqId: \(reqId)")
         let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
         ctx.performAndWait {
@@ -1617,48 +1756,80 @@ class PersistenceService {
             xs.append(contentsOf: self.localdb.getRequestDataMarkedForDelete(reqId: reqId, type: .binary, ctx: ctx))
             xs.forEach { reqData in
                 files.append(contentsOf: self.localdb.getFilesMarkedForDelete(reqDataId: reqData.getId(), ctx: ctx))
-                self.deleteDataMarkedForDelete(reqData.image, wsId: wsId)
+                self.deleteDataMarkedForDelete(reqData.image, wsId: wsId, isDeleteFromCloud: isDeleteFromCloud)
+                if !isDeleteFromCloud {
+                    self.localdb.deleteRequestData(id: reqData.getId(), ctx: ctx)
+                }
             }
-            self.deleteEntitesFromCloud(files, ctx: ctx)
-            self.deleteEntitesFromCloud(xs, ctx: ctx)
+            if isDeleteFromCloud {
+                self.deleteEntitesFromCloud(files, ctx: ctx)
+                self.deleteEntitesFromCloud(xs, ctx: ctx)
+            }
         }
     }
     
-    func deleteDataMarkedForDelete(_ files: [EFile], wsId: String, ctx: NSManagedObjectContext? = nil) {
+    func deleteDataMarkedForDelete(_ files: [EFile], wsId: String, isDeleteFromCloud: Bool = true, ctx: NSManagedObjectContext? = nil) {
         let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
-        self.deleteEntitesFromCloud(files, ctx: ctx)
+        if isDeleteFromCloud {
+            self.deleteEntitesFromCloud(files, ctx: ctx)
+        } else {
+            ctx.perform {
+                files.forEach { file in
+                    self.localdb.deleteFileData(id: file.getId(), ctx: ctx)
+                }
+            }
+        }
     }
     
-    func deleteDataMarkedForDelete(_ image: EImage?, wsId: String, ctx: NSManagedObjectContext? = nil) {
+    func deleteDataMarkedForDelete(_ image: EImage?, wsId: String, isDeleteFromCloud: Bool = true, ctx: NSManagedObjectContext? = nil) {
         let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
         ctx.performAndWait {
             guard let image = image, image.markForDelete else { return }
-            self.deleteEntitesFromCloud([image], ctx: ctx)
-        }
-    }
-    
-    func deleteDataMarkedForDelete(history: EHistory?, wsId: String, ctx: NSManagedObjectContext? = nil) {
-        let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
-        ctx.performAndWait {
-            guard let history = history, history.markForDelete else { return }
-            self.deleteEntitesFromCloud([history], ctx: ctx)
-        }
-    }
-    
-    func deleteRequestBodyDataMarkedForDelete(_ req: ERequest, ctx: NSManagedObjectContext? = nil) {
-        let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
-        ctx.performAndWait {
-            if let body = req.body, body.markForDelete {
-                self.deleteEntitesFromCloud([body], ctx: ctx)
+            if isDeleteFromCloud {
+                self.deleteEntitesFromCloud([image], ctx: ctx)
+            } else {
+                self.localdb.deleteImageData(id: image.getId(), ctx: ctx)
             }
         }
     }
     
-    func deleteRequestMethodDataMarkedForDelete(_ req: ERequest, ctx: NSManagedObjectContext? = nil) {
+    func deleteDataMarkedForDelete(history: EHistory?, wsId: String, isDeleteFromCloud: Bool = true, ctx: NSManagedObjectContext? = nil) {
+        let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
+        ctx.performAndWait {
+            guard let history = history, history.markForDelete else { return }
+            if isDeleteFromCloud {
+                self.deleteEntitesFromCloud([history], ctx: ctx)
+            } else {
+                self.localdb.deleteHistory(id: history.getId(), ctx: ctx)
+            }
+        }
+    }
+    
+    func deleteRequestBodyDataMarkedForDelete(_ req: ERequest, isDeleteFromCloud: Bool = true, ctx: NSManagedObjectContext? = nil) {
+        let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
+        ctx.performAndWait {
+            if let body = req.body, body.markForDelete {
+                if isDeleteFromCloud {
+                    self.deleteEntitesFromCloud([body], ctx: ctx)
+                } else {
+                    self.localdb.deleteRequest(id: req.getId(), ctx: ctx)
+                }
+            }
+        }
+    }
+    
+    func deleteRequestMethodDataMarkedForDelete(_ req: ERequest, isDeleteFromCloud: Bool = true, ctx: NSManagedObjectContext? = nil) {
         let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
         ctx.performAndWait {
             if let proj = req.project {
-                self.deleteEntitesFromCloud(self.localdb.getRequestMethodDataMarkedForDelete(projId: proj.getId(), ctx: self.localdb.getChildMOC()), ctx: ctx)
+                let reqMethods = self.localdb.getRequestMethodDataMarkedForDelete(projId: proj.getId(), ctx: self.localdb.getChildMOC())
+                if isDeleteFromCloud {
+                    self.deleteEntitesFromCloud(reqMethods, ctx: ctx)
+                } else {
+                    reqMethods.forEach { method in
+                        self.localdb.deleteRequestMethodData(id: method.getId(), ctx: ctx)
+                    }
+                }
             }
         }
     }
@@ -1687,6 +1858,10 @@ class PersistenceService {
                     var count = 0
                     let len = deleted.count
                     deleted.forEach { recordID in
+                        let zoneName = recordID.zoneID.zoneName
+                        if RecordType.isWorkspace(id: zoneName) {
+                            self?.disableZoneRecordFromDefaultZone(zoneName)
+                        }
                         if let idx = (recordIDs.firstIndex { oRecordID -> Bool in oRecordID == recordID }) {
                             let elem = xs[idx]
                             xs.remove(at: idx)
@@ -2012,7 +2187,7 @@ class PersistenceService {
         var wsId: String!
         ws.managedObjectContext?.performAndWait {
             wsId = ws.getId()
-            let zone = Zone(id: wsId, name: ws.getName(), desc: ws.desc ?? "", isSyncEnabled: ws.isSyncEnabled, created: ws.created, modified: ws.modified, changeTag: ws.changeTag, version: ws.version)
+            let zone = Zone(id: wsId, name: ws.getName(), desc: ws.desc ?? "", isSyncEnabled: ws.isSyncEnabled, isDisabled: ws.markForDelete, created: ws.created, modified: ws.modified, changeTag: ws.changeTag, version: ws.version)
             let recordID = self.ck.recordID(entityId: wsId, zoneID: self.ck.defaultZoneID())
             ckzn = self.ck.createRecord(recordID: recordID, recordType: RecordType.zone.rawValue)
             zone.updateCKRecord(ckzn)
