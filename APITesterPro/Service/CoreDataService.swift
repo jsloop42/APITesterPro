@@ -93,6 +93,10 @@ public enum RecordType: String, Hashable {
         return RecordType(rawValue: type)
     }
     
+    static func isWorkspace(id: String) -> Bool {
+        return RecordType.from(id: id) == RecordType.workspace
+    }
+    
     /// All data record type
     static let allCases: [RecordType] = [RecordType.workspace, RecordType.project, RecordType.request, RecordType.requestBodyData, RecordType.requestData,
                                          RecordType.requestMethodData, RecordType.file, RecordType.image, RecordType.env, RecordType.envVar]
