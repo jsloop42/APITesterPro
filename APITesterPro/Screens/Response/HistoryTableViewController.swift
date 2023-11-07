@@ -14,7 +14,6 @@ class HistoryCell: UITableViewCell {
     @IBOutlet weak var methodLabel: UILabel!
     @IBOutlet weak var pathLabel: UILabel!
     @IBOutlet weak var statusCodeLabel: UILabel!
-    @IBOutlet weak var pathScrollView: UIScrollView!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var bottomBorder: UIView!
     
@@ -179,7 +178,6 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         cell.statusCodeLabel.text = history.statusCode > 0 ? "\(history.statusCode)" : ""
         cell.statusCodeLabel.textColor = self.app.getStatusCodeViewColor(history.statusCode.toInt())
         cell.dateLabel.text = Date(nanos: history.created).fmt_dd_MMM_YYYY_HH_mm_ss
-        cell.contentView.addGestureRecognizer(cell.pathScrollView.panGestureRecognizer)
         let len = isToday ? self.todayFrc.numberOfRows(in: 0) : self.pastFrc.numberOfRows(in: 0)
         if row == len - 1 {
             cell.displayBottomBorder()
@@ -203,7 +201,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 75
+        return UITableView.automaticDimension
     }
     
     func hasElements(inSection section: Int) -> Bool {
