@@ -96,10 +96,8 @@ class CloudKitTests: XCTestCase {
         ws.updateCKRecord(ckws)
         let ckproj = self.ck.createRecord(recordID: projRecordID, recordType: "Project")
         proj.updateCKRecord(ckproj, workspace: ckws)
-        EWorkspace.addProjectReference(to: ckws, project: ckproj)  // add project reference to workspace
         let ckreq = self.ck.createRecord(recordID: reqRecordID, recordType: "Request")
         req.updateCKRecord(ckreq, project: ckproj)
-        EProject.addRequestReference(to: ckproj, request: ckreq)  // add req reference to project
         self.ck.saveRecords([ckws, ckproj, ckreq]) { result in
             if case .failure(_) = result { XCTFail("Error saving record") }
             self.ck.deleteRecords(recordIDs: [wsRecordID, projRecordID, reqRecordID]) { result in

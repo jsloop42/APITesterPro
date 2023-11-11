@@ -11,6 +11,8 @@ import CloudKit
 import CoreData
 
 public class EWorkspace: NSManagedObject, Entity {
+    static let db: CoreDataService = CoreDataService.shared
+    static let ck: EACloudKit = EACloudKit.shared
     public var recordType: String { return "Workspace" }
     
     public func getId() -> String {
@@ -65,6 +67,58 @@ public class EWorkspace: NSManagedObject, Entity {
         //if self.modified < AppState.editRequestSaveTs { self.modified = AppState.editRequestSaveTs }
     }
     
+    static func getWorkspace(_ record: CKRecord, ctx: NSManagedObjectContext) -> EWorkspace? {
+        if let ref = record["workspace"] as? CKRecord.Reference {
+            return self.db.getWorkspace(id: EACloudKit.shared.entityID(recordID: ref.recordID), ctx: ctx)
+        }
+        return nil
+    }
+    
+    public static func fromDictionary(_ dict: [String: Any]) -> EWorkspace? {
+        guard let id = dict["id"] as? String else { return nil }
+        let ctx = self.db.mainMOC
+        guard let ws = self.db.createWorkspace(id: id, name: "", desc: "", isSyncEnabled: false, ctx: ctx) else { return nil }
+        if let x = dict["created"] as? Int64 { ws.created = x }
+        if let x = dict["modified"] as? Int64 { ws.modified = x }
+        if let x = dict["changeTag"] as? Int64 { ws.changeTag = x }
+        if let x = dict["isActive"] as? Bool { ws.isActive = x }
+        if let x = dict["isSyncEnabled"] as? Bool { ws.isSyncEnabled = x }
+        if let x = dict["name"] as? String { ws.name = x }
+        if let x = dict["desc"] as? String { ws.desc = x }
+        if let x = dict["saveResponse"] as? Bool { ws.saveResponse = x }
+        if let x = dict["version"] as? Int64 { ws.version = x }
+        self.db.saveMainContext()
+        if let xs = dict["projects"] as? [[String: Any]] {
+            xs.forEach { x in
+                if let proj = EProject.fromDictionary(x) {
+                    proj.workspace = ws
+                }
+            }
+        }
+        if let xs = dict["envs"] as? [[String: Any]] {
+            xs.forEach { dict in
+                _ = EEnv.fromDictionary(dict)
+            }
+        }
+        ws.markForDelete = false
+        self.db.saveMainContext()
+        self.db.mainMOC.refreshAllObjects()
+        return ws
+    }
+    
+    static func getCKRecord(id: String, ctx: NSManagedObjectContext) -> CKRecord? {
+        var ws: EWorkspace!
+        let zoneID = self.ck.zoneID(workspaceId: id)
+        let ckWsID = self.ck.recordID(entityId: id, zoneID: zoneID)
+        var ckWs: CKRecord!
+        ctx.performAndWait {
+            ws = db.getWorkspace(id: id, ctx: ctx)
+            ckWs = self.ck.createRecord(recordID: ckWsID, recordType: ws.recordType)
+            ws.updateCKRecord(ckWs)
+        }
+        return ckWs
+    }
+    
     func updateCKRecord(_ record: CKRecord) {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
@@ -79,22 +133,6 @@ public class EWorkspace: NSManagedObject, Entity {
             record["saveResponse"] = self.saveResponse as CKRecordValue
             record["version"] = self.version as CKRecordValue
         }
-    }
-    
-    static func addProjectReference(to workspace: CKRecord, project: CKRecord) {
-//        let ref = CKRecord.Reference(record: project, action: .deleteSelf)
-//        var xs = workspace["projects"] as? [CKRecord.Reference] ?? [CKRecord.Reference]()
-//        if !xs.contains(ref) {
-//            xs.append(ref)
-//            workspace["projects"] = xs as CKRecordValue
-//        }
-    }
-    
-    static func getProjectRecordIDs(_ record: CKRecord) -> [CKRecord.ID] {
-//        if let xs = record["projects"] as? [CKRecord.Reference] {
-//            return xs.map { ref -> CKRecord.ID in ref.recordID }
-//        }
-        return []
     }
     
     func updateFromCKRecord(_ record: CKRecord) {
@@ -116,39 +154,6 @@ public class EWorkspace: NSManagedObject, Entity {
     var isInDefaultMode: Bool {
         let db = CoreDataService.shared
         return self.id == db.defaultWorkspaceId && self.name == db.defaultWorkspaceName && self.desc == db.defaultWorkspaceDesc && self.modified == self.changeTag && (self.projects == nil || self.projects!.isEmpty)
-    }
-    
-    public static func fromDictionary(_ dict: [String: Any]) -> EWorkspace? {
-        guard let id = dict["id"] as? String else { return nil }
-        let db = CoreDataService.shared
-        let ctx = db.mainMOC
-        guard let ws = db.createWorkspace(id: id, name: "", desc: "", isSyncEnabled: false, ctx: ctx) else { return nil }
-        if let x = dict["created"] as? Int64 { ws.created = x }
-        if let x = dict["modified"] as? Int64 { ws.modified = x }
-        if let x = dict["changeTag"] as? Int64 { ws.changeTag = x }
-        if let x = dict["isActive"] as? Bool { ws.isActive = x }
-        if let x = dict["isSyncEnabled"] as? Bool { ws.isSyncEnabled = x }
-        if let x = dict["name"] as? String { ws.name = x }
-        if let x = dict["desc"] as? String { ws.desc = x }
-        if let x = dict["saveResponse"] as? Bool { ws.saveResponse = x }
-        if let x = dict["version"] as? Int64 { ws.version = x }
-        db.saveMainContext()
-        if let xs = dict["projects"] as? [[String: Any]] {
-            xs.forEach { x in
-                if let proj = EProject.fromDictionary(x) {
-                    proj.workspace = ws
-                }
-            }
-        }
-        if let xs = dict["envs"] as? [[String: Any]] {
-            xs.forEach { dict in
-                _ = EEnv.fromDictionary(dict)
-            }
-        }
-        ws.markForDelete = false
-        db.saveMainContext()
-        db.mainMOC.refreshAllObjects()
-        return ws
     }
     
     public func toDictionary() -> [String: Any] {

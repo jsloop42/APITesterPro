@@ -470,6 +470,73 @@ class APITesterProTests: XCTestCase {
         waitForExpectations(timeout: 1.0, handler: nil)
     }
     
+    func testGetCKRecordForWorspace() {
+        let exp = expectation(description: "test getting CKRecord from EWorkspace")
+        self.localdb.setup(storeType: NSSQLiteStoreType) {
+            let ctx = self.localdb.mainMOC
+            ctx.perform {
+                let wsId = "ws-ck-record-get-test"
+                let ws = self.localdb.createWorkspace(id: wsId, name: wsId, desc: "", isSyncEnabled: true, ctx: ctx)
+                XCTAssertNotNil(ws)
+                self.localdb.saveMainContext()
+                let wsCKRecord = EWorkspace.getCKRecord(id: wsId, ctx: ctx)
+                XCTAssertNotNil(wsCKRecord)
+                XCTAssertEqual(wsCKRecord!.id(), wsId)
+                XCTAssertTrue(wsCKRecord!.isSyncEnabled())
+                // cleanup
+                self.localdb.deleteWorkspace(id: wsId)
+                self.localdb.saveMainContext()
+                let ws1 = self.localdb.getWorkspace(id: wsId, ctx: ctx)
+                XCTAssertNil(ws1)
+                exp.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1.0)
+    }
+    
+    func testCascadeDeleteTest() {
+        let exp = expectation(description: "test core data entities cascade delete")
+        self.localdb.setup(storeType: NSSQLiteStoreType) {
+            let ctx = self.localdb.mainMOC
+            ctx.perform {
+                let wsId = "ws-cascade-delete-test"
+                let envId = "en-cascade-delete-test"
+                let envVarId = "ev-cascade-delete-test"
+                let projId = "pj-cascade-delete-test"
+                let reqId = "rq-cascade-delete-test"
+                let ws = self.localdb.createWorkspace(id: wsId, name: wsId, desc: "", isSyncEnabled: true, ctx: ctx)
+                XCTAssertNotNil(ws)
+                self.localdb.saveMainContext()
+                let env = self.localdb.createEnv(name: envId, wsId: wsId, ctx: ctx)
+                XCTAssertNotNil(env)
+                self.localdb.saveMainContext()
+                let envVar = self.localdb.createEnvVar(name: envVarId, value: "server", id: envVarId, checkExists: false, ctx: ctx)
+                XCTAssertNotNil(envVar)
+                envVar?.env = env
+                self.localdb.saveMainContext()
+                XCTAssertNotNil(envVar!.env)
+                let proj = self.localdb.createProject(id: projId, wsId: wsId, name: projId, desc: "", ctx: ctx)
+                XCTAssertNotNil(proj)
+                proj?.workspace = ws
+                self.localdb.saveMainContext()
+                // delete workspace
+                self.localdb.deleteWorkspace(id: wsId)
+                self.localdb.saveMainContext()
+                // ensure rest of the referenced entities are also deleted
+                let ws1 = self.localdb.getWorkspace(id: wsId, ctx: ctx)
+                XCTAssertNil(ws1)
+                let env1 = self.localdb.getEnv(id: envId, ctx: ctx)
+                XCTAssertNil(env1)
+                let envVar1 = self.localdb.getEnvVar(id: envVarId, ctx: ctx)
+                XCTAssertNil(envVar1)
+                let proj1 = self.localdb.getProject(id: projId, ctx: ctx)
+                XCTAssertNil(proj1)
+                exp.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1.0)
+    }
+    
     func testEntitiesDeletionOnDisabledZoneSync() {
         let exp = expectation(description: "test deletion of workspace and all entities in it when a disabled zone record gets synced")
         self.localdb.setup(storeType: NSSQLiteStoreType) {
@@ -477,7 +544,7 @@ class APITesterProTests: XCTestCase {
             ctx.perform {
                 let wsId = "ws-sync-delete-test"
                 let envId = "en-sync-delete-test"
-                let envVarId = "ev-var-sync-delete-test"
+                let envVarId = "ev-sync-delete-test"
                 let projId = "pj-sync-delete-test"
                 let reqId = "rq-sync-delete-test"
                 let headerId = "rd-header-sync-delete-test"
@@ -526,7 +593,7 @@ class APITesterProTests: XCTestCase {
                 // delete entities starting from workspace
                 self.dbSvc.deleteDataMarkedForDelete(ws!, isDeleteFromCloud: false, ctx: ctx)
                 // ensure entities are deleted
-                let ws1 = self.localdb.getWorkspace(id: wsId, isMarkForDelete: true, ctx: ctx)
+                let ws1 = self.localdb.getWorkspace(id: wsId, ctx: ctx)
                 XCTAssertNil(ws1)
                 let env1 = self.localdb.getEnv(id: envId, ctx: ctx)
                 XCTAssertNil(env1)
@@ -547,7 +614,7 @@ class APITesterProTests: XCTestCase {
                 exp.fulfill()
             }
         }
-        waitForExpectations(timeout: 3.0)
+        waitForExpectations(timeout: 1.0)
     }
     
     func testTemp() {
