@@ -240,7 +240,7 @@
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wsId" attributeType="String" defaultValueString=""/>
         <attribute name="xml" optional="YES" attributeType="String"/>
-        <relationship name="binary" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequestData" inverseName="binary" inverseEntity="ERequestData"/>
+        <relationship name="binary" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ERequestData" inverseName="binary" inverseEntity="ERequestData"/>
         <relationship name="form" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ERequestData" inverseName="form" inverseEntity="ERequestData"/>
         <relationship name="multipart" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ERequestData" inverseName="multipart" inverseEntity="ERequestData"/>
         <relationship name="request" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequest" inverseName="body" inverseEntity="ERequest"/>
@@ -271,13 +271,13 @@
         <attribute name="value" attributeType="String" defaultValueString=""/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wsId" attributeType="String" defaultValueString=""/>
-        <relationship name="binary" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequestBodyData" inverseName="binary" inverseEntity="ERequestBodyData"/>
+        <relationship name="binary" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ERequestBodyData" inverseName="binary" inverseEntity="ERequestBodyData"/>
         <relationship name="files" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EFile" inverseName="requestData" inverseEntity="EFile"/>
-        <relationship name="form" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequestBodyData" inverseName="form" inverseEntity="ERequestBodyData"/>
-        <relationship name="header" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequest" inverseName="headers" inverseEntity="ERequest"/>
+        <relationship name="form" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ERequestBodyData" inverseName="form" inverseEntity="ERequestBodyData"/>
+        <relationship name="header" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ERequest" inverseName="headers" inverseEntity="ERequest"/>
         <relationship name="image" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="EImage" inverseName="requestData" inverseEntity="EImage"/>
-        <relationship name="multipart" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequestBodyData" inverseName="multipart" inverseEntity="ERequestBodyData"/>
-        <relationship name="param" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequest" inverseName="params" inverseEntity="ERequest"/>
+        <relationship name="multipart" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ERequestBodyData" inverseName="multipart" inverseEntity="ERequestBodyData"/>
+        <relationship name="param" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ERequest" inverseName="params" inverseEntity="ERequest"/>
         <fetchIndex name="byCreated">
             <fetchIndexElement property="created" type="Binary" order="ascending"/>
         </fetchIndex>
