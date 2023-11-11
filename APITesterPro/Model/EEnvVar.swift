@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 import CloudKit
 
-class EEnvVar: NSManagedObject, Entity {
+public class EEnvVar: NSManagedObject, Entity {
     public var recordType: String { return "EnvVar" }
     private let secureTrans = SecureTransformerString()
     
@@ -66,6 +66,20 @@ class EEnvVar: NSManagedObject, Entity {
         //if self.modified < AppState.editRequestSaveTs { self.modified = AppState.editRequestSaveTs }
     }
     
+    public static func fromDictionary(_ dict: [String: Any]) -> EEnvVar? {
+        guard let id = dict["id"] as? String else { return nil }
+        let db = CoreDataService.shared
+        guard let envVar = db.createEnvVar(name: "", value: "", id: id, checkExists: true, ctx: db.mainMOC) else { return nil }
+        if let x = dict["created"] as? Int64 { envVar.created = x }
+        if let x = dict["modified"] as? Int64 { envVar.modified = x }
+        if let x = dict["changeTag"] as? Int64 { envVar.changeTag = x }
+        if let x = dict["name"] as? String { envVar.name = x }
+        if let x = dict["value"] as? String { envVar.value = x as NSObject }
+        if let x = dict["version"] as? Int64 { envVar.version = x }
+        envVar.markForDelete = false
+        return envVar
+    }
+    
     func updateCKRecord(_ record: CKRecord, env: CKRecord) {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
@@ -83,7 +97,7 @@ class EEnvVar: NSManagedObject, Entity {
                 }
             }
             record["version"] = self.version as CKRecordValue
-            let ref = CKRecord.Reference(record: env, action: .none)
+            let ref = CKRecord.Reference(record: env, action: .deleteSelf)
             record["env"] = ref
         }
     }
@@ -111,20 +125,6 @@ class EEnvVar: NSManagedObject, Entity {
                 }
             }
         }
-    }
-    
-    public static func fromDictionary(_ dict: [String: Any]) -> EEnvVar? {
-        guard let id = dict["id"] as? String else { return nil }
-        let db = CoreDataService.shared
-        guard let envVar = db.createEnvVar(name: "", value: "", id: id, checkExists: true, ctx: db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Int64 { envVar.created = x }
-        if let x = dict["modified"] as? Int64 { envVar.modified = x }
-        if let x = dict["changeTag"] as? Int64 { envVar.changeTag = x }
-        if let x = dict["name"] as? String { envVar.name = x }
-        if let x = dict["value"] as? String { envVar.value = x as NSObject }
-        if let x = dict["version"] as? Int64 { envVar.version = x }
-        envVar.markForDelete = false
-        return envVar
     }
     
     func toDictionary() -> [String: Any] {
