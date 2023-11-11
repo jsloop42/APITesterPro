@@ -65,6 +65,33 @@ public class EImage: NSManagedObject, Entity {
         //if self.modified < AppState.editRequestSaveTs { self.modified = AppState.editRequestSaveTs }
     }
     
+    static func addRequestDataReference(_ reqData: CKRecord, image: CKRecord) {
+        let ref = CKRecord.Reference(record: reqData, action: .none)
+        image["requestData"] = ref
+    }
+    
+    static func getRequestData(_ record: CKRecord, ctx: NSManagedObjectContext) -> ERequestData? {
+        if let ref = record["requestData"] as? CKRecord.Reference {
+            return CoreDataService.shared.getRequestData(id: EACloudKit.shared.entityID(recordID: ref.recordID), ctx: ctx)
+        }
+        return nil
+    }
+    
+    public static func fromDictionary(_ dict: [String: Any]) -> EImage? {
+        guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String, let data = dict["data"] as? String,
+        let name = dict["name"] as? String, let type = dict["type"] as? String else { return nil }
+        let db = CoreDataService.shared
+        guard let data1 = EAUtils.shared.stringToImageData(data) else { return nil }
+        guard let image = db.createImage(imageId: id, data: data1, wsId: wsId, name: name, type: type, ctx: db.mainMOC) else { return nil }
+        if let x = dict["created"] as? Int64 { image.created = x }
+        if let x = dict["modified"] as? Int64 { image.modified = x }
+        if let x = dict["changeTag"] as? Int64 { image.changeTag = x }
+        if let x = dict["isCameraMode"] as? Bool { image.isCameraMode = x }
+        if let x = dict["version"] as? Int64 { image.version = x }
+        image.markForDelete = false
+        return image
+    }
+    
     func updateCKRecord(_ record: CKRecord) {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
@@ -88,18 +115,6 @@ public class EImage: NSManagedObject, Entity {
         }
     }
     
-    static func addRequestDataReference(_ reqData: CKRecord, image: CKRecord) {
-        let ref = CKRecord.Reference(record: reqData, action: .none)
-        image["requestData"] = ref
-    }
-    
-    static func getRequestData(_ record: CKRecord, ctx: NSManagedObjectContext) -> ERequestData? {
-        if let ref = record["requestData"] as? CKRecord.Reference {
-            return CoreDataService.shared.getRequestData(id: EACloudKit.shared.entityID(recordID: ref.recordID), ctx: ctx)
-        }
-        return nil
-    }
-    
     func updateFromCKRecord(_ record: CKRecord, ctx: NSManagedObjectContext) {
         if let moc = self.managedObjectContext {
             moc.performAndWait {
@@ -119,21 +134,6 @@ public class EImage: NSManagedObject, Entity {
                 }
             }
         }
-    }
-    
-    public static func fromDictionary(_ dict: [String: Any]) -> EImage? {
-        guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String, let data = dict["data"] as? String,
-        let name = dict["name"] as? String, let type = dict["type"] as? String else { return nil }
-        let db = CoreDataService.shared
-        guard let data1 = EAUtils.shared.stringToImageData(data) else { return nil }
-        guard let image = db.createImage(imageId: id, data: data1, wsId: wsId, name: name, type: type, ctx: db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Int64 { image.created = x }
-        if let x = dict["modified"] as? Int64 { image.modified = x }
-        if let x = dict["changeTag"] as? Int64 { image.changeTag = x }
-        if let x = dict["isCameraMode"] as? Bool { image.isCameraMode = x }
-        if let x = dict["version"] as? Int64 { image.version = x }
-        image.markForDelete = false
-        return image
     }
     
     public func toDictionary() -> [String : Any] {

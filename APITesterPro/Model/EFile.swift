@@ -65,6 +65,38 @@ public class EFile: NSManagedObject, Entity {
         //if self.modified < AppState.editRequestSaveTs { self.modified = AppState.editRequestSaveTs }
     }
     
+    static func addRequestDataReference(_ file: CKRecord, reqData: CKRecord) {
+        let ref = CKRecord.Reference(record: reqData, action: .none)
+        file["requestData"] = ref as CKRecordValue
+    }
+    
+    static func getRequestData(_ record: CKRecord, ctx: NSManagedObjectContext) -> ERequestData? {
+        if let ref = record["requestData"] as? CKRecord.Reference {
+            return CoreDataService.shared.getRequestData(id: EACloudKit.shared.entityID(recordID: ref.recordID), ctx: ctx)
+        }
+        return nil
+    }
+    
+    public static func fromDictionary(_ dict: [String: Any]) -> EFile? {
+        guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String, let _data = dict["data"] as? String,
+            let name = dict["name"] as? String, let _type = dict["type"] as? Int64, let type = RequestDataType(rawValue: _type.toInt()) else { return nil }
+        let db = CoreDataService.shared
+        var data: Data?
+        if let aData = _data.data(using: .utf8) {
+            data = aData
+        } else {
+            data = EAUtils.shared.stringToImageData(_data)
+        }
+        guard let data1 = data else { return nil }
+        guard let file = db.createFile(fileId: id, data: data1, wsId: wsId, name: name, path: URL(fileURLWithPath: "/tmp/"), type: type, checkExists: true, ctx: db.mainMOC) else { return nil }
+        if let x = dict["created"] as? Int64 { file.created = x }
+        if let x = dict["modified"] as? Int64 { file.modified = x }
+        if let x = dict["changeTag"] as? Int64 { file.changeTag = x }
+        if let x = dict["version"] as? Int64 { file.version = x }
+        file.markForDelete = false
+        return file
+    }
+    
     func updateCKRecord(_ record: CKRecord) {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
@@ -87,18 +119,6 @@ public class EFile: NSManagedObject, Entity {
         }
     }
     
-    static func addRequestDataReference(_ file: CKRecord, reqData: CKRecord) {
-        let ref = CKRecord.Reference(record: reqData, action: .none)
-        file["requestData"] = ref as CKRecordValue
-    }
-    
-    static func getRequestData(_ record: CKRecord, ctx: NSManagedObjectContext) -> ERequestData? {
-        if let ref = record["requestData"] as? CKRecord.Reference {
-            return CoreDataService.shared.getRequestData(id: EACloudKit.shared.entityID(recordID: ref.recordID), ctx: ctx)
-        }
-        return nil
-    }
-    
     func updateFromCKRecord(_ record: CKRecord, ctx: NSManagedObjectContext) {
         if let moc = self.managedObjectContext {
             moc.performAndWait {
@@ -117,26 +137,6 @@ public class EFile: NSManagedObject, Entity {
                 }
             }
         }
-    }
-    
-    public static func fromDictionary(_ dict: [String: Any]) -> EFile? {
-        guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String, let _data = dict["data"] as? String,
-            let name = dict["name"] as? String, let _type = dict["type"] as? Int64, let type = RequestDataType(rawValue: _type.toInt()) else { return nil }
-        let db = CoreDataService.shared
-        var data: Data?
-        if let aData = _data.data(using: .utf8) {
-            data = aData
-        } else {
-            data = EAUtils.shared.stringToImageData(_data)
-        }
-        guard let data1 = data else { return nil }
-        guard let file = db.createFile(fileId: id, data: data1, wsId: wsId, name: name, path: URL(fileURLWithPath: "/tmp/"), type: type, checkExists: true, ctx: db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Int64 { file.created = x }
-        if let x = dict["modified"] as? Int64 { file.modified = x }
-        if let x = dict["changeTag"] as? Int64 { file.changeTag = x }
-        if let x = dict["version"] as? Int64 { file.version = x }
-        file.markForDelete = false
-        return file
     }
     
     public func toDictionary() -> [String : Any] {

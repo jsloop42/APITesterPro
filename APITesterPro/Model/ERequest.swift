@@ -65,25 +65,6 @@ public class ERequest: NSManagedObject, Entity {
         //if self.modified < AppState.editRequestSaveTs { self.modified = AppState.editRequestSaveTs }
     }
     
-    func updateCKRecord(_ record: CKRecord, project: CKRecord) {
-        self.managedObjectContext?.performAndWait {
-            record["created"] = self.created as CKRecordValue
-            record["modified"] = self.modified as CKRecordValue
-            record["changeTag"] = self.changeTag as CKRecordValue
-            record["desc"] = (self.desc ?? "") as CKRecordValue
-            record["id"] = self.getId() as CKRecordValue
-            record["wsId"] = self.getWsId() as CKRecordValue
-            record["envId"] = (self.envId ?? "") as CKRecordValue
-            record["name"] = self.name! as CKRecordValue
-            record["validateSSL"] = self.validateSSL as CKRecordValue
-            record["selectedMethodIndex"] = self.selectedMethodIndex as CKRecordValue
-            record["url"] = (self.url ?? "") as CKRecordValue
-            record["version"] = self.version as CKRecordValue
-            let ref = CKRecord.Reference(record: project, action: .none)
-            record["project"] = ref
-        }
-    }
-    
     static func updateRequestDataReference(to request: CKRecord, requestData: CKRecord, type: RequestDataType) {
         let key: String = {
             if type == .header { return "headers" }
@@ -111,25 +92,6 @@ public class ERequest: NSManagedObject, Entity {
         let req = CoreDataService.shared.createRequest(id: reqId, wsId: wsId, name: "", checkExists: false, ctx: ctx)
         req?.changeTag = 0
         return req
-    }
-    
-    func updateFromCKRecord(_ record: CKRecord, ctx: NSManagedObjectContext) {
-        if let moc = self.managedObjectContext {
-            moc.performAndWait {
-                if let x = record["created"] as? Int64 { self.created = x }
-                if let x = record["modified"] as? Int64 { self.modified = x }
-                if let x = record["changeTag"] as? Int64 { self.changeTag = x }
-                if let x = record["id"] as? String { self.id = x }
-                if let x = record["wsId"] as? String { self.wsId = x }
-                if let x = record["desc"] as? String { self.desc = x }
-                if let x = record["name"] as? String { self.name = x }
-                if let x = record["validateSSL"] as? Bool { self.validateSSL = x }
-                if let x = record["selectedMethodIndex"] as? Int64 { self.selectedMethodIndex = x }
-                if let x = record["url"] as? String { self.url = x }
-                if let x = record["version"] as? Int64 { self.version = x }
-                if let ref = record["project"] as? CKRecord.Reference, let proj = EProject.getProjectFromReference(ref, record: record, ctx: moc) { self.project = proj }
-            }
-        }
     }
     
     public static func fromDictionary(_ dict: [String: Any]) -> ERequest? {
@@ -167,6 +129,44 @@ public class ERequest: NSManagedObject, Entity {
         req.markForDelete = false
         db.saveMainContext()
         return req
+    }
+    
+    func updateCKRecord(_ record: CKRecord, project: CKRecord) {
+        self.managedObjectContext?.performAndWait {
+            record["created"] = self.created as CKRecordValue
+            record["modified"] = self.modified as CKRecordValue
+            record["changeTag"] = self.changeTag as CKRecordValue
+            record["desc"] = (self.desc ?? "") as CKRecordValue
+            record["id"] = self.getId() as CKRecordValue
+            record["wsId"] = self.getWsId() as CKRecordValue
+            record["envId"] = (self.envId ?? "") as CKRecordValue
+            record["name"] = self.name! as CKRecordValue
+            record["validateSSL"] = self.validateSSL as CKRecordValue
+            record["selectedMethodIndex"] = self.selectedMethodIndex as CKRecordValue
+            record["url"] = (self.url ?? "") as CKRecordValue
+            record["version"] = self.version as CKRecordValue
+            let ref = CKRecord.Reference(record: project, action: .none)
+            record["project"] = ref
+        }
+    }
+    
+    func updateFromCKRecord(_ record: CKRecord, ctx: NSManagedObjectContext) {
+        if let moc = self.managedObjectContext {
+            moc.performAndWait {
+                if let x = record["created"] as? Int64 { self.created = x }
+                if let x = record["modified"] as? Int64 { self.modified = x }
+                if let x = record["changeTag"] as? Int64 { self.changeTag = x }
+                if let x = record["id"] as? String { self.id = x }
+                if let x = record["wsId"] as? String { self.wsId = x }
+                if let x = record["desc"] as? String { self.desc = x }
+                if let x = record["name"] as? String { self.name = x }
+                if let x = record["validateSSL"] as? Bool { self.validateSSL = x }
+                if let x = record["selectedMethodIndex"] as? Int64 { self.selectedMethodIndex = x }
+                if let x = record["url"] as? String { self.url = x }
+                if let x = record["version"] as? Int64 { self.version = x }
+                if let ref = record["project"] as? CKRecord.Reference, let proj = EProject.getProjectFromReference(ref, record: record, ctx: moc) { self.project = proj }
+            }
+        }
     }
     
     public func toDictionary() -> [String: Any] {
