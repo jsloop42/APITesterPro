@@ -1552,12 +1552,12 @@ class PersistenceService {
         let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
         ctx.performAndWait {
             var acc: [Entity] = []
-            let xs = self.localdb.getProjects(wsId: ws.getId(), isMarkForDelete: true, ctx: ctx)
+            let xs = self.localdb.getProjects(wsId: ws.getId(), ctx: ctx)
             xs.forEach { proj in
                 proj.markForDelete = true
                 self.deleteDataMarkedForDelete(proj, isDeleteFromCloud: isDeleteFromCloud, ctx: ctx)
             }
-            let envs = self.localdb.getEnvs(wsId: ws.getId(), isMarkForDelete: nil, ctx: ctx)
+            let envs = self.localdb.getEnvs(wsId: ws.getId(), ctx: ctx)
             envs.forEach { env in
                 env.markForDelete = true
                 self.deleteDataMarkedForDelete(env, isDeleteFromCloud: isDeleteFromCloud, ctx: ctx)
@@ -1572,12 +1572,6 @@ class PersistenceService {
                 self.localdb.saveMainContext()
             }
         }
-        //if ws.isInDefaultMode {
-//            ws.markForDelete = false
-  //          self.saveWorkspaceToCloud(ws)  // Update the workspace as it's the default one
-    //    } else {
-            
-      //  }
     }
     
     func deleteDataMarkedForDelete(_ env: EEnv, isDeleteFromCloud: Bool = true, ctx: NSManagedObjectContext? = nil) {
@@ -1620,7 +1614,7 @@ class PersistenceService {
         Log.debug("delete data marked for delete - proj")
         let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
         ctx.performAndWait {
-            let xs = self.localdb.getRequests(projectId: proj.getId(), isMarkForDelete: true, ctx: ctx)
+            let xs = self.localdb.getRequests(projectId: proj.getId(), ctx: ctx)
             xs.forEach { req in self.deleteDataMarkedForDelete(req, isDeleteFromCloud: isDeleteFromCloud, ctx: ctx) }
         }
         if isDeleteFromCloud {
@@ -1636,8 +1630,9 @@ class PersistenceService {
     func deleteDataMarkedForDelete(_ request: ERequest, isDeleteFromCloud: Bool = true, ctx: NSManagedObjectContext? = nil) {
         Log.debug("delete data marked for delete - req")
         let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
+        let wsId = request.getWsId()
         ctx.performAndWait {
-            guard let ws = request.project?.workspace else { return }
+            // guard let ws = request.project?.workspace else { return }
             if request.markForDelete {
                 var acc: [Entity] = []
                 acc.append(request)
@@ -1757,11 +1752,12 @@ class PersistenceService {
                     self.deleteEntitesFromCloud(acc, ctx: ctx)
                 }
             } else {
-                self.deleteRequestDataMarkedForDelete(reqId: request.getId(), wsId: ws.getId(), ctx: ctx)
+                self.deleteRequestDataMarkedForDelete(reqId: request.getId(), wsId: wsId, ctx: ctx)
                 self.deleteRequestBodyDataMarkedForDelete(request, ctx: ctx)
             }
         }
         self.deleteRequestMethodDataMarkedForDelete(request, ctx: ctx)
+        // TODO: get histories associated with this request
     }
     
     func deleteRequestDataMarkedForDelete(reqId: String, wsId: String, isDeleteFromCloud: Bool = true, ctx: NSManagedObjectContext? = nil) {
