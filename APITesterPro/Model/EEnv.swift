@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 import CloudKit
 
-class EEnv: NSManagedObject, Entity {
+public class EEnv: NSManagedObject, Entity {
     public var recordType: String { return "Env" }
     
     public func getId() -> String {
@@ -65,38 +65,12 @@ class EEnv: NSManagedObject, Entity {
         //if self.modified < AppState.editRequestSaveTs { self.modified = AppState.editRequestSaveTs }
     }
     
-    func updateCKRecord(_ record: CKRecord) {
-        self.managedObjectContext?.performAndWait {
-            record["created"] = self.created as CKRecordValue
-            record["modified"] = self.modified as CKRecordValue
-            record["changeTag"] = self.changeTag as CKRecordValue
-            record["id"] = (self.id ?? "") as CKRecordValue
-            record["wsId"] = (self.wsId ?? "") as CKRecordValue
-            record["name"] = (self.name ?? "") as CKRecordValue
-            record["version"] = self.version as CKRecordValue
-        }
-    }
-    
     static func getEnvFromReference(_ ref: CKRecord.Reference, record: CKRecord, ctx: NSManagedObjectContext) -> EEnv? {
         let envId = EACloudKit.shared.entityID(recordID: ref.recordID)
         if let env = CoreDataService.shared.getEnv(id: envId, ctx: ctx) { return env }
         let env = CoreDataService.shared.createEnv(name: "", envId: envId, wsId: "", checkExists: false, ctx: ctx)
         env?.changeTag = 0
         return env
-    }
-        
-    func updateFromCKRecord(_ record: CKRecord, ctx: NSManagedObjectContext) {
-        if let moc = self.managedObjectContext {
-            moc.performAndWait {
-                if let x = record["created"] as? Int64 { self.created = x }
-                if let x = record["modified"] as? Int64 { self.modified = x }
-                if let x = record["changeTag"] as? Int64 { self.changeTag = x }
-                if let x = record["id"] as? String { self.id = x }
-                if let x = record["wsId"] as? String { self.wsId = x }
-                if let x = record["name"] as? String { self.name = x }
-                if let x = record["version"] as? Int64 { self.version = x }
-            }
-        }
     }
     
     public static func fromDictionary(_ dict: [String: Any]) -> EEnv? {
@@ -118,6 +92,35 @@ class EEnv: NSManagedObject, Entity {
         env.markForDelete = false
         db.saveMainContext()
         return env
+    }
+    
+    func updateCKRecord(_ record: CKRecord, workspace: CKRecord) {
+        self.managedObjectContext?.performAndWait {
+            record["created"] = self.created as CKRecordValue
+            record["modified"] = self.modified as CKRecordValue
+            record["changeTag"] = self.changeTag as CKRecordValue
+            record["id"] = (self.id ?? "") as CKRecordValue
+            record["wsId"] = (self.wsId ?? "") as CKRecordValue
+            record["name"] = (self.name ?? "") as CKRecordValue
+            record["version"] = self.version as CKRecordValue
+            let ref = CKRecord.Reference(record: workspace, action: .deleteSelf)
+            record["workspace"] = ref
+        }
+    }
+        
+    func updateFromCKRecord(_ record: CKRecord, ctx: NSManagedObjectContext) {
+        if let moc = self.managedObjectContext {
+            moc.performAndWait {
+                if let x = record["created"] as? Int64 { self.created = x }
+                if let x = record["modified"] as? Int64 { self.modified = x }
+                if let x = record["changeTag"] as? Int64 { self.changeTag = x }
+                if let x = record["id"] as? String { self.id = x }
+                if let x = record["wsId"] as? String { self.wsId = x }
+                if let x = record["name"] as? String { self.name = x }
+                if let x = record["version"] as? Int64 { self.version = x }
+                if let ws = EWorkspace.getWorkspace(record, ctx: moc) { self.workspace = ws }
+            }
+        }
     }
     
     func toDictionary() -> [String: Any] {
