@@ -1416,7 +1416,7 @@ class PersistenceService {
     func disableZoneRecordFromDefaultZone(_ wsId: String) {
         let ctx = self.syncToCloudCtx!
         ctx.perform {
-            if let ws = self.localdb.getWorkspace(id: wsId, includeMarkForDelete: true, ctx: ctx) {
+            if let ws = self.localdb.getWorkspace(id: wsId, isMarkForDelete: true, ctx: ctx) {
                 self.saveZoneToCloud(ws)
             }
         }
@@ -1552,12 +1552,12 @@ class PersistenceService {
         let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
         ctx.performAndWait {
             var acc: [Entity] = []
-            let xs = self.localdb.getProjects(wsId: ws.getId(), includeMarkForDelete: true, ctx: ctx)
+            let xs = self.localdb.getProjects(wsId: ws.getId(), isMarkForDelete: true, ctx: ctx)
             xs.forEach { proj in
                 proj.markForDelete = true
                 self.deleteDataMarkedForDelete(proj, isDeleteFromCloud: isDeleteFromCloud, ctx: ctx)
             }
-            let envs = self.localdb.getEnvs(wsId: ws.getId(), includeMarkForDelete: nil, ctx: ctx)
+            let envs = self.localdb.getEnvs(wsId: ws.getId(), isMarkForDelete: nil, ctx: ctx)
             envs.forEach { env in
                 env.markForDelete = true
                 self.deleteDataMarkedForDelete(env, isDeleteFromCloud: isDeleteFromCloud, ctx: ctx)
@@ -1567,6 +1567,9 @@ class PersistenceService {
             self.localdb.saveMainContext()
             if isDeleteFromCloud {
                 self.deleteEntitesFromCloud(acc, ctx: ctx)
+            } else {
+                self.localdb.deleteWorkspace(id: ws.getId(), ctx: ctx)
+                self.localdb.saveMainContext()
             }
         }
         //if ws.isInDefaultMode {
@@ -1589,6 +1592,7 @@ class PersistenceService {
                 xs.forEach { envVar in
                     self.localdb.deleteEnvVar(id: envVar.getId(), ctx: ctx)
                 }
+                self.localdb.saveMainContext()
             }
         }
         if isDeleteFromCloud {
@@ -1596,21 +1600,27 @@ class PersistenceService {
         } else {
             ctx.perform {
                 self.localdb.deleteEnv(id: env.getId(), ctx: ctx)
+                self.localdb.saveMainContext()
             }
         }
     }
     
-    func deleteDataMarkedForDelete(_ envVar: EEnvVar, ctx: NSManagedObjectContext? = nil) {
+    func deleteDataMarkedForDelete(_ envVar: EEnvVar, isDeleteFromCloud: Bool = true, ctx: NSManagedObjectContext? = nil) {
         Log.debug("delete data marked for delete - env var")
         let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
-        self.deleteEntitesFromCloud([envVar], ctx: ctx)
+        if isDeleteFromCloud {
+            self.deleteEntitesFromCloud([envVar], ctx: ctx)
+        } else {
+            self.localdb.deleteEnvVar(id: envVar.getId(), ctx: ctx)
+            self.localdb.saveMainContext()
+        }
     }
         
     func deleteDataMarkedForDelete(_ proj: EProject, isDeleteFromCloud: Bool = true, ctx: NSManagedObjectContext? = nil) {
         Log.debug("delete data marked for delete - proj")
         let ctx = ctx != nil ? ctx! : self.localdb.getChildMOC()
         ctx.performAndWait {
-            let xs = self.localdb.getRequests(projectId: proj.getId(), includeMarkForDelete: true, ctx: ctx)
+            let xs = self.localdb.getRequests(projectId: proj.getId(), isMarkForDelete: true, ctx: ctx)
             xs.forEach { req in self.deleteDataMarkedForDelete(req, isDeleteFromCloud: isDeleteFromCloud, ctx: ctx) }
         }
         if isDeleteFromCloud {
@@ -1618,6 +1628,7 @@ class PersistenceService {
         } else {
             ctx.perform {
                 self.localdb.deleteProject(id: proj.getId(), ctx: ctx)
+                self.localdb.saveMainContext()
             }
         }
     }
@@ -1638,6 +1649,7 @@ class PersistenceService {
                             xs.forEach { reqData in
                                 self.localdb.deleteRequestData(id: reqData.getId(), ctx: ctx)
                             }
+                            self.localdb.saveMainContext()
                         }
                     }
                 }
@@ -1649,6 +1661,7 @@ class PersistenceService {
                             xs.forEach { reqData in
                                 self.localdb.deleteRequestData(id: reqData.getId(), ctx: ctx)
                             }
+                            self.localdb.saveMainContext()
                         }
                     }
                 }
@@ -1663,6 +1676,7 @@ class PersistenceService {
                                         files.forEach { file in
                                             self.localdb.deleteFileData(id: file.getId(), ctx: ctx)
                                         }
+                                        self.localdb.saveMainContext()
                                     }
                                 }
                             }
@@ -1672,15 +1686,16 @@ class PersistenceService {
                                 } else {
                                     ctx.perform {
                                         self.localdb.deleteImageData(id: image.getId(), ctx: ctx)
+                                        self.localdb.saveMainContext()
                                     }
                                 }
-                                
                             }
                             if isDeleteFromCloud {
                                 acc.append(reqData)
                             } else {
                                 ctx.perform {
                                     self.localdb.deleteRequestData(id: reqData.getId(), ctx: ctx)
+                                    self.localdb.saveMainContext()
                                 }
                             }
                         }
@@ -1693,6 +1708,7 @@ class PersistenceService {
                                 xs.forEach { reqData in
                                     self.localdb.deleteRequestData(id: reqData.getId(), ctx: ctx)
                                 }
+                                self.localdb.saveMainContext()
                             }
                         }
                     }
@@ -1705,6 +1721,7 @@ class PersistenceService {
                                     xs.forEach { file in
                                         self.localdb.deleteFileData(id: file.getId(), ctx: ctx)
                                     }
+                                    self.localdb.saveMainContext()
                                 }
                             }
                         }
@@ -1714,6 +1731,7 @@ class PersistenceService {
                             } else {
                                 ctx.perform {
                                     self.localdb.deleteImageData(id: image.getId(), ctx: ctx)
+                                    self.localdb.saveMainContext()
                                 }
                             }
                         }
@@ -1722,6 +1740,7 @@ class PersistenceService {
                         } else {
                             ctx.perform {
                                 self.localdb.deleteRequestData(id: bin.getId(), ctx: ctx)
+                                self.localdb.saveMainContext()
                             }
                         }
                     }
@@ -1730,6 +1749,7 @@ class PersistenceService {
                     } else {
                         ctx.perform {
                             self.localdb.deleteRequestBodyData(id: body.getId(), ctx: ctx)
+                            self.localdb.saveMainContext()
                         }
                     }
                 }
@@ -1759,6 +1779,7 @@ class PersistenceService {
                 self.deleteDataMarkedForDelete(reqData.image, wsId: wsId, isDeleteFromCloud: isDeleteFromCloud)
                 if !isDeleteFromCloud {
                     self.localdb.deleteRequestData(id: reqData.getId(), ctx: ctx)
+                    self.localdb.saveMainContext()
                 }
             }
             if isDeleteFromCloud {
@@ -1777,6 +1798,7 @@ class PersistenceService {
                 files.forEach { file in
                     self.localdb.deleteFileData(id: file.getId(), ctx: ctx)
                 }
+                self.localdb.saveMainContext()
             }
         }
     }
@@ -1789,6 +1811,7 @@ class PersistenceService {
                 self.deleteEntitesFromCloud([image], ctx: ctx)
             } else {
                 self.localdb.deleteImageData(id: image.getId(), ctx: ctx)
+                self.localdb.saveMainContext()
             }
         }
     }
@@ -1801,6 +1824,7 @@ class PersistenceService {
                 self.deleteEntitesFromCloud([history], ctx: ctx)
             } else {
                 self.localdb.deleteHistory(id: history.getId(), ctx: ctx)
+                self.localdb.saveMainContext()
             }
         }
     }
@@ -1813,6 +1837,7 @@ class PersistenceService {
                     self.deleteEntitesFromCloud([body], ctx: ctx)
                 } else {
                     self.localdb.deleteRequest(id: req.getId(), ctx: ctx)
+                    self.localdb.saveMainContext()
                 }
             }
         }
@@ -1829,6 +1854,7 @@ class PersistenceService {
                     reqMethods.forEach { method in
                         self.localdb.deleteRequestMethodData(id: method.getId(), ctx: ctx)
                     }
+                    self.localdb.saveMainContext()
                 }
             }
         }
