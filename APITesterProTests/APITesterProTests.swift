@@ -12,6 +12,7 @@ import CoreData
 
 class APITesterProTests: XCTestCase {
     private var localdb = CoreDataService.shared
+    private var dbSvc = PersistenceService.shared
     private let utils = EAUtils.shared
     private let serialQueue = DispatchQueue(label: "serial-queue")
     private let app = App.shared
@@ -467,6 +468,86 @@ class APITesterProTests: XCTestCase {
             }
         }
         waitForExpectations(timeout: 1.0, handler: nil)
+    }
+    
+    func testEntitiesDeletionOnDisabledZoneSync() {
+        let exp = expectation(description: "test deletion of workspace and all entities in it when a disabled zone record gets synced")
+        self.localdb.setup(storeType: NSSQLiteStoreType) {
+            let ctx = self.localdb.mainMOC
+            ctx.perform {
+                let wsId = "ws-sync-delete-test"
+                let envId = "en-sync-delete-test"
+                let envVarId = "ev-var-sync-delete-test"
+                let projId = "pj-sync-delete-test"
+                let reqId = "rq-sync-delete-test"
+                let headerId = "rd-header-sync-delete-test"
+                let fileId = "fl-sync-delete-test"
+                let formId = "rd-form-sync-delete-test"
+                let bodyId = "rb-body-with-file-sync-delete-test"
+                let ws = self.localdb.createWorkspace(id: wsId, name: wsId, desc: "", isSyncEnabled: true, ctx: ctx)
+                XCTAssertNotNil(ws)
+                self.localdb.saveMainContext()
+                let env = self.localdb.createEnv(name: envId, wsId: wsId, ctx: ctx)
+                XCTAssertNotNil(env)
+                self.localdb.saveMainContext()
+                let envVar = self.localdb.createEnvVar(name: envVarId, value: "server", id: envVarId, checkExists: false, ctx: ctx)
+                XCTAssertNotNil(envVar)
+                envVar?.env = env
+                self.localdb.saveMainContext()
+                let proj = self.localdb.createProject(id: projId, wsId: wsId, name: projId, desc: "", ctx: ctx)
+                XCTAssertNotNil(proj)
+                proj?.workspace = ws
+                self.localdb.saveMainContext()
+                let req = self.localdb.createRequest(id: reqId, wsId: wsId, name: reqId, ctx: ctx)
+                XCTAssertNotNil(req)
+                req?.project = proj
+                self.localdb.saveMainContext()
+                let header = self.localdb.createRequestData(id: headerId, wsId: wsId, type: .header, fieldFormat: .text, ctx: ctx)
+                XCTAssertNotNil(header)
+                header!.key = "name"
+                header!.value = "value"
+                req!.addToHeaders(header!)
+                XCTAssertNotNil(req!.headers)
+                XCTAssertEqual(req!.headers!.count, 1)
+                self.localdb.saveMainContext()
+                let file = self.localdb.createFile(fileId: fileId, data: Data(), wsId: wsId, name: fileId, path: URL(fileURLWithPath: "/tmp"), type: .form, checkExists: false, ctx: ctx)
+                XCTAssertNotNil(file)
+                let fileReqData = self.localdb.createRequestData(id: formId, wsId: wsId, type: .form, fieldFormat: .file, checkExists: false, ctx: ctx)
+                XCTAssertNotNil(fileReqData)
+                file!.requestData = fileReqData!
+                req!.body = self.localdb.createRequestBodyData(id: bodyId, wsId: wsId, checkExists: false, ctx: ctx)
+                XCTAssertNotNil(req!.body)
+                req!.body!.request = req
+                XCTAssertNotNil(req!.body!.request)
+                req!.body!.addToForm(fileReqData!)
+                XCTAssertNotNil(req!.body!.form)
+                XCTAssertEqual(req!.body!.form!.count, 1)
+                self.localdb.saveMainContext()
+                // delete entities starting from workspace
+                self.dbSvc.deleteDataMarkedForDelete(ws!, isDeleteFromCloud: false, ctx: ctx)
+                // ensure entities are deleted
+                let ws1 = self.localdb.getWorkspace(id: wsId, isMarkForDelete: true, ctx: ctx)
+                XCTAssertNil(ws1)
+                let env1 = self.localdb.getEnv(id: envId, ctx: ctx)
+                XCTAssertNil(env1)
+                let envVar1 = self.localdb.getEnvVar(id: envVarId, ctx: ctx)
+                XCTAssertNil(envVar1)
+                let proj1 = self.localdb.getProject(id: projId, ctx: ctx)
+                XCTAssertNil(proj1)
+                let req1 = self.localdb.getRequest(id: reqId, ctx: ctx)
+                XCTAssertNil(req1)
+                let header1 = self.localdb.getRequestData(id: headerId, ctx: ctx)
+                XCTAssertNil(header1)
+                let file1 = self.localdb.getFileData(id: fileId, ctx: ctx)
+                XCTAssertNil(file1)
+                let fileReqData1 = self.localdb.getRequestData(id: formId, ctx: ctx)
+                XCTAssertNil(fileReqData1)
+                let reqBody1 = self.localdb.getRequestBodyData(id: bodyId, ctx: ctx)
+                XCTAssertNil(reqBody1)
+                exp.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 3.0)
     }
     
     func testTemp() {
