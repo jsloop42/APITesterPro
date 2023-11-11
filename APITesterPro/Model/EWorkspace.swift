@@ -15,6 +15,12 @@ public class EWorkspace: NSManagedObject, Entity {
     static let ck: EACloudKit = EACloudKit.shared
     public var recordType: String { return "Workspace" }
     
+    /// Checks if the default workspace does not have any change or is just after a reset (is new)
+    var isInDefaultMode: Bool {
+        let db = CoreDataService.shared
+        return self.id == db.defaultWorkspaceId && self.name == db.defaultWorkspaceName && self.desc == db.defaultWorkspaceDesc && self.modified == self.changeTag && (self.projects == nil || self.projects!.isEmpty)
+    }
+    
     public func getId() -> String {
         return self.id ?? ""
     }
@@ -148,12 +154,6 @@ public class EWorkspace: NSManagedObject, Entity {
             if let x = record["saveResponse"] as? Bool { self.saveResponse = x }
             if let x = record["version"] as? Int64 { self.version = x }
         }
-    }
-    
-    /// Checks if the default workspace does not have any change or is just after a reset (is new)
-    var isInDefaultMode: Bool {
-        let db = CoreDataService.shared
-        return self.id == db.defaultWorkspaceId && self.name == db.defaultWorkspaceName && self.desc == db.defaultWorkspaceDesc && self.modified == self.changeTag && (self.projects == nil || self.projects!.isEmpty)
     }
     
     public func toDictionary() -> [String: Any] {

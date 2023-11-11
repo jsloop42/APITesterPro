@@ -65,6 +65,20 @@ public class ERequestMethodData: NSManagedObject, Entity {
         //if self.modified < AppState.editRequestSaveTs { self.modified = AppState.editRequestSaveTs }
     }
     
+    public static func fromDictionary(_ dict: [String: Any]) -> ERequestMethodData? {
+        guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
+        let db = CoreDataService.shared
+        guard let method = db.createRequestMethodData(id: id, wsId: wsId, name: "", ctx: db.mainMOC) else { return nil }
+        if let x = dict["created"] as? Int64 { method.created = x }
+        if let x = dict["modified"] as? Int64 { method.modified = x }
+        if let x = dict["changeTag"] as? Int64 { method.changeTag = x }
+        if let x = dict["name"] as? String { method.name = x }
+        if let x = dict["version"] as? Int64 { method.version = x }
+        method.markForDelete = false
+        db.saveMainContext()
+        return method
+    }
+    
     func updateCKRecord(_ record: CKRecord, project: CKRecord) {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
@@ -95,20 +109,6 @@ public class ERequestMethodData: NSManagedObject, Entity {
                 if let ref = record["project"] as? CKRecord.Reference, let proj = EProject.getProjectFromReference(ref, record: record, ctx: moc) { self.project = proj }
             }
         }
-    }
-    
-    public static func fromDictionary(_ dict: [String: Any]) -> ERequestMethodData? {
-        guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
-        let db = CoreDataService.shared
-        guard let method = db.createRequestMethodData(id: id, wsId: wsId, name: "", ctx: db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Int64 { method.created = x }
-        if let x = dict["modified"] as? Int64 { method.modified = x }
-        if let x = dict["changeTag"] as? Int64 { method.changeTag = x }
-        if let x = dict["name"] as? String { method.name = x }
-        if let x = dict["version"] as? Int64 { method.version = x }
-        method.markForDelete = false
-        db.saveMainContext()
-        return method
     }
     
     public func toDictionary() -> [String: Any] {

@@ -65,22 +65,6 @@ public class ERequestData: NSManagedObject, Entity {
         //if self.modified < AppState.editRequestSaveTs { self.modified = AppState.editRequestSaveTs }
     }
     
-    func updateCKRecord(_ record: CKRecord) {
-        self.managedObjectContext?.performAndWait {
-            record["created"] = self.created as CKRecordValue
-            record["modified"] = self.modified as CKRecordValue
-            record["changeTag"] = self.changeTag as CKRecordValue
-            record["desc"] = (self.desc ?? "") as CKRecordValue
-            record["fieldFormat"] = self.fieldFormat as CKRecordValue
-            record["id"] = self.getId() as CKRecordValue
-            record["wsId"] = self.getWsId() as CKRecordValue
-            record["key"] = (self.key ?? "") as CKRecordValue
-            record["type"] = self.type as CKRecordValue
-            record["value"] = (self.value ?? "") as CKRecordValue
-            record["version"] = self.version as CKRecordValue
-        }
-    }
-    
     /// Adds binary (ERequestBodyData) back reference to ERequestData.
     static func addRequestBodyDataReference(_ reqBodyData: CKRecord, toBinary reqData: CKRecord) {
         let ref = CKRecord.Reference(record: reqBodyData, action: .none)
@@ -157,24 +141,6 @@ public class ERequestData: NSManagedObject, Entity {
         }
     }
     
-    func updateFromCKRecord(_ record: CKRecord, ctx: NSManagedObjectContext) {
-        if let moc = self.managedObjectContext {
-            moc.performAndWait {
-                if let x = record["created"] as? Int64 { self.created = x }
-                if let x = record["modified"] as? Int64 { self.modified = x }
-                if let x = record["changeTag"] as? Int64 { self.changeTag = x }
-                if let x = record["desc"] as? String { self.desc = x }
-                if let x = record["fieldFormat"] as? Int64 { self.fieldFormat = x }
-                if let x = record["id"] as? String { self.id = x }
-                if let x = record["key"] as? String { self.key = x }
-                if let x = record["type"] as? Int64 { self.type = x }
-                if let x = record["value"] as? String { self.value = x }
-                if let x = record["version"] as? Int64 { self.version = x }
-                ERequestData.addBackReference(record: record, reqData: self, ctx: moc)
-            }
-        }
-    }
-    
     public static func fromDictionary(_ dict: [String: Any]) -> ERequestData? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String, let _type = dict["type"] as? Int64,
             let type = RequestDataType(rawValue: _type.toInt()), let _format = dict["fieldFormat"] as? Int64,
@@ -203,6 +169,40 @@ public class ERequestData: NSManagedObject, Entity {
         reqData.markForDelete = false
         db.saveMainContext()
         return reqData
+    }
+    
+    func updateCKRecord(_ record: CKRecord) {
+        self.managedObjectContext?.performAndWait {
+            record["created"] = self.created as CKRecordValue
+            record["modified"] = self.modified as CKRecordValue
+            record["changeTag"] = self.changeTag as CKRecordValue
+            record["desc"] = (self.desc ?? "") as CKRecordValue
+            record["fieldFormat"] = self.fieldFormat as CKRecordValue
+            record["id"] = self.getId() as CKRecordValue
+            record["wsId"] = self.getWsId() as CKRecordValue
+            record["key"] = (self.key ?? "") as CKRecordValue
+            record["type"] = self.type as CKRecordValue
+            record["value"] = (self.value ?? "") as CKRecordValue
+            record["version"] = self.version as CKRecordValue
+        }
+    }
+    
+    func updateFromCKRecord(_ record: CKRecord, ctx: NSManagedObjectContext) {
+        if let moc = self.managedObjectContext {
+            moc.performAndWait {
+                if let x = record["created"] as? Int64 { self.created = x }
+                if let x = record["modified"] as? Int64 { self.modified = x }
+                if let x = record["changeTag"] as? Int64 { self.changeTag = x }
+                if let x = record["desc"] as? String { self.desc = x }
+                if let x = record["fieldFormat"] as? Int64 { self.fieldFormat = x }
+                if let x = record["id"] as? String { self.id = x }
+                if let x = record["key"] as? String { self.key = x }
+                if let x = record["type"] as? Int64 { self.type = x }
+                if let x = record["value"] as? String { self.value = x }
+                if let x = record["version"] as? Int64 { self.version = x }
+                ERequestData.addBackReference(record: record, reqData: self, ctx: moc)
+            }
+        }
     }
     
     public func toDictionary() -> [String : Any] {

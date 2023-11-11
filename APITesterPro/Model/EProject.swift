@@ -65,46 +65,6 @@ public class EProject: NSManagedObject, Entity {
         //if self.modified < AppState.editRequestSaveTs { self.modified = AppState.editRequestSaveTs }
     }
     
-    func updateCKRecord(_ record: CKRecord, workspace: CKRecord) {
-        self.managedObjectContext?.performAndWait {
-            record["created"] = self.created as CKRecordValue
-            record["modified"] = self.modified as CKRecordValue
-            record["changeTag"] = self.changeTag as CKRecordValue
-            record["desc"] = (self.desc ?? "") as CKRecordValue
-            record["id"] = self.getId() as CKRecordValue
-            record["wsId"] = self.getWsId() as CKRecordValue
-            record["name"] = (self.name ?? "") as CKRecordValue
-            record["version"] = self.version as CKRecordValue
-            let ref = CKRecord.Reference(record: workspace, action: .none)
-            record["workspace"] = ref
-        }
-    }
-    
-    static func addRequestReference(to project: CKRecord, request: CKRecord) {
-        let ref = CKRecord.Reference(record: request, action: .deleteSelf)
-        var xs = project["requests"] as? [CKRecord.Reference] ?? [CKRecord.Reference]()
-        if !xs.contains(ref) {
-            xs.append(ref)
-            project["requests"] = xs as CKRecordValue
-        }
-    }
-    
-    static func addRequestMethodReference(to project: CKRecord, requestMethod: CKRecord) {
-        let ref = CKRecord.Reference(record: requestMethod, action: .deleteSelf)
-        var xs = project["requestMethods"] as? [CKRecord.Reference] ?? [CKRecord.Reference]()
-        if !xs.contains(ref) {
-            xs.append(ref)
-            project["requestMethods"] = xs as CKRecordValue
-        }
-    }
-    
-    static func getWorkspace(_ record: CKRecord, ctx: NSManagedObjectContext) -> EWorkspace? {
-        if let ref = record["workspace"] as? CKRecord.Reference {
-            return CoreDataService.shared.getWorkspace(id: EACloudKit.shared.entityID(recordID: ref.recordID), ctx: ctx)
-        }
-        return nil
-    }
-    
     /// Returns project from the given record reference. If the project does not exists, one will be created.
     static func getProjectFromReference(_ ref: CKRecord.Reference, record: CKRecord, ctx: NSManagedObjectContext) -> EProject? {
         let projId = EACloudKit.shared.entityID(recordID: ref.recordID)
@@ -120,22 +80,6 @@ public class EProject: NSManagedObject, Entity {
             return xs.map { ref -> CKRecord.ID in ref.recordID }
         }
         return []
-    }
-    
-    func updateFromCKRecord(_ record: CKRecord, ctx: NSManagedObjectContext) {
-        if let moc = self.managedObjectContext {
-            moc.performAndWait {
-                if let x = record["created"] as? Int64 { self.created = x }
-                if let x = record["modified"] as? Int64 { self.modified = x }
-                if let x = record["changeTag"] as? Int64 { self.changeTag = x }
-                if let x = record["desc"] as? String { self.desc = x }
-                if let x = record["id"] as? String { self.id = x }
-                if let x = record["wsId"] as? String { self.wsId = x }
-                if let x = record["name"] as? String { self.name = x }
-                if let x = record["version"] as? Int64 { self.version = x }
-                if let ws = EProject.getWorkspace(record, ctx: moc) { self.workspace = ws }
-            }
-        }
     }
     
     public static func fromDictionary(_ dict: [String: Any]) -> EProject? {
@@ -165,6 +109,37 @@ public class EProject: NSManagedObject, Entity {
         proj.markForDelete = false
         db.saveMainContext()
         return proj
+    }
+    
+    func updateCKRecord(_ record: CKRecord, workspace: CKRecord) {
+        self.managedObjectContext?.performAndWait {
+            record["created"] = self.created as CKRecordValue
+            record["modified"] = self.modified as CKRecordValue
+            record["changeTag"] = self.changeTag as CKRecordValue
+            record["desc"] = (self.desc ?? "") as CKRecordValue
+            record["id"] = self.getId() as CKRecordValue
+            record["wsId"] = self.getWsId() as CKRecordValue
+            record["name"] = (self.name ?? "") as CKRecordValue
+            record["version"] = self.version as CKRecordValue
+            let ref = CKRecord.Reference(record: workspace, action: .deleteSelf)
+            record["workspace"] = ref
+        }
+    }
+    
+    func updateFromCKRecord(_ record: CKRecord, ctx: NSManagedObjectContext) {
+        if let moc = self.managedObjectContext {
+            moc.performAndWait {
+                if let x = record["created"] as? Int64 { self.created = x }
+                if let x = record["modified"] as? Int64 { self.modified = x }
+                if let x = record["changeTag"] as? Int64 { self.changeTag = x }
+                if let x = record["desc"] as? String { self.desc = x }
+                if let x = record["id"] as? String { self.id = x }
+                if let x = record["wsId"] as? String { self.wsId = x }
+                if let x = record["name"] as? String { self.name = x }
+                if let x = record["version"] as? Int64 { self.version = x }
+                if let ws = EWorkspace.getWorkspace(record, ctx: moc) { self.workspace = ws }
+            }
+        }
     }
     
     public func toDictionary() -> [String: Any] {
