@@ -10,7 +10,8 @@
         <attribute name="name" attributeType="String" defaultValueString=""/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wsId" attributeType="String" defaultValueString=""/>
-        <relationship name="variables" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EEnvVar" inverseName="env" inverseEntity="EEnvVar"/>
+        <relationship name="variables" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EEnvVar" inverseName="env" inverseEntity="EEnvVar"/>
+        <relationship name="workspace" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWorkspace" inverseName="envs" inverseEntity="EWorkspace"/>
         <fetchIndex name="byId">
             <fetchIndexElement property="id" type="Binary" order="ascending"/>
         </fetchIndex>
@@ -271,13 +272,13 @@
         <attribute name="value" attributeType="String" defaultValueString=""/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wsId" attributeType="String" defaultValueString=""/>
-        <relationship name="binary" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ERequestBodyData" inverseName="binary" inverseEntity="ERequestBodyData"/>
+        <relationship name="binary" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequestBodyData" inverseName="binary" inverseEntity="ERequestBodyData"/>
         <relationship name="files" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EFile" inverseName="requestData" inverseEntity="EFile"/>
-        <relationship name="form" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ERequestBodyData" inverseName="form" inverseEntity="ERequestBodyData"/>
-        <relationship name="header" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ERequest" inverseName="headers" inverseEntity="ERequest"/>
+        <relationship name="form" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequestBodyData" inverseName="form" inverseEntity="ERequestBodyData"/>
+        <relationship name="header" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequest" inverseName="headers" inverseEntity="ERequest"/>
         <relationship name="image" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="EImage" inverseName="requestData" inverseEntity="EImage"/>
-        <relationship name="multipart" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ERequestBodyData" inverseName="multipart" inverseEntity="ERequestBodyData"/>
-        <relationship name="param" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ERequest" inverseName="params" inverseEntity="ERequest"/>
+        <relationship name="multipart" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequestBodyData" inverseName="multipart" inverseEntity="ERequestBodyData"/>
+        <relationship name="param" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequest" inverseName="params" inverseEntity="ERequest"/>
         <fetchIndex name="byCreated">
             <fetchIndexElement property="created" type="Binary" order="ascending"/>
         </fetchIndex>
@@ -337,6 +338,7 @@
         <attribute name="saveResponse" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="syncDisabled" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="envs" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EEnv" inverseName="workspace" inverseEntity="EEnv"/>
         <relationship name="projects" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EProject" inverseName="workspace" inverseEntity="EProject"/>
         <fetchIndex name="byCreated">
             <fetchIndexElement property="created" type="Binary" order="ascending"/>
