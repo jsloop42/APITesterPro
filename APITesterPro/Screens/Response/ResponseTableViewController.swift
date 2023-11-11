@@ -559,7 +559,7 @@ class ResponseTableViewController: APITesterProTableViewController {
             self.data?.request = self.request
         }
         if self.data == nil {
-            if let history = self.localdb.getLatestHistory(reqId: req.getId(), includeMarkForDelete: nil, ctx: self.localdb.mainMOC) {
+            if let history = self.localdb.getLatestHistory(reqId: req.getId(), isMarkForDelete: nil, ctx: self.localdb.mainMOC) {
                 self.data = ResponseData(history: history)
                 self.data?.history = history
                 self.data?.request = req

@@ -279,7 +279,7 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
         let delete = UIContextualAction(style: .destructive, title: "Delete") { action, view, completion in
             Log.debug("delete row: \(indexPath)")
             if ws == self.wsSelected {  // Reset selection to the default workspace
-                let wss = self.localdb.getAllWorkspaces(offset: 0, limit: 1, includeMarkForDelete: false, ctx: self.localdb.mainMOC)
+                let wss = self.localdb.getAllWorkspaces(offset: 0, limit: 1, isMarkForDelete: false, ctx: self.localdb.mainMOC)
                 self.wsSelected = !wss.isEmpty ? wss.first! : self.localdb.getDefaultWorkspace()
             }
             self.localdb.markEntityForDelete(ws)
