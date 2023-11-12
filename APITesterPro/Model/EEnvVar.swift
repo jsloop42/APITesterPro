@@ -87,7 +87,7 @@ public class EEnvVar: NSManagedObject, Entity {
         guard let ckEnv: CKRecord = EEnv.getCKRecord(id: envId, wsId: wsId, ctx: ctx) else { return ckEnvVar }
         ctx.performAndWait {
             envVar = db.getEnvVar(id: id, ctx: ctx)
-            let zoneID = self.ck.zoneID(workspaceId: wsId)
+            let zoneID = envVar.getZoneID()
             let ckEnvVarID = self.ck.recordID(entityId: id, zoneID: zoneID)
             let ckEnvVar = self.ck.createRecord(recordID: ckEnvVarID, recordType: envVar.recordType)
             envVar.updateCKRecord(ckEnvVar, env: ckEnv)
