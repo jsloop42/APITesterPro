@@ -11,6 +11,8 @@ import CoreData
 import CloudKit
 
 public class EEnvVar: NSManagedObject, Entity {
+    static let db: CoreDataService = CoreDataService.shared
+    static let ck: EACloudKit = EACloudKit.shared
     public var recordType: String { return "EnvVar" }
     private let secureTrans = SecureTransformerString()
     
@@ -68,8 +70,7 @@ public class EEnvVar: NSManagedObject, Entity {
     
     public static func fromDictionary(_ dict: [String: Any]) -> EEnvVar? {
         guard let id = dict["id"] as? String else { return nil }
-        let db = CoreDataService.shared
-        guard let envVar = db.createEnvVar(name: "", value: "", id: id, checkExists: true, ctx: db.mainMOC) else { return nil }
+        guard let envVar = self.db.createEnvVar(name: "", value: "", id: id, checkExists: true, ctx: self.db.mainMOC) else { return nil }
         if let x = dict["created"] as? Int64 { envVar.created = x }
         if let x = dict["modified"] as? Int64 { envVar.modified = x }
         if let x = dict["changeTag"] as? Int64 { envVar.changeTag = x }
@@ -78,6 +79,20 @@ public class EEnvVar: NSManagedObject, Entity {
         if let x = dict["version"] as? Int64 { envVar.version = x }
         envVar.markForDelete = false
         return envVar
+    }
+    
+    static func getCKRecord(id: String, envId: String, wsId: String, ctx: NSManagedObjectContext) -> CKRecord? {
+        var envVar: EEnvVar!
+        var ckEnvVar: CKRecord!
+        guard let ckEnv: CKRecord = EEnv.getCKRecord(id: envId, wsId: wsId, ctx: ctx) else { return ckEnvVar }
+        ctx.performAndWait {
+            envVar = db.getEnvVar(id: id, ctx: ctx)
+            let zoneID = self.ck.zoneID(workspaceId: wsId)
+            let ckEnvVarID = self.ck.recordID(entityId: id, zoneID: zoneID)
+            let ckEnvVar = self.ck.createRecord(recordID: ckEnvVarID, recordType: envVar.recordType)
+            envVar.updateCKRecord(ckEnvVar, env: ckEnv)
+        }
+        return ckEnvVar
     }
     
     func updateCKRecord(_ record: CKRecord, env: CKRecord) {
