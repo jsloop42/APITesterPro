@@ -11,6 +11,7 @@ import CoreData
 import CloudKit
 
 public class EHistory: NSManagedObject, Entity {
+    public var recordType: String { return "History" }
     private let secureTrans = SecureTransformerData()
     
     static func initFromResponseData(_ respData: ResponseData) -> EHistory {
@@ -59,8 +60,6 @@ public class EHistory: NSManagedObject, Entity {
         history.wsId = respData.wsId
         return history
     }
-    
-    public var recordType: String { return "History" }
     
     public func getId() -> String {
         return self.id ?? ""
