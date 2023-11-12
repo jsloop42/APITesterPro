@@ -21,8 +21,9 @@ struct EditRequestInfo: Hashable {
 class App {
     static let shared: App = App()
     var popupBottomContraints: NSLayoutConstraint?
-    private var dbService = PersistenceService.shared
+    private var dbSvc = PersistenceService.shared
     private let localdb = CoreDataService.shared
+    private let ck = EACloudKit.shared
     private let utils = EAUtils.shared
     /// Entity diff rescheduler.
     var diffRescheduler = EARescheduler(interval: 0.3, type: .everyFn)
@@ -88,8 +89,8 @@ class App {
     
     private func didFinishLaunchingImpl(window: UIWindow) {
         if !self.appLaunched {
-            CoreDataService.shared.bootstrap()
-            EACloudKit.shared.bootstrap()
+            self.localdb.bootstrap()
+            self.ck.bootstrap()
             self.initUI(window.rootViewController as! UINavigationController)
             self.appLaunched = true
         }
@@ -259,7 +260,7 @@ class App {
     /// Returns the current workspace
     func getSelectedWorkspace() -> EWorkspace {
         if AppState.currentWorkspace != nil { return AppState.currentWorkspace! }
-        let ckWsId = EACloudKit.shared.getValue(key: Const.selectedWorkspaceIdKey) as? String ?? ""
+        let ckWsId = self.ck.getValue(key: Const.selectedWorkspaceIdKey) as? String ?? ""
         var wsId = self.utils.getValue(Const.selectedWorkspaceIdKey) as? String ?? ""
         if wsId.isEmpty && !ckWsId.isEmpty {
             wsId = ckWsId
@@ -280,13 +281,13 @@ class App {
     }
     
     func saveSelectedWorkspaceId(_ id: String) {
-        EACloudKit.shared.saveValue(key: Const.selectedWorkspaceIdKey, value: id)
+        self.ck.saveValue(key: Const.selectedWorkspaceIdKey, value: id)
         self.utils.setValue(key: Const.selectedWorkspaceIdKey, value: id)
     }
     
     func didReceiveMemoryWarning() {
         Log.debug("app: did receive memory warning")
-        PersistenceService.shared.clearCache()
+        self.dbSvc.clearCache()
     }
     
     func getImageType(_ url: URL) -> ImageType? {
@@ -309,7 +310,7 @@ class App {
     func addEditRequestDeleteObject(_ obj: Entity?) {
         guard let obj = obj else { return }
         obj.managedObjectContext?.performAndWait {
-            if obj.objectID.isTemporaryID { CoreDataService.shared.deleteEntity(obj); return }
+            if obj.objectID.isTemporaryID { self.localdb.deleteEntity(obj); return }
             guard let type = RecordType.from(id: obj.getId()) else { return }
             self.editReqDelete.insert(EditRequestInfo(id: obj.getId(), moID: obj.objectID, recordType: type, isDelete: true))
         }
@@ -324,111 +325,7 @@ class App {
         self.editReqDelete.removeAll()
     }
     
-    func markEntityForDelete(file: EFile?, ctx: NSManagedObjectContext? = nil) {
-        ctx?.performAndWait {
-            guard let file = file else { return }
-            file.requestData = nil
-            self.localdb.markEntityForDelete(file, ctx: ctx)
-            self.addEditRequestDeleteObject(file)
-        }
-    }
-    
-    func markForDelete(image: EImage?, ctx: NSManagedObjectContext? = nil) {
-        ctx?.performAndWait {
-            guard let image = image else { return }
-            image.requestData = nil
-            self.localdb.markEntityForDelete(image, ctx: ctx)
-            self.addEditRequestDeleteObject(image)
-        }
-    }
-    
-    func markEntityForDelete(reqData: ERequestData?, ctx: NSManagedObjectContext? = nil) {
-        ctx?.performAndWait {
-            guard let reqData = reqData else { return }
-            if let xs = reqData.files?.allObjects as? [EFile] {
-                xs.forEach { file in self.markEntityForDelete(file: file, ctx: ctx) }
-            }
-            if let img = reqData.image { self.markForDelete(image: img, ctx: ctx) }
-            self.localdb.markEntityForDelete(reqData, ctx: ctx)
-            reqData.header = nil
-            reqData.param = nil
-            reqData.form = nil
-            reqData.multipart = nil
-            reqData.binary = nil
-            reqData.image = nil
-            self.addEditRequestDeleteObject(reqData)
-        }
-    }
-    
-    func markEntityForDelete(body: ERequestBodyData?, ctx: NSManagedObjectContext? = nil) {
-        ctx?.performAndWait {
-            guard let body = body else { return }
-            if let xs = body.form?.allObjects as? [ERequestData] {
-                xs.forEach { reqData in self.markEntityForDelete(reqData: reqData, ctx: ctx) }
-            }
-            if let xs = body.multipart?.allObjects as? [ERequestData] {
-                xs.forEach { reqData in self.markEntityForDelete(reqData: reqData, ctx: ctx) }
-            }
-            if let bin = body.binary { self.markEntityForDelete(reqData: bin, ctx: ctx) }
-            body.request = nil
-            self.localdb.markEntityForDelete(body, ctx: ctx)
-            AppState.editRequest?.body = nil
-            self.addEditRequestDeleteObject(body)
-        }
-    }
-    
-    func markEntityForDelete(reqMethodData: ERequestMethodData?, ctx: NSManagedObjectContext? = nil) {
-        ctx?.performAndWait {
-            guard let reqMethodData = reqMethodData else { return }
-            self.localdb.markEntityForDelete(reqMethodData)
-            reqMethodData.project = nil
-            self.addEditRequestDeleteObject(reqMethodData)
-        }
-    }
-    
-    func markEntityForDelete(req: ERequest?, ctx: NSManagedObjectContext? = nil) {
-        ctx?.performAndWait {
-            guard let req = req else { return }
-            self.localdb.markEntityForDelete(req)
-            guard let projId = req.project?.getId() else { return }
-            req.project = nil
-            self.markEntityForDelete(body: req.body)
-            if let xs = req.headers?.allObjects as? [ERequestData] {
-                xs.forEach { reqData in self.markEntityForDelete(reqData: reqData) }
-            }
-            if let xs = req.params?.allObjects as? [ERequestData] {
-                xs.forEach { reqData in self.markEntityForDelete(reqData: reqData) }
-            }
-            let reqMethods = self.localdb.getRequestMethodDataMarkedForDelete(projId: projId, ctx: ctx)
-            reqMethods.forEach { method in self.markEntityForDelete(reqMethodData: method, ctx: ctx) }
-            self.addEditRequestDeleteObject(req)
-        }
-    }
-    
-    func markEntityForDelete(proj: EProject?, ctx: NSManagedObjectContext? = nil) {
-        ctx?.performAndWait {
-            guard let proj = proj else { return }
-            self.localdb.markEntityForDelete(proj)
-            proj.workspace = nil
-            if let xs = proj.requests?.allObjects as? [ERequest] {
-                xs.forEach { req in self.markEntityForDelete(req: req, ctx: ctx) }
-            }
-            self.addEditRequestDeleteObject(proj)
-        }
-    }
-    
-    func markEntityForDelete(ws: EWorkspace?, ctx: NSManagedObjectContext? = nil) {
-        ctx?.performAndWait {
-            guard let ws = ws else { return }
-            self.localdb.markEntityForDelete(ws)
-            if let xs = ws.projects?.allObjects as? [EProject] {
-                xs.forEach { proj in self.markEntityForDelete(proj: proj, ctx: ctx) }
-            }
-            self.addEditRequestDeleteObject(ws)
-        }        
-    }
-    
-    /// MARK: - Entity change tracking
+    // MARK: - Entity change tracking
     
     func addEditRequestEntity(_ obj: Entity?) {
         guard let obj = obj, let type = RecordType.from(id: obj.getId()) else { return }
