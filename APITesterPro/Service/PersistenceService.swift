@@ -2181,14 +2181,7 @@ class PersistenceService {
     
     func saveEnvToCloud(_ env: EEnv) {
         env.managedObjectContext?.perform {
-            let wsId = env.getWsId()
-            // ws record
-            let zoneID = self.ck.zoneID(workspaceId: wsId)
-            guard let ckWs = EWorkspace.getCKRecord(id: wsId, ctx: env.managedObjectContext!) else { return }
-            // env record
-            let ckEnvID = self.ck.recordID(entityId: env.getId(), zoneID: zoneID)
-            let ckEnv = self.ck.createRecord(recordID: ckEnvID, recordType: env.recordType)
-            env.updateCKRecord(ckEnv, workspace: ckWs)
+            guard let ckEnv = EEnv.getCKRecord(id: env.getId(), wsId: env.getWsId(), ctx: env.managedObjectContext!) else { return }
             self.saveToCloud(record: ckEnv, entity: env)
         }
     }
