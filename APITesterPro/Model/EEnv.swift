@@ -11,6 +11,8 @@ import CoreData
 import CloudKit
 
 public class EEnv: NSManagedObject, Entity {
+    static let db: CoreDataService = CoreDataService.shared
+    static let ck: EACloudKit = EACloudKit.shared
     public var recordType: String { return "Env" }
     
     public func getId() -> String {
@@ -92,6 +94,20 @@ public class EEnv: NSManagedObject, Entity {
         env.markForDelete = false
         db.saveMainContext()
         return env
+    }
+    
+    static func getCKRecord(id: String, wsId: String, ctx: NSManagedObjectContext) -> CKRecord? {
+        var env: EEnv!
+        var ckEnv: CKRecord!
+        guard let ckWs: CKRecord = EWorkspace.getCKRecord(id: wsId, ctx: ctx) else { return ckEnv }
+        ctx.performAndWait {
+            env = db.getEnv(id: id, ctx: ctx)
+            let zoneID = self.ck.zoneID(workspaceId: ckWs.getWsId())
+            let ckEnvID = self.ck.recordID(entityId: env.getId(), zoneID: zoneID)
+            let ckEnv = self.ck.createRecord(recordID: ckEnvID, recordType: env.recordType)
+            env.updateCKRecord(ckEnv, workspace: ckWs)
+        }
+        return ckEnv
     }
     
     func updateCKRecord(_ record: CKRecord, workspace: CKRecord) {
