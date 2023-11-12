@@ -115,11 +115,12 @@ struct ResponseData: CustomDebugStringConvertible, Equatable {
         self.created = history.created
         self.mode = .history
         self.history = history
-        self.urlRequestString = history.request ?? ""
+        self.urlRequestString = history.urlRequest ?? ""
         self.method = history.method ?? ""
         self.url = history.url ?? ""
         self.isSecure = self.isHTTPS(url: self.url)
-        self.requestId = history.requestId ?? ""
+        self.request = history.request
+        self.requestId = history.request?.getId() ?? ""
         self.wsId = history.wsId ?? ""
         self.hasRequestBody = history.hasRequestBody
         self.responseData = history.responseData

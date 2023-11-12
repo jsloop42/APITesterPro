@@ -99,10 +99,8 @@
         <attribute name="networkProtocolName" attributeType="String" defaultValueString=""/>
         <attribute name="remoteAddress" attributeType="String" defaultValueString=""/>
         <attribute name="remotePort" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="request" optional="YES" attributeType="String"/>
         <attribute name="requestBodyBytes" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="requestHeaderBytes" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="requestId" optional="YES" attributeType="String"/>
         <attribute name="requestTime" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="responseBodyBytes" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="responseData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
@@ -115,10 +113,12 @@
         <attribute name="tlsCipherSuite" attributeType="String" defaultValueString=""/>
         <attribute name="tlsProtocolVersion" attributeType="String" defaultValueString=""/>
         <attribute name="url" attributeType="String" defaultValueString=""/>
+        <attribute name="urlRequest" optional="YES" attributeType="String"/>
         <attribute name="version" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wsId" optional="YES" attributeType="String"/>
+        <relationship name="request" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequest" inverseName="histories" inverseEntity="ERequest"/>
         <fetchIndex name="byRequestId">
-            <fetchIndexElement property="requestId" type="Binary" order="ascending"/>
+            <fetchIndexElement property="request" type="Binary" order="ascending"/>
         </fetchIndex>
         <fetchIndex name="byMarkForDelete">
             <fetchIndexElement property="markForDelete" type="Binary" order="ascending"/>
@@ -210,6 +210,7 @@
         <attribute name="wsId" attributeType="String" defaultValueString=""/>
         <relationship name="body" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ERequestBodyData" inverseName="request" inverseEntity="ERequestBodyData"/>
         <relationship name="headers" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ERequestData" inverseName="header" inverseEntity="ERequestData"/>
+        <relationship name="histories" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EHistory" inverseName="request" inverseEntity="EHistory"/>
         <relationship name="method" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequestMethodData" inverseName="request" inverseEntity="ERequestMethodData"/>
         <relationship name="params" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ERequestData" inverseName="param" inverseEntity="ERequestData"/>
         <relationship name="project" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EProject" inverseName="requests" inverseEntity="EProject"/>

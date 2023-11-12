@@ -11,6 +11,8 @@ import CloudKit
 import CoreData
 
 public class EImage: NSManagedObject, Entity {
+    static let db: CoreDataService = CoreDataService.shared
+    static let ck: EACloudKit = EACloudKit.shared
     public var recordType: String { return "Image" }
     
     public func getId() -> String {
@@ -72,7 +74,7 @@ public class EImage: NSManagedObject, Entity {
     
     static func getRequestData(_ record: CKRecord, ctx: NSManagedObjectContext) -> ERequestData? {
         if let ref = record["requestData"] as? CKRecord.Reference {
-            return CoreDataService.shared.getRequestData(id: EACloudKit.shared.entityID(recordID: ref.recordID), ctx: ctx)
+            return self.db.getRequestData(id: self.ck.entityID(recordID: ref.recordID), ctx: ctx)
         }
         return nil
     }
@@ -80,9 +82,8 @@ public class EImage: NSManagedObject, Entity {
     public static func fromDictionary(_ dict: [String: Any]) -> EImage? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String, let data = dict["data"] as? String,
         let name = dict["name"] as? String, let type = dict["type"] as? String else { return nil }
-        let db = CoreDataService.shared
         guard let data1 = EAUtils.shared.stringToImageData(data) else { return nil }
-        guard let image = db.createImage(imageId: id, data: data1, wsId: wsId, name: name, type: type, ctx: db.mainMOC) else { return nil }
+        guard let image = self.db.createImage(imageId: id, data: data1, wsId: wsId, name: name, type: type, ctx: self.db.mainMOC) else { return nil }
         if let x = dict["created"] as? Int64 { image.created = x }
         if let x = dict["modified"] as? Int64 { image.modified = x }
         if let x = dict["changeTag"] as? Int64 { image.changeTag = x }
@@ -92,7 +93,23 @@ public class EImage: NSManagedObject, Entity {
         return image
     }
     
-    func updateCKRecord(_ record: CKRecord) {
+    /// EImage belongs to ERequestData with belongs to ERequestBodyData. ERequestData can be form or binary type.
+    static func getCKRecord(id: String, reqBodyId: String, reqDataId: String, reqId: String, projId: String, wsId: String, reqType: RequestDataType, ctx: NSManagedObjectContext) -> CKRecord? {
+        var image: EImage!
+        var ckImage: CKRecord!
+        // We fetch ERequestData which belongs to body
+        guard let ckReqData = ERequestData.getCKRecord(id: reqDataId, reqBodyId: reqBodyId, reqId: reqId, projId: projId, wsId: wsId, reqType: reqType, ctx: ctx) else { return ckImage }
+        ctx.performAndWait {
+            image = db.getImageData(id: id, ctx: ctx)
+            let zoneID = image.getZoneID()
+            let ckImageID = self.ck.recordID(entityId: id, zoneID: zoneID)
+            ckImage = self.ck.createRecord(recordID: ckImageID, recordType: image.recordType)
+            image.updateCKRecord(ckImage, requestData: ckReqData)
+        }
+        return ckImage
+    }
+    
+    func updateCKRecord(_ record: CKRecord, requestData: CKRecord) {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
             record["modified"] = self.modified as CKRecordValue
@@ -112,6 +129,8 @@ public class EImage: NSManagedObject, Entity {
             record["name"] = (self.name ?? "") as CKRecordValue
             record["type"] = (self.type ?? "") as CKRecordValue
             record["version"] = self.version as CKRecordValue
+            let ref = CKRecord.Reference(record: requestData, action: .deleteSelf)
+            record["requestData"] = ref
         }
     }
     

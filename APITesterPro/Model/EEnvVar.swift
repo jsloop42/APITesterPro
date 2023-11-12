@@ -89,7 +89,7 @@ public class EEnvVar: NSManagedObject, Entity {
             envVar = db.getEnvVar(id: id, ctx: ctx)
             let zoneID = envVar.getZoneID()
             let ckEnvVarID = self.ck.recordID(entityId: id, zoneID: zoneID)
-            let ckEnvVar = self.ck.createRecord(recordID: ckEnvVarID, recordType: envVar.recordType)
+            ckEnvVar = self.ck.createRecord(recordID: ckEnvVarID, recordType: envVar.recordType)
             envVar.updateCKRecord(ckEnvVar, env: ckEnv)
         }
         return ckEnvVar

@@ -115,14 +115,14 @@ final class RequestManager {
                     history.statusCode = info.statusCode.toInt64()
                     history.elapsed = info.connectionInfo.elapsed
                     history.responseBodyBytes = info.connectionInfo.responseBodyBytesReceived
-                    history.requestId = info.requestId
                     history.url = info.url
                     history.isSecure = info.isSecure
                     history.method = info.method
-                    history.request = "\(info.method) \(info.url) HTTP/1.1"
+                    history.urlRequest = "\(info.method) \(info.url) HTTP/1.1"
                 }
             }
             if history != nil {
+                history.request = self.request
                 info.history = history
                 if let cookies = info.cookiesData as NSObject? { history.cookies = cookies }
                 self.localdb.saveMainContext()

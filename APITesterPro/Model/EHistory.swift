@@ -11,6 +11,8 @@ import CoreData
 import CloudKit
 
 public class EHistory: NSManagedObject, Entity {
+    static let db: CoreDataService = CoreDataService.shared
+    static let ck: EACloudKit = EACloudKit.shared
     public var recordType: String { return "History" }
     private let secureTrans = SecureTransformerData()
     
@@ -27,7 +29,7 @@ public class EHistory: NSManagedObject, Entity {
         history.elapsed = respData.connectionInfo.elapsed
         history.fetchStartTime = respData.connectionInfo.fetchStart
         history.hasRequestBody = respData.hasRequestBody
-        history.id = CoreDataService.shared.historyId()
+        history.id = self.db.historyId()
         history.isCellular = respData.connectionInfo.isCellular
         history.isMultipath = respData.connectionInfo.isMultipath
         history.isProxyConnection = respData.connectionInfo.isProxyConnection
@@ -40,10 +42,9 @@ public class EHistory: NSManagedObject, Entity {
         history.networkProtocolName = respData.connectionInfo.networkProtocolName
         history.remoteAddress = respData.connectionInfo.remoteAddress
         history.remotePort = respData.connectionInfo.remotePort
-        history.request = respData.urlRequest?.toString() ?? ""
+        history.request = respData.request
         history.requestBodyBytes = respData.connectionInfo.requestBodyBytesSent
         history.requestHeaderBytes = respData.connectionInfo.requestHeaderBytesSent
-        history.requestId = respData.requestId
         history.requestTime = respData.connectionInfo.requestTime
         history.responseBodyBytes = respData.connectionInfo.responseBodyBytesReceived
         history.responseData = respData.responseData
@@ -56,6 +57,7 @@ public class EHistory: NSManagedObject, Entity {
         history.tlsCipherSuite = respData.connectionInfo.negotiatedTLSCipherSuite
         history.tlsProtocolVersion = respData.connectionInfo.negotiatedTLSProtocolVersion
         history.url = respData.url
+        history.urlRequest = respData.urlRequest?.toString() ?? ""
         history.version = 0
         history.wsId = respData.wsId
         return history
@@ -113,7 +115,7 @@ public class EHistory: NSManagedObject, Entity {
         
     }
     
-    public func updateCKRecord(_ record: CKRecord) {
+    public func updateCKRecord(_ record: CKRecord, request: CKRecord) {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
             record["changeTag"] = self.changeTag as CKRecordValue
@@ -145,8 +147,6 @@ public class EHistory: NSManagedObject, Entity {
             record["networkProtocolName"] = (self.networkProtocolName ?? "") as CKRecordValue
             record["remoteAddress"] = (self.remoteAddress ?? "") as CKRecordValue
             record["remotePort"] = self.remotePort as CKRecordValue
-            record["request"] = (self.request ?? "") as CKRecordValue  // urlRequestString
-            record["requestId"] = (self.requestId ?? "") as CKRecordValue
             record["responseTime"] = self.responseTime as CKRecordValue
             record["responseBodyBytes"] = self.responseBodyBytes as CKRecordValue
             if let id = self.id, let data = self.responseData {
@@ -175,9 +175,12 @@ public class EHistory: NSManagedObject, Entity {
             record["tlsCipherSuite"] = (self.tlsCipherSuite ?? "") as CKRecordValue
             record["tlsProtocolVersion"] = (self.tlsProtocolVersion ?? "") as CKRecordValue
             record["url"] = (self.url ?? "") as CKRecordValue
+            record["urlRequest"] = (self.urlRequest ?? "") as CKRecordValue  // urlRequestString
             record["method"] = (self.method ?? "") as CKRecordValue
             record["version"] = self.version as CKRecordValue
             record["wsId"] = self.getWsId() as CKRecordValue
+            let ref = CKRecord.Reference(record: request, action: .deleteSelf)
+            record["request"] = ref
         }
     }
     
@@ -213,10 +216,8 @@ public class EHistory: NSManagedObject, Entity {
                 if let x = record["networkProtocolName"] as? String { self.networkProtocolName = x }
                 if let x = record["remoteAddress"] as? String { self.remoteAddress = x }
                 if let x = record["remotePort"] as? Int64 { self.remotePort = x }
-                if let x = record["request"] as? String { self.request = x }
                 if let x = record["requestHeaderBytes"] as? Int64 { self.requestHeaderBytes = x }
                 if let x = record["requestBodyBytes"] as? Int64 { self.requestBodyBytes = x }
-                if let x = record["requestId"] as? String { self.requestId = x }
                 if let x = record["requestTime"] as? Double { self.requestTime = x }
                 if let x = record["responseBodyBytes"] as? Int64 { self.responseBodyBytes = x }
                 if let x = record["responseData"] as? CKAsset, let url = x.fileURL {
@@ -233,8 +234,10 @@ public class EHistory: NSManagedObject, Entity {
                 if let x = record["tlsCipherSuite"] as? String { self.tlsCipherSuite = x }
                 if let x = record["tlsProtoclVersion"] as? String { self.tlsProtocolVersion = x }
                 if let x = record["url"] as? String { self.url = x }
+                if let x = record["urlRequest"] as? String { self.urlRequest = x }
                 if let x = record["version"] as? Int64 { self.version = x }
                 if let x = record["wsId"] as? String { self.wsId = x }
+                if let ref = record["request"] as? CKRecord.Reference, let req = ERequest.getRequestFromReference(ref, record: record, ctx: moc) { self.request = req }
             }
         }
     }

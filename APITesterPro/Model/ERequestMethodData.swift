@@ -11,6 +11,8 @@ import CloudKit
 import CoreData
 
 public class ERequestMethodData: NSManagedObject, Entity {
+    static let db: CoreDataService = CoreDataService.shared
+    static let ck: EACloudKit = EACloudKit.shared
     public var recordType: String { return "RequestMethodData" }
     
     public func getId() -> String {
@@ -67,16 +69,29 @@ public class ERequestMethodData: NSManagedObject, Entity {
     
     public static func fromDictionary(_ dict: [String: Any]) -> ERequestMethodData? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
-        let db = CoreDataService.shared
-        guard let method = db.createRequestMethodData(id: id, wsId: wsId, name: "", ctx: db.mainMOC) else { return nil }
+        guard let method = self.db.createRequestMethodData(id: id, wsId: wsId, name: "", ctx: self.db.mainMOC) else { return nil }
         if let x = dict["created"] as? Int64 { method.created = x }
         if let x = dict["modified"] as? Int64 { method.modified = x }
         if let x = dict["changeTag"] as? Int64 { method.changeTag = x }
         if let x = dict["name"] as? String { method.name = x }
         if let x = dict["version"] as? Int64 { method.version = x }
         method.markForDelete = false
-        db.saveMainContext()
+        self.db.saveMainContext()
         return method
+    }
+    
+    static func getCKRecord(id: String, projId: String, wsId: String, ctx: NSManagedObjectContext) -> CKRecord? {
+        var reqMeth: ERequestMethodData!
+        var ckReqMeth: CKRecord!
+        guard let ckProj = EProject.getCKRecord(id: projId, wsId: wsId, ctx: ctx) else { return ckReqMeth }
+        ctx.performAndWait {
+            reqMeth = db.getRequestMethodData(id: id, ctx: ctx)
+            let zoneID = reqMeth.getZoneID()
+            let ckReqMethID = self.ck.recordID(entityId: id, zoneID: zoneID)
+            ckReqMeth = self.ck.createRecord(recordID: ckReqMethID, recordType: reqMeth.recordType)
+            reqMeth.updateCKRecord(ckReqMeth, project: ckProj)
+        }
+        return ckReqMeth
     }
     
     func updateCKRecord(_ record: CKRecord, project: CKRecord) {

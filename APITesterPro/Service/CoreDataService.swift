@@ -23,6 +23,8 @@ import CoreData
          - forms [ERequestData]
            - files [EFile]
            - image [EImage]
+         - binary ERequestData
+         - multipart [ERequestData]
        - History EHistory
  */
 
@@ -1300,8 +1302,8 @@ class CoreDataService {
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             let fr = NSFetchRequest<EHistory>(entityName: "EHistory")
-            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "requestId == %@", reqId)
-                : NSPredicate(format: "requestId == %@ AND markForDelete == %hhd", reqId, isMarkForDelete!)
+            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "request.id == %@", reqId)
+                : NSPredicate(format: "request.id == %@ AND markForDelete == %hhd", reqId, isMarkForDelete!)
             fr.sortDescriptors = [NSSortDescriptor(key: "created", ascending: false)]
             fr.fetchLimit = 1
             do {
@@ -1792,7 +1794,9 @@ class CoreDataService {
         return x
     }
     
-    func createHistory(id: String, requestId: String, wsId: String, request: String, responseData: Data?, responseHeaders: Data?, statusCode: Int64, elapsed: Int64,
+    
+    // FIXME: Probably remove as it's not used
+    func createHistory(id: String, wsId: String, urlRequest: String, responseData: Data?, responseHeaders: Data?, statusCode: Int64, elapsed: Int64,
                        responseBodyBytes: Int64, url: String, method: String, isSecure: Bool, checkExists: Bool? = true,
                        ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EHistory? {
         var x: EHistory?
@@ -1803,8 +1807,7 @@ class CoreDataService {
             let data = x != nil ? x! : EHistory(context: moc)
             data.id = id
             data.wsId = wsId
-            data.requestId = requestId
-            data.request = request
+            data.urlRequest = urlRequest
             data.responseData = responseData
             data.responseHeaders = responseHeaders
             data.statusCode = statusCode

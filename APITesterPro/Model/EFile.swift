@@ -11,6 +11,8 @@ import CloudKit
 import CoreData
 
 public class EFile: NSManagedObject, Entity {
+    static let db: CoreDataService = CoreDataService.shared
+    static let ck: EACloudKit = EACloudKit.shared
     public var recordType: String { return "File" }
     
     public func getId() -> String {
@@ -65,14 +67,9 @@ public class EFile: NSManagedObject, Entity {
         //if self.modified < AppState.editRequestSaveTs { self.modified = AppState.editRequestSaveTs }
     }
     
-    static func addRequestDataReference(_ file: CKRecord, reqData: CKRecord) {
-        let ref = CKRecord.Reference(record: reqData, action: .none)
-        file["requestData"] = ref as CKRecordValue
-    }
-    
     static func getRequestData(_ record: CKRecord, ctx: NSManagedObjectContext) -> ERequestData? {
         if let ref = record["requestData"] as? CKRecord.Reference {
-            return CoreDataService.shared.getRequestData(id: EACloudKit.shared.entityID(recordID: ref.recordID), ctx: ctx)
+            return self.db.getRequestData(id: self.ck.entityID(recordID: ref.recordID), ctx: ctx)
         }
         return nil
     }
@@ -80,7 +77,6 @@ public class EFile: NSManagedObject, Entity {
     public static func fromDictionary(_ dict: [String: Any]) -> EFile? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String, let _data = dict["data"] as? String,
             let name = dict["name"] as? String, let _type = dict["type"] as? Int64, let type = RequestDataType(rawValue: _type.toInt()) else { return nil }
-        let db = CoreDataService.shared
         var data: Data?
         if let aData = _data.data(using: .utf8) {
             data = aData
@@ -88,7 +84,7 @@ public class EFile: NSManagedObject, Entity {
             data = EAUtils.shared.stringToImageData(_data)
         }
         guard let data1 = data else { return nil }
-        guard let file = db.createFile(fileId: id, data: data1, wsId: wsId, name: name, path: URL(fileURLWithPath: "/tmp/"), type: type, checkExists: true, ctx: db.mainMOC) else { return nil }
+        guard let file = self.db.createFile(fileId: id, data: data1, wsId: wsId, name: name, path: URL(fileURLWithPath: "/tmp/"), type: type, checkExists: true, ctx: self.db.mainMOC) else { return nil }
         if let x = dict["created"] as? Int64 { file.created = x }
         if let x = dict["modified"] as? Int64 { file.modified = x }
         if let x = dict["changeTag"] as? Int64 { file.changeTag = x }
@@ -97,7 +93,23 @@ public class EFile: NSManagedObject, Entity {
         return file
     }
     
-    func updateCKRecord(_ record: CKRecord) {
+    /// EFile belongs to ERequestData with belongs to ERequestBodyData
+    static func getCKRecord(id: String, reqBodyId: String, reqDataId: String, reqId: String, projId: String, wsId: String, reqType: RequestDataType, ctx: NSManagedObjectContext) -> CKRecord? {
+        var file: EFile!
+        var ckFile: CKRecord!
+        // We fetch ERequestData which belongs to body
+        guard let ckReqData = ERequestData.getCKRecord(id: reqDataId, reqBodyId: reqBodyId, reqId: reqId, projId: projId, wsId: wsId, reqType: reqType, ctx: ctx) else { return ckFile }
+        ctx.performAndWait {
+            file = db.getFileData(id: id, ctx: ctx)
+            let zoneID = file.getZoneID()
+            let ckFileID = self.ck.recordID(entityId: id, zoneID: zoneID)
+            ckFile = self.ck.createRecord(recordID: ckFileID, recordType: file.recordType)
+            file.updateCKRecord(ckFile, requestData: ckReqData)
+        }
+        return ckFile
+    }
+    
+    func updateCKRecord(_ record: CKRecord, requestData: CKRecord) {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
             record["modified"] = self.modified as CKRecordValue
@@ -116,6 +128,8 @@ public class EFile: NSManagedObject, Entity {
             record["name"] = (self.name ?? "") as CKRecordValue
             record["type"] = self.type as CKRecordValue
             record["version"] = self.version as CKRecordValue
+            let ref = CKRecord.Reference(record: requestData, action: .deleteSelf)
+            record["requestData"] = ref
         }
     }
     
