@@ -115,6 +115,20 @@ public class EHistory: NSManagedObject, Entity {
         
     }
     
+    static func getCKRecord(id: String, reqId: String, projId: String, wsId: String, ctx: NSManagedObjectContext) -> CKRecord? {
+        var history: EHistory!
+        var ckHistory: CKRecord!
+        guard let ckReq = ERequest.getCKRecord(id: reqId, projId: projId, wsId: wsId, ctx: ctx) else { return ckHistory }
+        ctx.performAndWait {
+            history = db.getHistory(id: id, ctx: ctx)
+            let zoneID = history.getZoneID()
+            let ckHistoryID = self.ck.recordID(entityId: id, zoneID: zoneID)
+            ckHistory = self.ck.createRecord(recordID: ckHistoryID, recordType: history.recordType)
+            history.updateCKRecord(ckHistory, request: ckReq)
+        }
+        return ckHistory
+    }
+    
     public func updateCKRecord(_ record: CKRecord, request: CKRecord) {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
