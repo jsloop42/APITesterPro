@@ -11,6 +11,8 @@ import CloudKit
 import CoreData
 
 public class EProject: NSManagedObject, Entity {
+    static let db: CoreDataService = CoreDataService.shared
+    static let ck: EACloudKit = EACloudKit.shared
     public var recordType: String { return "Project" }
     
     public func getId() -> String {
@@ -67,10 +69,10 @@ public class EProject: NSManagedObject, Entity {
     
     /// Returns project from the given record reference. If the project does not exists, one will be created.
     static func getProjectFromReference(_ ref: CKRecord.Reference, record: CKRecord, ctx: NSManagedObjectContext) -> EProject? {
-        let projId = EACloudKit.shared.entityID(recordID: ref.recordID)
+        let projId = self.ck.entityID(recordID: ref.recordID)
         let wsId = record.getWsId()
-        if let proj = CoreDataService.shared.getProject(id: projId, ctx: ctx) { return proj }
-        let proj = CoreDataService.shared.createProject(id: projId, wsId: wsId, name: "", desc: "", checkExists: false, ctx: ctx)
+        if let proj = self.db.getProject(id: projId, ctx: ctx) { return proj }
+        let proj = self.db.createProject(id: projId, wsId: wsId, name: "", desc: "", checkExists: false, ctx: ctx)
         proj?.changeTag = 0
         return proj
     }
@@ -84,8 +86,7 @@ public class EProject: NSManagedObject, Entity {
     
     public static func fromDictionary(_ dict: [String: Any]) -> EProject? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
-        let db = CoreDataService.shared
-        guard let proj = db.createProject(id: id, wsId: wsId, name: "", desc: "", ctx: db.mainMOC) else { return nil }
+        guard let proj = self.db.createProject(id: id, wsId: wsId, name: "", desc: "", ctx: self.db.mainMOC) else { return nil }
         if let x = dict["created"] as? Int64 { proj.created = x }
         if let x = dict["modified"] as? Int64 { proj.modified = x }
         if let x = dict["changeTag"] as? Int64 { proj.changeTag = x }
@@ -107,8 +108,22 @@ public class EProject: NSManagedObject, Entity {
             }
         }
         proj.markForDelete = false
-        db.saveMainContext()
+        self.db.saveMainContext()
         return proj
+    }
+    
+    static func getCKRecord(id: String, wsId: String, ctx: NSManagedObjectContext) -> CKRecord? {
+        var proj: EProject!
+        var ckProj: CKRecord!
+        guard let ckWs = EWorkspace.getCKRecord(id: wsId, ctx: ctx) else { return ckProj }
+        ctx.performAndWait {
+            proj = db.getProject(id: id, ctx: ctx)
+            let zoneID = proj.getZoneID()
+            let ckProjID = self.ck.recordID(entityId: id, zoneID: zoneID)
+            ckProj = self.ck.createRecord(recordID: ckProjID, recordType: proj.recordType)
+            proj.updateCKRecord(ckProj, workspace: ckWs)
+        }
+        return ckProj
     }
     
     func updateCKRecord(_ record: CKRecord, workspace: CKRecord) {

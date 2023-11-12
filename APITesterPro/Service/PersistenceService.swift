@@ -2099,13 +2099,13 @@ class PersistenceService {
             let wsId  = ws.getId()
             let projId = proj.getId()
             let zoneID = proj.getZoneID()
-            let recordID = self.ck.recordID(entityId: projId, zoneID: zoneID)
-            let ckproj = self.ck.createRecord(recordID: recordID, recordType: RecordType.project.rawValue)
+            guard let ckWs = EWorkspace.getCKRecord(id: wsId, ctx: ctx) else { Log.error("Error getting workspace"); return }
+            guard let ckProj = EProject.getCKRecord(id: projId, wsId: wsId, ctx: ctx) else { Log.error("Error getting project"); return }
             self.fetchRecord(ws, type: .workspace) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
-                case .success(let ckws):
-                    self.saveProjectToCloudImp(ckproj: ckproj, proj: proj, ckws: ckws, ws: ws)
+                case .success(let ckWs):
+                    self.saveProjectToCloudImp(ckProj: ckProj, proj: proj, ckWs: ckWs, ws: ws)
                 case .failure(let error):
                     Log.error("Error getting workspace from cloud: \(error)")
                     if let err = error as? CKError {
@@ -2114,18 +2114,14 @@ class PersistenceService {
                                 switch result {
                                 case .success(_):
                                     ctx.perform {
-                                        let ckwsID = self.ck.recordID(entityId: wsId, zoneID: zoneID)
-                                        let ckws = self.ck.createRecord(recordID: ckwsID, recordType: RecordType.workspace.rawValue)
-                                        ws.updateCKRecord(ckws)
-                                        self.saveProjectToCloudImp(ckproj: ckproj, proj: proj, ckws: ckws, ws: ws, isCreateZoneRecord: true)
+                                        self.saveProjectToCloudImp(ckProj: ckProj, proj: proj, ckWs: ckWs, ws: ws, isCreateZoneRecord: true)
                                     }
                                 case .failure(let error):
                                     Log.error("Error creating zone: \(error)")
                                 }
                             }
                         } else if err.isRecordNotFound() {
-                            let ckws = self.ck.createRecord(recordID: self.ck.recordID(entityId: wsId, zoneID: ckproj.zoneID()), recordType: RecordType.workspace.rawValue)
-                            self.saveProjectToCloudImp(ckproj: ckproj, proj: proj, ckws: ckws, ws: ws)
+                            self.saveProjectToCloudImp(ckProj: ckProj, proj: proj, ckWs: ckWs, ws: ws)
                         }
                     }
                 }
@@ -2149,15 +2145,14 @@ class PersistenceService {
                 guard let self = self else { return }
                 switch result {
                 case .success(let ckproj):
-                    self.saveRequestToCloudImp(ckreq: ckreq, req: req, ckproj: ckproj, proj: proj)
+                    self.saveRequestToCloudImp(ckReq: ckreq, req: req, ckProj: ckproj, proj: proj)
                 case .failure(let error):
                     Log.error("Error fetching project record: \(error)")
                     if let err = error as? CKError {
                         if !err.isRecordExists() {
                             Log.error("Project record does not exist. Retrying with new record.")
-                            let projID = self.ck.recordID(entityId: projId, zoneID: zoneID)
-                            let ckproj = self.ck.createRecord(recordID: projID, recordType: RecordType.project.rawValue)
-                            self.saveRequestToCloudImp(ckreq: ckreq, req: req, ckproj: ckproj, proj: proj)
+                            guard let ckProj = EProject.getCKRecord(id: projId, wsId: wsId, ctx: req.managedObjectContext!) else { Log.error("Error getting project"); return }
+                            self.saveRequestToCloudImp(ckReq: ckreq, req: req, ckProj: ckProj, proj: proj)
                         }
                     }
                 }
@@ -2203,12 +2198,11 @@ class PersistenceService {
         return DeferredSaveModel(record: ckzn, id: wsId)
     }
     
-    /// Saves the given request and corresponding project to the cloud.
-    func saveProjectToCloudImp(ckproj: CKRecord, proj: EProject, ckws: CKRecord, ws: EWorkspace, isCreateZoneRecord: Bool? = false) {
+    /// Saves the given project and workspace to cloud. Workspace is saved because the default workspace is not added to cloud until a project is created in it.
+    func saveProjectToCloudImp(ckProj: CKRecord, proj: EProject, ckWs: CKRecord, ws: EWorkspace, isCreateZoneRecord: Bool? = false) {
         proj.managedObjectContext?.perform {
-            proj.updateCKRecord(ckproj, workspace: ckws)
-            let projModel = DeferredSaveModel(record: ckproj, entity: proj, id: proj.getId())
-            let wsModel = DeferredSaveModel(record: ckws, entity: ws, id: ws.getId())
+            let projModel = DeferredSaveModel(record: ckProj, entity: proj, id: proj.getId())
+            let wsModel = DeferredSaveModel(record: ckWs, entity: ws, id: ws.getId())
             if let createZoneRecord = isCreateZoneRecord, createZoneRecord {
                 self.saveToCloud([projModel, wsModel, self.zoneDeferredSaveModel(ws: ws)])
             } else {
@@ -2218,21 +2212,21 @@ class PersistenceService {
     }
     
     /// Saves the given request and corresponding project to the cloud.
-    func saveRequestToCloudImp(ckreq: CKRecord, req: ERequest, ckproj: CKRecord, proj: EProject) {
+    func saveRequestToCloudImp(ckReq: CKRecord, req: ERequest, ckProj: CKRecord, proj: EProject) {
         req.managedObjectContext?.perform {
             var acc: [DeferredSaveModel] = []
-            let zoneID = ckreq.zoneID()
+            let zoneID = ckReq.zoneID()
             guard let wsId = req.project?.workspace?.getId() else { return }
-            req.updateCKRecord(ckreq, project: ckproj)
-            let projModel = DeferredSaveModel(record: ckproj, entity: proj, id: proj.getId())
-            let reqModel = DeferredSaveModel(record: ckreq, entity: req, id: req.getId())
+            req.updateCKRecord(ckReq, project: ckProj)
+            let projModel = DeferredSaveModel(record: ckProj, entity: proj, id: proj.getId())
+            let reqModel = DeferredSaveModel(record: ckReq, entity: req, id: req.getId())
             acc.append(contentsOf: [projModel, reqModel])
             if let methods = proj.requestMethods?.allObjects as? [ERequestMethodData], methods.count > 0 {
                 methods.forEach { method in
                     if method.markForDelete { self.deleteRequestMethodDataMarkedForDelete(req); return}
                     if method.isCustom && !method.isSynced {
                         let ckmeth = self.ck.createRecord(recordID: self.ck.recordID(entityId: method.getId(), zoneID: zoneID), recordType: RecordType.requestMethodData.rawValue)
-                        method.updateCKRecord(ckmeth, project: ckproj)
+                        method.updateCKRecord(ckmeth, project: ckProj)
                         acc.append(DeferredSaveModel(record: ckmeth, id: ckmeth.id()))
                     }
                 }
@@ -2243,7 +2237,7 @@ class PersistenceService {
                     if !reqData.isSynced {
                         let hdrecord = self.ck.createRecord(recordID: self.ck.recordID(entityId: reqData.getId(), zoneID: zoneID), recordType: RecordType.requestData.rawValue)
                         reqData.updateCKRecord(hdrecord)
-                        ERequestData.addRequestReference(ckreq, toheader: hdrecord)
+                        ERequestData.addRequestReference(ckReq, toheader: hdrecord)
                         acc.append(DeferredSaveModel(record: hdrecord, id: reqData.getId()))
                     }
                 }
@@ -2257,7 +2251,7 @@ class PersistenceService {
                         }
                         let paramrecord = self.ck.createRecord(recordID: self.ck.recordID(entityId: reqData.getId(), zoneID: zoneID), recordType: RecordType.requestData.rawValue)
                         reqData.updateCKRecord(paramrecord)
-                        ERequestData.addRequestReference(ckreq, toParam: paramrecord)
+                        ERequestData.addRequestReference(ckReq, toParam: paramrecord)
                         acc.append(DeferredSaveModel(record: paramrecord, id: reqData.getId()))
                     }
                 }
@@ -2266,7 +2260,7 @@ class PersistenceService {
                 if body.markForDelete { self.deleteRequestBodyDataMarkedForDelete(req); return }
                 let ckbody = self.ck.createRecord(recordID: self.ck.recordID(entityId: body.getId(), zoneID: zoneID), recordType: RecordType.requestBodyData.rawValue)
                 if !body.isSynced {
-                    body.updateCKRecord(ckbody, request: ckreq)
+                    body.updateCKRecord(ckbody, request: ckReq)
                     acc.append(DeferredSaveModel(record: ckbody, id: ckbody.id()))
                 }
                 if let binary = body.binary {
