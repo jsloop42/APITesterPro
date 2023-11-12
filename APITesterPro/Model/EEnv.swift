@@ -68,17 +68,16 @@ public class EEnv: NSManagedObject, Entity {
     }
     
     static func getEnvFromReference(_ ref: CKRecord.Reference, record: CKRecord, ctx: NSManagedObjectContext) -> EEnv? {
-        let envId = EACloudKit.shared.entityID(recordID: ref.recordID)
-        if let env = CoreDataService.shared.getEnv(id: envId, ctx: ctx) { return env }
-        let env = CoreDataService.shared.createEnv(name: "", envId: envId, wsId: "", checkExists: false, ctx: ctx)
+        let envId = self.ck.entityID(recordID: ref.recordID)
+        if let env = self.db.getEnv(id: envId, ctx: ctx) { return env }
+        let env = self.db.createEnv(name: "", envId: envId, wsId: "", checkExists: false, ctx: ctx)
         env?.changeTag = 0
         return env
     }
     
     public static func fromDictionary(_ dict: [String: Any]) -> EEnv? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
-        let db = CoreDataService.shared
-        guard let env = db.createEnv(name: "", envId: id, wsId: wsId, checkExists: true, ctx: db.mainMOC) else { return nil }
+        guard let env = self.db.createEnv(name: "", envId: id, wsId: wsId, checkExists: true, ctx: self.db.mainMOC) else { return nil }
         if let x = dict["created"] as? Int64 { env.created = x }
         if let x = dict["modified"] as? Int64 { env.modified = x }
         if let x = dict["changeTag"] as? Int64 { env.changeTag = x }
@@ -92,7 +91,7 @@ public class EEnv: NSManagedObject, Entity {
             }
         }
         env.markForDelete = false
-        db.saveMainContext()
+        self.db.saveMainContext()
         return env
     }
     
@@ -104,7 +103,7 @@ public class EEnv: NSManagedObject, Entity {
             env = db.getEnv(id: id, ctx: ctx)
             let zoneID = self.ck.zoneID(workspaceId: ckWs.getWsId())
             let ckEnvID = self.ck.recordID(entityId: env.getId(), zoneID: zoneID)
-            let ckEnv = self.ck.createRecord(recordID: ckEnvID, recordType: env.recordType)
+            ckEnv = self.ck.createRecord(recordID: ckEnvID, recordType: env.recordType)
             env.updateCKRecord(ckEnv, workspace: ckWs)
         }
         return ckEnv
