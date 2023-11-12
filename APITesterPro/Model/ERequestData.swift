@@ -11,6 +11,8 @@ import CloudKit
 import CoreData
 
 public class ERequestData: NSManagedObject, Entity {
+    static let db: CoreDataService = CoreDataService.shared
+    static let ck: EACloudKit = EACloudKit.shared
     public var recordType: String { return "RequestData" }
     
     public func getId() -> String {
@@ -65,34 +67,6 @@ public class ERequestData: NSManagedObject, Entity {
         //if self.modified < AppState.editRequestSaveTs { self.modified = AppState.editRequestSaveTs }
     }
     
-    /// Adds binary (ERequestBodyData) back reference to ERequestData.
-    static func addRequestBodyDataReference(_ reqBodyData: CKRecord, toBinary reqData: CKRecord) {
-        let ref = CKRecord.Reference(record: reqBodyData, action: .none)
-        reqData["binary"] = ref
-    }
-    
-    /// Adds a to-one reference to `form` field.
-    static func addRequestBodyDataReference(_ requestBody: CKRecord, toForm reqData: CKRecord, type: RequestDataType) {
-        let ref = CKRecord.Reference(record: requestBody, action: .none)
-        let key: String = {
-            if type == .form { return "form" }
-            if type == .multipart { return "multipart" }
-            return ""
-        }()
-        guard !key.isEmpty else { Log.error("Wrong type passed: \(type.rawValue)"); return }
-        reqData[key] = ref
-    }
-    
-    static func addRequestReference(_ request: CKRecord, toheader reqData: CKRecord) {
-        let ref = CKRecord.Reference(record: request, action: .none)
-        reqData["header"] = ref
-    }
-    
-    static func addRequestReference(_ request: CKRecord, toParam reqData: CKRecord) {
-        let ref = CKRecord.Reference(record: request, action: .none)
-        reqData["param"] = ref
-    }
-    
     static func getRecordType(_ record: CKRecord) -> RequestDataType? {
         guard let x = record["type"] as? Int64, let type = RequestDataType(rawValue: x.toInt()) else { return nil }
         return type
@@ -104,10 +78,10 @@ public class ERequestData: NSManagedObject, Entity {
     }
     
     static func getRequestDataFromReference(_ ref: CKRecord.Reference, record: CKRecord, ctx: NSManagedObjectContext) -> ERequestData? {
-        let reqDataId = EACloudKit.shared.entityID(recordID: ref.recordID)
+        let reqDataId = self.ck.entityID(recordID: ref.recordID)
         let wsId = record.getWsId()
-        if let reqData = CoreDataService.shared.getRequestData(id: reqDataId, ctx: ctx) { return reqData }
-        let reqData = CoreDataService.shared.createRequestData(id: reqDataId, wsId: wsId, type: .form, fieldFormat: .file, checkExists: false, ctx: ctx)
+        if let reqData = self.db.getRequestData(id: reqDataId, ctx: ctx) { return reqData }
+        let reqData = self.db.createRequestData(id: reqDataId, wsId: wsId, type: .form, fieldFormat: .file, checkExists: false, ctx: ctx)
         reqData?.changeTag = 0
         return reqData
     }
@@ -171,7 +145,37 @@ public class ERequestData: NSManagedObject, Entity {
         return reqData
     }
     
-    func updateCKRecord(_ record: CKRecord) {
+    /// Get RequestData CKRecord of type header or param. This is backreferenced to Request record.
+    static func getCKRecord(id: String, reqId: String, projId: String, wsId: String, reqType: RequestDataType, ctx: NSManagedObjectContext) -> CKRecord? {
+        var reqData: ERequestData!
+        var ckReqData: CKRecord!
+        guard let ckReq = ERequest.getCKRecord(id: reqId, projId: projId, wsId: wsId, ctx: ctx) else { return ckReqData }
+        ctx.performAndWait {
+            reqData = db.getRequestData(id: id, ctx: ctx)
+            let zoneID = reqData.getZoneID()
+            let ckReqDataID = self.ck.recordID(entityId: id, zoneID: zoneID)
+            ckReqData = self.ck.createRecord(recordID: ckReqDataID, recordType: reqData.recordType)
+            reqData.updateCKRecord(ckReqData, request: ckReq, reqType: reqType)
+        }
+        return ckReq
+    }
+    
+    /// Get RequestData CKRecord of type form, multipart or binary. This is backreferenced to RequestBodyData record.
+    static func getCKRecord(id: String, reqBodyId: String, reqId: String, projId: String, wsId: String, reqType: RequestDataType, ctx: NSManagedObjectContext) -> CKRecord? {
+        var reqData: ERequestData!
+        var ckReqData: CKRecord!
+        guard let ckReqBodyData = ERequestBodyData.getCKRecord(id: reqBodyId, reqId: reqId, projId: projId, wsId: wsId, ctx: ctx) else { return ckReqData }
+        ctx.performAndWait {
+            reqData = db.getRequestData(id: id, ctx: ctx)
+            let zoneID = reqData.getZoneID()
+            let ckReqDataID = self.ck.recordID(entityId: id, zoneID: zoneID)
+            ckReqData = self.ck.createRecord(recordID: ckReqDataID, recordType: reqData.recordType)
+            reqData.updateCKRecord(ckReqData, reqBodyData: ckReqBodyData, reqType: reqType)
+        }
+        return ckReqData
+    }
+    
+    private func updateCKRecord(_ record: CKRecord) {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
             record["modified"] = self.modified as CKRecordValue
@@ -184,6 +188,30 @@ public class ERequestData: NSManagedObject, Entity {
             record["type"] = self.type as CKRecordValue
             record["value"] = (self.value ?? "") as CKRecordValue
             record["version"] = self.version as CKRecordValue
+        }
+    }
+    
+    /// RequestData can either belong to a Request (header, param) or RequestBodyData (form, multipart or binary)
+    func updateCKRecord(_ record: CKRecord, request: CKRecord, reqType: RequestDataType) {
+        self.updateCKRecord(record)
+        let ref = CKRecord.Reference(record: request, action: .deleteSelf)
+        if reqType == .header {
+            record["header"] = ref
+        } else if reqType == .param {
+            record["param"] = ref
+        }
+    }
+    
+    /// RequestData can either belong to a Request (header, param) or RequestBodyData (form, multipart or binary)
+    func updateCKRecord(_ record: CKRecord, reqBodyData: CKRecord, reqType: RequestDataType) {
+        self.updateCKRecord(record)
+        let ref = CKRecord.Reference(record: reqBodyData, action: .deleteSelf)
+        if reqType == .form {
+            record["form"] = ref
+        } else if reqType == .multipart {
+            record["multipart"] = ref
+        } else if reqType == .binary {
+            record["binary"] = ref
         }
     }
     

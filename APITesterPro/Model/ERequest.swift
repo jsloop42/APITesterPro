@@ -11,6 +11,8 @@ import CloudKit
 import CoreData
 
 public class ERequest: NSManagedObject, Entity {
+    static let db: CoreDataService = CoreDataService.shared
+    static let ck: EACloudKit = EACloudKit.shared
     public var recordType: String { return "Request" }
     
     public func getId() -> String {
@@ -86,18 +88,17 @@ public class ERequest: NSManagedObject, Entity {
     }
     
     static func getRequestFromReference(_ ref: CKRecord.Reference, record: CKRecord, ctx: NSManagedObjectContext) -> ERequest? {
-        let reqId = EACloudKit.shared.entityID(recordID: ref.recordID)
+        let reqId = self.ck.entityID(recordID: ref.recordID)
         let wsId = record.getWsId()
-        if let req = CoreDataService.shared.getRequest(id: reqId, ctx: ctx) { return req }
-        let req = CoreDataService.shared.createRequest(id: reqId, wsId: wsId, name: "", checkExists: false, ctx: ctx)
+        if let req = self.db.getRequest(id: reqId, ctx: ctx) { return req }
+        let req = self.db.createRequest(id: reqId, wsId: wsId, name: "", checkExists: false, ctx: ctx)
         req?.changeTag = 0
         return req
     }
     
     public static func fromDictionary(_ dict: [String: Any]) -> ERequest? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
-        let db = CoreDataService.shared
-        guard let req = db.createRequest(id: id, wsId: wsId, name: "") else { return nil }
+        guard let req = self.db.createRequest(id: id, wsId: wsId, name: "") else { return nil }
         if let x = dict["created"] as? Int64 { req.created = x }
         if let x = dict["modified"] as? Int64 { req.modified = x }
         if let x = dict["changeTag"] as? Int64 { req.changeTag = x }
@@ -127,8 +128,22 @@ public class ERequest: NSManagedObject, Entity {
             }
         }
         req.markForDelete = false
-        db.saveMainContext()
+        self.db.saveMainContext()
         return req
+    }
+    
+    static func getCKRecord(id: String, projId: String, wsId: String, ctx: NSManagedObjectContext) -> CKRecord? {
+        var req: ERequest!
+        var ckReq: CKRecord!
+        guard let ckProj = EProject.getCKRecord(id: projId, wsId: wsId, ctx: ctx) else { return ckReq }
+        ctx.performAndWait {
+            req = db.getRequest(id: id, ctx: ctx)
+            let zoneID = req.getZoneID()
+            let ckReqID = self.ck.recordID(entityId: id, zoneID: zoneID)
+            ckReq = self.ck.createRecord(recordID: ckReqID, recordType: req.recordType)
+            req.updateCKRecord(ckReq, project: ckProj)
+        }
+        return ckReq
     }
     
     func updateCKRecord(_ record: CKRecord, project: CKRecord) {
