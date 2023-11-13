@@ -312,10 +312,11 @@ class App {
         obj.managedObjectContext?.performAndWait {
             if obj.objectID.isTemporaryID { self.localdb.deleteEntity(obj); return }
             guard let type = RecordType.from(id: obj.getId()) else { return }
-            self.editReqDelete.insert(EditRequestInfo(id: obj.getId(), moID: obj.objectID, recordType: type, isDelete: true))
+            self.editReqDelete.insert(EditRequestInfo(id: obj.getId(), moID: obj.objectID, recordType: type, isDelete: true))  // FIXME: seems to have no effect
         }
     }
     
+    // FIXME: not used
     func removeEditRequestDeleteObject(_ obj: Entity) {
         guard let type = RecordType.from(id: obj.getId()) else { return }
         self.editReqDelete.remove(EditRequestInfo(id: obj.getId(), moID: obj.objectID, recordType: type, isDelete: true))

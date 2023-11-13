@@ -266,7 +266,7 @@ class PersistenceService {
     // MARK: - CloudKit
     
     func initSaveQueue() {
-        self.saveQueue = EAQueue<DeferredSaveModel>(interval: 4.0, completion: { elems in
+        self.saveQueue = EAQueue<DeferredSaveModel>(interval: 4.0, completion: { elems in  // FIXME: separate out completion handler
             guard !elems.isEmpty else { return }
             var records: [CKRecord] = []
             var entityMap: [CKRecord.ID: DeferredSaveModel] = [:]
@@ -297,9 +297,11 @@ class PersistenceService {
                                             }
                                         }
                                     }
-                                    if let _ = self.syncToCloudSaveIds.remove(id) { self.checkSyncToCloudState() }
+                                    if let _ = self.syncToCloudSaveIds.remove(id) {  // FIXME: this is already executed above. So the inner block won't execute
+                                        self.checkSyncToCloudState()
+                                    }
                                 }
-                            } else {
+                            } else {  // FIXME: not sure this line will execute because we are adding all DeferredSaveModels to entityMap
                                 Log.debug("Likely a save after a zone record not found error. Re-sync.")
                                 let ctx = self.localdb.mainMOC
                                 ctx.performAndWait {
