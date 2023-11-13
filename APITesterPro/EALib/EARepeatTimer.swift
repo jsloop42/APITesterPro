@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// A class that repeats the given block which uses DispatchSourceTimer
+/// A class that repeats the given block which uses DispatchSourceTimer. Running timers constantly can drain battery.
 public final class EARepeatTimer {
     let interval: TimeInterval
     private lazy var timer: DispatchSourceTimer = {
@@ -19,7 +19,7 @@ public final class EARepeatTimer {
     }()
     /// A code block to be executed when the timer triggers.
     var block: (() -> Void)?
-    /// When the timer completes or the limit is reached, the done block will be executed.
+    /// When the timer completes by reaching the limit, the done block will be executed.
     var done: (() -> Void)?
     /// The maximum number of times the timer should repeat.
     var limit: Int = 8
