@@ -126,7 +126,10 @@ final class RequestManager {
                 info.history = history
                 if let cookies = info.cookiesData as NSObject? { history.cookies = cookies }
                 self.localdb.saveMainContext()
-                if let ws = self.localdb.getWorkspace(id: history.getWsId()), ws.isSyncEnabled { PersistenceService.shared.saveHistoryToCloud(history!) }
+                if let ws = self.localdb.getWorkspace(id: history.getWsId()), ws.isSyncEnabled {
+                    // TODO: save history to cloud
+                    // PersistenceService.shared.saveHistoryToCloud(history!)
+                }
             }
             AppState.requestState.removeValue(forKey: self.request.getId())
             let state = self.fsm.state(forClass: RequestResponseState.self)

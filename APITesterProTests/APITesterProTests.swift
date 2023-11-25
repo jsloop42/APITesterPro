@@ -12,7 +12,7 @@ import CoreData
 
 class APITesterProTests: XCTestCase {
     private var localdb = CoreDataService.shared
-    private var dbSvc = PersistenceService.shared
+    // private var dbSvc = PersistenceService.shared
     private let utils = EAUtils.shared
     private let serialQueue = DispatchQueue(label: "serial-queue")
     private let app = App.shared
@@ -591,7 +591,8 @@ class APITesterProTests: XCTestCase {
                 XCTAssertEqual(req!.body!.form!.count, 1)
                 self.localdb.saveMainContext()
                 // delete entities starting from workspace
-                self.dbSvc.deleteDataMarkedForDelete(ws!, isDeleteFromCloud: false, ctx: ctx)
+                // TODO: fix me
+                // self.dbSvc.deleteDataMarkedForDelete(ws!, isDeleteFromCloud: false, ctx: ctx)
                 // ensure entities are deleted
                 let ws1 = self.localdb.getWorkspace(id: wsId, ctx: ctx)
                 XCTAssertNil(ws1)

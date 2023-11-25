@@ -18,7 +18,7 @@ class EnvironmentGroupViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     private let app = App.shared
     private lazy var localDB = { CoreDataService.shared }()
-    private lazy var db = { PersistenceService.shared }()
+    // private lazy var db = { PersistenceService.shared }()
     private var frc: NSFetchedResultsController<EEnv>!
     private var workspace: EWorkspace?
     
@@ -114,7 +114,8 @@ extension EnvironmentGroupViewController: UITableViewDelegate, UITableViewDataSo
             let env = self.frc.object(at: indexPath)
             env.markForDelete = true
             self.localDB.saveMainContext()
-            self.db.deleteDataMarkedForDelete(env, ctx: self.localDB.mainMOC)
+            // TODO: delete data marked for delete env
+            // self.db.deleteDataMarkedForDelete(env, ctx: self.localDB.mainMOC)
             self.updateData()
             completion(true)
         }

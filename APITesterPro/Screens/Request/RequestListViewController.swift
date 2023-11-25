@@ -27,7 +27,7 @@ class RequestListViewController: APITesterProViewController {
     private lazy var localdb = { CoreDataService.shared }()
     private var frc: NSFetchedResultsController<ERequest>!
     private let cellReuseId = "requestCell"
-    private lazy var db = { PersistenceService.shared }()
+    // private lazy var db = { PersistenceService.shared }()
     private let nc = NotificationCenter.default
     var project: EProject?
     var methods: [ERequestMethodData] = []
@@ -224,7 +224,8 @@ extension RequestListViewController: UITableViewDelegate, UITableViewDataSource 
             let req = self.frc.object(at: indexPath)
             self.localdb.markEntityForDelete(req)
             self.localdb.saveMainContext()
-            self.db.deleteDataMarkedForDelete(req, ctx: self.localdb.mainMOC)
+            // TODO: ck: delete data marked for delete request
+            // self.db.deleteDataMarkedForDelete(req, ctx: self.localdb.mainMOC)
             self.updateData()
             completion(true)
         }

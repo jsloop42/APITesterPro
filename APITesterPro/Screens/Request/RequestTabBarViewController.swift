@@ -21,6 +21,7 @@ class RequestTabBarController: UITabBarController, UITabBarControllerDelegate {
     var responseData: ResponseData?
     var segView: UISegmentedControl!
     private let ck = EACloudKit.shared
+    private let utils = EAUtils.shared
     private let nc = NotificationCenter.default
     private var selectedTab: Tab = .request
     private var barBtn: UIButton!
@@ -121,14 +122,14 @@ class RequestTabBarController: UITabBarController, UITabBarControllerDelegate {
     func segmentControl() -> UISegmentedControl {
         if self.segView != nil { return self.segView }
         self.segView = UISegmentedControl(items: ResponseMode.allCases)
-        self.segView.selectedSegmentIndex = self.ck.getValue(key: Const.responseSegmentIndexKey) as? Int ?? ResponseMode.info.rawValue
+        self.segView.selectedSegmentIndex = self.utils.getValue(Const.responseSegmentIndexKey) as? Int ?? ResponseMode.info.rawValue
         self.segView.sizeToFit()
         self.segView.addTarget(self, action: #selector(self.segmentDidChange(_:)), for: .valueChanged)
         return self.segView!
     }
     
     func viewNavbarSegment() {
-        self.segView.selectedSegmentIndex = self.ck.getValue(key: Const.responseSegmentIndexKey) as? Int ?? ResponseMode.info.rawValue
+        self.segView.selectedSegmentIndex = self.utils.getValue(Const.responseSegmentIndexKey) as? Int ?? ResponseMode.info.rawValue
         if self.selectedTab == .response {
             self.navigationItem.titleView = self.segView
         }

@@ -22,7 +22,7 @@ class EnvVarCell: UITableViewCell {
 class EnvironmentVariableTableViewController: UITableViewController {
     private let app = App.shared
     private lazy var localDB = { CoreDataService.shared }()
-    private lazy var db = { PersistenceService.shared }()
+    // private lazy var db = { PersistenceService.shared }()
     var env: EEnv?
     var frc: NSFetchedResultsController<EEnvVar>!
     
@@ -108,7 +108,8 @@ class EnvironmentVariableTableViewController: UITableViewController {
             let envVar = self.frc.object(at: indexPath)
             envVar.markForDelete = true
             self.localDB.saveMainContext()
-            self.db.deleteDataMarkedForDelete(envVar, ctx: self.localDB.mainMOC)
+            // TODO: delete data marked for delete envvar
+            // self.db.deleteDataMarkedForDelete(envVar, ctx: self.localDB.mainMOC)
             self.updateData()
             completion(true)
         }

@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var window: UIWindow?
     private let app = App.shared
     private lazy var ck = { EACloudKit.shared }()
-    private lazy var db = { PersistenceService.shared }()
+    // private lazy var db = { PersistenceService.shared }()
     private let nc = NotificationCenter.default
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -57,7 +57,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         if let info = userInfo as? [String: NSObject], let notif = CKNotification(fromRemoteNotificationDictionary: info) {
             if let subID = notif.subscriptionID, self.ck.isSubscribed(to: subID) {
                 if let ckhm = userInfo["ck"] as? [String: Any], let meta = ckhm["met"] as? [String: Any], let zid = meta["zid"] as? String {
-                    self.db.handleSyncNotification(self.ck.zoneID(with: zid))
+                    // TODO: ck: handle sync notification
+                    // self.db.handleSyncNotification(self.ck.zoneID(with: zid))
                     completionHandler(.newData)
                     return
                 }
