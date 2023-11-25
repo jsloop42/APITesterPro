@@ -17,7 +17,7 @@ public class EHistory: NSManagedObject, Entity {
     private let secureTrans = SecureTransformerData()
     
     static func initFromResponseData(_ respData: ResponseData) -> EHistory {
-        let history = EHistory(context: CoreDataService.shared.mainMOC)
+        let history = EHistory(context: Self.db.mainMOC)
         let ts = Date().currentTimeNanos()
         history.changeTag = ts
         history.created = ts

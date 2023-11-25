@@ -168,16 +168,15 @@ public class EProject: NSManagedObject, Entity {
         dict["name"] = self.name
         dict["version"] = self.version
         var xs: [[String: Any]] = []
-        let db = CoreDataService.shared
         // requests
-        let reqs = db.getRequests(projectId: self.getId())
+        let reqs = Self.db.getRequests(projectId: self.getId())
         reqs.forEach { req in
             xs.append(req.toDictionary())
         }
         dict["requests"] = xs
         xs = []
         // request methods
-        let reqMethods = db.getRequestMethodData(projId: self.getId())
+        let reqMethods = Self.db.getRequestMethodData(projId: self.getId())
         reqMethods.forEach { method in
             xs.append(method.toDictionary())
         }
