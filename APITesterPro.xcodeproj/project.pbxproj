@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		9E04F4F22B12138C007A0773 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A52AF5A36A0029E83E /* MessageUI.framework */; };
+		9E04F4F52B122577007A0773 /* EACloudOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F32B122577007A0773 /* EACloudOperation.swift */; };
+		9E04F4F62B122577007A0773 /* EACloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F42B122577007A0773 /* EACloudKit.swift */; };
+		9E04F4F82B122585007A0773 /* CloudKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F72B122585007A0773 /* CloudKitTests.swift */; };
+		9E04F4FA2B122CF0007A0773 /* EACryptoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F92B122CF0007A0773 /* EACryptoTest.swift */; };
 		9E4875E72AF56DD000D624DA /* APITesterPro.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9E4875E52AF56DD000D624DA /* APITesterPro.xcdatamodeld */; };
 		9E4875E82AF5856A00D624DA /* AppDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0812AF44CBF004095CF /* AppDelegateMock.swift */; };
 		9E81D0522AF44BE9004095CF /* APITesterProUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0512AF44BE9004095CF /* APITesterProUITestsLaunchTests.swift */; };
@@ -26,7 +30,6 @@
 		9E81D0C52AF451E9004095CF /* EACommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0B52AF451E9004095CF /* EACommon.swift */; };
 		9E81D0C62AF451E9004095CF /* EANetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0B62AF451E9004095CF /* EANetwork.swift */; };
 		9E81D0C72AF451E9004095CF /* EAHTTPCookie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0B72AF451E9004095CF /* EAHTTPCookie.swift */; };
-		9E81D0C82AF451E9004095CF /* EACloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0B82AF451E9004095CF /* EACloudKit.swift */; };
 		9E81D0C92AF451E9004095CF /* EAQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0B92AF451E9004095CF /* EAQueue.swift */; };
 		9E81D0CA2AF451E9004095CF /* EADocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0BA2AF451E9004095CF /* EADocumentPicker.swift */; };
 		9E81D0CB2AF451E9004095CF /* EAOperationQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0BB2AF451E9004095CF /* EAOperationQueue.swift */; };
@@ -35,11 +38,9 @@
 		9E81D0CE2AF451EA004095CF /* EALFUCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0BE2AF451E9004095CF /* EALFUCache.swift */; };
 		9E81D0CF2AF451EA004095CF /* EAUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0BF2AF451E9004095CF /* EAUtils.swift */; };
 		9E81D0D02AF451EA004095CF /* EAExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0C02AF451E9004095CF /* EAExtensions.swift */; };
-		9E81D0D12AF451EA004095CF /* EACloudOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0C12AF451E9004095CF /* EACloudOperation.swift */; };
 		9E81D0D22AF451EA004095CF /* EAFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0C22AF451E9004095CF /* EAFileManager.swift */; };
 		9E81D0D32AF451EA004095CF /* EARescheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0C32AF451E9004095CF /* EARescheduler.swift */; };
 		9E81D0D42AF451EA004095CF /* EASystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0C42AF451E9004095CF /* EASystem.swift */; };
-		9E81D0D72AF451F7004095CF /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0D52AF451F7004095CF /* PersistenceService.swift */; };
 		9E81D0D82AF451F7004095CF /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0D62AF451F7004095CF /* CoreDataService.swift */; };
 		9E81D0E92AF451FF004095CF /* EWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0D92AF451FE004095CF /* EWorkspace.swift */; };
 		9E81D0EA2AF451FF004095CF /* EHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0DA2AF451FF004095CF /* EHistory.swift */; };
@@ -93,7 +94,6 @@
 		9E81D1412AF4529D004095CF /* rawview.html in Resources */ = {isa = PBXBuildFile; fileRef = 9E81D13B2AF4529D004095CF /* rawview.html */; };
 		9E81D1422AF4529D004095CF /* prism-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 9E81D13C2AF4529D004095CF /* prism-dark.css */; };
 		9E81D14A2AF452DE004095CF /* EALFUCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1442AF452DE004095CF /* EALFUCacheTests.swift */; };
-		9E81D14B2AF452DE004095CF /* CloudKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1452AF452DE004095CF /* CloudKitTests.swift */; };
 		9E81D14C2AF452DE004095CF /* EAReschedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1462AF452DE004095CF /* EAReschedulerTests.swift */; };
 		9E81D14D2AF452DE004095CF /* EARepeatTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1472AF452DE004095CF /* EARepeatTimerTests.swift */; };
 		9E81D14E2AF452DE004095CF /* EAUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1482AF452DE004095CF /* EAUtilsTests.swift */; };
@@ -120,6 +120,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9E04F4F32B122577007A0773 /* EACloudOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EACloudOperation.swift; sourceTree = "<group>"; };
+		9E04F4F42B122577007A0773 /* EACloudKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EACloudKit.swift; sourceTree = "<group>"; };
+		9E04F4F72B122585007A0773 /* CloudKitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitTests.swift; sourceTree = "<group>"; };
+		9E04F4F92B122CF0007A0773 /* EACryptoTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EACryptoTest.swift; sourceTree = "<group>"; };
 		9E4875E62AF56DD000D624DA /* APITesterPro.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = APITesterPro.xcdatamodel; sourceTree = "<group>"; };
 		9E4875E92AF5889300D624DA /* APITesterPro.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = APITesterPro.entitlements; sourceTree = "<group>"; };
 		9E4875EB2AF590A300D624DA /* APITesterPro.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = APITesterPro.xctestplan; sourceTree = "<group>"; };
@@ -144,7 +148,6 @@
 		9E81D0B52AF451E9004095CF /* EACommon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EACommon.swift; sourceTree = "<group>"; };
 		9E81D0B62AF451E9004095CF /* EANetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EANetwork.swift; sourceTree = "<group>"; };
 		9E81D0B72AF451E9004095CF /* EAHTTPCookie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAHTTPCookie.swift; sourceTree = "<group>"; };
-		9E81D0B82AF451E9004095CF /* EACloudKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EACloudKit.swift; sourceTree = "<group>"; };
 		9E81D0B92AF451E9004095CF /* EAQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAQueue.swift; sourceTree = "<group>"; };
 		9E81D0BA2AF451E9004095CF /* EADocumentPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EADocumentPicker.swift; sourceTree = "<group>"; };
 		9E81D0BB2AF451E9004095CF /* EAOperationQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAOperationQueue.swift; sourceTree = "<group>"; };
@@ -153,11 +156,9 @@
 		9E81D0BE2AF451E9004095CF /* EALFUCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EALFUCache.swift; sourceTree = "<group>"; };
 		9E81D0BF2AF451E9004095CF /* EAUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAUtils.swift; sourceTree = "<group>"; };
 		9E81D0C02AF451E9004095CF /* EAExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAExtensions.swift; sourceTree = "<group>"; };
-		9E81D0C12AF451E9004095CF /* EACloudOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EACloudOperation.swift; sourceTree = "<group>"; };
 		9E81D0C22AF451E9004095CF /* EAFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAFileManager.swift; sourceTree = "<group>"; };
 		9E81D0C32AF451E9004095CF /* EARescheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EARescheduler.swift; sourceTree = "<group>"; };
 		9E81D0C42AF451E9004095CF /* EASystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EASystem.swift; sourceTree = "<group>"; };
-		9E81D0D52AF451F7004095CF /* PersistenceService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
 		9E81D0D62AF451F7004095CF /* CoreDataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		9E81D0D92AF451FE004095CF /* EWorkspace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EWorkspace.swift; sourceTree = "<group>"; };
 		9E81D0DA2AF451FF004095CF /* EHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHistory.swift; sourceTree = "<group>"; };
@@ -211,7 +212,6 @@
 		9E81D13B2AF4529D004095CF /* rawview.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = rawview.html; sourceTree = "<group>"; };
 		9E81D13C2AF4529D004095CF /* prism-dark.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "prism-dark.css"; sourceTree = "<group>"; };
 		9E81D1442AF452DE004095CF /* EALFUCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EALFUCacheTests.swift; sourceTree = "<group>"; };
-		9E81D1452AF452DE004095CF /* CloudKitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitTests.swift; sourceTree = "<group>"; };
 		9E81D1462AF452DE004095CF /* EAReschedulerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAReschedulerTests.swift; sourceTree = "<group>"; };
 		9E81D1472AF452DE004095CF /* EARepeatTimerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EARepeatTimerTests.swift; sourceTree = "<group>"; };
 		9E81D1482AF452DE004095CF /* EAUtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAUtilsTests.swift; sourceTree = "<group>"; };
@@ -320,8 +320,8 @@
 		9E81D0A62AF44F85004095CF /* EALib */ = {
 			isa = PBXGroup;
 			children = (
-				9E81D0B82AF451E9004095CF /* EACloudKit.swift */,
-				9E81D0C12AF451E9004095CF /* EACloudOperation.swift */,
+				9E04F4F42B122577007A0773 /* EACloudKit.swift */,
+				9E04F4F32B122577007A0773 /* EACloudOperation.swift */,
 				9E81D0B52AF451E9004095CF /* EACommon.swift */,
 				9E81D0BC2AF451E9004095CF /* EACrypto.swift */,
 				9E81D0BA2AF451E9004095CF /* EADocumentPicker.swift */,
@@ -393,7 +393,6 @@
 			isa = PBXGroup;
 			children = (
 				9E81D0D62AF451F7004095CF /* CoreDataService.swift */,
-				9E81D0D52AF451F7004095CF /* PersistenceService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -480,7 +479,8 @@
 		9E81D1432AF452B3004095CF /* EALibTests */ = {
 			isa = PBXGroup;
 			children = (
-				9E81D1452AF452DE004095CF /* CloudKitTests.swift */,
+				9E04F4F72B122585007A0773 /* CloudKitTests.swift */,
+				9E04F4F92B122CF0007A0773 /* EACryptoTest.swift */,
 				9E81D1442AF452DE004095CF /* EALFUCacheTests.swift */,
 				9E81D1492AF452DE004095CF /* EAQueueTests.swift */,
 				9E81D1472AF452DE004095CF /* EARepeatTimerTests.swift */,
@@ -643,7 +643,6 @@
 			files = (
 				9E81D10D2AF45218004095CF /* RequestManager.swift in Sources */,
 				9E81D0F12AF451FF004095CF /* EEnv.swift in Sources */,
-				9E81D0D72AF451F7004095CF /* PersistenceService.swift in Sources */,
 				9E81D12E2AF45241004095CF /* EATextField.swift in Sources */,
 				9E4875E82AF5856A00D624DA /* AppDelegateMock.swift in Sources */,
 				9E81D0CC2AF451EA004095CF /* EACrypto.swift in Sources */,
@@ -652,7 +651,6 @@
 				9E81D1302AF45242004095CF /* EATextView.swift in Sources */,
 				9E81D11E2AF4522C004095CF /* EnvironmentVariableTableViewController.swift in Sources */,
 				9E81D12A2AF45241004095CF /* PopupViewController.swift in Sources */,
-				9E81D0C82AF451E9004095CF /* EACloudKit.swift in Sources */,
 				9E81D0992AF44F4F004095CF /* main.swift in Sources */,
 				9E81D0C72AF451E9004095CF /* EAHTTPCookie.swift in Sources */,
 				9E81D0C52AF451E9004095CF /* EACommon.swift in Sources */,
@@ -664,6 +662,7 @@
 				9E81D0A52AF44F4F004095CF /* AppState.swift in Sources */,
 				9E81D0F72AF451FF004095CF /* ERequestBodyData.swift in Sources */,
 				9E81D09B2AF44F4F004095CF /* SceneDelegate.swift in Sources */,
+				9E04F4F62B122577007A0773 /* EACloudKit.swift in Sources */,
 				9E81D12C2AF45241004095CF /* EADynamicSizeTableView.swift in Sources */,
 				9E81D10C2AF45218004095CF /* EditRequestTableViewController.swift in Sources */,
 				9E81D11B2AF4522C004095CF /* Base64ViewController.swift in Sources */,
@@ -694,6 +693,7 @@
 				9E81D1092AF45218004095CF /* RequestStates.swift in Sources */,
 				9E81D1222AF45235004095CF /* WorkspaceListViewController.swift in Sources */,
 				9E81D1132AF45221004095CF /* ResponseTableViewController.swift in Sources */,
+				9E04F4F52B122577007A0773 /* EACloudOperation.swift in Sources */,
 				9E81D1102AF45218004095CF /* RequestListViewController.swift in Sources */,
 				9E81D12F2AF45241004095CF /* UI.swift in Sources */,
 				9E81D0CD2AF451EA004095CF /* EARepeatTimer.swift in Sources */,
@@ -703,7 +703,6 @@
 				9E81D0D42AF451EA004095CF /* EASystem.swift in Sources */,
 				9E81D12D2AF45241004095CF /* KVCell.swift in Sources */,
 				9E81D0EE2AF451FF004095CF /* ERequestMethodData.swift in Sources */,
-				9E81D0D12AF451EA004095CF /* EACloudOperation.swift in Sources */,
 				9E81D0F22AF451FF004095CF /* ERequest.swift in Sources */,
 				9E81D0EF2AF451FF004095CF /* SecureTransformer.swift in Sources */,
 				9E81D0F02AF451FF004095CF /* EEnvVar.swift in Sources */,
@@ -718,14 +717,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E04F4F82B122585007A0773 /* CloudKitTests.swift in Sources */,
 				9E81D14D2AF452DE004095CF /* EARepeatTimerTests.swift in Sources */,
 				9E81D14C2AF452DE004095CF /* EAReschedulerTests.swift in Sources */,
-				9E81D14B2AF452DE004095CF /* CloudKitTests.swift in Sources */,
 				9E81D14F2AF452DE004095CF /* EAQueueTests.swift in Sources */,
 				9E81D14E2AF452DE004095CF /* EAUtilsTests.swift in Sources */,
 				9E81D0862AF44CC0004095CF /* AppDelegateMock.swift in Sources */,
 				9E81D14A2AF452DE004095CF /* EALFUCacheTests.swift in Sources */,
 				9E81D0822AF44CC0004095CF /* APITesterProTests.swift in Sources */,
+				9E04F4FA2B122CF0007A0773 /* EACryptoTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

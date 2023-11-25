@@ -201,7 +201,7 @@ class UI {
     }
    
     static func activityIndicator() -> UIActivityIndicatorView {
-        let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView.init(style: UIActivityIndicatorView.Style.gray)
+        let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView.init(style: UIActivityIndicatorView.Style.medium)
         activityIndicator.alpha = 1.0
         activityIndicator.center = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: UIScreen.main.bounds.size.height / 2)
         activityIndicator.startAnimating()
@@ -227,7 +227,7 @@ class UI {
     static func addActivityIndicator(indicator: UIActivityIndicatorView?, view: UIView) {
         guard let indicator = indicator else { return }
         DispatchQueue.main.async {
-            indicator.style = UIActivityIndicatorView.Style.gray
+            indicator.style = UIActivityIndicatorView.Style.medium
             indicator.center = view.center
             view.addSubview(indicator)
         }
@@ -242,7 +242,7 @@ class UI {
     
     /// A loading indicator snipper
     private static var spinner: (UITableView) -> UIActivityIndicatorView = { tableView in
-        let s = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+        let s = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
         s.startAnimating()
         s.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.bounds.width, height: CGFloat(44))
         return s
@@ -279,7 +279,7 @@ class UI {
         bgView.isOpaque = false
         bgView.backgroundColor = App.Color.activityIndicatorBg
 
-        indicator.style = UIActivityIndicatorView.Style.gray
+        indicator.style = UIActivityIndicatorView.Style.medium
         indicator.color = App.Color.activityIndicator
         indicator.startAnimating()
 
@@ -297,7 +297,7 @@ class UI {
         indicator.centerYAnchor.constraint(equalTo: bgView.centerYAnchor).isActive = true
         
         if shouldDisableInteraction {
-            UIApplication.shared.beginIgnoringInteractionEvents()
+            mainView.isUserInteractionEnabled = false
         }
     }
     
@@ -305,7 +305,7 @@ class UI {
     /// - Parameter bgView: The activity indicator view
     static func removeCustomActivityIndicator(_ bgView: UIView) {
         bgView.removeFromSuperview()
-        UIApplication.shared.endIgnoringInteractionEvents()
+        bgView.superview?.isUserInteractionEnabled = true
     }
         
     static func getTextHeight(_ text: String, width: CGFloat, font: UIFont) -> CGFloat {
@@ -361,6 +361,20 @@ class UI {
         documentPicker.allowsMultipleSelection = false
         if let _vc = tvVc ?? vc {
             _vc.present(documentPicker, animated: true, completion: nil)
+        }
+    }
+    
+    static func getKeyWindow() -> UIWindow? {
+        if #available(iOS 15, *) {  // 15 and above
+            return UIApplication.shared
+                .connectedScenes
+                .compactMap { ($0 as? UIWindowScene)?.keyWindow }
+                .last
+        } else {  // 13 to 15
+            return UIApplication.shared
+                .connectedScenes
+                .flatMap { ($0 as? UIWindowScene)?.windows ?? [] }
+                .last { $0.isKeyWindow }
         }
     }
 }

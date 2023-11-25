@@ -168,12 +168,12 @@ struct ResponseCache {
     }
     
     mutating private func hash(_ string: String) -> String {
-        return self.utils.md5(txt: string)
+        return Hash.md5(txt: string)
     }
     
     /// Hashes the original data as recevied from the server. This hash is used as the key to the rendered data.
     mutating private func hash(_ data: Data) -> String {
-        return self.utils.md5(data: data)
+        return Hash.md5(data: data)
     }
     
     private func writeToTemporaryURL(_ hash: String, data: Data) throws -> EATemporaryFile {

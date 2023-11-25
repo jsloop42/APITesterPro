@@ -8,25 +8,26 @@
 
 import Foundation
 
-fileprivate struct SecureTransformerInfo {
+public struct SecureTransformerInfo {
     private static let utils = { EAUtils.shared }()
-    private static let _key: [UInt8] = [79, 87, 53, 108, 90, 72, 73, 53, 78, 87, 49, 108, 100, 87, 120, 106, 97, 68, 74, 109, 99, 88, 86, 51, 90, 68, 70, 105,
-                                        79, 84, 104, 120, 100, 110, 90, 104, 99, 71, 49, 122, 97, 51, 77, 61]
-    private static let _iv: [UInt8] = [78, 84, 82, 120, 90, 106, 70, 108, 100, 84, 70, 104, 100, 87, 69, 52, 97, 109, 100, 51, 101, 65, 61, 61]
+    // 32 bytes
+    static var _key: [UInt8] = [102, 50, 54, 115, 49, 76, 67, 48, 100, 105, 89, 80, 71, 56, 118, 108, 99, 51, 83, 86, 110, 109, 88, 79, 103, 84, 77, 101, 55, 104, 52, 122]
+    // 16 bytes
+    static var _iv: [UInt8] = [101, 88, 56, 76, 102, 87, 49, 77, 115, 79, 78, 80, 108, 86, 112, 114]
     
     static var key: String {
-        guard let str = String(data: Data(_key), encoding: .utf8) else { return "" }
-        return self.utils.base64Decode(str) ?? ""
+        if let str = String(data: Data(_key), encoding: .utf8) { return str }
+        return ""
     }
     static var iv: String {
-        guard let str = String(data: Data(_iv), encoding: .utf8) else { return "" }
-        return self.utils.base64Decode(str) ?? ""
+        if let str = String(data: Data(_iv), encoding: .utf8) { return str }
+        return ""
     }
 }
 
 /// A class that can be used for encrypting and decrypting core data `String` values on the fly.
 class SecureTransformerString: NSSecureUnarchiveFromDataTransformer {
-    private let aes = AES(key: SecureTransformerInfo.key, iv: SecureTransformerInfo.iv)
+    private let aes = try? AESCBC(key: SecureTransformerInfo.key, iv: SecureTransformerInfo.iv)
     
     override class var allowedTopLevelClasses: [AnyClass] {
         return [NSString.self]
@@ -65,7 +66,7 @@ class SecureTransformerString: NSSecureUnarchiveFromDataTransformer {
 
 /// A class that can be used for encrypting and decrypting core data `Data` values on the fly.
 class SecureTransformerData: NSSecureUnarchiveFromDataTransformer {
-    private let aes = AES(key: SecureTransformerInfo.key, iv: SecureTransformerInfo.iv)
+    private let aes = try? AESCBC(key: SecureTransformerInfo.key, iv: SecureTransformerInfo.iv)
     
     override class var allowedTopLevelClasses: [AnyClass] {
         return [NSData.self]

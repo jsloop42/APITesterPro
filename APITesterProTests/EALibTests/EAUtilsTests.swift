@@ -19,14 +19,7 @@ class EAUtilsTests: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
-    }
-    
-    func testMD5ofData() {
-        let data = "hello world".data(using: .utf8)
-        XCTAssertNotNil(data)
-        let md5 = self.utils.md5(data: data!)
-        XCTAssertEqual(md5, "5eb63bbbe01eeed093cb22bb8f5acdc3")
-    }
+    } 
     
     func testGenRandom() {
         let x = self.utils.genRandomString()
