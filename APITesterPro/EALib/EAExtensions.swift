@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import CoreData
+import CryptoKit
 
 public extension Calendar.Component {
     static let allCases: [Calendar.Component] = [.year, .month, .day, .hour, .minute, .second, .weekday, .weekdayOrdinal, .weekOfYear]
@@ -375,6 +376,12 @@ public extension String {
     }
 }
 
+/// This allows us to throw a string for exceptions
+extension String: Error {}
+extension String: LocalizedError {
+    public var errorDescription: String? { return self }
+}
+
 public extension Collection {
     func distance(to index: Index) -> Int {
         return self.distance(from: startIndex, to: index)
@@ -673,6 +680,13 @@ public extension Data {
         var ba: [UInt8] = Array(repeating: 0, count: count)
         ba = withUnsafeBytes { $0.compactMap { byte -> UInt8? in byte } }
         return ba
+    }
+}
+
+public extension Insecure.MD5Digest {
+    /// Returns a hex string
+    func toHex() -> String {
+        return String(self.map { String(format: "%02hhx", $0) }.joined().prefix(32))
     }
 }
 

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CryptoKit
 import CommonCrypto
 
 // MARK: - PKCS12
@@ -53,22 +54,100 @@ extension URLCredential {
     }
 }
 
-// MARK: - AES
+// MARK: - AES GCM
 
-public struct AES {
+/// Encrypt/decrypt using AES GCM (Galois Counter Mode). Encrypted data is accompanied with an authentication tag data which is required for decryption and verification.
+public struct AESGCM {
+    /// A 32 bytes (256 bits) string data for AES-256. Key size must be any of 128, 192 or 256 bits.
+    private let key: Data
+    /// A 12 bytes string data used as nonce
+    private let nonce: Data
+    /// Authentication data used for data verification
+    private let tag: Data
+    /// Optional additional meta data that will be added to the tag which will be used for verification
+    private let meta: Data?
+    private let symKey: SymmetricKey
+    
+    /// Initialize with encryption key, nonce (initialization vector) and verification data
+    init(key: Data, nonce: Data, tag: Data) throws {
+        self.key = key
+        self.nonce = nonce
+        self.tag = tag
+        self.symKey = SymmetricKey(data: self.nonce)
+        self.meta = nil
+        try self.validateFields()
+    }
+    
+    /// Initialize with encryption key, nonce (initialization vector),  verification data and adiitional metadata used for verification
+    init(key: Data, nonce: Data, tag: Data, meta: Data) throws {
+        self.key = key
+        self.nonce = nonce
+        self.tag = tag
+        self.symKey = SymmetricKey(data: self.nonce)
+        self.meta = meta
+        try self.validateFields()
+    }
+    
+    func validateFields() throws {
+        try self.validateKeySize()
+        try self.validateNonceSize()
+    }
+    
+    func validateKeySize() throws {
+        let bitCount = self.symKey.bitCount
+        if bitCount != SymmetricKeySize.bits128.bitCount || bitCount != SymmetricKeySize.bits192.bitCount || bitCount != SymmetricKeySize.bits256.bitCount {
+            throw "Invalid key size"
+        }
+    }
+    
+    func validateNonceSize() throws {
+        if nonce.count != 12 {
+            throw "Nonce size must be 12 bytes"
+        }
+    }
+    
+    /// Encrpt the given string. If meta is set this data will also be added to the tag
+    func encrypt(string: String) throws -> (cipher: Data, tag: Data)? {
+        guard let data = string.data(using: .utf8) else { return nil }
+        let sealedBox: AES.GCM.SealedBox
+        if let meta = self.meta {
+            sealedBox = try AES.GCM.seal(data, using: symKey, nonce: AES.GCM.Nonce(data: self.nonce), authenticating: meta)
+        } else {
+            sealedBox = try AES.GCM.seal(data, using: symKey, nonce: AES.GCM.Nonce(data: self.nonce))
+        }
+        return (cipher: sealedBox.ciphertext, tag: sealedBox.tag)
+    }
+    
+    /// Decrypt the given data using the parameters set. If meta is set additional verification on that is also performed.
+    func decrypt(data: Data?) throws -> Data? {
+        guard let data = data else { return nil }
+        let sealedBox = try AES.GCM.SealedBox(nonce: AES.GCM.Nonce(data: self.nonce), ciphertext: data, tag: self.tag)
+        let decryptedData: Data?
+        if let meta = self.meta {
+            decryptedData = try AES.GCM.open(sealedBox, using: self.symKey, authenticating: meta)
+        } else {
+            decryptedData = try AES.GCM.open(sealedBox, using: self.symKey)
+        }
+        return decryptedData
+    }
+}
+
+// MARK: - AES CBC (Cipher Block Chaining)
+
+public struct AESCBC {
     /// A 32 bytes string data for AES256.
     private let key: Data
     /// A 16 bytes string data.
     private let iv: Data
 
-    init?(key: String, iv: String) {
+    init?(key: String, iv: String) throws {
         guard key.count == kCCKeySizeAES128 || key.count == kCCKeySizeAES256, let keyData = key.data(using: .utf8) else {
             Log.error("Error setting key")
-            return nil
+            throw "Invalid key size"
         }
         guard iv.count == kCCBlockSizeAES128, let ivData = iv.data(using: .utf8) else {
             Log.error("Error setting initialisation vector")
-            return nil
+            throw "Invalid IV size"
         }
         self.key = keyData
         self.iv = ivData
@@ -111,6 +190,19 @@ public struct AES {
         }
         cryptData.removeSubrange(bytesLen..<cryptData.count)
         return cryptData
+    }
+}
+
+public struct Hash {
+    /// Generate MD5 hash of the given string
+    static func md5(txt: String) -> String {
+        guard let data = txt.data(using: .utf8) else { return "" }
+        return self.md5(data: data)
+    }
+    
+    /// Generate MD5 hash of the given data
+    static func md5(data: Data) -> String {
+        return Insecure.MD5.hash(data: data).toHex()
     }
 }
 

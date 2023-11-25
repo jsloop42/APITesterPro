@@ -87,7 +87,7 @@ public final class EAUtils {
     
     /// Generate random string with similar looking characters avoided.
     /// The generated string does not have 0, o, O, i, 6
-    func genRandomString(_ len: Int = 7) -> String{
+    func genRandomStringWithoutSimilarChars(_ len: Int = 7) -> String{
         enum info {
             static let chars = Array("abcdefghjklmnpqrstuvwxyz12345789")
             static let len = UInt32(chars.count)
@@ -98,6 +98,36 @@ public final class EAUtils {
             res[i] = info.chars[rand]
         }
         return String(res)
+    }
+    
+    /// Generate random string of the given length
+    func genRandomString(_ len: Int = 7) -> String{
+        enum info {
+            static let chars = Array("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+            static let len = UInt32(chars.count)
+        }
+        var res = [Character](repeating: "-", count: len)
+        for i in 0..<len {
+            let rand = Int(arc4random_uniform(info.len))
+            res[i] = info.chars[rand]
+        }
+        return String(res)
+    }
+    
+    /// Generate random string with unique characters. The maximum length can be 62 as it's limited by the character set length.
+    func generateUniqueString(_ len: Int = 32) -> String {
+        let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        var uniqueString = ""
+        if len > 62 { return "" }
+        while uniqueString.count < len {
+            let randomIndex = Int(arc4random_uniform(UInt32(characters.count)))
+            let randomCharacter = characters[characters.index(characters.startIndex, offsetBy: randomIndex)]
+
+            if !uniqueString.contains(randomCharacter) {
+                uniqueString.append(randomCharacter)
+            }
+        }
+        return uniqueString
     }
     
     /// Generates a uuid with the given identifier and compresses it to return a 22 bytes string.
@@ -151,29 +181,6 @@ public final class EAUtils {
             return "\(f)\(txt[1..<txt.count])"
         }
         return txt
-    }
-    
-    /// Generates the MD5 hash corresponding to the given text.
-    func md5(txt: String) -> String {
-        let context = UnsafeMutablePointer<CC_MD5_CTX>.allocate(capacity: 1)
-        var digest = Array<UInt8>(repeating:0, count:Int(CC_MD5_DIGEST_LENGTH))
-        CC_MD5_Init(context)
-        CC_MD5_Update(context, txt, CC_LONG(txt.lengthOfBytes(using: String.Encoding.utf8)))
-        CC_MD5_Final(&digest, context)
-        context.deallocate()
-        return self.toHex(digest)
-    }
-    
-    /// Generates the MD5 hash corresponding to the given data.
-    func md5(data: Data) -> String {
-        var digest = Array<UInt8>(repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
-        var hex = ""
-        data.withUnsafeBytes { bytes in
-            let buff: UnsafePointer<UInt8> = bytes.baseAddress!.assumingMemoryBound(to: UInt8.self)
-            CC_MD5(buff, CC_LONG(data.count), &digest)
-            hex = self.toHex(digest)
-        }
-        return hex
     }
     
     /// Get hex string from the given array.

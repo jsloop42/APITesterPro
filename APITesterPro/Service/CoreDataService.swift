@@ -249,7 +249,7 @@ class CoreDataService {
     }
     
     func fileId(_ data: Data) -> String {
-        return  "\(RecordType.prefix(for: .file))\(self.utils.md5(data: data))"
+        return  "\(RecordType.prefix(for: .file))\(Hash.md5(data: data))"
     }
     
     func imageId() -> String {
@@ -257,7 +257,7 @@ class CoreDataService {
     }
     
     func imageId(_ data: Data) -> String {
-        return "\(RecordType.prefix(for: .image))\(self.utils.md5(data: data))"
+        return "\(RecordType.prefix(for: .image))\(Hash.md5(data: data))"
     }
     
     func historyId() -> String {
