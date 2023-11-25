@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9E04F4F22B12138C007A0773 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A52AF5A36A0029E83E /* MessageUI.framework */; };
 		9E4875E72AF56DD000D624DA /* APITesterPro.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9E4875E52AF56DD000D624DA /* APITesterPro.xcdatamodeld */; };
 		9E4875E82AF5856A00D624DA /* AppDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0812AF44CBF004095CF /* AppDelegateMock.swift */; };
 		9E81D0522AF44BE9004095CF /* APITesterProUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0512AF44BE9004095CF /* APITesterProUITestsLaunchTests.swift */; };
@@ -228,6 +229,7 @@
 			files = (
 				9ED969A82AF5A38B0029E83E /* CloudKit.framework in Frameworks */,
 				9ED969A42AF5A35F0029E83E /* WebKit.framework in Frameworks */,
+				9E04F4F22B12138C007A0773 /* MessageUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
