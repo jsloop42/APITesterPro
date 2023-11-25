@@ -27,7 +27,7 @@ class ProjectListViewController: APITesterProViewController {
     private let app: App = App.shared
     private let nc = NotificationCenter.default
     private lazy var localdb = { CoreDataService.shared }()
-    private lazy var db = { PersistenceService.shared }()
+    // private lazy var db = { PersistenceService.shared }()
     private var frc: NSFetchedResultsController<EProject>!
     private let cellReuseId = "projectCell"
     
@@ -184,7 +184,8 @@ class ProjectListViewController: APITesterProViewController {
             if let proj = self.localdb.createProject(id: self.localdb.projectId(), wsId: self.workspace.getId(), name: name, desc: desc, ws: self.workspace, ctx: ctx) {
                 proj.workspace = self.workspace
                 self.localdb.saveMainContext()
-                self.db.saveProjectToCloud(proj)
+                // TODO: ck: save project to cloud
+                // self.db.saveProjectToCloud(proj)
             }
         }
     }
@@ -344,7 +345,8 @@ extension ProjectListViewController: UITableViewDelegate, UITableViewDataSource 
             let proj = self.frc.object(at: indexPath)
             self.localdb.markEntityForDelete(proj)
             self.localdb.saveMainContext()
-            self.db.deleteDataMarkedForDelete(proj, ctx: self.localdb.mainMOC)
+            // TODO: ck: delete project from cloud
+            // self.db.deleteDataMarkedForDelete(proj, ctx: self.localdb.mainMOC)
             self.updateData()
             completion(true)
         }

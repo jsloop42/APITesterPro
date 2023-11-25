@@ -16,7 +16,7 @@ class SettingsTableViewController: APITesterProTableViewController {
     @IBOutlet weak var saveHistorySwitch: UISwitch!
     @IBOutlet weak var syncWorkspaceSwitch: UISwitch!
     private lazy var localDB = { CoreDataService.shared }()
-    private lazy var db = { PersistenceService.shared }()
+    // private lazy var db = { PersistenceService.shared }()
     private lazy var workspace = { self.app.getSelectedWorkspace() }()
     @IBOutlet weak var aboutTitle: UILabel!
     private lazy var utils = { EAUtils.shared }()
@@ -118,10 +118,12 @@ class SettingsTableViewController: APITesterProTableViewController {
         Log.debug("sync workspace switch did change")
         self.workspace.isSyncEnabled = self.syncWorkspaceSwitch.isOn
         self.localDB.saveMainContext()
-        self.db.saveWorkspaceToCloud(self.workspace)
+        // TODO: save workspace to cloud
+        // self.db.saveWorkspaceToCloud(self.workspace)
         if self.workspace.isSyncEnabled {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {  // sync any pending changes
-                self.db.syncToCloud()
+                // TODO: ck: sync enabled for workspace. Queue it
+                // self.db.syncToCloud()
             }
         }
     }
@@ -130,7 +132,8 @@ class SettingsTableViewController: APITesterProTableViewController {
         Log.debug("save history switch did change")
         self.workspace.saveResponse = self.saveHistorySwitch.isOn
         self.localDB.saveMainContext()
-        self.db.saveWorkspaceToCloud(self.workspace)
+        // TODO: ck: save workspace to cloud
+        // self.db.saveWorkspaceToCloud(self.workspace)
     }
     
     func showLoadingIndicator() {

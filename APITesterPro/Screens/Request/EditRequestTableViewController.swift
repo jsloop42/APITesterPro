@@ -65,8 +65,10 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     var isOptionFromNotif = false
     private let docPicker = EADocumentPicker.shared
     private let utils = EAUtils.shared
-    private lazy var db = { PersistenceService.shared }()
+    // private lazy var db = { PersistenceService.shared }()
+    private static var localdb = { CoreDataService.shared }()
     private lazy var localdb = { CoreDataService.shared }()
+    
     private lazy var doneBtn: UIButton = {
         let btn = UI.getNavbarTopDoneButton()
         btn.addTarget(self, action: #selector(self.doneDidTap(_:)), for: .touchUpInside)
@@ -356,7 +358,10 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
             data.isSynced = false
             if let set = proj.requestMethods, let xs = set.allObjects as? [ERequestMethodData] {
                 xs.forEach { method in
-                    if method.shouldDelete { self.db.markEntityForDelete(reqMethodData: method, ctx: method.managedObjectContext) }
+                    if method.shouldDelete {
+                        // TODO: ck: mark entities for delete
+                        // self.db.markEntityForDelete(reqMethodData: method, ctx: method.managedObjectContext)
+                    }
                 }
             }
             //let timer = DispatchSource.makeTimerSource()
@@ -366,8 +371,10 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
                 self.localdb.saveMainContext()
                 self.isDirty = false
                 if let tabvc = self.tabBarController as? RequestTabBarController { tabvc.request = data }
-                self.db.saveRequestToCloud(data)
-                self.db.deleteDataMarkedForDelete(self.app.editReqDelete)
+                // TODO: save to cloud
+                // self.db.saveRequestToCloud(data)
+                // TODO: delete data marked for delete
+                // self.db.deleteDataMarkedForDelete(self.app.editReqDelete)
                 self.nc.post(name: .requestDidChange, object: self, userInfo: ["request": data])
                 self.close()
                 //timer.cancel()
@@ -640,10 +647,9 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     }
     
     static func addRequestBodyToState() {
-        let localdb = CoreDataService.shared
         if let data = AppState.editRequest, let ctx = data.managedObjectContext {
             if data.body == nil {
-                data.body = localdb.createRequestBodyData(id: localdb.requestBodyDataId(), wsId: data.getWsId(), ctx: ctx)
+                data.body = self.localdb.createRequestBodyData(id: self.localdb.requestBodyDataId(), wsId: data.getWsId(), ctx: ctx)
                 AppState.editRequest!.body?.request = AppState.editRequest
             }
         }
@@ -656,9 +662,9 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         if let request = AppState.editRequest, let body = request.body, let ctx = request.managedObjectContext {
             var n = 0
             if body.selected == RequestBodyType.form.rawValue {
-                n = CoreDataService.shared.getRequestDataCount(reqId: request.getId(), type: .form, ctx: ctx)
+                n = self.localdb.getRequestDataCount(reqId: request.getId(), type: .form, ctx: ctx)
             } else if body.selected == RequestBodyType.multipart.rawValue {
-                n = CoreDataService.shared.getRequestDataCount(reqId: request.getId(), type: .multipart, ctx: ctx)
+                n = self.localdb.getRequestDataCount(reqId: request.getId(), type: .multipart, ctx: ctx)
             } else if body.selected == RequestBodyType.binary.rawValue {
                 return 60  // TODO: remove
             }
@@ -1341,7 +1347,7 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
     var selectedType: RequestBodyType = .json
     private let app = App.shared
     private let localdb = CoreDataService.shared
-    private let db = PersistenceService.shared
+    // private let db = PersistenceService.shared
     private let utils = EAUtils.shared
     
     deinit {
@@ -1401,7 +1407,10 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
                         eimage?.requestData = form
                         eimage?.isCameraMode = DocumentPickerState.isCameraMode
                         if let files = form.files?.allObjects as? [EFile] {
-                            files.forEach { file in self.db.markEntityForDelete(file: file, ctx: ctx) }
+                            files.forEach { file in
+                                // TODO: ck: mark file for delete
+                                // self.db.markEntityForDelete(file: file, ctx: ctx)
+                            }
                         }
                         if let vc = RequestVC.shared {
                             self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
@@ -1434,7 +1443,8 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
                                                                   type: self.selectedType == .form ? .form : .multipart, checkExists: true, ctx: ctx) {
                                 ctx.performAndWait {
                                     file.requestData = form
-                                    self.db.markForDelete(image: form.image, ctx: form.image?.managedObjectContext)
+                                    // TODO: ck mark image for delete
+                                    // self.db.markForDelete(image: form.image, ctx: form.image?.managedObjectContext)
                                 }
                                 DispatchQueue.main.async {
                                     if let vc = RequestVC.shared {
@@ -1631,7 +1641,8 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
                     if let xs = elem?.files?.allObjects as? [EFile] {
                         xs.forEach { file in self.app.addEditRequestDeleteObject(file) }
                     }
-                    self.db.markEntityForDelete(reqData: elem, ctx: ctx)
+                    // TODO: ck: mark request data for delete
+                    // self.db.markEntityForDelete(reqData: elem, ctx: ctx)
                     shouldReload = true
                 }
             }
@@ -1699,7 +1710,7 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
     var editingIndexPath: IndexPath?
     var tableViewType: KVTableViewType = .header
     private let localdb = CoreDataService.shared
-    private let db = PersistenceService.shared
+    // private let db = PersistenceService.shared
     private let utils = EAUtils.shared
     private let app = App.shared
     private let nc = NotificationCenter.default
@@ -1777,13 +1788,16 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
         guard let data = AppState.editRequest, let ctx = data.managedObjectContext else { return }
         if type == .body {
             guard let body = self.localdb.getRequestBodyData(id: id, ctx: ctx) else { return }
-            self.db.markEntityForDelete(body: body, ctx: ctx)
+            // TODO: ck: mark body for delete
+            // self.db.markEntityForDelete(body: body, ctx: ctx)
         } else if type == .header {
             guard let elem = self.localdb.getRequestData(id: id, ctx: ctx) else { return }
-            self.db.markEntityForDelete(reqData: elem, ctx: ctx)
+            // TODO: ck: mark request data for delete
+            // self.db.markEntityForDelete(reqData: elem, ctx: ctx)
         } else if type == .param {
             guard let elem = self.localdb.getRequestData(id: id, ctx: ctx) else { return }
-            self.db.markEntityForDelete(reqData: elem, ctx: ctx)
+            // TODO: ck: mark request data for delete
+            // self.db.markEntityForDelete(reqData: elem, ctx: ctx)
         }
         if let vc = RequestVC.shared {
             self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
@@ -1805,7 +1819,10 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
                         eimage?.requestData = binary
                         eimage?.isCameraMode = DocumentPickerState.isCameraMode
                         if let xs = binary.files?.allObjects as? [EFile] {
-                            xs.forEach { file in self.db.markEntityForDelete(file: file, ctx: ctx) }
+                            xs.forEach { file in
+                                // TODO: ck: mark file for delete
+                                // self.db.markEntityForDelete(file: file, ctx: ctx)
+                            }
                         }
                     }
                     DispatchQueue.main.async {
@@ -1836,13 +1853,19 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
                             case .success(let fileData):
                                 Log.debug("bin: file read")
                                 if let xs = binary.files?.allObjects as? [EFile] {
-                                    xs.forEach { file in self.db.markEntityForDelete(file: file, ctx: ctx) }
+                                    xs.forEach { file in
+                                        // TODO: ck: mark file for delete
+                                        // self.db.markEntityForDelete(file: file, ctx: ctx)
+                                    }
                                 }
                                 let name = self.app.getFileName(fileURL)
                                 if let file = self.localdb.createFile(data: fileData, wsId: data.getWsId(), name: name, path: fileURL,
                                                                       type: .binary, checkExists: true, ctx: ctx) {
                                     file.requestData = binary
-                                    if let img = binary.image { self.db.markForDelete(image: img, ctx: ctx) }
+                                    if let img = binary.image {
+                                        // TODO: ck: mark image for delete
+                                        // self.db.markForDelete(image: img, ctx: ctx)
+                                    }
                                     Log.debug("bin: entity deleted")
                                     DispatchQueue.main.async {
                                         if let vc = RequestVC.shared {

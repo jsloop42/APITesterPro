@@ -30,7 +30,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var tableView: UITableView!
     private let app = App.shared
     private lazy var localDB = { CoreDataService.shared }()
-    private lazy var db = { PersistenceService.shared }()
+    // private lazy var db = { PersistenceService.shared }()
     private var todayFrc: NSFetchedResultsController<EHistory>!
     private var pastFrc: NSFetchedResultsController<EHistory>!
     @IBOutlet weak var helpLabel: UILabel!
@@ -245,7 +245,8 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
             let history = self.historyForRow(row, isToday: isToday)
             self.localDB.markEntityForDelete(history)
             self.localDB.saveMainContext()
-            self.db.deleteDataMarkedForDelete(history: history, wsId: history.getWsId(), ctx: self.localDB.mainMOC)
+            // TODO: delete data marked for delete history
+            // self.db.deleteDataMarkedForDelete(history: history, wsId: history.getWsId(), ctx: self.localDB.mainMOC)
             self.updateData()
             completion(true)
         }

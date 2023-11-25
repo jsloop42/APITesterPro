@@ -717,7 +717,7 @@ class ResponseTableViewController: APITesterProTableViewController {
         Log.debug("segment did change notif")
         if let info = notif.userInfo, let idx = info["index"] as? Int {
             if self.viewType == .requestResponse {
-                self.ck.saveValue(key: Const.responseSegmentIndexKey, value: idx)
+                self.utils.setValue(key: Const.responseSegmentIndexKey, value: idx)
             }
             self.mode = ResponseMode(rawValue: idx) ?? .info
             Log.debug("response mode changed: \(self.mode)")
@@ -875,15 +875,19 @@ extension ResponseTableViewController {
             if indexPath.row == RawCellId.spacerBeforeRawCell.rawValue {
                 return 24
             }
-            let h: CGFloat = UIScreen.main.bounds.height - (48 + (self.tabbarController?.tabBar.frame.height ?? 0) + self.navigationController!.navigationBar.frame.height +
-                UIApplication.shared.keyWindow!.safeAreaInsets.top)
+            let h: CGFloat = UIScreen.main.bounds.height 
+                - (48 + (self.tabbarController?.tabBar.frame.height ?? 0)
+                      + self.navigationController!.navigationBar.frame.height
+                      + (UI.getKeyWindow()?.safeAreaInsets.top ?? 0))
             return h
         case 2:  // preview section
             if indexPath.row == PreviewCellId.spacerBeforePreviewCell.rawValue {
                 return 24
             }
-            let h: CGFloat = UIScreen.main.bounds.height - (48 + (self.tabbarController?.tabBar.frame.height ?? 0) + self.navigationController!.navigationBar.frame.height +
-                UIApplication.shared.keyWindow!.safeAreaInsets.top)
+            let h: CGFloat = UIScreen.main.bounds.height
+                - (48 + (self.tabbarController?.tabBar.frame.height ?? 0)
+                      + self.navigationController!.navigationBar.frame.height
+                      + (UI.getKeyWindow()?.safeAreaInsets.top ?? 0))
             return h
         default:
             return 0

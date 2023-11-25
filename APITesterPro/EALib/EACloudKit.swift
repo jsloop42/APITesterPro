@@ -974,13 +974,14 @@ class EACloudKit {
                     if count! >= 2 { completion(.failure(err)); return }  // Tried three time.
                     // Merge in the changes, save the new record
                     let (local, server) = err.getMergeRecords()
-                    if let merged = PersistenceService.shared.mergeRecords(local: local, server: server, recordType: local?.recordType ?? "") {
-                        var xs: [CKRecord] = records.filter { record -> Bool in record.recordID != merged.recordID }
-                        xs.append(merged)
-                        self.saveRecords(xs, count: count! + 1, isForce: true, completion: completion)
-                    } else {
-                        completion(.failure(err))
-                    }
+                    // TODO: ck: off load this to the caller using a callback function for merging records
+//                    if let merged = PersistenceService.shared.mergeRecords(local: local, server: server, recordType: local?.recordType ?? "") {
+//                        var xs: [CKRecord] = records.filter { record -> Bool in record.recordID != merged.recordID }
+//                        xs.append(merged)
+//                        self.saveRecords(xs, count: count! + 1, isForce: true, completion: completion)
+//                    } else {
+//                        completion(.failure(err))
+//                    }
                 } else if err.isNetworkFailure() {
                     if RetryTimer.saveRecords == nil && self.canRetry() {
                         RetryTimer.saveRecords = EARepeatTimer(block: {

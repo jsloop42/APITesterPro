@@ -66,7 +66,7 @@ class EnvironmentEditViewController: UITableViewController, UITextFieldDelegate 
     @IBOutlet weak var cancelBtn: UIButton!
     var mode: Mode = .addEnv
     private lazy var localDB = { CoreDataService.shared }()
-    private lazy var db = { PersistenceService.shared }()
+    // private lazy var db = { PersistenceService.shared }()
     private lazy var app = { App.shared }()
     private let nc = NotificationCenter.default
     var name = ""
@@ -158,12 +158,14 @@ class EnvironmentEditViewController: UITableViewController, UITextFieldDelegate 
 
     func saveEnv() {
         self.localDB.saveMainContext()
-        self.db.saveEnvToCloud(self.env!)
+        // TODO: save env to cloud
+        // self.db.saveEnvToCloud(self.env!)
     }
 
     func saveEnvVar() {
         self.localDB.saveMainContext()
-        self.db.saveEnvVarToCloud(self.envVar!)
+        // TODO: save env var to cloud
+        // self.db.saveEnvVarToCloud(self.envVar!)
     }
 
     @objc func doneDidTap(_ sender: Any) {

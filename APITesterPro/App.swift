@@ -21,7 +21,7 @@ struct EditRequestInfo: Hashable {
 class App {
     static let shared: App = App()
     var popupBottomContraints: NSLayoutConstraint?
-    private var dbSvc = PersistenceService.shared
+    // private var dbSvc = PersistenceService.shared
     private let localdb = CoreDataService.shared
     private let ck = EACloudKit.shared
     private let utils = EAUtils.shared
@@ -260,12 +260,8 @@ class App {
     /// Returns the current workspace
     func getSelectedWorkspace() -> EWorkspace {
         if AppState.currentWorkspace != nil { return AppState.currentWorkspace! }
-        let ckWsId = self.ck.getValue(key: Const.selectedWorkspaceIdKey) as? String ?? ""
         var wsId = self.utils.getValue(Const.selectedWorkspaceIdKey) as? String ?? ""
-        if wsId.isEmpty && !ckWsId.isEmpty {
-            wsId = ckWsId
-        }
-        if let ws = self.localdb.getWorkspace(id: wsId) {
+        if !wsId.isEmpty, let ws = self.localdb.getWorkspace(id: wsId) {
             AppState.currentWorkspace = ws
             return ws
         }
@@ -281,13 +277,13 @@ class App {
     }
     
     func saveSelectedWorkspaceId(_ id: String) {
-        self.ck.saveValue(key: Const.selectedWorkspaceIdKey, value: id)
         self.utils.setValue(key: Const.selectedWorkspaceIdKey, value: id)
     }
     
     func didReceiveMemoryWarning() {
         Log.debug("app: did receive memory warning")
-        self.dbSvc.clearCache()
+        // TODO: ck: fix me
+        // self.dbSvc.clearCache()
     }
     
     func getImageType(_ url: URL) -> ImageType? {
