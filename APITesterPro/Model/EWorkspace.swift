@@ -17,8 +17,7 @@ public class EWorkspace: NSManagedObject, Entity {
     
     /// Checks if the default workspace does not have any change or is just after a reset (is new)
     var isInDefaultMode: Bool {
-        let db = CoreDataService.shared
-        return self.id == db.defaultWorkspaceId && self.name == db.defaultWorkspaceName && self.desc == db.defaultWorkspaceDesc && self.modified == self.changeTag && (self.projects == nil || self.projects!.isEmpty)
+        return self.id == Self.db.defaultWorkspaceId && self.name == Self.db.defaultWorkspaceName && self.desc == Self.db.defaultWorkspaceDesc && self.modified == self.changeTag && (self.projects == nil || self.projects!.isEmpty)
     }
     
     public func getId() -> String {
@@ -170,7 +169,7 @@ public class EWorkspace: NSManagedObject, Entity {
         dict["saveResponse"] = self.saveResponse
         dict["version"] = self.version
         var xs: [[String: Any]] = []
-        let projs = CoreDataService.shared.getProjects(wsId: self.getId())
+        let projs = Self.db.getProjects(wsId: self.getId())
         projs.forEach { proj in
             xs.append(proj.toDictionary())
         }

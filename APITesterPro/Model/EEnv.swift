@@ -147,7 +147,7 @@ public class EEnv: NSManagedObject, Entity {
         dict["name"] = self.name
         dict["version"] = self.version
         dict["wsId"] = self.wsId
-        let vars = CoreDataService.shared.getEnvVars(envId: self.getId())
+        let vars = Self.db.getEnvVars(envId: self.getId())
         var acc: [[String: Any]] = []
         vars.forEach { envVar in
             acc.append(envVar.toDictionary())

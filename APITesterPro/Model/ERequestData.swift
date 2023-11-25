@@ -120,8 +120,7 @@ public class ERequestData: NSManagedObject, Entity {
             let type = RequestDataType(rawValue: _type.toInt()), let _format = dict["fieldFormat"] as? Int64,
             let format = RequestBodyFormFieldFormatType(rawValue: _format.toInt())
             else { return nil }
-        let db = CoreDataService.shared
-        guard let reqData = db.createRequestData(id: id, wsId: wsId, type: type, fieldFormat: format, ctx: db.mainMOC) else { return nil }
+        guard let reqData = self.db.createRequestData(id: id, wsId: wsId, type: type, fieldFormat: format, ctx: db.mainMOC) else { return nil }
         if let x = dict["created"] as? Int64 { reqData.created = x }
         if let x = dict["modified"] as? Int64 { reqData.modified = x }
         if let x = dict["changeTag"] as? Int64 { reqData.changeTag = x }

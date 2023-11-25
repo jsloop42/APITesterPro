@@ -200,15 +200,14 @@ public class ERequest: NSManagedObject, Entity {
         if let body = self.body {
             dict["body"] = body.toDictionary()
         }
-        let db = CoreDataService.shared
-        let headers = db.getHeadersRequestData(self.getId())
+        let headers = Self.db.getHeadersRequestData(self.getId())
         var xs: [[String: Any]] = []
         headers.forEach { header in
             xs.append(header.toDictionary())
         }
         dict["headers"] = xs
         xs = []
-        let params = db.getParamsRequestData(self.getId())
+        let params = Self.db.getParamsRequestData(self.getId())
         params.forEach { param in
             xs.append(param.toDictionary())
         }
