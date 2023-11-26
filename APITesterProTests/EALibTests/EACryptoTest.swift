@@ -61,4 +61,16 @@ class EACryptoTests: XCTestCase {
         XCTAssertEqual(hash, "5eb63bbbe01eeed093cb22bb8f5acdc3")
         XCTAssertEqual(Hash.md5(txt: "api tester pro"), "4880382417348f9f442d17dcc45762c6")
     }
+    
+    /// Tests encryption and decryiption using key and iv defined in SecureTransformerInfo
+    func testAESCBCEncryptionDecryption() {
+        let txt = "api tester pro"
+        XCTAssertEqual(SecureTransformerInfo._key.count, 32)  // 32 bytes
+        XCTAssertEqual(SecureTransformerInfo._iv.count, 16)  // 16 bytes
+        let encryptedData = SecureTransformerString().transformedValue(txt)
+        XCTAssertNotNil(encryptedData)
+        let decryptedData = SecureTransformerString().reverseTransformedValue(encryptedData)
+        XCTAssertNotNil(decryptedData)
+        XCTAssertEqual(decryptedData as! String, txt)
+    }
 }
