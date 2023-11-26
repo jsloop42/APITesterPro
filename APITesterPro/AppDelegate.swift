@@ -54,17 +54,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         Log.debug("Remote notification did receive: \(userInfo)")
-        if let info = userInfo as? [String: NSObject], let notif = CKNotification(fromRemoteNotificationDictionary: info) {
-            if let subID = notif.subscriptionID, self.ck.isSubscribed(to: subID) {
-                if let ckhm = userInfo["ck"] as? [String: Any], let meta = ckhm["met"] as? [String: Any], let zid = meta["zid"] as? String {
-                    // TODO: ck: handle sync notification
-                    // self.db.handleSyncNotification(self.ck.zoneID(with: zid))
-                    completionHandler(.newData)
-                    return
-                }
-            }
-            completionHandler(.noData)
-        }
+        // TODO: ck: enable back
+//        if let info = userInfo as? [String: NSObject], let notif = CKNotification(fromRemoteNotificationDictionary: info) {
+//            if let subID = notif.subscriptionID, self.ck.isSubscribed(to: subID) {
+//                if let ckhm = userInfo["ck"] as? [String: Any], let meta = ckhm["met"] as? [String: Any], let zid = meta["zid"] as? String {
+//                    // TODO: ck: handle sync notification
+//                    // self.db.handleSyncNotification(self.ck.zoneID(with: zid))
+//                    completionHandler(.newData)
+//                    return
+//                }
+//            }
+//            completionHandler(.noData)
+//        }
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {

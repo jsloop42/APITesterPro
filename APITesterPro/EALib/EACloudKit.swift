@@ -65,7 +65,7 @@ class EACloudKit {
     private var _privateDatabase: CKDatabase!
     private var _container: CKContainer!
     private let nc = NotificationCenter.default
-    private let kvstore = NSUbiquitousKeyValueStore.default
+    private lazy var kvstore = { NSUbiquitousKeyValueStore.default }()
     private let store = UserDefaults.standard
     /// CloudKit user defaults subscriptions key
     private let subscriptionsKey = "ck-subscriptions"
@@ -125,37 +125,42 @@ class EACloudKit {
     
     deinit {
         self.nc.removeObserver(self)
-        if !self.zoneFetchChangesTimer.isCancelled {
-            if self.zoneFetchChangesTimerState == .suspended { self.zoneFetchChangesTimer.resume() }
-            self.zoneFetchChangesTimer.cancel()
-            self.zoneFetchChangesTimer.setEventHandler(handler: {})
-        }
+        // TODO: ck: enable back
+//        if !self.zoneFetchChangesTimer.isCancelled {
+//            if self.zoneFetchChangesTimerState == .suspended { self.zoneFetchChangesTimer.resume() }
+//            self.zoneFetchChangesTimer.cancel()
+//            self.zoneFetchChangesTimer.setEventHandler(handler: {})
+//        }
     }
     
     init() {
-        self.initEvents()
+        //self.initEvents()  // TODO: ck: enable back
     }
     
     func initEvents() {
-        self.nc.addObserver(self, selector: #selector(self.networkDidBecomeAvailable(_:)), name: .online, object: nil)
-        self.nc.addObserver(self, selector: #selector(self.networkDidBecomeUnavailable(_:)), name: .offline, object: nil)
+        // TODO: ck: enable back
+//        self.nc.addObserver(self, selector: #selector(self.networkDidBecomeAvailable(_:)), name: .online, object: nil)
+//        self.nc.addObserver(self, selector: #selector(self.networkDidBecomeUnavailable(_:)), name: .offline, object: nil)
     }
     
     func bootstrap() {
         if isRunningTests { return }
-        self.loadSubscriptions()
-        self.nc.addObserver(self, selector: #selector(self.zoneChangesDidSave(_:)), name: .zoneChangesDidSave, object: nil)
-        self.zoneFetchChangesTimer.schedule(deadline: .now() + 5, repeating: 8)
+        // TODO: ck: enable back
+//        self.loadSubscriptions()
+//        self.nc.addObserver(self, selector: #selector(self.zoneChangesDidSave(_:)), name: .zoneChangesDidSave, object: nil)
+//        self.zoneFetchChangesTimer.schedule(deadline: .now() + 5, repeating: 8)
     }
     
     @objc func networkDidBecomeUnavailable(_ notif: Notification) {
-        self.isOffline = true
-        RetryTimer.allTimers.forEach { $0?.suspend() }
+        // TODO: ck: enable back
+//        self.isOffline = true
+//        RetryTimer.allTimers.forEach { $0?.suspend() }
     }
     
     @objc func networkDidBecomeAvailable(_ notif: Notification) {
-        self.isOffline = false
-        RetryTimer.allTimers.forEach { $0?.resume() }
+        // TODO: ck: enable back
+//        self.isOffline = false
+//        RetryTimer.allTimers.forEach { $0?.resume() }
     }
 
     // MARK: - KV Store
@@ -173,7 +178,8 @@ class EACloudKit {
     }
     
     func addKVChangeObserver() {
-        self.nc.addObserver(self, selector: #selector(self.kvStoreDidChange(_:)), name: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: self.kvstore)
+        // TODO: ck: enable back
+//        self.nc.addObserver(self, selector: #selector(self.kvStoreDidChange(_:)), name: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: self.kvstore)
     }
     
     @objc func kvStoreDidChange(_ notif: Notification) {
