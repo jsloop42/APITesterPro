@@ -12,6 +12,7 @@
 		9E04F4F62B122577007A0773 /* EACloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F42B122577007A0773 /* EACloudKit.swift */; };
 		9E04F4F82B122585007A0773 /* CloudKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F72B122585007A0773 /* CloudKitTests.swift */; };
 		9E04F4FA2B122CF0007A0773 /* EACryptoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F92B122CF0007A0773 /* EACryptoTest.swift */; };
+		9E04F4FD2B138F38007A0773 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4FC2B138F38007A0773 /* PersistenceService.swift */; };
 		9E4875E72AF56DD000D624DA /* APITesterPro.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9E4875E52AF56DD000D624DA /* APITesterPro.xcdatamodeld */; };
 		9E4875E82AF5856A00D624DA /* AppDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0812AF44CBF004095CF /* AppDelegateMock.swift */; };
 		9E81D0522AF44BE9004095CF /* APITesterProUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0512AF44BE9004095CF /* APITesterProUITestsLaunchTests.swift */; };
@@ -22,7 +23,6 @@
 		9E81D0992AF44F4F004095CF /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D08B2AF44F4E004095CF /* main.swift */; };
 		9E81D09B2AF44F4F004095CF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D08D2AF44F4E004095CF /* SceneDelegate.swift */; };
 		9E81D09D2AF44F4F004095CF /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D08F2AF44F4E004095CF /* App.swift */; };
-		9E81D0A02AF44F4F004095CF /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0922AF44F4E004095CF /* BackgroundWorker.swift */; };
 		9E81D0A12AF44F4F004095CF /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0932AF44F4E004095CF /* Const.swift */; };
 		9E81D0A32AF44F4F004095CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0952AF44F4E004095CF /* AppDelegate.swift */; };
 		9E81D0A42AF44F4F004095CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E81D0962AF44F4E004095CF /* Assets.xcassets */; };
@@ -125,6 +125,7 @@
 		9E04F4F72B122585007A0773 /* CloudKitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitTests.swift; sourceTree = "<group>"; };
 		9E04F4F92B122CF0007A0773 /* EACryptoTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EACryptoTest.swift; sourceTree = "<group>"; };
 		9E04F4FB2B131A3C007A0773 /* APITesterPro.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = APITesterPro.entitlements; sourceTree = "<group>"; };
+		9E04F4FC2B138F38007A0773 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
 		9E4875E62AF56DD000D624DA /* APITesterPro.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = APITesterPro.xcdatamodel; sourceTree = "<group>"; };
 		9E4875EB2AF590A300D624DA /* APITesterPro.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = APITesterPro.xctestplan; sourceTree = "<group>"; };
 		9E81D0282AF44BE7004095CF /* APITesterPro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APITesterPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -140,7 +141,6 @@
 		9E81D08B2AF44F4E004095CF /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		9E81D08D2AF44F4E004095CF /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		9E81D08F2AF44F4E004095CF /* App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
-		9E81D0922AF44F4E004095CF /* BackgroundWorker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
 		9E81D0932AF44F4E004095CF /* Const.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
 		9E81D0952AF44F4E004095CF /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9E81D0962AF44F4E004095CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -283,7 +283,6 @@
 				9E81D08F2AF44F4E004095CF /* App.swift */,
 				9E81D0952AF44F4E004095CF /* AppDelegate.swift */,
 				9E81D0972AF44F4E004095CF /* AppState.swift */,
-				9E81D0922AF44F4E004095CF /* BackgroundWorker.swift */,
 				9E81D0932AF44F4E004095CF /* Const.swift */,
 				9E81D08B2AF44F4E004095CF /* main.swift */,
 				9E81D08D2AF44F4E004095CF /* SceneDelegate.swift */,
@@ -393,6 +392,7 @@
 			isa = PBXGroup;
 			children = (
 				9E81D0D62AF451F7004095CF /* CoreDataService.swift */,
+				9E04F4FC2B138F38007A0773 /* PersistenceService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -654,6 +654,7 @@
 				9E81D0992AF44F4F004095CF /* main.swift in Sources */,
 				9E81D0C72AF451E9004095CF /* EAHTTPCookie.swift in Sources */,
 				9E81D0C52AF451E9004095CF /* EACommon.swift in Sources */,
+				9E04F4FD2B138F38007A0773 /* PersistenceService.swift in Sources */,
 				9E81D0C62AF451E9004095CF /* EANetwork.swift in Sources */,
 				9E81D09D2AF44F4F004095CF /* App.swift in Sources */,
 				9E81D11C2AF4522C004095CF /* SettingsTableViewController.swift in Sources */,
@@ -679,7 +680,6 @@
 				9E81D0A32AF44F4F004095CF /* AppDelegate.swift in Sources */,
 				9E81D0F62AF451FF004095CF /* ResponseData.swift in Sources */,
 				9E4875E72AF56DD000D624DA /* APITesterPro.xcdatamodeld in Sources */,
-				9E81D0A02AF44F4F004095CF /* BackgroundWorker.swift in Sources */,
 				9E81D0CF2AF451EA004095CF /* EAUtils.swift in Sources */,
 				9E81D1142AF45221004095CF /* HistoryTableViewController.swift in Sources */,
 				9E81D0ED2AF451FF004095CF /* EFile.swift in Sources */,
