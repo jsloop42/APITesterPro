@@ -27,6 +27,16 @@ class APITesterProTests: XCTestCase {
     
     // MARK: - CoreData tests
     
+    func destroyPersistenceStore() throws {
+        let pc = self.localdb.persistentContainer.persistentStoreCoordinator
+        let url = pc.url(for: pc.persistentStores.first!)
+        if #available(iOS 15, *) {
+            try pc.destroyPersistentStore(at: url, type: .sqlite)
+        } else {
+            try pc.destroyPersistentStore(at: url, ofType: NSSQLiteStoreType, options: [:])
+        }
+    }
+    
     func testCoreDataSetupCompletion() {
         let exp = expectation(description: "CoreData setup completion")
         self.localdb.setup { exp.fulfill() }
@@ -51,9 +61,11 @@ class APITesterProTests: XCTestCase {
             }
         }
         waitForExpectations(timeout: 1.0) { _ in
-            let pc = self.localdb.persistentContainer.persistentStoreCoordinator
-            let url = pc.url(for: pc.persistentStores.first!)
-            _ = try? pc.destroyPersistentStore(at: url, ofType: NSSQLiteStoreType, options: [:])
+            do {
+                try self.destroyPersistenceStore()
+            } catch {
+                XCTFail("Error deleting persistence store: \(error)")
+            }
         }
     }
     
@@ -494,43 +506,186 @@ class APITesterProTests: XCTestCase {
         waitForExpectations(timeout: 1.0)
     }
     
+    /// Check if adding entity to the set will add a back reference to the parent automatically
+    func testEntityReference() {
+        let exp = expectation(description: "test core data entity referencing")
+        self.localdb.setup(storeType: NSSQLiteStoreType) {
+            let ctx = self.localdb.mainMOC
+            ctx.perform {
+                let wsId = "ws-backref-test"
+                let projId = "pj-backref-test"
+                let ws = self.localdb.createWorkspace(id: wsId, name: wsId, desc: "", isSyncEnabled: false, ctx: ctx)
+                XCTAssertNotNil(ws)
+                let proj = self.localdb.createProject(id: projId, wsId: wsId, name: projId, desc: "", ctx: ctx)
+                XCTAssertNotNil(proj)
+                if ws!.projects == nil {
+                    ws!.projects = NSSet()
+                }
+                ws!.addToProjects(proj!)
+                self.localdb.saveMainContext()
+                XCTAssertNotNil(proj!.workspace)
+                exp.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1.0) { _ in
+            do {
+                try self.destroyPersistenceStore()
+            } catch let error {
+                XCTFail("\(error)")
+            }
+        }
+    }
+    
     func testCascadeDeleteTest() {
         let exp = expectation(description: "test core data entities cascade delete")
         self.localdb.setup(storeType: NSSQLiteStoreType) {
             let ctx = self.localdb.mainMOC
             ctx.perform {
+                /*
+                 ws (ws delete should cascade delete all *) - direct delete
+                   - proj  (proj delete should cascade delete all referenced entities) - direct delete
+                     - req method
+                     - req
+                       - req data (header)
+                       - req data (param)
+                       - req body data
+                         - req data (form)
+                           - file
+                     - req 1 (req 1 delete should delete all referenced entities) - direct delete
+                       - req body data
+                         - req data (form)
+                           - image
+                       - history
+                   - proj 1 (*)
+                     - req 2 (*)
+                   - env (env delete should delete env var) - direct delete
+                     - env var
+                   - env 1 (*)
+                     - env var (*)
+                 */
                 let wsId = "ws-cascade-delete-test"
-                let envId = "en-cascade-delete-test"
-                let envVarId = "ev-cascade-delete-test"
-                let projId = "pj-cascade-delete-test"
-                let reqId = "rq-cascade-delete-test"
-                let ws = self.localdb.createWorkspace(id: wsId, name: wsId, desc: "", isSyncEnabled: true, ctx: ctx)
+                let projId = "pj-cascade-delete-test"  // will be deleted directly
+                let reqMeth = "rm-cascade-delete-test"  // will be casade deleted with project
+                let reqId = "rq-cascade-delete-test"  // will be cascade deleted with project
+                let reqDataHeaderId = "rd-cascade-delete-test-header"  // will be cascade deleted with project
+                let reqDataParamId = "rd-cascade-delete-test-param"  // will be cascade deleted with project
+                let reqBodyDataId = "rb-cascade-delete-test"  // will be cascade deleted with project
+                let reqDataFormId = "rd-cascade-delete-test-form"  // will be cascade deleted with project
+                let fileId = "fl-cascade-delete-test"  // will be cascade deleted with project
+                
+                let reqId1 = "rq-cascade-delete-test-1"  // will be deleted directly
+                let reqBodyDataId1 = "rb-cascade-delete-test-1"  // will be cascade deleted with request 1
+                let imageId = "im-cascade-delete-test"  // will be cascade deleted with request 1
+                let historyId = "hs-cascade-delete-test"  // will be cascade delted with request 1
+                
+                let projId1 = "pj-cascade-delete-test-1"  // will be cascade deleted with workspace
+                let reqId2 = "rq-cascade-delete-test-2"  // will be cascade deleted with workspace
+                
+                let envId = "en-cascade-delete-test"  // will be deleted directly
+                let envVarId = "ev-cascade-delete-test"  // will be cascade deleted with env
+                
+                let envId1 = "en-cascade-delete-test-1"  // will be cascade deleted with workspace
+                let envVarId1 = "ev-cascade-delete-test-1"  // will be cascade deleted with workspace
+                
+                let ws = self.localdb.createWorkspace(id: wsId, name: wsId, desc: "", isSyncEnabled: false, ctx: ctx)
                 XCTAssertNotNil(ws)
                 self.localdb.saveMainContext()
-                let env = self.localdb.createEnv(name: envId, wsId: wsId, ctx: ctx)
-                XCTAssertNotNil(env)
-                self.localdb.saveMainContext()
-                let envVar = self.localdb.createEnvVar(name: envVarId, value: "server", id: envVarId, checkExists: false, ctx: ctx)
-                XCTAssertNotNil(envVar)
-                envVar?.env = env
-                self.localdb.saveMainContext()
-                XCTAssertNotNil(envVar!.env)
+                
+                // project - deleted directly
                 let proj = self.localdb.createProject(id: projId, wsId: wsId, name: projId, desc: "", ctx: ctx)
                 XCTAssertNotNil(proj)
-                proj?.workspace = ws
+                proj!.workspace = ws
                 self.localdb.saveMainContext()
-                // delete workspace
-                self.localdb.deleteWorkspace(id: wsId)
+                
+                // request - cascade deleted with project
+                let req = self.localdb.createRequest(id: reqId, wsId: wsId, name: reqId, ctx: ctx)
+                XCTAssertNotNil(req)
+                req!.project = proj
+                // header - cascade deleted with project
+                let header = self.localdb.createRequestData(id: reqDataHeaderId, wsId: wsId, type: .header, fieldFormat: .text, ctx: ctx)
+                XCTAssertNotNil(header)
+                header!.header = req
+                // param - cascade deleted with project
+                let param = self.localdb.createRequestData(id: reqDataParamId, wsId: wsId, type: .param, fieldFormat: .text, ctx: ctx)
+                XCTAssertNotNil(param)
+                param!.param = req
+                // body - cascade deleted with project
+                let body = self.localdb.createRequestBodyData(id: reqBodyDataId, wsId: wsId, ctx: ctx)
+                XCTAssertNotNil(body)
+                body!.request = req
+                // form - cascade delete with project
+                let form = self.localdb.createRequestData(id: reqDataFormId, wsId: wsId, type: .form, fieldFormat: .file)
+                XCTAssertNotNil(form)
+                form!.form = body
+                // file - cascade delete with project
+                let fileContent = "file".data(using: .utf8)
+                XCTAssertNotNil(fileContent)
+                let path = URL(fileURLWithPath: "/tmp/test.txt")
+                let file = self.localdb.createFile(fileId: fileId, data: fileContent!, wsId: wsId, name: fileId, path: path, type: .form, ctx: ctx)
+                XCTAssertNotNil(file)
+                file!.requestData = form
                 self.localdb.saveMainContext()
-                // ensure rest of the referenced entities are also deleted
-                let ws1 = self.localdb.getWorkspace(id: wsId, ctx: ctx)
-                XCTAssertNil(ws1)
-                let env1 = self.localdb.getEnv(id: envId, ctx: ctx)
-                XCTAssertNil(env1)
-                let envVar1 = self.localdb.getEnvVar(id: envVarId, ctx: ctx)
-                XCTAssertNil(envVar1)
-                let proj1 = self.localdb.getProject(id: projId, ctx: ctx)
-                XCTAssertNil(proj1)
+                
+                // delete proj
+                self.localdb.deleteEntity(proj, ctx: ctx)
+                // test for cascade delete
+                let _file = self.localdb.getFileData(id: fileId, ctx: ctx)
+                XCTAssertNil(_file)
+                let _form = self.localdb.getRequestData(id: reqDataFormId, ctx: ctx)
+                XCTAssertNil(_form)
+                let _body = self.localdb.getRequestBodyData(id: reqBodyDataId, ctx: ctx)
+                XCTAssertNil(_body)
+                let _param = self.localdb.getRequestData(id: reqDataParamId, ctx: ctx)
+                XCTAssertNil(_param)
+                let _header = self.localdb.getRequestData(id: reqDataHeaderId, ctx: ctx)
+                XCTAssertNil(_header)
+                let _proj = self.localdb.getProject(id: projId, ctx: ctx)
+                XCTAssertNil(_proj)
+                
+//                let req1 = self.localdb.createRequest(id: reqId1, wsId: wsId, name: reqId1, ctx: ctx)
+//                XCTAssertNotNil(req1)
+//                req1!.project = proj
+//                
+//                // project 1 - cascade deleted with workspace
+//                let proj1 = self.localdb.createProject(id: projId1, wsId: wsId, name: projId1, desc: "", ctx: ctx)
+//                XCTAssertNotNil(proj1)
+//                proj1!.workspace = ws
+//                self.localdb.saveMainContext()
+//                
+//                // env - deleted directly
+//                let env = self.localdb.createEnv(name: envId, wsId: wsId, ctx: ctx)
+//                XCTAssertNotNil(env)
+//                env!.workspace = ws
+//                self.localdb.saveMainContext()
+//                let envVar = self.localdb.createEnvVar(name: envVarId, value: "server", id: envVarId, ctx: ctx)
+//                XCTAssertNotNil(envVar)
+//                envVar!.env = env
+//                self.localdb.saveMainContext()
+//                XCTAssertNotNil(envVar!.env)
+//                
+//                // env - cascade deleted with workspace
+//                let env1 = self.localdb.createEnv(name: envId1, wsId: wsId, ctx: ctx)
+//                XCTAssertNotNil(env1)
+//                env1!.workspace = ws
+//                self.localdb.saveMainContext()
+//                let envVar1 = self.localdb.createEnvVar(name: envVarId1, value: "server", id: envVarId1, ctx: ctx)
+//                XCTAssertNotNil(envVar1)
+//                envVar!.env = env1
+//                self.localdb.saveMainContext()
+//                XCTAssertNotNil(envVar1!.env)
+//                
+//                // delete workspace
+//                self.localdb.deleteWorkspace(id: wsId)
+//                self.localdb.saveMainContext()
+//                // ensure rest of the referenced entities are also deleted
+//                let ws1 = self.localdb.getWorkspace(id: wsId, ctx: ctx)
+//                XCTAssertNil(ws1)
+//                let env1 = self.localdb.getEnv(id: envId, ctx: ctx)
+//                XCTAssertNil(env1)
+//                let envVar1 = self.localdb.getEnvVar(id: envVarId, ctx: ctx)
+//                XCTAssertNil(envVar1)
+//                let proj1 = self.localdb.getProject(id: projId, ctx: ctx)
+//                XCTAssertNil(proj1)
                 exp.fulfill()
             }
         }
@@ -615,7 +770,13 @@ class APITesterProTests: XCTestCase {
                 exp.fulfill()
             }
         }
-        waitForExpectations(timeout: 1.0)
+        waitForExpectations(timeout: 1.0) { _ in
+            do {
+                try self.destroyPersistenceStore()
+            } catch {
+                XCTFail("Error deleting persistence store: \(error)")
+            }
+        }
     }
     
     func testTemp() {

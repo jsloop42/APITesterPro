@@ -100,6 +100,7 @@
 		9E81D14F2AF452DE004095CF /* EAQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1492AF452DE004095CF /* EAQueueTests.swift */; };
 		9ED969A42AF5A35F0029E83E /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A32AF5A35F0029E83E /* WebKit.framework */; };
 		9ED969A82AF5A38B0029E83E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A72AF5A38B0029E83E /* CloudKit.framework */; };
+		9EEA0E2A2B152E0200DFB42B /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEA0E292B152E0200DFB42B /* BackgroundWorker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -220,6 +221,7 @@
 		9ED969A32AF5A35F0029E83E /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		9ED969A52AF5A36A0029E83E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		9ED969A72AF5A38B0029E83E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		9EEA0E292B152E0200DFB42B /* BackgroundWorker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -319,6 +321,7 @@
 		9E81D0A62AF44F85004095CF /* EALib */ = {
 			isa = PBXGroup;
 			children = (
+				9EEA0E292B152E0200DFB42B /* BackgroundWorker.swift */,
 				9E04F4F42B122577007A0773 /* EACloudKit.swift */,
 				9E04F4F32B122577007A0773 /* EACloudOperation.swift */,
 				9E81D0B52AF451E9004095CF /* EACommon.swift */,
@@ -690,6 +693,7 @@
 				9E81D12B2AF45241004095CF /* OptionsPickerViewController.swift in Sources */,
 				9E81D10A2AF45218004095CF /* RequestTabBarViewController.swift in Sources */,
 				9E81D0D02AF451EA004095CF /* EAExtensions.swift in Sources */,
+				9EEA0E2A2B152E0200DFB42B /* BackgroundWorker.swift in Sources */,
 				9E81D1092AF45218004095CF /* RequestStates.swift in Sources */,
 				9E81D1222AF45235004095CF /* WorkspaceListViewController.swift in Sources */,
 				9E81D1132AF45221004095CF /* ResponseTableViewController.swift in Sources */,
