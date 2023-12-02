@@ -27,7 +27,7 @@ class ProjectListViewController: APITesterProViewController {
     private let app: App = App.shared
     private let nc = NotificationCenter.default
     private lazy var localdb = { CoreDataService.shared }()
-    // private lazy var db = { PersistenceService.shared }()
+    private lazy var localdbSvc = { PersistenceService.shared }()
     private var frc: NSFetchedResultsController<EProject>!
     private let cellReuseId = "projectCell"
     
@@ -343,8 +343,7 @@ extension ProjectListViewController: UITableViewDelegate, UITableViewDataSource 
         let delete = UIContextualAction(style: .destructive, title: "Delete") { action, view, completion in
             Log.debug("delete row: \(indexPath)")
             let proj = self.frc.object(at: indexPath)
-            self.localdb.markEntityForDelete(proj)
-            self.localdb.saveMainContext()
+            self.localdbSvc.markEntityForDelete(proj: proj)
             // TODO: ck: delete project from cloud
             // self.db.deleteDataMarkedForDelete(proj, ctx: self.localdb.mainMOC)
             self.updateData()

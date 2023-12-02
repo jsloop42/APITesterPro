@@ -284,7 +284,7 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
                 let wss = self.localdb.getAllWorkspaces(offset: 0, limit: 1, isMarkForDelete: false, ctx: self.localdb.mainMOC)
                 self.wsSelected = !wss.isEmpty ? wss.first! : self.localdb.getDefaultWorkspace()
             }
-            self.localdbSvc.markEntityForDelete(ws)
+            self.localdbSvc.markEntityForDelete(ws: ws)
             // TODO: ck: delete ws marked for delete
             // self.db.deleteDataMarkedForDelete(ws, ctx: self.localdb.mainMOC)
             self.updateData()
