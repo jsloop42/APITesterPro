@@ -565,7 +565,7 @@ class APITesterProTests: XCTestCase {
                  */
                 let wsId = "ws-cascade-delete-test"
                 let projId = "pj-cascade-delete-test"  // will be deleted directly
-                let reqMeth = "rm-cascade-delete-test"  // will be casade deleted with project
+                let reqMethId = "rm-cascade-delete-test"  // will be casade deleted with project
                 let reqId = "rq-cascade-delete-test"  // will be cascade deleted with project
                 let reqDataHeaderId = "rd-cascade-delete-test-header"  // will be cascade deleted with project
                 let reqDataParamId = "rd-cascade-delete-test-param"  // will be cascade deleted with project
@@ -575,6 +575,7 @@ class APITesterProTests: XCTestCase {
                 
                 let reqId1 = "rq-cascade-delete-test-1"  // will be deleted directly
                 let reqBodyDataId1 = "rb-cascade-delete-test-1"  // will be cascade deleted with request 1
+                let reqDataFormId1 = "rd-cascade-delete-test-form-1"  // will be cascade deleted with request 1
                 let imageId = "im-cascade-delete-test"  // will be cascade deleted with request 1
                 let historyId = "hs-cascade-delete-test"  // will be cascade delted with request 1
                 
@@ -595,8 +596,10 @@ class APITesterProTests: XCTestCase {
                 let proj = self.localdb.createProject(id: projId, wsId: wsId, name: projId, desc: "", ctx: ctx)
                 XCTAssertNotNil(proj)
                 proj!.workspace = ws
-                self.localdb.saveMainContext()
-                
+                // request method - cascade delete with project
+                let reqMeth = self.localdb.createRequestMethodData(id: reqMethId, wsId: wsId, name: reqMethId, ctx: ctx)
+                XCTAssertNotNil(reqMeth)
+                reqMeth!.project = proj
                 // request - cascade deleted with project
                 let req = self.localdb.createRequest(id: reqId, wsId: wsId, name: reqId, ctx: ctx)
                 XCTAssertNotNil(req)
@@ -625,9 +628,9 @@ class APITesterProTests: XCTestCase {
                 XCTAssertNotNil(file)
                 file!.requestData = form
                 self.localdb.saveMainContext()
-                
                 // delete proj
                 self.localdb.deleteEntity(proj, ctx: ctx)
+                self.localdb.saveMainContext()
                 // test for cascade delete
                 let _file = self.localdb.getFileData(id: fileId, ctx: ctx)
                 XCTAssertNil(_file)
@@ -639,53 +642,95 @@ class APITesterProTests: XCTestCase {
                 XCTAssertNil(_param)
                 let _header = self.localdb.getRequestData(id: reqDataHeaderId, ctx: ctx)
                 XCTAssertNil(_header)
+                let _reqMeth = self.localdb.getRequestMethodData(id: reqMethId, ctx: ctx)
+                XCTAssertNil(_reqMeth)
                 let _proj = self.localdb.getProject(id: projId, ctx: ctx)
                 XCTAssertNil(_proj)
                 
-//                let req1 = self.localdb.createRequest(id: reqId1, wsId: wsId, name: reqId1, ctx: ctx)
-//                XCTAssertNotNil(req1)
-//                req1!.project = proj
-//                
-//                // project 1 - cascade deleted with workspace
-//                let proj1 = self.localdb.createProject(id: projId1, wsId: wsId, name: projId1, desc: "", ctx: ctx)
-//                XCTAssertNotNil(proj1)
-//                proj1!.workspace = ws
-//                self.localdb.saveMainContext()
-//                
-//                // env - deleted directly
-//                let env = self.localdb.createEnv(name: envId, wsId: wsId, ctx: ctx)
-//                XCTAssertNotNil(env)
-//                env!.workspace = ws
-//                self.localdb.saveMainContext()
-//                let envVar = self.localdb.createEnvVar(name: envVarId, value: "server", id: envVarId, ctx: ctx)
-//                XCTAssertNotNil(envVar)
-//                envVar!.env = env
-//                self.localdb.saveMainContext()
-//                XCTAssertNotNil(envVar!.env)
-//                
-//                // env - cascade deleted with workspace
-//                let env1 = self.localdb.createEnv(name: envId1, wsId: wsId, ctx: ctx)
-//                XCTAssertNotNil(env1)
-//                env1!.workspace = ws
-//                self.localdb.saveMainContext()
-//                let envVar1 = self.localdb.createEnvVar(name: envVarId1, value: "server", id: envVarId1, ctx: ctx)
-//                XCTAssertNotNil(envVar1)
-//                envVar!.env = env1
-//                self.localdb.saveMainContext()
-//                XCTAssertNotNil(envVar1!.env)
-//                
-//                // delete workspace
-//                self.localdb.deleteWorkspace(id: wsId)
-//                self.localdb.saveMainContext()
-//                // ensure rest of the referenced entities are also deleted
-//                let ws1 = self.localdb.getWorkspace(id: wsId, ctx: ctx)
-//                XCTAssertNil(ws1)
-//                let env1 = self.localdb.getEnv(id: envId, ctx: ctx)
-//                XCTAssertNil(env1)
-//                let envVar1 = self.localdb.getEnvVar(id: envVarId, ctx: ctx)
-//                XCTAssertNil(envVar1)
-//                let proj1 = self.localdb.getProject(id: projId, ctx: ctx)
-//                XCTAssertNil(proj1)
+                // request 1 - deleted directly
+                let req1 = self.localdb.createRequest(id: reqId1, wsId: wsId, name: reqId1, ctx: ctx)
+                XCTAssertNotNil(req1)
+                // body cascade delete with request 1
+                let body1 = self.localdb.createRequestBodyData(id: reqBodyDataId1, wsId: wsId, ctx: ctx)
+                XCTAssertNotNil(body1)
+                body1!.request = req1
+                // form cascade delete with request 1
+                let form1 = self.localdb.createRequestData(id: reqDataFormId1, wsId: wsId, type: .form, fieldFormat: .file)
+                XCTAssertNotNil(form1)
+                form1!.form = body1
+                // image cascade delete with request 1
+                let img = self.localdb.createImage(imageId: imageId, data: Data(), wsId: wsId, name: imageId, type: "png", ctx: ctx)
+                XCTAssertNotNil(img)
+                img!.requestData = form1
+                // history cascade delete with request 1
+                let history = self.localdb.createHistory(id: historyId, wsId: wsId, ctx: ctx)
+                XCTAssertNotNil(history)
+                history!.request = req1
+                self.localdb.saveMainContext()
+                // delete request 1
+                self.localdb.deleteEntity(req1, ctx: ctx)
+                self.localdb.saveMainContext()
+                // test cascade delete of request 1
+                let _history = self.localdb.getHistory(id: historyId, ctx: ctx)
+                XCTAssertNil(_history)
+                let _img = self.localdb.getImageData(id: imageId, ctx: ctx)
+                XCTAssertNil(_img)
+                let _form1 = self.localdb.getRequestData(id: reqDataFormId1, ctx: ctx)
+                XCTAssertNil(_form1)
+                let _body1 = self.localdb.getRequestBodyData(id: reqBodyDataId1, ctx: ctx)
+                XCTAssertNil(_body1)
+                let _req1 = self.localdb.getRequest(id: reqId1, ctx: ctx)
+                XCTAssertNil(_req1)
+                
+                // env - deleted directly
+                let env = self.localdb.createEnv(name: envId, wsId: wsId, ctx: ctx)
+                XCTAssertNotNil(env)
+                env!.workspace = ws
+                let envVar = self.localdb.createEnvVar(name: envVarId, value: "server", id: envVarId, ctx: ctx)
+                XCTAssertNotNil(envVar)
+                envVar!.env = env
+                self.localdb.saveMainContext()
+                XCTAssertNotNil(envVar!.env)
+                // delete env and ensure envVar is also deleted
+                self.localdb.deleteEntity(env, ctx: ctx)
+                self.localdb.saveMainContext()
+                let _env = self.localdb.getEnv(id: envId, ctx: ctx)
+                XCTAssertNil(_env)
+                let _envVar = self.localdb.getEnvVar(id: envVarId, ctx: ctx)
+                XCTAssertNil(_envVar)
+                
+                // project 1 - cascade deleted with workspace
+                let proj1 = self.localdb.createProject(id: projId1, wsId: wsId, name: projId1, desc: "", ctx: ctx)
+                XCTAssertNotNil(proj1)
+                proj1!.workspace = ws
+                // request 2 - cascade delete with workspace
+                let req2 = self.localdb.createRequest(id: reqId2, wsId: wsId, name: reqId2, ctx: ctx)
+                XCTAssertNotNil(req2)
+                req2!.project = proj1
+                // env 1 - cascade deleted with workspace
+                let env1 = self.localdb.createEnv(name: envId1, wsId: wsId, ctx: ctx)
+                XCTAssertNotNil(env1)
+                env1!.workspace = ws
+                let envVar1 = self.localdb.createEnvVar(name: envVarId1, value: "server", id: envVarId1, ctx: ctx)
+                XCTAssertNotNil(envVar1)
+                envVar1!.env = env1
+                XCTAssertNotNil(envVar1!.env)
+                self.localdb.saveMainContext()
+                // delete workspace
+                self.localdb.deleteWorkspace(id: wsId)
+                self.localdb.saveMainContext()
+                // ensure rest of the referenced entities are also deleted
+                let _envVar1 = self.localdb.getEnvVar(id: envVarId1, ctx: ctx)
+                XCTAssertNil(_envVar1)
+                let _env1 = self.localdb.getEnv(id: envId1, ctx: ctx)
+                XCTAssertNil(_env1)
+                let _req2 = self.localdb.getRequest(id: reqId2, ctx: ctx)
+                XCTAssertNil(_req2)
+                let _proj1 = self.localdb.getProject(id: projId1, ctx: ctx)
+                XCTAssertNil(_proj1)
+                let _ws = self.localdb.getWorkspace(id: wsId, ctx: ctx)
+                XCTAssertNil(_ws)
+                
                 exp.fulfill()
             }
         }
