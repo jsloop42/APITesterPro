@@ -29,6 +29,7 @@ class WorkspaceListViewController: APITesterProViewController {
     private let app: App = App.shared
     private let nc = NotificationCenter.default
     private lazy var localdb = { CoreDataService.shared }()
+    private lazy var localdbSvc = { PersistenceService.shared }()
     private var frc: NSFetchedResultsController<EWorkspace>!
     // private lazy var db = { PersistenceService.shared }()
     private var wsSelected: EWorkspace!
@@ -283,8 +284,7 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
                 let wss = self.localdb.getAllWorkspaces(offset: 0, limit: 1, isMarkForDelete: false, ctx: self.localdb.mainMOC)
                 self.wsSelected = !wss.isEmpty ? wss.first! : self.localdb.getDefaultWorkspace()
             }
-            self.localdb.markEntityForDelete(ws)
-            self.localdb.saveMainContext()
+            self.localdbSvc.markEntityForDelete(ws)
             // TODO: ck: delete ws marked for delete
             // self.db.deleteDataMarkedForDelete(ws, ctx: self.localdb.mainMOC)
             self.updateData()
