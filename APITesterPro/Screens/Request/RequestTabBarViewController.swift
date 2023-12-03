@@ -17,11 +17,13 @@ extension Notification.Name {
 }
 
 class RequestTabBarController: UITabBarController, UITabBarControllerDelegate {
-    var request: ERequest?
+    /// Request is accessed from request view screen and set after editing
+    private var request: ERequest?
     var responseData: ResponseData?
     var segView: UISegmentedControl!
-    private let ck = EACloudKit.shared
-    private let utils = EAUtils.shared
+    private lazy var ck = { EACloudKit.shared }()
+    private lazy var utils = { EAUtils.shared }()
+    private lazy var localdb = { CoreDataService.shared }()
     private let nc = NotificationCenter.default
     private var selectedTab: Tab = .request
     private var barBtn: UIButton!
@@ -66,6 +68,17 @@ class RequestTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     func initEvents() {
         self.nc.addObserver(self, selector: #selector(self.responseDidReceive(_:)), name: .responseDidReceive, object: nil)
+    }
+    
+    func getRequest() -> ERequest? {
+        return self.request
+    }
+    
+    /// Get the request from Core Data using the main context based on the given Id. The request is loaded because edits are made in a different context and we cannot set the request object from edit as it's in another context.
+    /// Set this which will be accessed by request view (RequestTableViewController).
+    func updateRequest(reqId: String) {
+        let ctx = self.localdb.mainMOC
+        self.request = self.localdb.getRequest(id: reqId, ctx: ctx)
     }
     
     @objc func responseDidReceive(_ notif: Notification) {

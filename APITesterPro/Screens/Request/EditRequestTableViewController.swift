@@ -394,7 +394,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         self.endEditing()
         self.requestTracker.diffRescheduler.done()
         if self.isDirty, let data = self.request, let proj = self.project {
-            proj.addToRequests(data)
+            self.request.project = proj
             data.isSynced = false
             if let set = proj.requestMethods, let xs = set.allObjects as? [ERequestMethodData] {
                 xs.forEach { method in
@@ -404,23 +404,20 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
                     }
                 }
             }
-            //let timer = DispatchSource.makeTimerSource()
-            //timer.schedule(deadline: .now() + .milliseconds(300))
-            //timer.setEventHandler {
-                Log.debug("edit req in save timer")
-                self.localdb.saveChildContext(self.ctx)
-                self.localdb.saveMainContext()
-                self.isDirty = false
-                if let tabvc = self.tabBarController as? RequestTabBarController { tabvc.request = data }
-                // TODO: save to cloud
-                // self.db.saveRequestToCloud(data)
-                // TODO: delete data marked for delete
-                // self.db.deleteDataMarkedForDelete(self.app.editReqDelete)
-                self.nc.post(name: .requestDidChange, object: self, userInfo: ["request": data])
-                self.close()
-                //timer.cancel()
-            //}
-            //timer.resume()
+            Log.debug("edit req in save timer")
+            self.localdb.saveChildContext(self.ctx)
+            self.localdb.saveMainContext()
+            self.isDirty = false
+            if let tabvc = self.tabBarController as? RequestTabBarController {
+                tabvc.updateRequest(reqId: data.getId())
+            }
+            // TODO: save to cloud
+            // self.db.saveRequestToCloud(data)
+            // TODO: delete data marked for delete
+            // self.db.deleteDataMarkedForDelete(self.app.editReqDelete)
+            self.nc.post(name: .requestDidChange, object: self, userInfo: ["request": data])
+            self.close()
+            
         }
     }
     

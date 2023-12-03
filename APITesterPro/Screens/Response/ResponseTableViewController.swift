@@ -552,7 +552,7 @@ class ResponseTableViewController: APITesterProTableViewController {
     
     func initData() {
         Log.debug("response vc - initData")
-        guard let req = (self.viewType == .requestResponse ? self.tabbarController?.request : self.request) else { return }
+        guard let req = (self.viewType == .requestResponse ? self.tabbarController?.getRequest() : self.request) else { return }
         if self.viewType == .requestResponse {
             self.data = self.tabbarController?.responseData
         } else {

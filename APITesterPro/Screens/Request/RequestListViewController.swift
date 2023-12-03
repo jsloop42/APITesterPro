@@ -207,7 +207,7 @@ extension RequestListViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let req = self.frc.object(at: indexPath)
         if let vc = UIStoryboard.requestTabBar {
-            vc.request = req
+            vc.updateRequest(reqId: req.getId())
             self.navigationController!.pushViewController(vc, animated: true)
         }
     }

@@ -117,7 +117,7 @@ class RequestTableViewController: APITesterProTableViewController {
     }
     
     func initData() {
-        self.request = self.tabbarController.request
+        self.request = self.tabbarController.getRequest()
         if let envId = self.request?.envId, let env = self.localdb.getEnv(id: envId) {
             self.env = env
             self.updateEnv()
@@ -246,7 +246,7 @@ class RequestTableViewController: APITesterProTableViewController {
         DispatchQueue.main.async {
             if let info = notif.userInfo as? [String: Any], let req = info["request"] as? ERequest, req.getId() == self.request?.getId() {
                 self.request = req
-                self.tabbarController.request = req
+                self.tabbarController.updateRequest(reqId: req.getId())
                 Log.debug("current request did change - reloading views")
                 if let reqMan = AppState.getFromRequestState(req.getId()) {  // On edit request, cancel existing one and remove the current manager from state
                     reqMan.cancelRequest()
