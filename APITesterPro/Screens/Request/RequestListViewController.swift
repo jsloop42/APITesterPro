@@ -145,15 +145,9 @@ class RequestListViewController: APITesterProViewController {
     
     @objc func addBtnDidTap(_ sender: Any) {
         Log.debug("add btn did tap")
-        if AppState.editRequest == nil {
-            let name = self.app.getNewRequestName()
-            if let proj = self.project, let wsId = proj.workspace?.getId(),
-                let req = self.localdb.createRequest(id: self.localdb.requestId(), wsId: wsId, name: name, ctx: self.localdb.mainMOC) {
-                if let vc = UIStoryboard.editRequestVC {
-                    AppState.editRequest = req
-                    self.navigationController!.pushViewController(vc, animated: true)
-                }
-            }
+        if let vc = UIStoryboard.editRequestVC, let projId = self.project?.getId() {
+            vc.bootstrap(projectId: projId)
+            self.navigationController!.pushViewController(vc, animated: true)
         }
     }
 }

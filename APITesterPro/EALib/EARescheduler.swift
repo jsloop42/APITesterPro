@@ -55,7 +55,7 @@ public struct EAReschedulerFn: Equatable, Hashable {
 public final class EARescheduler: EAReschedulable {
     public typealias EAEquatable = String
     private var timer: DispatchSourceTimer!
-    public var interval: TimeInterval = 0.3
+    public var interval: TimeInterval = 0.3  // seconds
     public var type: EAReschedulerType!
     private var blocks: [EAReschedulerFn] = []
     private let queue = EACommon.userInteractiveQueue

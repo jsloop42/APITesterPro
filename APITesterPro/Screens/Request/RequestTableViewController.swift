@@ -345,8 +345,8 @@ class RequestTableViewController: APITesterProTableViewController {
     
     func viewEditRequestVC() {
         Log.debug("view edit request vc")
-        if let vc = UIStoryboard.editRequestVC {
-            AppState.editRequest = self.request
+        if let vc = UIStoryboard.editRequestVC, let req = self.request, let projId = req.project?.getId() {
+            vc.bootstrap(projectId: projId, requestId: req.getId())
             self.tabbarController.navigationController?.pushViewController(vc, animated: true)
         }
     }

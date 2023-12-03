@@ -36,11 +36,13 @@ class OptionsPickerViewController: UIViewController, UITableViewDelegate, UITabl
     var modelIndex: Int = 0
     var data: [String] = []
     var reqMethodData: [ERequestMethodData] = []
+    /// Set when option picker is in requestMethod mode
+    var project: EProject?
     var name = ""
     var model: Any?  // Any model data, eg: RequestData associated with a body form field
     var modelxs: [Any] = []
     private var isPopupActive = false
-    private let localdb = CoreDataService.shared
+    private lazy var localdb = { CoreDataService.shared }()
     
     deinit {
         Log.debug("option picker vc deinit")
@@ -233,7 +235,7 @@ class OptionsPickerViewController: UIViewController, UITableViewDelegate, UITabl
         let row = indexPath.row
         if self.pickerType == .requestMethod {
             if self.modelxs.count > row {
-                if AppState.editRequest?.project == nil { return false }
+                // if AppState.editRequest?.project == nil { return false } TODO: check why this was added
                 return (self.modelxs[row] as? ERequestMethodData)?.isCustom ?? false
             }
         }
@@ -243,7 +245,7 @@ class OptionsPickerViewController: UIViewController, UITableViewDelegate, UITabl
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let row = indexPath.row
         let elem = self.modelxs[row] as? ERequestMethodData
-        let projId = AppState.editRequest!.project!.getId()
+        guard let projId = self.project?.getId() else { return nil }
         let count = self.localdb.getRequestsCountForRequestMethodData(projId: projId, ctx: elem?.managedObjectContext)
         let delete = UIContextualAction(style: .destructive, title: "Delete") { action, view, completion in
             if count > 0, let name = elem?.name {

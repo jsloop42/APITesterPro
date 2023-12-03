@@ -258,19 +258,3 @@ public final class EAUtils {
         return Data(base64Encoded: b64)
     }
 }
-
-class Log {
-    static func debug(_ msg: Any) {
-        #if DEBUG
-        print("[DEBUG] \(msg)")
-        #endif
-    }
-    
-    static func error(_ msg: Any) {
-        print("[ERROR] \(msg)")
-    }
-    
-    static func info(_ msg: Any) {
-        print("[INFO] \(msg)")
-    }
-}

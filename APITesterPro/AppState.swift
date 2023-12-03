@@ -18,13 +18,11 @@ struct AppState {
     static var keyboardHeight: CGFloat = 0.0
     static var currentWorkspace: EWorkspace?
     static var currentProject: EProject?
-    /// The request which is currently being added or edited.
-    static var editRequest: ERequest?
     /// Current attachment info being processed.
     static var binaryAttachmentInfo = AttachmentInfo()
     /// If any request is begin currently edited, in which case, we delay saving context, until done.
     static var isRequestEdit = false
-    static var editRequestSaveTs: Int64 = 0
+    // static var editRequestSaveTs: Int64 = 0
     static private (set) var previousScreen: App.Screen = .projectList
     static private (set) var currentScreen: App.Screen = .projectList
     /// The state will own the manager so that even if the vc gets deallocated, the processing happens.
@@ -80,9 +78,9 @@ struct AppState {
         return nil
     }
     
-    static func updateEditRequestSaveTs() {
-        self.editRequestSaveTs = Date().currentTimeNanos()
-    }
+//    static func updateEditRequestSaveTs() {
+//        self.editRequestSaveTs = Date().currentTimeNanos()
+//    }
     
     // MARK: - Response Cache
     

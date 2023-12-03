@@ -1360,8 +1360,6 @@ extension CKError {
 }
 
 extension CKRecord {
-    var changeTag: Int64 { return self["changeTag"] ?? 0 }
-    
     func id() -> String {
         return self["id"] ?? ""
     }

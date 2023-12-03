@@ -17,7 +17,7 @@ public class EWorkspace: NSManagedObject, Entity {
     
     /// Checks if the default workspace does not have any change or is just after a reset (is new)
     var isInDefaultMode: Bool {
-        return self.id == Self.db.defaultWorkspaceId && self.name == Self.db.defaultWorkspaceName && self.desc == Self.db.defaultWorkspaceDesc && self.modified == self.changeTag && (self.projects == nil || self.projects!.isEmpty)
+        return self.id == Self.db.defaultWorkspaceId && self.name == Self.db.defaultWorkspaceName && self.desc == Self.db.defaultWorkspaceDesc && (self.projects == nil || self.projects!.isEmpty)
     }
     
     public func getId() -> String {
@@ -46,14 +46,6 @@ public class EWorkspace: NSManagedObject, Entity {
     
     public func setModified(_ ts: Int64? = nil) {
         self.modified = ts ?? Date().currentTimeNanos()
-    }
-    
-    public func getChangeTag() -> Int64 {
-        return self.changeTag
-    }
-    
-    public func setChangeTag(_ ts: Int64? = nil) {
-        self.changeTag = ts ?? Date().currentTimeNanos()
     }
     
     public func getVersion() -> Int64 {
@@ -85,7 +77,6 @@ public class EWorkspace: NSManagedObject, Entity {
         guard let ws = self.db.createWorkspace(id: id, name: "", desc: "", isSyncEnabled: false, ctx: ctx) else { return nil }
         if let x = dict["created"] as? Int64 { ws.created = x }
         if let x = dict["modified"] as? Int64 { ws.modified = x }
-        if let x = dict["changeTag"] as? Int64 { ws.changeTag = x }
         if let x = dict["isActive"] as? Bool { ws.isActive = x }
         if let x = dict["isSyncEnabled"] as? Bool { ws.isSyncEnabled = x }
         if let x = dict["name"] as? String { ws.name = x }
@@ -128,7 +119,6 @@ public class EWorkspace: NSManagedObject, Entity {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
             record["modified"] = self.modified as CKRecordValue
-            record["changeTag"] = self.changeTag as CKRecordValue
             record["desc"] = (self.desc ?? "") as CKRecordValue
             record["id"] = self.getId() as CKRecordValue
             record["wsId"] = self.getWsId() as CKRecordValue
@@ -144,7 +134,6 @@ public class EWorkspace: NSManagedObject, Entity {
         self.managedObjectContext?.performAndWait {
             if let x = record["created"] as? Int64 { self.created = x }
             if let x = record["modified"] as? Int64 { self.modified = x }
-            if let x = record["changeTag"] as? Int64 { self.changeTag = x }
             if let x = record["id"] as? String { self.id = x }
             if let x = record["isActive"] as? Bool { self.isActive = x }
             if let x = record["isSyncEnabled"] as? Bool { self.isSyncEnabled = x }
@@ -160,7 +149,6 @@ public class EWorkspace: NSManagedObject, Entity {
         var dict: [String: Any] = [:]
         dict["created"] = self.created
         dict["modified"] = self.modified
-        dict["changeTag"] = self.changeTag
         dict["id"] = self.id
         dict["isActive"] = self.isActive
         dict["isSyncEnabled"] = self.isSyncEnabled

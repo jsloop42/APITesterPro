@@ -44,14 +44,6 @@ public class EEnvVar: NSManagedObject, Entity {
         self.modified = ts ?? Date().currentTimeNanos()
     }
     
-    public func getChangeTag() -> Int64 {
-        return self.changeTag
-    }
-    
-    public func setChangeTag(_ ts: Int64? = nil) {
-        self.changeTag = ts ?? Date().currentTimeNanos()
-    }
-    
     public func getVersion() -> Int64 {
         return self.version
     }
@@ -73,7 +65,6 @@ public class EEnvVar: NSManagedObject, Entity {
         guard let envVar = self.db.createEnvVar(name: "", value: "", id: id, checkExists: true, ctx: self.db.mainMOC) else { return nil }
         if let x = dict["created"] as? Int64 { envVar.created = x }
         if let x = dict["modified"] as? Int64 { envVar.modified = x }
-        if let x = dict["changeTag"] as? Int64 { envVar.changeTag = x }
         if let x = dict["name"] as? String { envVar.name = x }
         if let x = dict["value"] as? String { envVar.value = x as NSObject }
         if let x = dict["version"] as? Int64 { envVar.version = x }
@@ -99,7 +90,6 @@ public class EEnvVar: NSManagedObject, Entity {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
             record["modified"] = self.modified as CKRecordValue
-            record["changeTag"] = self.changeTag as CKRecordValue
             record["id"] = self.getId() as CKRecordValue
             record["name"] = (self.name ?? "") as CKRecordValue
             if let name = self.name, let str = self.value as? String, let data = self.secureTrans.transformedValue(str) as? Data {
@@ -122,7 +112,6 @@ public class EEnvVar: NSManagedObject, Entity {
             moc.performAndWait {
                 if let x = record["created"] as? Int64 { self.created = x }
                 if let x = record["modified"] as? Int64 { self.modified = x }
-                if let x = record["changeTag"] as? Int64 { self.changeTag = x }
                 if let x = record["id"] as? String { self.id = x }
                 if let x = record["name"] as? String { self.name = x }
                 if let x = record["value"] as? CKAsset, let url = x.fileURL {
@@ -146,7 +135,6 @@ public class EEnvVar: NSManagedObject, Entity {
         var dict: [String: Any] = [:]
         dict["created"] = self.created
         dict["modified"] = self.modified
-        dict["changeTag"] = self.changeTag
         dict["id"] = self.id
         dict["name"] = self.name
         dict["value"] = self.value as? String ?? ""

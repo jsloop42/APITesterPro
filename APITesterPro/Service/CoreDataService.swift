@@ -197,6 +197,7 @@ class CoreDataService {
         }
     }
     
+    /// Returns the context if present or the main context
     private func getMainMOC(ctx: NSManagedObjectContext?) -> NSManagedObjectContext {
         if ctx != nil { return ctx! }
         return self.mainMOC
@@ -283,7 +284,7 @@ class CoreDataService {
     }
     
     /// Sort the given list of entities in the order of created and update the index property.
-    func sortByCreated(_ xs: inout [Entity]) {
+    func sortByCreated(_ xs: inout [any Entity]) {
         xs.sort { (a, b) -> Bool in a.getCreated() < b.getCreated() }
     }
     
@@ -293,7 +294,7 @@ class CoreDataService {
         return xs
     }
     
-    func sortedByCreated(_ xs: [Entity]) -> [Entity] {
+    func sortedByCreated(_ xs: [any Entity]) -> [any Entity] {
         var xs = xs
         self.sortByCreated(&xs)
         return xs
@@ -377,7 +378,7 @@ class CoreDataService {
     ///   - predicate: An optional fetch predicate.
     ///   - ctx: The managed object context.
     /// - Returns: The fetch results controller.
-    func getFetchResultsController(obj: Entity.Type, predicate: NSPredicate? = nil, sortDesc: [NSSortDescriptor]? = nil, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSFetchedResultsController<NSFetchRequestResult> {
+    func getFetchResultsController(obj: any Entity.Type, predicate: NSPredicate? = nil, sortDesc: [NSSortDescriptor]? = nil, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSFetchedResultsController<NSFetchRequestResult> {
         let moc = self.getMainMOC(ctx: ctx)
         var frc: NSFetchedResultsController<NSFetchRequestResult>!
         moc.performAndWait {
@@ -409,7 +410,7 @@ class CoreDataService {
         return frc
     }
     
-    func getEntity(recordType: RecordType, id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> Entity? {
+    func getEntity(recordType: RecordType, id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> (any Entity)? {
         let moc = self.getMainMOC(ctx: ctx)
         switch recordType {
         case .workspace:
@@ -1098,7 +1099,6 @@ class CoreDataService {
             if let x = self.createRequestMethodData(id: self.requestMethodDataId(proj.getId(), methodName: elem), wsId: proj.getWsId(), name: elem, isCustom: false, ctx: ctx) {
                 x.created = proj.getCreated() - 6 + idx.toInt64()
                 x.modified = x.created
-                x.changeTag = x.created
                 x.project = proj
                 return x
             }
@@ -1506,7 +1506,7 @@ class CoreDataService {
         return frc
     }
     
-    func getDataMarkedForDelete(obj: Entity.Type, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSFetchedResultsController<NSFetchRequestResult> {
+    func getDataMarkedForDelete(obj: any Entity.Type, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSFetchedResultsController<NSFetchRequestResult> {
         let moc = self.getMainMOC(ctx: ctx)
         var frc: NSFetchedResultsController<NSFetchRequestResult>!
         moc.performAndWait {
@@ -1551,7 +1551,6 @@ class CoreDataService {
             if !isSyncEnabled { ws.syncDisabled =  ts }
             ws.created = x == nil ? ts : x!.created
             ws.modified = ts
-            ws.changeTag = ts
             ws.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = ws
         }
@@ -1577,7 +1576,6 @@ class CoreDataService {
         moc.performAndWait {
             if !state { ws.syncDisabled = ts }
             ws.modified = ts
-            ws.changeTag = ts
             ws.isSyncEnabled = state
             do {
                 if !AppState.isRequestEdit {  try moc.save() }
@@ -1611,7 +1609,6 @@ class CoreDataService {
             proj.desc = desc
             proj.created = x == nil ? ts : x!.created
             proj.modified = ts
-            proj.changeTag = ts
             proj.version = x == nil ? CoreDataService.modelVersion : x!.version
             _ = self.genDefaultRequestMethods(proj, ctx: moc)
             ws?.addToProjects(proj)
@@ -1643,7 +1640,6 @@ class CoreDataService {
             req.name = name
             req.created = x == nil ? ts : x!.created
             req.modified = ts
-            req.changeTag = ts
             req.version = x == nil ? CoreDataService.modelVersion : x!.version
             project?.addToRequests(req)
             x = req
@@ -1672,7 +1668,6 @@ class CoreDataService {
             data.wsId = wsId
             data.created = x == nil ? ts : x!.created
             data.modified = ts
-            data.changeTag = ts
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
             data.fieldFormat = fieldFormat.rawValue.toInt64()
             data.type = type.rawValue.toInt64()
@@ -1705,7 +1700,6 @@ class CoreDataService {
             data.name = name
             data.created = x == nil ? ts : x!.created
             data.modified = ts
-            data.changeTag = ts
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
@@ -1730,7 +1724,6 @@ class CoreDataService {
             data.wsId = wsId
             data.created = x == nil ? ts : x!.created
             data.modified = ts
-            data.changeTag = ts
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
@@ -1760,7 +1753,6 @@ class CoreDataService {
             image.type = type
             image.created = x == nil ? ts : x!.created
             image.modified = ts
-            image.changeTag = ts
             image.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = image
         }
@@ -1784,7 +1776,6 @@ class CoreDataService {
             file.data = data
             file.created = x == nil ? ts : x!.created
             file.modified = ts
-            file.changeTag = ts
             file.name = name
             file.path = path
             file.type = type.rawValue.toInt64()
@@ -1818,7 +1809,6 @@ class CoreDataService {
             data.isSecure = isSecure
             data.created = x == nil ? ts : x!.created
             data.modified = ts
-            data.changeTag = ts
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
@@ -1836,7 +1826,6 @@ class CoreDataService {
             data.wsId = wsId
             data.created = x == nil ? ts : x!.created
             data.modified = ts
-            data.changeTag = ts
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
@@ -1855,7 +1844,6 @@ class CoreDataService {
             data.name = name
             data.created = x == nil ? ts: x!.created
             data.modified = ts
-            data.changeTag = ts
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
@@ -1875,7 +1863,6 @@ class CoreDataService {
             data.value = value as NSString
             data.created = x == nil ? ts: x!.created
             data.modified = ts
-            data.changeTag = ts
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
@@ -1893,7 +1880,6 @@ class CoreDataService {
             data.id = envVarId
             data.created = x == nil ? ts: x!.created
             data.modified = ts
-            data.changeTag = ts
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
@@ -1955,13 +1941,13 @@ class CoreDataService {
         
     // MARK: - Delete
     
-    func markEntityForDelete(_ entity: Entity?, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+    func markEntityForDelete(_ entity: (any Entity)?) {
         guard let entity = entity else { return }
-        entity.setMarkedForDelete(true)
-        if entity.getChangeTag() > AppState.editRequestSaveTs { self.deleteEntity(entity); return }
-        let ts = Date().currentTimeNanos()
-        entity.setModified(ts)
-        entity.setChangeTag(ts)
+        entity.managedObjectContext?.performAndWait {
+            entity.setMarkedForDelete(true)
+            let ts = Date().currentTimeNanos()
+            entity.setModified(ts)
+        }
     }
     
     /// Resets the context to its base state if there are any changes.
@@ -1994,86 +1980,86 @@ class CoreDataService {
         }
     }
     
-    func deleteWorkspace(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-        let moc = self.getMainMOC(ctx: ctx)
-        self.deleteEntity(self.getWorkspace(id: id, isMarkForDelete: nil, ctx: moc))
-    }
-    
-    func deleteProject(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-        let moc = self.getMainMOC(ctx: ctx)
-        self.deleteEntity(self.getProject(id: id, isMarkForDelete: nil, ctx: moc))
-    }
-    
-    func deleteRequest(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-        let moc = self.getMainMOC(ctx: ctx)
-        self.deleteEntity(self.getRequest(id: id, isMarkForDelete: nil, ctx: moc))
-    }
-    
-    func deleteRequestBodyData(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-        let moc = self.getMainMOC(ctx: ctx)
-        self.deleteEntity(self.getRequestBodyData(id: id, isMarkForDelete: nil, ctx: moc))
-    }
-    
-    func deleteRequestData(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-        let moc = self.getMainMOC(ctx: ctx)
-        self.deleteEntity(self.getRequestData(id: id, isMarkForDelete: nil, ctx: moc))
-    }
-    
-    func deleteRequestMethodData(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-        let moc = self.getMainMOC(ctx: ctx)
-        self.deleteEntity(self.getRequestMethodData(id: id, isMarkForDelete: nil, ctx: moc))
-    }
-    
-    func deleteFileData(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-        let moc = self.getMainMOC(ctx: ctx)
-        self.deleteEntity(self.getFileData(id: id, isMarkForDelete: nil, ctx: moc))
-    }
-    
-    func deleteImageData(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-        let moc = self.getMainMOC(ctx: ctx)
-        self.deleteEntity(self.getImageData(id: id, isMarkForDelete: nil, ctx: moc))
-    }
-    
-    func deleteHistory(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-        let moc = self.getMainMOC(ctx: ctx)
-        self.deleteEntity(self.getHistory(id: id, isMarkForDelete: nil, ctx: moc))
-    }
-    
-    func deleteEnv(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-        let moc = self.getMainMOC(ctx: ctx)
-        self.deleteEntity(self.getEnv(id: id, isMarkForDelete: nil, ctx: moc))
-    }
-    
-    func deleteEnvVar(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-        let moc = self.getMainMOC(ctx: ctx)
-        self.deleteEntity(self.getEnvVar(id: id, isMarkForDelete: nil, ctx: moc))
-    }
-    
-    /// Delete the entity with the given id.
-    /// - Parameters:
-    ///   - dataId: The entity id. If the entity could be `RequestData` or `RequestBodyData`.
-    ///   - req: The request to which the entity belongs.
-    ///   - type: The entity type.
-    ///   - ctx: The managed object context.
-    func deleteRequestData(dataId: String, req: ERequest, type: RequestCellType, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-        let moc = self.getMainMOC(ctx: ctx)
-        moc.performAndWait {
-            var x: Entity?
-            switch type {
-            case .header:
-                x = self.getRequestData(id: dataId, isMarkForDelete: nil, ctx: moc)
-                if let y = x as? ERequestData { req.removeFromHeaders(y) }
-            case .param:
-                x = self.getRequestData(id: dataId, isMarkForDelete: nil, ctx: ctx)
-                if let y = x as? ERequestData { req.removeFromParams(y) }
-            case .body:
-                x = self.getRequestBodyData(id: dataId, isMarkForDelete: nil, ctx: moc)
-                if x != nil { req.body = nil }
-            default:
-                break
-            }
-            if let y = x { moc.delete(y) }
-            Log.debug("Deleted data id: \(dataId)")
-        }
-    }
+//    func deleteWorkspace(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+//        let moc = self.getMainMOC(ctx: ctx)
+//        self.deleteEntity(self.getWorkspace(id: id, isMarkForDelete: nil, ctx: moc))
+//    }
+//    
+//    func deleteProject(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+//        let moc = self.getMainMOC(ctx: ctx)
+//        self.deleteEntity(self.getProject(id: id, isMarkForDelete: nil, ctx: moc))
+//    }
+//    
+//    func deleteRequest(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+//        let moc = self.getMainMOC(ctx: ctx)
+//        self.deleteEntity(self.getRequest(id: id, isMarkForDelete: nil, ctx: moc))
+//    }
+//    
+//    func deleteRequestBodyData(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+//        let moc = self.getMainMOC(ctx: ctx)
+//        self.deleteEntity(self.getRequestBodyData(id: id, isMarkForDelete: nil, ctx: moc))
+//    }
+//    
+//    func deleteRequestData(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+//        let moc = self.getMainMOC(ctx: ctx)
+//        self.deleteEntity(self.getRequestData(id: id, isMarkForDelete: nil, ctx: moc))
+//    }
+//    
+//    func deleteRequestMethodData(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+//        let moc = self.getMainMOC(ctx: ctx)
+//        self.deleteEntity(self.getRequestMethodData(id: id, isMarkForDelete: nil, ctx: moc))
+//    }
+//    
+//    func deleteFileData(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+//        let moc = self.getMainMOC(ctx: ctx)
+//        self.deleteEntity(self.getFileData(id: id, isMarkForDelete: nil, ctx: moc))
+//    }
+//    
+//    func deleteImageData(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+//        let moc = self.getMainMOC(ctx: ctx)
+//        self.deleteEntity(self.getImageData(id: id, isMarkForDelete: nil, ctx: moc))
+//    }
+//    
+//    func deleteHistory(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+//        let moc = self.getMainMOC(ctx: ctx)
+//        self.deleteEntity(self.getHistory(id: id, isMarkForDelete: nil, ctx: moc))
+//    }
+//    
+//    func deleteEnv(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+//        let moc = self.getMainMOC(ctx: ctx)
+//        self.deleteEntity(self.getEnv(id: id, isMarkForDelete: nil, ctx: moc))
+//    }
+//    
+//    func deleteEnvVar(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+//        let moc = self.getMainMOC(ctx: ctx)
+//        self.deleteEntity(self.getEnvVar(id: id, isMarkForDelete: nil, ctx: moc))
+//    }
+//    
+//    /// Delete the entity with the given id.
+//    /// - Parameters:
+//    ///   - dataId: The entity id. If the entity could be `RequestData` or `RequestBodyData`.
+//    ///   - req: The request to which the entity belongs.
+//    ///   - type: The entity type.
+//    ///   - ctx: The managed object context.
+//    func deleteRequestData(dataId: String, req: ERequest, type: RequestCellType, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+//        let moc = self.getMainMOC(ctx: ctx)
+//        moc.performAndWait {
+//            var x: Entity?
+//            switch type {
+//            case .header:
+//                x = self.getRequestData(id: dataId, isMarkForDelete: nil, ctx: moc)
+//                if let y = x as? ERequestData { req.removeFromHeaders(y) }
+//            case .param:
+//                x = self.getRequestData(id: dataId, isMarkForDelete: nil, ctx: ctx)
+//                if let y = x as? ERequestData { req.removeFromParams(y) }
+//            case .body:
+//                x = self.getRequestBodyData(id: dataId, isMarkForDelete: nil, ctx: moc)
+//                if x != nil { req.body = nil }
+//            default:
+//                break
+//            }
+//            if let y = x { moc.delete(y) }
+//            Log.debug("Deleted data id: \(dataId)")
+//        }
+//    }
 }
