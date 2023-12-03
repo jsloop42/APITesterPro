@@ -43,14 +43,6 @@ public class EProject: NSManagedObject, Entity {
         self.modified = ts ?? Date().currentTimeNanos()
     }
     
-    public func getChangeTag() -> Int64 {
-        return self.changeTag
-    }
-    
-    public func setChangeTag(_ ts: Int64? = nil) {
-        self.changeTag = ts ?? Date().currentTimeNanos()
-    }
-    
     public func getVersion() -> Int64 {
         return self.version
     }
@@ -73,7 +65,6 @@ public class EProject: NSManagedObject, Entity {
         let wsId = record.getWsId()
         if let proj = self.db.getProject(id: projId, ctx: ctx) { return proj }
         let proj = self.db.createProject(id: projId, wsId: wsId, name: "", desc: "", checkExists: false, ctx: ctx)
-        proj?.changeTag = 0
         return proj
     }
     
@@ -89,7 +80,6 @@ public class EProject: NSManagedObject, Entity {
         guard let proj = self.db.createProject(id: id, wsId: wsId, name: "", desc: "", ctx: self.db.mainMOC) else { return nil }
         if let x = dict["created"] as? Int64 { proj.created = x }
         if let x = dict["modified"] as? Int64 { proj.modified = x }
-        if let x = dict["changeTag"] as? Int64 { proj.changeTag = x }
         if let x = dict["desc"] as? String { proj.desc = x }
         if let x = dict["name"] as? String { proj.name = x }
         if let x = dict["version"] as? Int64 { proj.version = x }
@@ -130,7 +120,6 @@ public class EProject: NSManagedObject, Entity {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
             record["modified"] = self.modified as CKRecordValue
-            record["changeTag"] = self.changeTag as CKRecordValue
             record["desc"] = (self.desc ?? "") as CKRecordValue
             record["id"] = self.getId() as CKRecordValue
             record["wsId"] = self.getWsId() as CKRecordValue
@@ -146,7 +135,6 @@ public class EProject: NSManagedObject, Entity {
             moc.performAndWait {
                 if let x = record["created"] as? Int64 { self.created = x }
                 if let x = record["modified"] as? Int64 { self.modified = x }
-                if let x = record["changeTag"] as? Int64 { self.changeTag = x }
                 if let x = record["desc"] as? String { self.desc = x }
                 if let x = record["id"] as? String { self.id = x }
                 if let x = record["wsId"] as? String { self.wsId = x }
@@ -161,7 +149,6 @@ public class EProject: NSManagedObject, Entity {
         var dict: [String: Any] = [:]
         dict["created"] = self.created
         dict["modified"] = self.modified
-        dict["changeTag"] = self.changeTag
         dict["desc"] = self.desc
         dict["id"] = self.id
         dict["wsId"] = self.wsId

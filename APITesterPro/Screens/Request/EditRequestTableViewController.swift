@@ -30,7 +30,6 @@ class ValidateSSLCell: UITableViewCell {
 }
 
 class EditRequestTableViewController: APITesterProTableViewController, UITextFieldDelegate, UITextViewDelegate {
-    static weak var shared: EditRequestTableViewController?
     @IBOutlet weak var titleLabel: UILabel!
     // @IBOutlet weak var cancelBtn: UIButton!
     // @IBOutlet weak var doneBtn: UIButton!
@@ -68,7 +67,17 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     // private lazy var db = { PersistenceService.shared }()
     private static var localdb = { CoreDataService.shared }()
     private lazy var localdb = { CoreDataService.shared }()
-    
+    /// The projectId to which the request belongs
+    var projectId: String!
+    /// The project to which the request belongs. We need to load the project using the background context to assign it to request.
+    var project: EProject!
+    /// The request Id of the request that is in edit. This needs to be set before pushing this VC.
+    var requestId: String!
+    /// On view will appear, if request is not populated, we load the request in a background context.
+    var request: ERequest!
+    /// The background context used for editing
+    var ctx: NSManagedObjectContext!
+    var requestTracker: EditRequestTracker!
     private lazy var doneBtn: UIButton = {
         let btn = UI.getNavbarTopDoneButton()
         btn.addTarget(self, action: #selector(self.doneDidTap(_:)), for: .touchUpInside)
@@ -107,8 +116,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         self.headerKVTableViewManager.destroy()
         self.paramsKVTableViewManager.destroy()
         self.bodyKVTableViewManager.destroy()
-        AppState.editRequest = nil
-        EditRequestTableViewController.shared = nil
+        self.request = nil
         self.nc.removeObserver(self)
     }
     
@@ -118,16 +126,19 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     }
     
     func discardContextChanges() {
-        if let data = AppState.editRequest, let ctx = data.managedObjectContext {
-            [self.app.editReqInfo, self.app.editReqDelete].forEach { self.localdb.discardChanges(for: $0, inContext: ctx) }
-            self.app.clearEditRequestEntityIds()
-            self.app.clearEditRequestDeleteObjects()
-            self.localdb.saveMainContext { _ in
-                AppState.editRequest = nil
-                self.isDirty = false
-                self.close()
-            }
+        if let ctx = self.ctx {
+            self.localdb.discardChanges(in: ctx)
         }
+//        if let data = AppState.editRequest, let ctx = data.managedObjectContext {
+//            [self.app.editReqInfo, self.app.editReqDelete].forEach { self.localdb.discardChanges(for: $0, inContext: ctx) }
+//            self.app.clearEditRequestEntityIds()
+//            self.app.clearEditRequestDeleteObjects()
+//            self.localdb.saveMainContext { _ in
+//                AppState.editRequest = nil
+//                self.isDirty = false
+//                self.close()
+//            }
+//        }
     }
     
     public override func shouldPopOnBackButton() -> Bool {
@@ -145,8 +156,9 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
             )
             return false
         } else {
-            if let data = AppState.editRequest, let url = data.url, url.isEmpty {  // New request and user taps back button without any change, so we discard.
-                self.localdb.deleteEntity(data)
+            if let req = self.request, let url = req.url, url.isEmpty {  // New request and user taps back button without any change, so we discard.
+                // self.localdb.deleteEntity(data)
+                self.discardContextChanges()
             }
         }
         self.destroy()
@@ -162,7 +174,6 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         }
         super.willMove(toParent: parent)
     }
-
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -171,22 +182,51 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         AppState.setCurrentScreen(.editRequest)
-        RequestVC.shared = self
+        Log.debug("edit request view will appear")
+    }
+    
+    func bootstrap(projectId: String, requestId: String? = nil) {
+        self.projectId = projectId
+        self.requestId = requestId
+        if self.ctx == nil {
+            self.ctx = self.localdb.getChildMOC()
+        }
+        if self.project == nil {
+            self.project = self.localdb.getProject(id: self.projectId, ctx: self.ctx)
+        }
+        if self.requestId == nil {  // add new request mode
+            Log.debug("new request")
+            self.requestId = self.localdb.requestId()
+            self.request = self.localdb.createRequest(id: self.requestId, wsId: self.project.getWsId(), name: self.app.getNewRequestName(), ctx: self.ctx)
+        }
+        if self.request == nil {  // edit request mode, load the request using background context
+            Log.debug("request not present loading..")
+            self.request = self.localdb.getRequest(id: self.requestId, ctx: self.ctx)
+        }
+        self.entityDict = self.localdb.requestToDictionary(self.request)
+        Log.debug("initial entity dic: \(self.entityDict)")
+        self.requestTracker = EditRequestTracker(ctx: self.ctx, request: self.request)
+    }
+    
+    func loadData() {
+        if self.request == nil && self.requestId != nil {  // loading edit for the first time
+            Log.debug("request not present loading..")
+            if self.ctx == nil {
+                self.ctx = self.localdb.getChildMOC()
+            }
+            self.request = self.localdb.getRequest(id: self.requestId, ctx: self.ctx)
+            self.entityDict = self.localdb.requestToDictionary(self.request)  // FIXME: remove
+            Log.debug("initial entity dic: \(self.entityDict)")
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        EditRequestTableViewController.shared = self
         Log.debug("request table vc view did load")
         self.initUI()
         self.initEvents()
-        if let data = AppState.editRequest {
-            self.entityDict = self.localdb.requestToDictionary(data)
-            Log.debug("initial entity dic: \(self.entityDict)")
-        }
         self.updateData()
         self.reloadAllTableViews()
-        AppState.updateEditRequestSaveTs()
     }
         
     func initUI() {
@@ -217,8 +257,8 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         self.bodyCell.borderColor = .clear
         self.validateSSLCell.borderColor = .clear
         // end clear
-        self.reqName = AppState.editRequest?.name ?? ""
-        if let data = AppState.editRequest {
+        self.reqName = self.request.name ?? ""
+        if let data = self.request {
             if data.objectID.isTemporaryID {
                 self.titleLabel.text = "Add Request"
                 self.isEditMode = false
@@ -255,7 +295,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     }
 
     func updateData() {
-        if let data = AppState.editRequest, let ctx = data.managedObjectContext {
+        if let data = self.request, let ctx = data.managedObjectContext {
             self.validateSSLCell.requestId = data.getId()
             self.validateSSLCell.validateSwitch.isOn = data.validateSSL
             self.urlTextField.text = data.url
@@ -269,7 +309,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
                 } else {
                     if !self.methods.isEmpty {
                         self.methodLabel.text = self.methods[0].name
-                        AppState.editRequest!.selectedMethodIndex = 0
+                        data.selectedMethodIndex = 0
                     }
                 }
             }
@@ -343,17 +383,17 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     
     @objc func validateSSLDidChange(_ notif: Notification) {
         Log.debug("validate ssl did change")
-        if let info = notif.userInfo, let reqId = info["requestId"] as? String, reqId == AppState.editRequest?.getId(), let shouldValidateSSL = info["shouldValidateSSL"] as? Bool {
-            AppState.editRequest!.validateSSL = shouldValidateSSL
-            self.app.didRequestChange(AppState.editRequest!, request: self.entityDict, callback: { [weak self] status in self?.updateDoneButton(status) })
+        if let info = notif.userInfo, let reqId = info["requestId"] as? String, reqId == self.request.getId(), let shouldValidateSSL = info["shouldValidateSSL"] as? Bool {
+            self.request.validateSSL = shouldValidateSSL
+            self.requestTracker.didRequestChange(self.request, callback: { [weak self] status in self?.updateDoneButton(status) })
         }
     }
     
     @objc func doneDidTap(_ sender: Any) {
         Log.debug("Done did tap")
         self.endEditing()
-        self.app.diffRescheduler.done()
-        if self.isDirty, let data = AppState.editRequest, let proj = AppState.currentProject {
+        self.requestTracker.diffRescheduler.done()
+        if self.isDirty, let data = self.request, let proj = self.project {
             proj.addToRequests(data)
             data.isSynced = false
             if let set = proj.requestMethods, let xs = set.allObjects as? [ERequestMethodData] {
@@ -368,6 +408,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
             //timer.schedule(deadline: .now() + .milliseconds(300))
             //timer.setEventHandler {
                 Log.debug("edit req in save timer")
+                self.localdb.saveChildContext(self.ctx)
                 self.localdb.saveMainContext()
                 self.isDirty = false
                 if let tabvc = self.tabBarController as? RequestTabBarController { tabvc.request = data }
@@ -385,7 +426,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     
     @objc func methodViewDidTap() {
         Log.debug("method view did tap")
-        guard let data = AppState.editRequest else { return }
+        guard let data = self.request else { return }
         let model: [String] = self.methods.compactMap { reqData -> String? in reqData.name }
         self.app.presentOptionPicker(type: .requestMethod, title: "Request Method", modelIndex: 0, selectedIndex: data.selectedMethodIndex.toInt(), data: model,
                                      modelxs: self.methods, storyboard: self.storyboard!, navVC: self.navigationController!)
@@ -397,8 +438,8 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
             DispatchQueue.main.async {
                 self.methodLabel.text = name
                 let i = idx.toInt64()
-                AppState.editRequest?.selectedMethodIndex = i
-                self.app.didRequestChange(AppState.editRequest!, request: self.entityDict, callback: { [weak self] status in self?.updateDoneButton(status) })
+                self.request.selectedMethodIndex = i
+                self.requestTracker.didRequestChange(self.request, callback: { [weak self] status in self?.updateDoneButton(status) })
                 self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
             }
         }
@@ -406,12 +447,12 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     
     @objc func customRequestMethodDidAdd(_ notif: Notification) {
         if let info = notif.userInfo as? [String: Any], let name = info[Const.requestMethodNameKey] as? String,
-            let data = AppState.editRequest, let ctx = data.managedObjectContext {
+           let data = self.request, let ctx = data.managedObjectContext {
             if let method = self.localdb.createRequestMethodData(id: self.localdb.requestMethodDataId(), wsId: data.getWsId(), name: name, checkExists: true, ctx: ctx) {
                 data.method = method
                 self.methods.append(method)
                 method.project = AppState.currentProject
-                self.app.didRequestChange(AppState.editRequest!, request: self.entityDict, callback: { [weak self] status in self?.updateDoneButton(status) })
+                self.requestTracker.didRequestChange(self.request, callback: { [weak self] status in self?.updateDoneButton(status) })
                 self.nc.post(name: .optionPickerShouldReload, object: self,
                              userInfo: [Const.optionModelKey: method, Const.optionDataActionKey: OptionDataAction.add])
             }
@@ -424,9 +465,9 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
                 if let idx = self.methods.firstIndex(of: data) { self.methods.remove(at: idx) }
                 data.shouldDelete = true
                 let selectedIdx = 0
-                AppState.editRequest?.selectedMethodIndex = selectedIdx.toInt64()
+                self.request.selectedMethodIndex = selectedIdx.toInt64()
                 if let method = self.methods.first { self.methodLabel.text = method.name }
-                self.app.didRequestChange(AppState.editRequest!, request: self.entityDict, callback: { [weak self] status in self?.updateDoneButton(status) })
+                self.requestTracker.didRequestChange(self.request, callback: { [weak self] status in self?.updateDoneButton(status) })
                 self.nc.post(name: .optionPickerShouldReload, object: self,
                              userInfo: [Const.optionDataActionKey: OptionDataAction.delete, Const.dataKey: id, Const.optionSelectedIndexKey: selectedIdx])
             }
@@ -435,32 +476,32 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
  
     @objc func requestBodyDidChange(_ notif: Notification) {
         if let info = notif.userInfo as? [String: Any], let idx = info[Const.optionSelectedIndexKey] as? Int {
-            guard let wsId = AppState.editRequest?.getWsId() else { return }
+            let wsId = self.request.getWsId()
             // If form is selected and there are no fields add one
-            if idx == RequestBodyType.form.rawValue, let xs = AppState.editRequest?.body?.form, xs.isEmpty {
+            if idx == RequestBodyType.form.rawValue, let xs = self.request.body?.form, xs.isEmpty {
                 if let req = self.localdb.createRequestData(id: self.localdb.requestDataId(), wsId: wsId, type: .form, fieldFormat: .text,
-                                                            ctx: AppState.editRequest?.managedObjectContext) {
-                    AppState.editRequest?.body?.addToForm(req)
+                                                            ctx: self.request.managedObjectContext) {
+                    self.request.body?.addToForm(req)
                 }
-            } else if idx == RequestBodyType.multipart.rawValue, let xs = AppState.editRequest?.body?.multipart, xs.isEmpty {
+            } else if idx == RequestBodyType.multipart.rawValue, let xs = self.request.body?.multipart, xs.isEmpty {
                 if let req = self.localdb.createRequestData(id: self.localdb.requestDataId(), wsId: wsId, type: .multipart, fieldFormat: .text,
-                                                            ctx: AppState.editRequest?.managedObjectContext) {
-                    AppState.editRequest?.body?.addToMultipart(req)
+                                                            ctx: self.request.managedObjectContext) {
+                    self.request.body?.addToMultipart(req)
                 }
             } else if idx == RequestBodyType.binary.rawValue {
-                if let data = AppState.editRequest, let body = data.body {
+                if let data = self.request, let body = data.body {
                     if body.binary == nil {
                         if let req = self.localdb.createRequestData(id: self.localdb.requestDataId(), wsId: wsId, type: .binary, fieldFormat: .file,
-                                                                    ctx: AppState.editRequest?.managedObjectContext) {
+                                                                    ctx: self.request.managedObjectContext) {
                             body.binary = req
                         }
                     }
                 }
             }
-            AppState.editRequest?.body?.selected = idx.toInt64()
+            self.request.body?.selected = idx.toInt64()
             DispatchQueue.main.async {
                 // NB: Calling within main thread seem to only work in this case
-                self.app.didRequestChange(AppState.editRequest!, request: self.entityDict, callback: { [weak self] status in self?.updateDoneButton(status) })
+                self.requestTracker.didRequestChange(self.request, callback: { [weak self] status in self?.updateDoneButton(status) })
                 self.tableView.reloadRows(at: [IndexPath(row: RequestCellType.body.rawValue, section: 0)], with: .none)
                 self.bodyKVTableViewManager.reloadData()
                 if idx == RequestBodyType.binary.rawValue {
@@ -481,7 +522,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
             let title = info[Const.optionTitleKey] as? String ?? ""
             let model = info[Const.optionModelKey]
             DispatchQueue.main.async {
-                self.app.presentOptionPicker(type: type, title: title, modelIndex: modelIndex, selectedIndex: selectedIndex, data: data, model: model,
+                self.app.presentOptionPicker(type: type, title: title, modelIndex: modelIndex, selectedIndex: selectedIndex, data: data, model: model, project: self.project,
                                              storyboard: self.storyboard!, navVC: self.navigationController!)
             }
         }
@@ -504,8 +545,6 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     }
     
     @objc func endEditing() {
-//        Log.debug("entity dict: \(self.entityDict)")
-//        Log.debug("edit request: \(AppState.editRequest)")
         Log.debug("end editing")
         self.isEndEditing = true
         UI.endEditing()
@@ -576,10 +615,10 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         } else if indexPath.row == CellId.spacerAfterParams.rawValue {
             height = 12
         } else if indexPath.row == CellId.body.rawValue && indexPath.section == 0 {
-            if let body = AppState.editRequest?.body, !body.markForDelete, (body.selected == RequestBodyType.form.rawValue || body.selected == RequestBodyType.multipart.rawValue) {
-                return RequestVC.bodyFormCellHeight()
+            if let body = self.request.body, !body.markForDelete, (body.selected == RequestBodyType.form.rawValue || body.selected == RequestBodyType.multipart.rawValue) {
+                return self.bodyFormCellHeight()
             }
-            if let body = AppState.editRequest?.body, !body.markForDelete, body.selected == RequestBodyType.binary.rawValue {
+            if let body = self.request.body, !body.markForDelete, body.selected == RequestBodyType.binary.rawValue {
                 return 60  // Only this one gets called.
             }
             height = self.bodyKVTableViewManager.getHeight()
@@ -610,17 +649,17 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     }
     
     @objc func updateStateForTextField(_ textField: UITextField) {
-        if AppState.editRequest == nil { return }
+        if self.request == nil { return }
         if textField == self.urlTextField {
-            AppState.editRequest!.url = (textField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            self.request.url = (textField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         } else if textField == self.nameTextField {
-            AppState.editRequest!.name = textField.text ?? ""
+            self.request.name = textField.text ?? ""
         }
-        self.app.didRequestChange(AppState.editRequest!, request: self.entityDict, callback: { [weak self] status in self?.updateDoneButton(status) })
+        self.requestTracker.didRequestChange(self.request, callback: { [weak self] status in self?.updateDoneButton(status) })
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        RequestVC.shared?.clearEditing()
+        self.clearEditing()
         //self.updateStateForTextField(textField)
     }
     
@@ -634,32 +673,30 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     }
         
     func textViewDidBeginEditing(_ textView: UITextView) {
-        RequestVC.shared?.clearEditing()
+        self.clearEditing()
         // TODO
         // self.updateDoneButton(self.app.didRequestDescriptionChange(textView.text ?? "", request: self.entityDict))
     }
     
     func textViewDidChange(_ textView: UITextView) {
         if textView == self.descTextView {
-            AppState.editRequest!.desc = textView.text ?? ""
-            self.app.didRequestChange(AppState.editRequest!, request: self.entityDict, callback: { [weak self] status in self?.updateDoneButton(status) })
+            self.request.desc = textView.text ?? ""
+            self.requestTracker.didRequestChange(self.request, callback: { [weak self] status in self?.updateDoneButton(status) })
         }
     }
     
-    static func addRequestBodyToState() {
-        if let data = AppState.editRequest, let ctx = data.managedObjectContext {
+    func addRequestBodyToState() {
+        if let data = self.request, let ctx = data.managedObjectContext {
             if data.body == nil {
                 data.body = self.localdb.createRequestBodyData(id: self.localdb.requestBodyDataId(), wsId: data.getWsId(), ctx: ctx)
-                AppState.editRequest!.body?.request = AppState.editRequest
+                data.body?.request = self.request
             }
         }
-        if let vc = RequestVC.shared {
-            vc.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
-        }
+        self.requestTracker.didRequestChange(self.request, callback: { [weak self] status in self?.updateDoneButton(status) })
     }
     
-    static func bodyFormCellHeight() -> CGFloat {
-        if let request = AppState.editRequest, let body = request.body, let ctx = request.managedObjectContext {
+    func bodyFormCellHeight() -> CGFloat {
+        if let body = request.body, let ctx = request.managedObjectContext {
             var n = 0
             if body.selected == RequestBodyType.form.rawValue {
                 n = self.localdb.getRequestDataCount(reqId: request.getId(), type: .form, ctx: ctx)
@@ -705,6 +742,26 @@ extension EditRequestTableViewController: KVEditTableViewDelegate {
     func reloadData() {
         self.tableView.reloadData()
     }
+    
+    func getRequest() -> ERequest {
+        return self.request
+    }
+    
+    func getRequestTracker() -> EditRequestTracker {
+        return self.requestTracker
+    }
+    
+    func getEntityDict() -> [String : Any] {
+        return self.entityDict
+    }
+    
+    func getVC() -> EditRequestTableViewController {
+        return self
+    }
+    
+    func didRequestChange(_ x: ERequest, callback: @escaping (Bool) -> Void) {
+        self.requestTracker.didRequestChange(x, callback: callback)
+    }
 }
 
 enum KVTableViewType {
@@ -715,20 +772,18 @@ enum KVTableViewType {
 
 protocol KVEditTableViewDelegate: AnyObject {
     func reloadData()
-    //func presentOptionsVC(_ data: [String], selected: Int)
-}
-
-class KVEditHeaderCell: UITableViewCell {
-    @IBOutlet weak var headerTitleBtn: UIButton!
+    func getRequest() -> ERequest
+    func getRequestTracker() -> EditRequestTracker
+    func getEntityDict() -> [String: Any]
+    func getVC() -> EditRequestTableViewController
+    func didRequestChange(_ x: ERequest, callback: @escaping (Bool) -> Void)
 }
 
 protocol KVEditContentCellDelegate: AnyObject {
     func enableEditing(indexPath: IndexPath)
     func disableEditing(indexPath: IndexPath)
     func clearEditing(completion: ((Bool) -> Void)?)
-    //func deleteRow(indexPath: IndexPath)
     func deleteRow(_ reqDataId: String, type: RequestCellType)
-    //func presentOptionsVC(_ data: [String], selected: Int)
     func dataDidChange(key: String, value: String, reqDataId: String, row: Int)
     func refreshCell(indexPath: IndexPath, cell: KVEditContentCellType)
 }
@@ -740,6 +795,11 @@ protocol KVEditContentCellType: AnyObject {
     func getContainerView() -> UIView
 }
 
+
+class KVEditHeaderCell: UITableViewCell {
+    @IBOutlet weak var headerTitleBtn: UIButton!
+}
+
 // MARK: - Key-Value content cell
 
 class KVEditContentCell: UITableViewCell, KVEditContentCellType, UITextFieldDelegate {
@@ -749,6 +809,7 @@ class KVEditContentCell: UITableViewCell, KVEditContentCellType, UITextFieldDele
     @IBOutlet weak var deleteView: UIView!
     @IBOutlet weak var containerView: UIView!
     weak var delegate: KVEditContentCellDelegate?
+    weak var editTVDelegate: KVEditTableViewDelegate?
     private let app = App.shared
     var editingIndexPath: IndexPath?
     var isEditingActive = false
@@ -782,7 +843,8 @@ class KVEditContentCell: UITableViewCell, KVEditContentCellType, UITextFieldDele
     
     @objc func deleteBtnDidTap() {
         Log.debug("delete row did tap")
-        RequestVC.shared?.clearEditing({
+        guard let editTVDelegate = self.editTVDelegate else { return }
+        editTVDelegate.getVC().clearEditing({
             let idxPath = IndexPath(row: self.tag, section: 0)
             self.editingIndexPath = idxPath
             self.delegate?.enableEditing(indexPath: idxPath)
@@ -808,7 +870,8 @@ class KVEditContentCell: UITableViewCell, KVEditContentCellType, UITextFieldDele
     // MARK: - Delegate
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        RequestVC.shared?.clearEditing()
+        guard let editTVDelegate = self.editTVDelegate else { return }
+        editTVDelegate.getVC().clearEditing()
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -843,6 +906,7 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
     @IBOutlet weak var imageFileView: UIImageView!  // binary image attachment
     @IBOutlet weak var fileCollectionView: UICollectionView!  // binary file attachment
     weak var delegate: KVEditContentCellDelegate?
+    weak var editTVDelegate: KVEditTableViewDelegate?
     var optionsData: [String] = ["json", "xml", "raw", "form", "multipart", "binary"]
     var isEditingActive: Bool = false
     var editingIndexPath: IndexPath?
@@ -871,9 +935,9 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
         self.rawTextView.delegate = self
         self.initUI()
         self.initEvents()
-        RequestVC.addRequestBodyToState()
-        if RequestVC.shared != nil {
-            self.updateState(AppState.editRequest!.body!)
+        if let editTVDelegate = self.editTVDelegate {
+            editTVDelegate.getVC().addRequestBodyToState()
+            self.updateState(editTVDelegate.getRequest().body!)
         }
         self.fileCollectionView.delegate = self
         self.fileCollectionView.dataSource = self
@@ -913,7 +977,8 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
     // The left delete cirle button
     @objc func deleteBtnDidTap() {
         Log.debug("delete row did tap")
-        RequestVC.shared?.clearEditing({
+        guard let editTVDelegate = self.editTVDelegate else { return }
+        editTVDelegate.getVC().clearEditing({
             self.delegate?.enableEditing(indexPath: IndexPath(row: self.tag, section: 0))
             UIView.transition(with: self, duration: 0.5, options: .curveEaseIn, animations: {
                 self.deleteView.isHidden = false
@@ -936,8 +1001,10 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
     @IBAction func typeBtnDidTap(_ sender: Any) {
         Log.debug("type name did tap")
         var selected: Int! = 0
-        guard let ctx = AppState.editRequest?.managedObjectContext else { return }
-        if let body = AppState.editRequest!.body { selected = Int(body.selected) }
+        guard let editTVDelegate = self.editTVDelegate else { return }
+        let request = editTVDelegate.getRequest()
+        guard let ctx = request.managedObjectContext, let body = request.body else { return }
+        selected = Int(body.selected)
         self.nc.post(name: .optionScreenShouldPresent, object: self,
                      userInfo: [Const.optionTypeKey: OptionPickerType.requestBodyForm.rawValue,
                                 Const.modelIndexKey: self.tag,
@@ -962,9 +1029,12 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
         self.bodyFieldTableView.isHidden = false
         self.rawTextViewContainer.isHidden = true
         self.binaryTextFieldView.isHidden = true
-        RequestVC.addRequestBodyToState()
-        if let req = AppState.editRequest, let body = req.body, let type = RequestBodyType(rawValue: body.selected.toInt()) {
-            self.bodyFieldTableView.selectedType = type
+        if let editTVDelegate = self.editTVDelegate {
+            editTVDelegate.getVC().addRequestBodyToState()
+            let request = editTVDelegate.getRequest()
+            if let body = request.body, let type = RequestBodyType(rawValue: body.selected.toInt()) {
+                self.bodyFieldTableView.selectedType = type
+            }
         }
         self.fileCollectionView.isHidden = true
         self.imageFileView.isHidden = true
@@ -1017,7 +1087,9 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
     func updateState(_ data: ERequestBodyData) {
         if data.markForDelete { return }
         let idx: Int = Int(data.selected)
-        AppState.editRequest!.body!.selected = Int64(idx)
+        if let editTVDelegate = self.editTVDelegate {
+            editTVDelegate.getRequest().body!.selected = Int64(idx)
+        }
         self.typeLabel.text = "(\(self.optionsData[idx]))"
         self.bodyLabelViewWidth.isActive = false
         switch idx {
@@ -1060,15 +1132,17 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
             break
         }
         self.bodyLabelViewWidth.isActive = true
-        if let vc = RequestVC.shared {
-            self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
+        if let editTVDelegate = self.editTVDelegate {
+            let request = editTVDelegate.getRequest()
+            editTVDelegate.didRequestChange(request, callback: { status in editTVDelegate.getVC().updateDoneButton(status) })
         }
     }
     
     // MARK: - Delegate collection view
     
     func getFile() -> EFile? {
-        return AppState.editRequest?.body?.binary?.files?.allObjects.first as? EFile
+        guard let editTVDelegate = self.editTVDelegate else { return nil }
+        return editTVDelegate.getRequest().body?.binary?.files?.allObjects.first as? EFile
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -1101,15 +1175,16 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
 }
 
 // MARK: - Raw textview delegate
+
 extension KVEditBodyContentCell: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
-        RequestVC.shared?.clearEditing()
+        self.editTVDelegate?.getVC().clearEditing()
     }
     
     func textViewDidChange(_ textView: UITextView) {
         let txt = textView.text ?? ""
         Log.debug("text changed: \(txt)")
-        guard let body = AppState.editRequest!.body else { return }
+        guard let editTVDelegate = self.editTVDelegate, let request = self.editTVDelegate?.getRequest(), let body = request.body else { return }
         let selected = body.selected
         switch selected {
         case 0:
@@ -1122,10 +1197,8 @@ extension KVEditBodyContentCell: UITextViewDelegate {
             break
         }
         self.updateTextViewText(textView, text: txt)
-        AppState.editRequest!.body = body
-        if let vc = RequestVC.shared {
-            self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
-        }
+        request.body = body
+        editTVDelegate.didRequestChange(request, callback: { status in editTVDelegate.getVC().updateDoneButton(status) })
         self.delegate?.refreshCell(indexPath: IndexPath(row: self.tag, section: 0), cell: self)
     }
 }
@@ -1159,6 +1232,7 @@ class KVEditBodyFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIColl
     @IBOutlet weak var borderView: UIView!
     @IBOutlet var keyTextFieldHeight: NSLayoutConstraint!
     weak var delegate: KVEditBodyFieldTableViewCellDelegate?
+    weak var editTVDelegate: KVEditTableViewDelegate?
     var isValueTextFieldActive = false
     var selectedType: RequestBodyType = .form
     var isKeyTextFieldActive = false
@@ -1229,9 +1303,11 @@ class KVEditBodyFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIColl
     
     @objc func fieldTypeViewDidTap(_ recog: UITapGestureRecognizer) {
         Log.debug("field type view did tap")
-        RequestVC.shared?.endEditing()
-        guard let data = AppState.editRequest, let ctx = data.managedObjectContext else { return }
-        RequestVC.addRequestBodyToState()
+        guard let editTVDelegate = self.editTVDelegate else { return }
+        editTVDelegate.getVC().endEditing()
+        let data = editTVDelegate.getRequest()
+        guard let ctx = data.managedObjectContext else { return }
+        editTVDelegate.getVC().addRequestBodyToState()
         let reqData = self.localdb.getRequestData(id: self.reqDataId, ctx: ctx)
         self.nc.post(name: .optionScreenShouldPresent, object: self,
                      userInfo: [Const.optionTypeKey: OptionPickerType.requestBodyFormField.rawValue,
@@ -1242,10 +1318,13 @@ class KVEditBodyFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIColl
     }
     
     @objc func presentDocPicker() {
+        guard let editTVDelegate = self.editTVDelegate else { return }
+        let data = editTVDelegate.getRequest()
+        guard let ctx = data.managedObjectContext else { return }
         DocumentPickerState.modelIndex = self.tag
-        if let data = AppState.editRequest, let ctx = data.managedObjectContext, let reqId = data.id,
-            let elem = self.localdb.getRequestData(at: self.tag, reqId: reqId, type: .form, ctx: ctx) {
-            DocumentPickerState.reqDataId = elem.id ?? ""
+        let reqId = data.getId()
+        if let elem = self.localdb.getRequestData(at: self.tag, reqId: reqId, type: .form, ctx: ctx) {
+            DocumentPickerState.reqDataId = elem.getId()
             if let image = elem.image {
                 DocumentPickerState.isCameraMode = image.isCameraMode
                 self.nc.post(Notification(name: .imagePickerShouldPresent))
@@ -1260,7 +1339,10 @@ class KVEditBodyFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIColl
     }
     
     @objc func updateState(_ textField: UITextField) {
-        if let data = AppState.editRequest, let ctx = data.managedObjectContext, let req = self.localdb.getRequestData(id: self.reqDataId, ctx: ctx) {
+        guard let editTVDelegate = self.editTVDelegate else { return }
+        let data = editTVDelegate.getRequest()
+        guard let ctx = data.managedObjectContext else { return }
+        if let req = self.localdb.getRequestData(id: self.reqDataId, ctx: ctx) {
             if textField == self.keyTextField {
                 req.key = textField.text
             } else if textField == self.valueTextField {
@@ -1274,7 +1356,7 @@ class KVEditBodyFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIColl
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         Log.debug("text field did begin editing")
-        RequestVC.shared?.clearEditing()
+        self.editTVDelegate?.getVC().clearEditing()
     }
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
@@ -1299,7 +1381,7 @@ class KVEditBodyFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIColl
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if self.selectedFieldFormat == .file {
-            if let data = AppState.editRequest, let ctx = data.managedObjectContext {
+            if let data = self.editTVDelegate?.getRequest(), let ctx = data.managedObjectContext {
                 return self.localdb.getFilesCount(self.reqDataId, type: selectedType == .form ? .form : .multipart, ctx: ctx)
             }
         }
@@ -1310,7 +1392,7 @@ class KVEditBodyFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIColl
         Log.debug("file collection view cell")
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "fileCell", for: indexPath) as! FileCollectionViewCell
         var name = ""
-        if let data = AppState.editRequest, let reqId = data.id, let ctx = data.managedObjectContext,
+        if let data = self.editTVDelegate?.getRequest(), let reqId = data.id, let ctx = data.managedObjectContext,
             let form = self.localdb.getRequestData(at: self.tag, reqId: reqId, type: self.selectedType == .form ? .form : .multipart, ctx: ctx),
             let formId = form.id, let file = self.localdb.getFile(at: indexPath.row, reqDataId: formId, ctx: ctx) {
             name = file.name ?? ""
@@ -1325,7 +1407,7 @@ class KVEditBodyFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIColl
             width = cell.nameLabel.textWidth()
         } else {
             var name = ""
-            if let data = AppState.editRequest, let reqId = data.id, let ctx = data.managedObjectContext,
+            if let data = self.editTVDelegate?.getRequest(), let reqId = data.id, let ctx = data.managedObjectContext,
                 let form = self.localdb.getRequestData(at: self.tag, reqId: reqId, type: self.selectedType == .form ? .form : .multipart, ctx: ctx),
                 let formId = form.id, let file = self.localdb.getFile(at: indexPath.row, reqDataId: formId, ctx: ctx) {
                 name = file.name ?? ""
@@ -1346,9 +1428,10 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
     private let nc = NotificationCenter.default
     var selectedType: RequestBodyType = .json
     private let app = App.shared
-    private let localdb = CoreDataService.shared
-    // private let db = PersistenceService.shared
+    private lazy var localdb = { CoreDataService.shared }()
+    private lazy var localdbSvc = { PersistenceService.shared }()
     private let utils = EAUtils.shared
+    weak var editTVDelegate: KVEditTableViewDelegate?
     
     deinit {
         Log.debug("KVBodyFieldTableView deinit")
@@ -1384,8 +1467,8 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
     @objc func requestBodyFieldDidChange(_ notif: Notification) {
         if let info = notif.userInfo as? [String: Any], let idx = info[Const.optionSelectedIndexKey] as? Int,
             let reqData = info[Const.optionModelKey] as? ERequestData {
-            if let vc = RequestVC.shared {
-                self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
+            if let request = self.editTVDelegate?.getRequest() {
+                self.editTVDelegate?.didRequestChange(request, callback: { status in self.editTVDelegate?.getVC().updateDoneButton(status) })
             }
             DispatchQueue.main.async {
                 reqData.fieldFormat = idx.toInt64()
@@ -1398,7 +1481,7 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
         Log.debug("KVBodyFieldTableView imageAttachmentDidReceive notification")
         if self.selectedType == .form {
             let row = DocumentPickerState.modelIndex
-            if let data = AppState.editRequest, let ctx = data.managedObjectContext,
+            if let data = self.editTVDelegate?.getRequest(), let ctx = data.managedObjectContext,
                 let form = self.localdb.getRequestData(id: DocumentPickerState.reqDataId, ctx: ctx) {
                 form.type = RequestDataType.form.rawValue.toInt64()
                 if let image = DocumentPickerState.image {
@@ -1406,15 +1489,12 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
                         let eimage = self.localdb.createImage(data: imageData, wsId: data.getWsId(), name: DocumentPickerState.imageName, type: DocumentPickerState.imageType, ctx: ctx)
                         eimage?.requestData = form
                         eimage?.isCameraMode = DocumentPickerState.isCameraMode
-                        if let files = form.files?.allObjects as? [EFile] {
+                        if let files = form.files?.allObjects as? [EFile] {  // remove files if selected previously
                             files.forEach { file in
-                                // TODO: ck: mark file for delete
-                                // self.db.markEntityForDelete(file: file, ctx: ctx)
+                                self.localdbSvc.markEntityForDelete(file: file, ctx: ctx)
                             }
                         }
-                        if let vc = RequestVC.shared {
-                            self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
-                        }
+                        self.editTVDelegate?.didRequestChange(data, callback: { status in self.editTVDelegate?.getVC().updateDoneButton(status) })
                     }
                 }
                 self.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
@@ -1427,7 +1507,7 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
         Log.debug("KVBodyFieldTableView documentAttachmentDidReceive notification")
         if self.selectedType == .form {
             let row = DocumentPickerState.modelIndex
-            if let data = AppState.editRequest, let ctx = data.managedObjectContext,
+            if let data = self.editTVDelegate?.getRequest(), let ctx = data.managedObjectContext,
                 let form = self.localdb.getRequestData(id: DocumentPickerState.reqDataId, ctx: ctx) {
                 let wsId = data.getWsId()
                 form.type = RequestDataType.form.rawValue.toInt64()
@@ -1443,20 +1523,21 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
                                                                   type: self.selectedType == .form ? .form : .multipart, checkExists: true, ctx: ctx) {
                                 ctx.performAndWait {
                                     file.requestData = form
+                                    if let image = form.image {  // remove previous image
+                                        self.localdbSvc.markEntityForDelete(image: image, ctx: ctx)
+                                    }
                                     // TODO: ck mark image for delete
                                     // self.db.markForDelete(image: form.image, ctx: form.image?.managedObjectContext)
                                 }
                                 DispatchQueue.main.async {
-                                    if let vc = RequestVC.shared {
-                                        self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
-                                    }
+                                    self.editTVDelegate?.didRequestChange(data, callback: { status in self.editTVDelegate?.getVC().updateDoneButton(status) })
                                     self.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
                                     DocumentPickerState.clear()
                                 }
                             }
                         case .failure(let error):
                             Log.debug("Error: \(error)")
-                            if let vc = RequestVC.shared { self.app.viewError(error, vc: vc) }
+                            if let vc = self.editTVDelegate?.getVC() { self.app.viewError(error, vc: vc) }
                         }
                     }
                 }
@@ -1465,28 +1546,22 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
     }
     
     func addFields() {
-        if let data = AppState.editRequest, let body = data.body, let ctx = data.managedObjectContext {
+        if let request = self.editTVDelegate?.getRequest(), let body = request.body, let ctx = request.managedObjectContext {
             if body.selected == RequestBodyType.form.rawValue {
-                let data = self.localdb.createRequestData(id: self.localdb.requestDataId(), wsId: data.getWsId(), type: .form, fieldFormat: .text, ctx: ctx)
-                if let x = data {
-                    body.addToForm(x)
-                    if let vc = RequestVC.shared {
-                        self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
-                    }
+                if let data = self.localdb.createRequestData(id: self.localdb.requestDataId(), wsId: request.getWsId(), type: .form, fieldFormat: .text, ctx: ctx) {
+                    body.addToForm(data)
+                    self.editTVDelegate?.didRequestChange(request, callback: { status in self.editTVDelegate?.getVC().updateDoneButton(status) })
                 }
             } else if body.selected == RequestBodyType.multipart.rawValue {
-                let data = self.localdb.createRequestData(id: self.localdb.requestDataId(), wsId: data.getWsId(), type: .multipart, fieldFormat: .text, ctx: ctx)
-                if let x = data {
-                    body.addToMultipart(x)
-                    if let vc = RequestVC.shared {
-                        self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
-                    }
+                if let data = self.localdb.createRequestData(id: self.localdb.requestDataId(), wsId: request.getWsId(), type: .multipart, fieldFormat: .text, ctx: ctx) {
+                    body.addToMultipart(data)
+                    self.editTVDelegate?.didRequestChange(request, callback: { status in self.editTVDelegate?.getVC().updateDoneButton(status) })
                 }
             }
         }
         self.reloadData()
-        RequestVC.shared?.bodyKVTableViewManager.reloadData()
-        RequestVC.shared?.reloadData()
+        self.editTVDelegate?.getVC().bodyKVTableViewManager.reloadData()
+        self.editTVDelegate?.getVC().reloadData()
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -1497,7 +1572,7 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
     }
         
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let data = AppState.editRequest, let reqId = data.id, let ctx = data.managedObjectContext else { return 0 }
+        guard let data = self.editTVDelegate?.getRequest(), let reqId = data.id, let ctx = data.managedObjectContext else { return 0 }
         if section == 1 {  // title
             return 1
         }
@@ -1518,6 +1593,7 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
             return cell
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: self.cellId, for: indexPath) as! KVEditBodyFieldTableViewCell
+        if cell.editTVDelegate == nil { cell.editTVDelegate = self.editTVDelegate }
         let row = indexPath.row
         cell.tag = row
         cell.delegate = self
@@ -1530,7 +1606,7 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
         var elem: ERequestData?
         var reqBodyData: ERequestBodyData?
         cell.selectedType = self.selectedType
-        if let data = AppState.editRequest, let ctx = data.managedObjectContext, let reqId = data.id {
+        if let data = self.editTVDelegate?.getRequest(), let ctx = data.managedObjectContext, let reqId = data.id {
             if self.selectedType == .form {
                 elem = self.localdb.getRequestData(at: row, reqId: reqId, type: .form, ctx: ctx)
                 reqBodyData = elem?.form
@@ -1633,14 +1709,14 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .destructive, title: "Delete") { action, view, completion in
             Log.debug("delete row: \(indexPath)")
-            guard let data = AppState.editRequest, let ctx = data.managedObjectContext else { completion(false); return }
+            guard let data = self.editTVDelegate?.getRequest(), let ctx = data.managedObjectContext else { completion(false); return }
             var shouldReload = false
             if let cell = tableView.cellForRow(at: indexPath) as? KVEditBodyFieldTableViewCell  {
                 if !cell.reqDataId.isEmpty {
                     let elem = self.localdb.getRequestData(id: cell.reqDataId, ctx: ctx)
-                    if let xs = elem?.files?.allObjects as? [EFile] {
-                        xs.forEach { file in self.app.addEditRequestDeleteObject(file) }
-                    }
+//                    if let xs = elem?.files?.allObjects as? [EFile] {
+//                        xs.forEach { file in self.app.addEditRequestDeleteObject(file) }
+//                    }
                     // TODO: ck: mark request data for delete
                     // self.db.markEntityForDelete(reqData: elem, ctx: ctx)
                     shouldReload = true
@@ -1658,7 +1734,7 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if indexPath.section == 0 {
-            if let body = AppState.editRequest!.body {
+            if let body = self.editTVDelegate?.getRequest().body {
                 if self.selectedType == .form {
                     if let form = body.form, form.count <= 1 {
                         return false
@@ -1676,27 +1752,24 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
     
     func reloadAllTableViews() {
         self.reloadData()
-        RequestVC.shared?.reloadData()
-        RequestVC.shared?.bodyKVTableViewManager.reloadData()
+        self.editTVDelegate?.getVC().reloadData()
+        self.editTVDelegate?.getVC().bodyKVTableViewManager.reloadData()
     }
     
     // MARK: - Delegate
     
     func updateState(_ data: ERequestData, row: Int) {
-        RequestVC.addRequestBodyToState()
-        AppState.editRequest!.body!.selected = self.selectedType.rawValue.toInt64()
+        guard let request = self.editTVDelegate?.getRequest() else { return }
+        self.editTVDelegate?.getVC().addRequestBodyToState()
+        request.body!.selected = self.selectedType.rawValue.toInt64()
         if self.selectedType == .form {
-            if AppState.editRequest!.body!.form == nil { AppState.editRequest!.body!.form = NSSet() }
-            AppState.editRequest!.body!.addToForm(data)
-            if let vc = RequestVC.shared {
-                self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
-            }
+            if request.body!.form == nil { request.body!.form = NSSet() }
+            request.body!.addToForm(data)
+            self.editTVDelegate?.didRequestChange(request, callback: { status in self.editTVDelegate?.getVC().updateDoneButton(status) })
         } else if self.selectedType == .multipart {
-            if AppState.editRequest!.body!.multipart == nil { AppState.editRequest!.body!.multipart = NSSet() }
-            AppState.editRequest!.body!.addToMultipart(data)
-            if let vc = RequestVC.shared {
-                self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
-            }
+            if request.body!.multipart == nil { request.body!.multipart = NSSet() }
+            request.body!.addToMultipart(data)
+            self.editTVDelegate?.didRequestChange(request, callback: { status in self.editTVDelegate?.getVC().updateDoneButton(status) })
         }
     }
 }
@@ -1709,7 +1782,7 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
     var height: CGFloat = 44
     var editingIndexPath: IndexPath?
     var tableViewType: KVTableViewType = .header
-    private let localdb = CoreDataService.shared
+    private lazy var localdb = { CoreDataService.shared }()
     // private let db = PersistenceService.shared
     private let utils = EAUtils.shared
     private let app = App.shared
@@ -1738,54 +1811,48 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
     }
     
     func addRequestDataToModel() {
-        guard let data = AppState.editRequest, let ctx = data.managedObjectContext else { return }
+        guard let delegate = self.delegate, let ctx = self.delegate?.getRequest().managedObjectContext else { return }
+        let data = delegate.getRequest()
         var x: ERequestData?
         switch self.tableViewType {
         case .header:
-            if data.headers == nil { AppState.editRequest!.headers = NSSet() }
+            if data.headers == nil { data.headers = NSSet() }
             x = self.localdb.createRequestData(id: self.localdb.requestDataId(), wsId: data.getWsId(), type: .header, fieldFormat: .text, ctx: ctx)
             if let y = x {
-                AppState.editRequest!.addToHeaders(y)
-                if let vc = RequestVC.shared {
-                    self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
-                }
+                data.addToHeaders(y)
+                self.delegate?.didRequestChange(data, callback: { status in self.delegate?.getVC().updateDoneButton(status) })
             }
         case .params:
-            if AppState.editRequest!.params == nil { AppState.editRequest!.params = NSSet() }
+            if data.params == nil { data.params = NSSet() }
             x = self.localdb.createRequestData(id: self.localdb.requestDataId(), wsId: data.getWsId(), type: .param, fieldFormat: .text, ctx: ctx)
             if let y = x {
-                AppState.editRequest!.addToParams(y)
-                if let vc = RequestVC.shared {
-                    self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
-                }
+                data.addToParams(y)
+                self.delegate?.didRequestChange(data, callback: { status in self.delegate?.getVC().updateDoneButton(status) })
             }
         case .body:
-            if AppState.editRequest!.body == nil || AppState.editRequest!.body!.markForDelete { RequestVC.addRequestBodyToState() }
-            if AppState.editRequest!.body == nil { return }
-            if AppState.editRequest!.body!.selected == RequestBodyType.form.rawValue {
-                if AppState.editRequest!.body!.form == nil { AppState.editRequest!.body!.form = NSSet() }
+            if data.body == nil || data.body!.markForDelete { delegate.getVC().addRequestBodyToState() }
+            if data.body == nil { return }
+            if data.body!.selected == RequestBodyType.form.rawValue {
+                if data.body!.form == nil { data.body!.form = NSSet() }
                 x = self.localdb.createRequestData(id: self.localdb.requestDataId(), wsId: data.getWsId(), type: .form, fieldFormat: .text, ctx: ctx)
                 if let y = x {
-                    AppState.editRequest!.body!.addToForm(y)
-                    if let vc = RequestVC.shared {
-                        self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
-                    }
+                    data.body!.addToForm(y)
+                    self.delegate?.didRequestChange(data, callback: { status in self.delegate?.getVC().updateDoneButton(status) })
                 }
-            } else if AppState.editRequest!.body!.selected == RequestBodyType.multipart.rawValue {
-                if AppState.editRequest!.body!.multipart == nil { AppState.editRequest!.body!.multipart = NSSet() }
+            } else if data.body!.selected == RequestBodyType.multipart.rawValue {
+                if data.body!.multipart == nil { data.body!.multipart = NSSet() }
                 x = self.localdb.createRequestData(id: self.localdb.requestDataId(), wsId: data.getWsId(), type: .multipart, fieldFormat: .text, ctx: ctx)
                 if let y = x {
-                    AppState.editRequest!.body!.addToMultipart(y)
-                    if let vc = RequestVC.shared {
-                        self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
-                    }
+                    data.body!.addToMultipart(y)
+                    self.delegate?.didRequestChange(data, callback: { status in self.delegate?.getVC().updateDoneButton(status) })
                 }
             }
         }
     }
     
     func removeRequestDataFromModel(_ id: String, type: RequestCellType) {
-        guard let data = AppState.editRequest, let ctx = data.managedObjectContext else { return }
+        guard let delegate = self.delegate, let ctx = self.delegate?.getRequest().managedObjectContext else { return }
+        let data = delegate.getRequest()
         if type == .body {
             guard let body = self.localdb.getRequestBodyData(id: id, ctx: ctx) else { return }
             // TODO: ck: mark body for delete
@@ -1799,92 +1866,87 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
             // TODO: ck: mark request data for delete
             // self.db.markEntityForDelete(reqData: elem, ctx: ctx)
         }
-        if let vc = RequestVC.shared {
-            self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
-        }
+        self.delegate?.didRequestChange(data, callback: { status in self.delegate?.getVC().updateDoneButton(status) })
     }
     
     @objc func imageAttachmentDidReceive(_ notif: Notification) {
         Log.debug("image attachment did receive")
         if AppState.binaryAttachmentInfo.isSame() { return }
         AppState.binaryAttachmentInfo.copyFromState()
-        guard let image = DocumentPickerState.image, let imageData = DocumentPickerState.imageType == ImageType.png.rawValue ? image.pngData() :
-            image.jpegData(compressionQuality: 1.0) else { return }
-        if let data = AppState.editRequest, let body = data.body, let ctx = data.managedObjectContext {
-            if body.selected == RequestBodyType.binary.rawValue {
-                Log.debug("binary field - image attachment")
-                if let binary = body.binary {
-                    if binary.image?.data != imageData {
-                        let eimage = self.localdb.createImage(data: imageData, wsId: data.getWsId(), name: DocumentPickerState.imageName, type: DocumentPickerState.imageType, ctx: ctx)
-                        eimage?.requestData = binary
-                        eimage?.isCameraMode = DocumentPickerState.isCameraMode
-                        if let xs = binary.files?.allObjects as? [EFile] {
-                            xs.forEach { file in
-                                // TODO: ck: mark file for delete
-                                // self.db.markEntityForDelete(file: file, ctx: ctx)
-                            }
-                        }
-                    }
-                    DispatchQueue.main.async {
-                        if let vc = RequestVC.shared {
-                            vc.bodyKVTableViewManager.reloadData()
-                            self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
+        guard let image = DocumentPickerState.image, let imageData = DocumentPickerState.imageType == ImageType.png.rawValue ? image.pngData() : image.jpegData(compressionQuality: 1.0) else { return }
+        guard let data = self.delegate?.getRequest(), let body = data.body, let ctx = data.managedObjectContext else { return }
+        if body.selected == RequestBodyType.binary.rawValue {
+            Log.debug("binary field - image attachment")
+            if let binary = body.binary {
+                if binary.image?.data != imageData {
+                    let eimage = self.localdb.createImage(data: imageData, wsId: data.getWsId(), name: DocumentPickerState.imageName, type: DocumentPickerState.imageType, ctx: ctx)
+                    eimage?.requestData = binary
+                    eimage?.isCameraMode = DocumentPickerState.isCameraMode
+                    if let xs = binary.files?.allObjects as? [EFile] {
+                        xs.forEach { file in
+                            // TODO: ck: mark file for delete
+                            // self.db.markEntityForDelete(file: file, ctx: ctx)
                         }
                     }
                 }
-                DocumentPickerState.clear()
+                DispatchQueue.main.async {
+                    self.delegate?.getVC().bodyKVTableViewManager.reloadData()
+                    self.delegate?.didRequestChange(data, callback: { status in self.delegate?.getVC().updateDoneButton(status) })
+                }
             }
+            DocumentPickerState.clear()
         }
+        
     }
     
     @objc func documentAttachmentDidReceive(_ notif: Notification) {
         Log.debug("doc attachment did receive")
         if AppState.binaryAttachmentInfo.isSame() { return }  // We are getting multiple notifications. So this prevents processing the same file again.
         AppState.binaryAttachmentInfo.copyFromState()
-        if let data = AppState.editRequest, let body = data.body, let ctx = data.managedObjectContext {
-            if body.selected == RequestBodyType.binary.rawValue {
-                Log.debug("binary field - doc attachment")
-                if let binary = body.binary {
-                    if DocumentPickerState.docs.isEmpty { return }
-                    let fileURL = DocumentPickerState.docs[0]
-                    self.app.getDataForURL(fileURL) { result in
-                        DispatchQueue.main.async {
-                            switch result {
-                            case .success(let fileData):
-                                Log.debug("bin: file read")
-                                if let xs = binary.files?.allObjects as? [EFile] {
-                                    xs.forEach { file in
-                                        // TODO: ck: mark file for delete
-                                        // self.db.markEntityForDelete(file: file, ctx: ctx)
-                                    }
+        guard let data = self.delegate?.getRequest(), let body = data.body, let ctx = data.managedObjectContext else { return }
+        if body.selected == RequestBodyType.binary.rawValue {
+            Log.debug("binary field - doc attachment")
+            if let binary = body.binary {
+                if DocumentPickerState.docs.isEmpty { return }
+                let fileURL = DocumentPickerState.docs[0]
+                self.app.getDataForURL(fileURL) { result in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(let fileData):
+                            Log.debug("bin: file read")
+                            if let xs = binary.files?.allObjects as? [EFile] {
+                                xs.forEach { file in
+                                    // TODO: ck: mark file for delete
+                                    // self.db.markEntityForDelete(file: file, ctx: ctx)
                                 }
-                                let name = self.app.getFileName(fileURL)
-                                if let file = self.localdb.createFile(data: fileData, wsId: data.getWsId(), name: name, path: fileURL,
-                                                                      type: .binary, checkExists: true, ctx: ctx) {
-                                    file.requestData = binary
-                                    if let img = binary.image {
-                                        // TODO: ck: mark image for delete
-                                        // self.db.markForDelete(image: img, ctx: ctx)
-                                    }
-                                    Log.debug("bin: entity deleted")
-                                    DispatchQueue.main.async {
-                                        if let vc = RequestVC.shared {
-                                            Log.debug("bin: tv reloaded")
-                                            vc.bodyKVTableViewManager.reloadData()
-                                            self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
-                                        }
-                                    }
-                                    DocumentPickerState.clear()
+                            }
+                            let name = self.app.getFileName(fileURL)
+                            if let file = self.localdb.createFile(data: fileData, wsId: data.getWsId(), name: name, path: fileURL,
+                                                                  type: .binary, checkExists: true, ctx: ctx) {
+                                file.requestData = binary
+                                if let img = binary.image {
+                                    // TODO: ck: mark image for delete
+                                    // self.db.markForDelete(image: img, ctx: ctx)
                                 }
-                            case .failure(let error):
-                                Log.debug("Error: \(error)")
-                                if let vc = RequestVC.shared { UI.viewToast(self.app.getErrorMessage(for: error), vc: vc) }
+                                Log.debug("bin: entity deleted")
+                                DispatchQueue.main.async {
+                                    self.delegate?.getVC().bodyKVTableViewManager.reloadData()
+                                    Log.debug("bin: tv reloaded")
+                                    self.delegate?.didRequestChange(data, callback: { status in self.delegate?.getVC().updateDoneButton(status) })
+                                }
+                                DocumentPickerState.clear()
+                            }
+                        case .failure(let error):
+                            Log.debug("Error: \(error)")
+                            if let vc = self.delegate?.getVC() {
+                                UI.viewToast(self.app.getErrorMessage(for: error), vc: vc)
                             }
                         }
                     }
                 }
             }
         }
+        
     }
     
     func reloadData() {
@@ -1903,7 +1965,7 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
     func getHeight() -> CGFloat {
         var height: CGFloat = 44
         var count = 0
-        guard let request = AppState.editRequest, let ctx = request.managedObjectContext else { return height }
+        guard let request = self.delegate?.getRequest(), let vc = self.delegate?.getVC(), let ctx = request.managedObjectContext else { return height }
         switch self.tableViewType {
         case .header:
             count = self.localdb.getRequestDataCount(reqId: request.getId(), type: .header, ctx: ctx)
@@ -1920,16 +1982,16 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
                 height = CGFloat(Double(count) * 92.5 + 50)
             }
         case .body:
-            if let body = AppState.editRequest?.body, !body.markForDelete {
+            if let body = request.body, !body.markForDelete {
                 if body.selected == RequestBodyType.json.rawValue ||
                    body.selected == RequestBodyType.xml.rawValue ||
                    body.selected == RequestBodyType.raw.rawValue {
                     height = self.getRowTextViewCellHeight()
                 } else if body.selected == RequestBodyType.form.rawValue {
-                    height = RequestVC.bodyFormCellHeight()
+                    height = vc.bodyFormCellHeight()
                     Log.debug("form cell height: \(height)")
                 } else if body.selected == RequestBodyType.multipart.rawValue {
-                    height = RequestVC.bodyFormCellHeight()
+                    height = vc.bodyFormCellHeight()
                     Log.debug("multipart cell height: \(height)")
                 } else if body.selected == RequestBodyType.binary.rawValue {
                     height = 60  // TODO: remove
@@ -1958,23 +2020,23 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let state = AppState.editRequest, let ctx = state.managedObjectContext else { return 0 }
+        guard let request = self.delegate?.getRequest(), let ctx = request.managedObjectContext else { return 0 }
         if section == 0 {
             switch self.tableViewType {
             case .header:
-                return self.localdb.getRequestDataCount(reqId: state.getId(), type: .header, ctx: ctx)
+                return self.localdb.getRequestDataCount(reqId: request.getId(), type: .header, ctx: ctx)
             case .params:
-                return self.localdb.getRequestDataCount(reqId: state.getId(), type: .param, ctx: ctx)
+                return self.localdb.getRequestDataCount(reqId: request.getId(), type: .param, ctx: ctx)
             case .body:
-                if state.body == nil { return 0 }
-                if state.body!.markForDelete { Log.debug("body num row: \(0)"); return 0 }
+                if request.body == nil { return 0 }
+                if request.body!.markForDelete { Log.debug("body num row: \(0)"); return 0 }
                 Log.debug("body num row: \(1)")
                 return 1
             }
         }
         // section 1 (header)
-        if self.tableViewType == .body && AppState.editRequest!.body != nil {
-            if AppState.editRequest!.body!.markForDelete { return 1 }
+        if self.tableViewType == .body && request.body != nil {
+            if request.body!.markForDelete { return 1 }
             Log.debug("body title num row: \(0)");
             return 0
         }
@@ -1987,23 +2049,24 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
             if self.tableViewType == .body {
                 Log.debug("cell for row: bodyContentCell")
                 let cell = tableView.dequeueReusableCell(withIdentifier: "editBodyContentCell", for: indexPath) as! KVEditBodyContentCell
+                if cell.editTVDelegate == nil { cell.editTVDelegate = self.delegate }
                 let row = indexPath.row
                 cell.tag = row
                 cell.delegate = self
                 self.hideDeleteRowView(cell: cell)
                 let selectedIdx: Int = {
-                    if let data = AppState.editRequest, let body = data.body { return Int(body.selected) }
+                    if let data = self.delegate?.getRequest(), let body = data.body { return Int(body.selected) }
                     return 0
                 }()
                 switch selectedIdx {
                 case RequestBodyType.json.rawValue:
-                    cell.updateTextViewText(cell.rawTextView, text: AppState.editRequest?.body?.json ?? "")
+                    cell.updateTextViewText(cell.rawTextView, text: self.delegate?.getRequest().body?.json ?? "")
                     cell.hideFormFields()
                 case RequestBodyType.xml.rawValue:
-                    cell.updateTextViewText(cell.rawTextView, text: AppState.editRequest?.body?.xml ?? "")
+                    cell.updateTextViewText(cell.rawTextView, text: self.delegate?.getRequest().body?.xml ?? "")
                     cell.hideFormFields()
                 case RequestBodyType.raw.rawValue:
-                    cell.updateTextViewText(cell.rawTextView, text: AppState.editRequest?.body?.raw ?? "")
+                    cell.updateTextViewText(cell.rawTextView, text: self.delegate?.getRequest().body?.raw ?? "")
                     cell.hideFormFields()
                 case RequestBodyType.form.rawValue:
                     cell.displayFormFields()
@@ -2014,14 +2077,15 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
                 default:
                     break
                 }
-                if AppState.editRequest != nil && AppState.editRequest!.body != nil {
-                    if AppState.editRequest!.body!.markForDelete { cell.isHidden = true }
-                    cell.bodyDataId = AppState.editRequest!.body!.id ?? ""
-                    cell.updateState(AppState.editRequest!.body!)
+                if let request = self.delegate?.getRequest(), let body = request.body {
+                    if body.markForDelete { cell.isHidden = true }
+                    cell.bodyDataId = body.getId()
+                    cell.updateState(body)
                 }
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "kvEditContentCell", for: indexPath) as! KVEditContentCell
+                if cell.editTVDelegate == nil { cell.editTVDelegate = self.delegate }
                 let row = indexPath.row
                 cell.tag = row
                 cell.delegate = self
@@ -2031,7 +2095,7 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
                 cell.reqDataId = ""
                 switch self.tableViewType {
                 case .header:
-                    if let data = AppState.editRequest, let reqId = data.id, let ctx = data.managedObjectContext {
+                    if let data = self.delegate?.getRequest(), let reqId = data.id, let ctx = data.managedObjectContext {
                         let xs = self.localdb.getHeadersRequestData(reqId, ctx: ctx)
                         if xs.count > row {
                             let x = xs[row]
@@ -2042,7 +2106,7 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
                         }
                     }
                 case .params:
-                    if let data = AppState.editRequest, let reqId = data.id, let ctx = data.managedObjectContext {
+                    if let data = self.delegate?.getRequest(), let reqId = data.id, let ctx = data.managedObjectContext {
                         let xs = self.localdb.getParamsRequestData(reqId, ctx: ctx)
                         if xs.count > row {
                             let x = xs[row]
@@ -2078,10 +2142,13 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         Log.debug("kvTableView row did select")
-        RequestVC.shared?.clearEditing()
-        if let reqVC = RequestVC.shared, reqVC.isEndEditing {
-            UI.endEditing()
-            return
+        self.delegate?.getVC().clearEditing()
+        if let vc = self.delegate?.getVC() {
+            vc.clearEditing()
+            if vc.isEndEditing {
+                UI.endEditing()
+                return
+            }
         }
         if indexPath.section == 1 {  // header
             self.addRequestDataToModel()
@@ -2089,7 +2156,7 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
             self.reloadData()
             self.delegate?.reloadData()
         }
-        if let data = AppState.editRequest, let body = data.body, body.selected == RequestBodyType.binary.rawValue {
+        if let data = self.delegate?.getRequest(), let body = data.body, body.selected == RequestBodyType.binary.rawValue {
             Log.debug("binary option - reloading data")
             self.reloadData()
         }
@@ -2097,10 +2164,10 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if self.tableViewType == .body {
-            if let data = AppState.editRequest, let body = data.body {
+            if let data = self.delegate?.getRequest(), let body = data.body, let vc = self.delegate?.getVC() {
                 if indexPath.section == 1 { return 0 }  // title is hidden when body content is present
                 if body.selected == RequestBodyType.form.rawValue || body.selected == RequestBodyType.multipart.rawValue {
-                    return RequestVC.bodyFormCellHeight()
+                    return vc.bodyFormCellHeight()
                 }
             }
         }
@@ -2114,7 +2181,7 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
         guard let cell: KVEditContentCellType = tv.cellForRow(at: indexPath) as? KVEditContentCellType else { return }
         cell.getDeleteView().transform = CGAffineTransform.identity
         if let _ = cell as? KVEditBodyContentCell {
-            if let data = AppState.editRequest, let body = data.body, let type = RequestBodyType(rawValue: body.selected.toInt()), type == .binary {
+            if let data = self.delegate?.getRequest(), let body = data.body, let type = RequestBodyType(rawValue: body.selected.toInt()), type == .binary {
                 cell.getDeleteView().transform = CGAffineTransform.identity.translatedBy(x: 0, y: -21)  // Update the delete view size to align to cell center for binary
             }
         }
@@ -2181,23 +2248,19 @@ extension KVEditTableViewManager: KVEditContentCellDelegate {
     }
     
     func dataDidChange(key: String, value: String, reqDataId: String, row: Int) {
-        if let req = AppState.editRequest, let ctx = req.managedObjectContext {
+        if let req = self.delegate?.getRequest(), let ctx = req.managedObjectContext {
             if self.tableViewType == .header {
                 if let x = self.localdb.getRequestData(id: reqDataId, ctx: ctx) {
                     x.key = key
                     x.value = value
                     Log.debug("header updated: \(x)")
-                    if let vc = RequestVC.shared {
-                        self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
-                    }
+                    self.delegate?.didRequestChange(req, callback: { status in self.delegate?.getVC().updateDoneButton(status) })
                 }
             } else if self.tableViewType == .params {
                 if let x = self.localdb.getRequestData(id: reqDataId, ctx: ctx) {
                     x.key = key
                     x.value = value
-                    if let vc = RequestVC.shared {
-                        self.app.didRequestChange(AppState.editRequest!, request: vc.entityDict, callback: { status in vc.updateDoneButton(status) })
-                    }
+                    self.delegate?.didRequestChange(req, callback: { status in self.delegate?.getVC().updateDoneButton(status) })
                 }
             }
         }
@@ -2216,10 +2279,10 @@ extension KVEditTableViewManager: KVEditContentCellDelegate {
         self.kvTableView?.scrollToRow(at: indexPath, at: .bottom, animated: false)
         let bodySpacerIdx = IndexPath(row: RequestVC.CellId.spacerAfterBody.rawValue, section: 0)
         UIView.setAnimationsEnabled(false)
-        RequestVC.shared?.tableView.beginUpdates()
-        RequestVC.shared?.tableView.endUpdates()
-        UIView.setAnimationsEnabled(true)
-        if let vc = RequestVC.shared {
+        if let vc = self.delegate?.getVC() {
+            vc.tableView.beginUpdates()
+            vc.tableView.endUpdates()
+            UIView.setAnimationsEnabled(true)
             vc.tableView.scrollToRow(at: bodySpacerIdx, at: .bottom, animated: false)
         }
     }

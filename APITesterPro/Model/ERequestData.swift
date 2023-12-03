@@ -43,14 +43,6 @@ public class ERequestData: NSManagedObject, Entity {
         self.modified = ts ?? Date().currentTimeNanos()
     }
     
-    public func getChangeTag() -> Int64 {
-        return self.changeTag
-    }
-    
-    public func setChangeTag(_ ts: Int64? = nil) {
-        self.changeTag = ts ?? Date().currentTimeNanos()
-    }
-    
     public func getVersion() -> Int64 {
         return self.version
     }
@@ -82,7 +74,6 @@ public class ERequestData: NSManagedObject, Entity {
         let wsId = record.getWsId()
         if let reqData = self.db.getRequestData(id: reqDataId, ctx: ctx) { return reqData }
         let reqData = self.db.createRequestData(id: reqDataId, wsId: wsId, type: .form, fieldFormat: .file, checkExists: false, ctx: ctx)
-        reqData?.changeTag = 0
         return reqData
     }
     
@@ -123,7 +114,6 @@ public class ERequestData: NSManagedObject, Entity {
         guard let reqData = self.db.createRequestData(id: id, wsId: wsId, type: type, fieldFormat: format, ctx: db.mainMOC) else { return nil }
         if let x = dict["created"] as? Int64 { reqData.created = x }
         if let x = dict["modified"] as? Int64 { reqData.modified = x }
-        if let x = dict["changeTag"] as? Int64 { reqData.changeTag = x }
         if let x = dict["key"] as? String { reqData.key = x }
         if let x = dict["value"] as? String { reqData.value = x }
         if let x = dict["version"] as? Int64 { reqData.version = x }
@@ -178,7 +168,6 @@ public class ERequestData: NSManagedObject, Entity {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
             record["modified"] = self.modified as CKRecordValue
-            record["changeTag"] = self.changeTag as CKRecordValue
             record["desc"] = (self.desc ?? "") as CKRecordValue
             record["fieldFormat"] = self.fieldFormat as CKRecordValue
             record["id"] = self.getId() as CKRecordValue
@@ -219,7 +208,6 @@ public class ERequestData: NSManagedObject, Entity {
             moc.performAndWait {
                 if let x = record["created"] as? Int64 { self.created = x }
                 if let x = record["modified"] as? Int64 { self.modified = x }
-                if let x = record["changeTag"] as? Int64 { self.changeTag = x }
                 if let x = record["desc"] as? String { self.desc = x }
                 if let x = record["fieldFormat"] as? Int64 { self.fieldFormat = x }
                 if let x = record["id"] as? String { self.id = x }
@@ -236,7 +224,6 @@ public class ERequestData: NSManagedObject, Entity {
         var dict: [String: Any] = [:]
         dict["created"] = self.created
         dict["modified"] = self.modified
-        dict["changeTag"] = self.changeTag
         dict["desc"] = self.desc
         dict["fieldFormat"] = self.fieldFormat
         dict["id"] = self.id

@@ -43,14 +43,6 @@ public class ERequestMethodData: NSManagedObject, Entity {
         self.modified = ts ?? Date().currentTimeNanos()
     }
     
-    public func getChangeTag() -> Int64 {
-        return self.changeTag
-    }
-    
-    public func setChangeTag(_ ts: Int64? = nil) {
-        self.changeTag = ts ?? Date().currentTimeNanos()
-    }
-    
     public func getVersion() -> Int64 {
         return self.version
     }
@@ -72,7 +64,6 @@ public class ERequestMethodData: NSManagedObject, Entity {
         guard let method = self.db.createRequestMethodData(id: id, wsId: wsId, name: "", ctx: self.db.mainMOC) else { return nil }
         if let x = dict["created"] as? Int64 { method.created = x }
         if let x = dict["modified"] as? Int64 { method.modified = x }
-        if let x = dict["changeTag"] as? Int64 { method.changeTag = x }
         if let x = dict["name"] as? String { method.name = x }
         if let x = dict["version"] as? Int64 { method.version = x }
         method.markForDelete = false
@@ -98,7 +89,6 @@ public class ERequestMethodData: NSManagedObject, Entity {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
             record["modified"] = self.modified as CKRecordValue
-            record["changeTag"] = self.changeTag as CKRecordValue
             record["id"] = self.getId() as CKRecordValue
             record["wsId"] = self.getWsId() as CKRecordValue
             record["isCustom"] = self.isCustom as CKRecordValue
@@ -115,7 +105,6 @@ public class ERequestMethodData: NSManagedObject, Entity {
             moc.performAndWait {
                 if let x = record["created"] as? Int64 { self.created = x }
                 if let x = record["modified"] as? Int64 { self.modified = x }
-                if let x = record["changeTag"] as? Int64 { self.changeTag = x }
                 if let x = record["id"] as? String { self.id = x }
                 if let x = record["isCustom"] as? Bool { self.isCustom = x }
                 if let x = record["name"] as? String { self.name = x }
@@ -130,7 +119,6 @@ public class ERequestMethodData: NSManagedObject, Entity {
         var dict: [String: Any] = [:]
         dict["created"] = self.created
         dict["modified"] = self.modified
-        dict["changeTag"] = self.changeTag
         dict["id"] = self.id
         dict["isCustom"] = self.isCustom
         dict["name"] = self.name

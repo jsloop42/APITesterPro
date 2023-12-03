@@ -100,6 +100,8 @@
 		9E81D14F2AF452DE004095CF /* EAQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1492AF452DE004095CF /* EAQueueTests.swift */; };
 		9ED969A42AF5A35F0029E83E /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A32AF5A35F0029E83E /* WebKit.framework */; };
 		9ED969A82AF5A38B0029E83E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A72AF5A38B0029E83E /* CloudKit.framework */; };
+		9EDDE3B72B1BC0A20074141A /* EditRequestTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDE3B62B1BC0A20074141A /* EditRequestTracker.swift */; };
+		9EDDE3B92B1C4C8B0074141A /* JVLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDE3B82B1C4C8B0074141A /* JVLogger.swift */; };
 		9EEA0E2A2B152E0200DFB42B /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEA0E292B152E0200DFB42B /* BackgroundWorker.swift */; };
 /* End PBXBuildFile section */
 
@@ -221,6 +223,8 @@
 		9ED969A32AF5A35F0029E83E /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		9ED969A52AF5A36A0029E83E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		9ED969A72AF5A38B0029E83E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		9EDDE3B62B1BC0A20074141A /* EditRequestTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRequestTracker.swift; sourceTree = "<group>"; };
+		9EDDE3B82B1C4C8B0074141A /* JVLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JVLogger.swift; sourceTree = "<group>"; };
 		9EEA0E292B152E0200DFB42B /* BackgroundWorker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -338,6 +342,7 @@
 				9E81D0C32AF451E9004095CF /* EARescheduler.swift */,
 				9E81D0C42AF451E9004095CF /* EASystem.swift */,
 				9E81D0BF2AF451E9004095CF /* EAUtils.swift */,
+				9EDDE3B82B1C4C8B0074141A /* JVLogger.swift */,
 			);
 			path = EALib;
 			sourceTree = "<group>";
@@ -445,6 +450,7 @@
 				9E81D1012AF45218004095CF /* RequestStates.swift */,
 				9E81D1022AF45218004095CF /* RequestTabBarViewController.swift */,
 				9E81D1072AF45218004095CF /* RequestTableViewController.swift */,
+				9EDDE3B62B1BC0A20074141A /* EditRequestTracker.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -661,6 +667,7 @@
 				9E81D0C62AF451E9004095CF /* EANetwork.swift in Sources */,
 				9E81D09D2AF44F4F004095CF /* App.swift in Sources */,
 				9E81D11C2AF4522C004095CF /* SettingsTableViewController.swift in Sources */,
+				9EDDE3B92B1C4C8B0074141A /* JVLogger.swift in Sources */,
 				9E81D10B2AF45218004095CF /* EnvironmentPickerViewController.swift in Sources */,
 				9E81D0D22AF451EA004095CF /* EAFileManager.swift in Sources */,
 				9E81D0A52AF44F4F004095CF /* AppState.swift in Sources */,
@@ -705,6 +712,7 @@
 				9E81D0EC2AF451FF004095CF /* ERequestData.swift in Sources */,
 				9E81D11D2AF4522C004095CF /* EnvironmentGroupViewController.swift in Sources */,
 				9E81D0D42AF451EA004095CF /* EASystem.swift in Sources */,
+				9EDDE3B72B1BC0A20074141A /* EditRequestTracker.swift in Sources */,
 				9E81D12D2AF45241004095CF /* KVCell.swift in Sources */,
 				9E81D0EE2AF451FF004095CF /* ERequestMethodData.swift in Sources */,
 				9E81D0F22AF451FF004095CF /* ERequest.swift in Sources */,

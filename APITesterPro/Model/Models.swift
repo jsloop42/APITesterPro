@@ -64,7 +64,7 @@ struct AttachmentInfo {
     }
 }
 
-public protocol Entity: NSManagedObject {
+public protocol Entity: NSManagedObject, Hashable {
     var recordType: String { get }
     func getId() -> String
     func getWsId() -> String
@@ -72,12 +72,8 @@ public protocol Entity: NSManagedObject {
     func getName() -> String
     func getCreated() -> Int64
     func getModified() -> Int64
-    /// The modified fields get update on changing any property or relation. But for syncing with cloud, we need to use the change tag value as we we do not
-    /// take into account relation changes for the given entity for syncing.
+    /// The modified fields get update on changing any property or relation.
     func setModified(_ ts: Int64?)
-    func getChangeTag() -> Int64
-    /// If any property changes, the change tag value will be updated.
-    func setChangeTag(_ ts: Int64?)
     func getVersion() -> Int64
     func getZoneID() -> CKRecordZone.ID
     func getRecordID() -> CKRecord.ID
@@ -93,15 +89,6 @@ extension Entity {
         return setModified(Date().currentTimeNanos())
     }
     
-    public func setChangeTag(_ ts: Int64? = nil) {
-        return setChangeTag(Date().currentTimeNanos())
-    }
-    
-    public func setChangeTagWithEditTs() {
-        self.setModified(AppState.editRequestSaveTs)
-        return setChangeTag(AppState.editRequestSaveTs)
-    }
-    
     public func getZoneID() -> CKRecordZone.ID {
         return EACloudKit.shared.zoneID(workspaceId: self.getWsId())
     }
@@ -109,4 +96,15 @@ extension Entity {
     public func getRecordID() -> CKRecord.ID {
         return EACloudKit.shared.recordID(entityId: self.getId(), zoneID: self.getZoneID())
     }
+    
+    // Hashable conformance
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(objectID)
+    }
+    
+    // Hashable conformance
+    public static func ==(lhs: Self, rhs: Self) -> Bool {
+        return lhs.isEqual(rhs)
+    }
 }
+

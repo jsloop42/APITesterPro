@@ -43,14 +43,6 @@ public class EImage: NSManagedObject, Entity {
         self.modified = ts ?? Date().currentTimeNanos()
     }
     
-    public func getChangeTag() -> Int64 {
-        return self.changeTag
-    }
-    
-    public func setChangeTag(_ ts: Int64? = nil) {
-        self.changeTag = ts ?? Date().currentTimeNanos()
-    }
-    
     public func getVersion() -> Int64 {
         return self.version
     }
@@ -86,7 +78,6 @@ public class EImage: NSManagedObject, Entity {
         guard let image = self.db.createImage(imageId: id, data: data1, wsId: wsId, name: name, type: type, ctx: self.db.mainMOC) else { return nil }
         if let x = dict["created"] as? Int64 { image.created = x }
         if let x = dict["modified"] as? Int64 { image.modified = x }
-        if let x = dict["changeTag"] as? Int64 { image.changeTag = x }
         if let x = dict["isCameraMode"] as? Bool { image.isCameraMode = x }
         if let x = dict["version"] as? Int64 { image.version = x }
         image.markForDelete = false
@@ -113,7 +104,6 @@ public class EImage: NSManagedObject, Entity {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
             record["modified"] = self.modified as CKRecordValue
-            record["changeTag"] = self.changeTag as CKRecordValue
             if let name = self.name, let data = self.data {
                 let url = EAFileManager.getTemporaryURL(name)
                 do {
@@ -139,7 +129,6 @@ public class EImage: NSManagedObject, Entity {
             moc.performAndWait {
                 if let x = record["created"] as? Int64 { self.created = x }
                 if let x = record["modified"] as? Int64 { self.modified = x }
-                if let x = record["changeTag"] as? Int64 { self.changeTag = x }
                 if let x = record["data"] as? CKAsset, let url = x.fileURL {
                     do { self.data = try Data(contentsOf: url) } catch let error { Log.error("Error getting data from file url: \(error)") }
                 }
@@ -159,7 +148,6 @@ public class EImage: NSManagedObject, Entity {
         var dict: [String: Any] = [:]
         dict["created"] = self.created
         dict["modified"] = self.modified
-        dict["changeTag"] = self.changeTag
         dict["id"] = self.id
         dict["wsId"] = self.wsId
         dict["name"] = self.name

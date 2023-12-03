@@ -343,7 +343,7 @@ extension ProjectListViewController: UITableViewDelegate, UITableViewDataSource 
         let delete = UIContextualAction(style: .destructive, title: "Delete") { action, view, completion in
             Log.debug("delete row: \(indexPath)")
             let proj = self.frc.object(at: indexPath)
-            self.localdbSvc.markEntityForDelete(proj: proj)
+            self.localdbSvc.deleteEntity(proj: proj)
             // TODO: ck: delete project from cloud
             // self.db.deleteDataMarkedForDelete(proj, ctx: self.localdb.mainMOC)
             self.updateData()

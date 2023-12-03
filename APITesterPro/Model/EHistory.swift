@@ -19,7 +19,6 @@ public class EHistory: NSManagedObject, Entity {
     static func initFromResponseData(_ respData: ResponseData) -> EHistory {
         let history = EHistory(context: Self.db.mainMOC)
         let ts = Date().currentTimeNanos()
-        history.changeTag = ts
         history.created = ts
         history.modified = ts
         history.connection = respData.connectionInfo.connection
@@ -91,14 +90,6 @@ public class EHistory: NSManagedObject, Entity {
         self.modified = ts ?? Date().currentTimeNanos()
     }
     
-    public func getChangeTag() -> Int64 {
-        return self.changeTag
-    }
-    
-    public func setChangeTag(_ ts: Int64? = nil) {
-        self.changeTag = ts ?? Date().currentTimeNanos()
-    }
-    
     public func getVersion() -> Int64 {
         return self.version
     }
@@ -132,7 +123,6 @@ public class EHistory: NSManagedObject, Entity {
     public func updateCKRecord(_ record: CKRecord, request: CKRecord) {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
-            record["changeTag"] = self.changeTag as CKRecordValue
             record["modified"] = self.modified as CKRecordValue
             record["connection"] = (self.connection ?? "") as CKRecordValue
             record["connectionTime"] = self.connectionTime as CKRecordValue
@@ -203,7 +193,6 @@ public class EHistory: NSManagedObject, Entity {
             moc.performAndWait {
                 if let x = record["created"] as? Int64 { self.created = x }
                 if let x = record["modified"] as? Int64 { self.modified = x }
-                if let x = record["changeTag"] as? Int64 { self.changeTag = x }
                 if let x = record["connection"] as? String { self.connection = x }
                 if let x = record["connectionTime"] as? Double { self.connectionTime = x }
                 if let x = record["cookies"] as? CKAsset, let url = x.fileURL {
