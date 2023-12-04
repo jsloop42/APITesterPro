@@ -221,13 +221,13 @@ class OptionsPickerViewController: UIViewController, UITableViewDelegate, UITabl
         Log.debug("option vc did select \(indexPath)")
         let row = indexPath.row
         self.selectedIndex = row
-        if self.pickerType == .requestBodyForm {
-            self.postRequestBodyChangeNotification()
-        } else if self.pickerType == .requestMethod {
-            self.postRequestMethodChangeNotification()
-        } else if self.pickerType == .requestBodyFormField {
-            self.postRequestBodyFieldChangeNotification()
-        }
+//        if self.pickerType == .requestBodyForm {
+//            self.postRequestBodyChangeNotification()
+//        } else if self.pickerType == .requestMethod {
+//            self.postRequestMethodChangeNotification()
+//        } else if self.pickerType == .requestBodyFormField {
+//            self.postRequestBodyFieldChangeNotification()
+//        }
         self.close(false)
     }
     
@@ -236,6 +236,7 @@ class OptionsPickerViewController: UIViewController, UITableViewDelegate, UITabl
         if self.pickerType == .requestMethod {
             if self.modelxs.count > row {
                 // if AppState.editRequest?.project == nil { return false } TODO: check why this was added
+                if self.project == nil { return false }
                 return (self.modelxs[row] as? ERequestMethodData)?.isCustom ?? false
             }
         }

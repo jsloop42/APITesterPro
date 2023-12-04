@@ -110,6 +110,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     
     deinit {
         Log.debug("request tableview deinit")
+        self.destroy()
     }
     
     func destroy() {
@@ -118,6 +119,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         self.bodyKVTableViewManager.destroy()
         self.request = nil
         self.nc.removeObserver(self)
+        self.requestTracker = nil
     }
     
     override func didReceiveMemoryWarning() {
@@ -301,7 +303,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
             self.urlTextField.text = data.url
             self.nameTextField.text = data.name
             self.descTextView.text = data.desc
-            if let projId = AppState.currentProject?.id {
+            if let projId = self.project.id {
                 self.methods = self.localdb.getRequestMethodData(projId: projId, ctx: ctx)
                 let idx = data.selectedMethodIndex.toInt()
                 if self.methods.count > idx {
@@ -436,7 +438,9 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
                 self.methodLabel.text = name
                 let i = idx.toInt64()
                 self.request.selectedMethodIndex = i
-                self.requestTracker.didRequestChange(self.request, callback: { [weak self] status in self?.updateDoneButton(status) })
+                self.requestTracker.didRequestChange(self.request) { status in
+                    self.updateDoneButton(status)
+                }
                 self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
             }
         }
@@ -448,7 +452,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
             if let method = self.localdb.createRequestMethodData(id: self.localdb.requestMethodDataId(), wsId: data.getWsId(), name: name, checkExists: true, ctx: ctx) {
                 data.method = method
                 self.methods.append(method)
-                method.project = AppState.currentProject
+                method.project = self.project
                 self.requestTracker.didRequestChange(self.request, callback: { [weak self] status in self?.updateDoneButton(status) })
                 self.nc.post(name: .optionPickerShouldReload, object: self,
                              userInfo: [Const.optionModelKey: method, Const.optionDataActionKey: OptionDataAction.add])

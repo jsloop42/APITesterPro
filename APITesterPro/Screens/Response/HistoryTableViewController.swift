@@ -29,8 +29,8 @@ class HistoryCell: UITableViewCell {
 class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
     private let app = App.shared
-    private lazy var localDB = { CoreDataService.shared }()
-    // private lazy var db = { PersistenceService.shared }()
+    private lazy var localdb = { CoreDataService.shared }()
+    private lazy var localdbSvc = { PersistenceService.shared }()
     private var todayFrc: NSFetchedResultsController<EHistory>!
     private var pastFrc: NSFetchedResultsController<EHistory>!
     @IBOutlet weak var helpLabel: UILabel!
@@ -57,16 +57,16 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func initData() {
         if self.todayFrc == nil {
-            if let _frc = self.localDB.getFetchResultsController(obj: EHistory.self, predicate: self.getTodayPredicate(), sortDesc: self.getSortDescriptors(),
-                                                                 ctx: self.localDB.mainMOC) as? NSFetchedResultsController<EHistory> {
+            if let _frc = self.localdb.getFetchResultsController(obj: EHistory.self, predicate: self.getTodayPredicate(), sortDesc: self.getSortDescriptors(),
+                                                                 ctx: self.localdb.mainMOC) as? NSFetchedResultsController<EHistory> {
                 self.todayFrc = _frc
                 self.todayFrc.delegate = self
                 try? self.todayFrc.performFetch()
             }
         }
         if self.pastFrc == nil {
-            if let _frc = self.localDB.getFetchResultsController(obj: EHistory.self, predicate: self.getPastPredicate(), sortDesc: self.getSortDescriptors(),
-                                                                 ctx: self.localDB.mainMOC) as? NSFetchedResultsController<EHistory> {
+            if let _frc = self.localdb.getFetchResultsController(obj: EHistory.self, predicate: self.getPastPredicate(), sortDesc: self.getSortDescriptors(),
+                                                                 ctx: self.localdb.mainMOC) as? NSFetchedResultsController<EHistory> {
                 self.pastFrc = _frc
                 self.pastFrc.delegate = self
                 try? self.pastFrc.performFetch()
@@ -243,8 +243,8 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
             let section = indexPath.section
             let isToday = section == Section.today.rawValue
             let history = self.historyForRow(row, isToday: isToday)
-            self.localDB.markEntityForDelete(history)
-            self.localDB.saveMainContext()
+            self.localdbSvc.deleteEntity(history: history)
+            self.localdb.saveMainContext()
             // TODO: delete data marked for delete history
             // self.db.deleteDataMarkedForDelete(history: history, wsId: history.getWsId(), ctx: self.localDB.mainMOC)
             self.updateData()

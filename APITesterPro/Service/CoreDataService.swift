@@ -1941,14 +1941,14 @@ class CoreDataService {
         
     // MARK: - Delete
     
-    func markEntityForDelete(_ entity: (any Entity)?) {
-        guard let entity = entity else { return }
-        entity.managedObjectContext?.performAndWait {
-            entity.setMarkedForDelete(true)
-            let ts = Date().currentTimeNanos()
-            entity.setModified(ts)
-        }
-    }
+//    func markEntityForDelete(_ entity: (any Entity)?) {
+//        guard let entity = entity else { return }
+//        entity.managedObjectContext?.performAndWait {
+//            entity.setMarkedForDelete(true)
+//            let ts = Date().currentTimeNanos()
+//            entity.setModified(ts)
+//        }
+//    }
     
     /// Resets the context to its base state if there are any changes.
     func discardChanges(in context: NSManagedObjectContext) {
