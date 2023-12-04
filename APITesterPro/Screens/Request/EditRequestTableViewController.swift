@@ -130,6 +130,8 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     func discardContextChanges() {
         if let ctx = self.ctx {
             self.localdb.discardChanges(in: ctx)
+            self.isDirty = false
+            self.close()
         }
 //        if let data = AppState.editRequest, let ctx = data.managedObjectContext {
 //            [self.app.editReqInfo, self.app.editReqDelete].forEach { self.localdb.discardChanges(for: $0, inContext: ctx) }
