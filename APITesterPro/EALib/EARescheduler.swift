@@ -59,15 +59,15 @@ public final class EARescheduler: EAReschedulable {
     public var type: EAReschedulerType!
     private var blocks: [EAReschedulerFn] = []
     private let queue = EACommon.userInteractiveQueue
-    private var limit: Int = 4
+    private let dispatchGroup = DispatchGroup()
     private var isLimitEnabled = false
     private var counter = 0
 
     private var state: EATimerState = .suspended
     
     deinit {
-        self.destroy()
-        self.blocks = []
+        Log.debug("EARescheduler deinit")
+        self.done()
     }
     
     public required init(interval: TimeInterval, type: EAReschedulerType) {
@@ -75,58 +75,66 @@ public final class EARescheduler: EAReschedulable {
         self.type = type
     }
     
-    init(interval: TimeInterval, type: EAReschedulerType, limit: Int) {
-        self.interval = interval
-        self.type = type
-        self.limit = limit
-        self.isLimitEnabled = true
-    }
-    
     private func initTimer() {
+        Log.debug("EARescheduler: init timer")
         if self.timer != nil { self.destroy() }
         self.timer = DispatchSource.makeTimerSource()
         self.timer.schedule(deadline: .now() + self.interval)
         self.timer.setEventHandler(handler: { [weak self] in self?.eventHandler() })
         self.timer.resume()
+        self.state = .resumed
     }
     
     private func destroy() {
+        Log.debug("EARescheduler: destroy")
         if self.timer != nil {
             self.timer.setEventHandler {}
-            self.timer.cancel()
+            if self.state == .resumed {
+                self.timer.cancel()
+            }
+            self.timer = nil
         }
+        self.state = .terminated
     }
     
+    /// Clears all data that this class holds and releases resources
     public func done() {
+        Log.debug("EARescheduler: done")
         self.destroy()
+        self.blocks = []
     }
     
-    public func schedule() {
-        self.initTimer()
-        self.counter += 1
-        if self.counter >= self.limit {
-            self.eventHandler()
-            self.done()
-        }
-    }
-        
-    func eventHandler() {
-        Log.debug("scheduler exec block")
-        if self.type == EAReschedulerType.everyFn {  // Invoke the callback function with the result of each block execution
-            self.queue.async {
-                self.blocks.forEach { fn in fn.callback(fn.block()) }
+    /// Event handler function which will be invoked when timer is realized. It takes an optional completion handler which will be invoked when all functions in the block are executed. Since the functions are executed in an async queue we use completion handler.
+    func eventHandler(_ completion: (() -> Void)? = nil) {
+        Log.debug("EARescheduler: event handler \(self.state)")
+        if self.state == .resumed && self.type == EAReschedulerType.everyFn {  // Invoke the callback function with the result of each block execution
+            self.queue.async(group: self.dispatchGroup) { [weak self] in
+                self?.blocks.forEach { fn in fn.callback(fn.block()) }  // The block is invoked when the timer completes
+            }
+            self.dispatchGroup.notify(queue: DispatchQueue.main) {
+                Log.debug("EARescheduler: all tasks complete")
+                self.done()  // release objects
+                completion?()
             }
         }
     }
     
+    public func schedule() {
+        Log.debug("EARescheduler: schedule")
+        self.initTimer()
+        self.counter += 1
+    }
+    
+    /// Used to set a function to be executed when the timer is realized.
     public func schedule(fn: EAReschedulerFn) {
-        Log.debug("schedule - fn")
+        Log.debug("EARescheduler: schedule fn")
         self.addToBlock(fn)
         self.schedule()
     }
     
+    /// Adds the given function to the block of functions to be executed when timer realizes. If the function is already present, it's replaced.
     private func addToBlock(_ fn: EAReschedulerFn) {
-        Log.debug("add to block - fn")
+        Log.debug("EARescheduler: add to block")
         if let idx = (self.blocks.firstIndex { afn -> Bool in afn.id == fn.id }) {
             self.blocks[idx] = fn
         } else {
