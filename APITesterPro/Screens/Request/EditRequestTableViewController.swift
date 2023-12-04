@@ -133,16 +133,6 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
             self.isDirty = false
             self.close()
         }
-//        if let data = AppState.editRequest, let ctx = data.managedObjectContext {
-//            [self.app.editReqInfo, self.app.editReqDelete].forEach { self.localdb.discardChanges(for: $0, inContext: ctx) }
-//            self.app.clearEditRequestEntityIds()
-//            self.app.clearEditRequestDeleteObjects()
-//            self.localdb.saveMainContext { _ in
-//                AppState.editRequest = nil
-//                self.isDirty = false
-//                self.close()
-//            }
-//        }
     }
     
     public override func shouldPopOnBackButton() -> Bool {
@@ -378,10 +368,6 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
             self.endEditing()
             self.destroy()
             self.navigationController?.popViewController(animated: true)
-//            self.dismiss(animated: true, completion: {
-//                let name = self.isEditMode ? "did-navigate-back-to-RequestTableViewController" : "did-navigate-back-to-RequestListViewController"
-//                self.nc.post(name: NSNotification.Name(name), object: self)
-//            })
         }
     }
     
@@ -1786,7 +1772,7 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
     var editingIndexPath: IndexPath?
     var tableViewType: KVTableViewType = .header
     private lazy var localdb = { CoreDataService.shared }()
-    // private let db = PersistenceService.shared
+    private lazy var localdbSvc = { PersistenceService.shared }()
     private let utils = EAUtils.shared
     private let app = App.shared
     private let nc = NotificationCenter.default
@@ -1863,11 +1849,13 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
         } else if type == .header {
             guard let elem = self.localdb.getRequestData(id: id, ctx: ctx) else { return }
             // TODO: ck: mark request data for delete
-            // self.db.markEntityForDelete(reqData: elem, ctx: ctx)
+            self.localdbSvc.markEntityForDelete(reqData: elem, ctx: ctx)
+            self.delegate?.getRequestTracker().trackDeletedEntity(elem)
         } else if type == .param {
             guard let elem = self.localdb.getRequestData(id: id, ctx: ctx) else { return }
             // TODO: ck: mark request data for delete
-            // self.db.markEntityForDelete(reqData: elem, ctx: ctx)
+            self.localdbSvc.markEntityForDelete(reqData: elem, ctx: ctx)
+            self.delegate?.getRequestTracker().trackDeletedEntity(elem)
         }
         self.delegate?.didRequestChange(data, callback: { status in self.delegate?.getVC().updateDoneButton(status) })
     }
