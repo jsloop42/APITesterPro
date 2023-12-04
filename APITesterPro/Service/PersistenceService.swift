@@ -84,6 +84,23 @@ class PersistenceService {
         self.db.saveMainContext()
     }
     
+    func deleteEntity(_ x: any Entity) {
+        switch (x.recordType) {
+        case RecordType.requestBodyData.rawValue:
+            self.deleteEntity(reqBodyData: x as! ERequestBodyData)
+        case RecordType.requestData.rawValue:
+            self.deleteEntity(reqData: x as! ERequestData)
+        case RecordType.requestMethodData.rawValue:
+            self.deleteEntity(reqMethodData: x as! ERequestMethodData)
+        case RecordType.file.rawValue:
+            self.deleteEntity(file: x as! EFile)
+        case RecordType.image.rawValue:
+            self.deleteEntity(image: x as! EImage)
+        default:
+            break
+        }
+    }
+    
     // MARK: - Mark data for delete in editing request
     
     // These methods are used when entites are deleted when editing a request. These shouldn't persist until the background context is saved. On save the stale entites needs to be deleted manually.
@@ -108,13 +125,7 @@ class PersistenceService {
         let ctx = ctx != nil ? ctx : (reqBodyData.managedObjectContext != nil ? reqBodyData.managedObjectContext : nil)
         guard let ctx = ctx else { return }
         ctx.performAndWait {
-            if let xs = reqBodyData.form?.allObjects as? [ERequestData] {
-                xs.forEach { reqData in self.markEntityForDelete(reqData: reqData, ctx: ctx) }
-            }
-            if let xs = reqBodyData.multipart?.allObjects as? [ERequestData] {
-                xs.forEach { reqData in self.markEntityForDelete(reqData: reqData, ctx: ctx) }
-            }
-            if let bin = reqBodyData.binary { self.markEntityForDelete(reqData: bin, ctx: ctx) }
+            reqBodyData.setMarkedForDelete(true)
             reqBodyData.request = nil
             // self.localdb.markEntityForDelete(body, ctx: ctx)
             //AppState.editRequest?.body = nil
@@ -132,8 +143,8 @@ class PersistenceService {
         
     }
     
-    ///Delete history
-    func markEntityForDelete(history: EHistory, ctx: NSManagedObjectContext?) {
+    ///Delete request method data
+    func markEntityForDelete(reqMeth: ERequestMethodData, ctx: NSManagedObjectContext?) {
         
     }
     
