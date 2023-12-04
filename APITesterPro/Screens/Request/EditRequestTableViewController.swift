@@ -64,9 +64,8 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     var isOptionFromNotif = false
     private let docPicker = EADocumentPicker.shared
     private let utils = EAUtils.shared
-    // private lazy var db = { PersistenceService.shared }()
-    private static var localdb = { CoreDataService.shared }()
     private lazy var localdb = { CoreDataService.shared }()
+    private lazy var localdbSvc = { PersistenceService.shared }()
     /// The projectId to which the request belongs
     var projectId: String!
     /// The project to which the request belongs. We need to load the project using the background context to assign it to request.
@@ -386,15 +385,17 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         if self.isDirty, let data = self.request, let proj = self.project {
             self.request.project = proj
             data.isSynced = false
-            if let set = proj.requestMethods, let xs = set.allObjects as? [ERequestMethodData] {
-                xs.forEach { method in
-                    if method.shouldDelete {
-                        // TODO: ck: mark entities for delete
-                        // self.db.markEntityForDelete(reqMethodData: method, ctx: method.managedObjectContext)
-                    }
-                }
+//            if let set = proj.requestMethods, let xs = set.allObjects as? [ERequestMethodData] {
+//                xs.forEach { method in
+//                    if method.shouldDelete {
+//                        // TODO: ck: mark entities for delete
+//                        // self.db.markEntityForDelete(reqMethodData: method, ctx: method.managedObjectContext)
+//                    }
+//                }
+//            }
+            self.requestTracker.deletedEntites.forEach { elem in
+                self.localdbSvc.deleteEntity(elem as! any Entity)
             }
-            Log.debug("edit req in save timer")
             self.localdb.saveChildContext(self.ctx)
             self.localdb.saveMainContext()
             self.isDirty = false
