@@ -393,11 +393,13 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
 //                    }
 //                }
 //            }
+            // delete entities marked for delete
             self.requestTracker.deletedEntites.forEach { elem in
                 self.localdbSvc.deleteEntity(elem as! any Entity)
             }
             self.localdb.saveChildContext(self.ctx)
             self.localdb.saveMainContext()
+            self.requestTracker.deletedEntites.removeAll()
             self.isDirty = false
             if let tabvc = self.tabBarController as? RequestTabBarController {
                 tabvc.updateRequest(reqId: data.getId())
@@ -896,7 +898,11 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
     @IBOutlet weak var imageFileView: UIImageView!  // binary image attachment
     @IBOutlet weak var fileCollectionView: UICollectionView!  // binary file attachment
     weak var delegate: KVEditContentCellDelegate?
-    weak var editTVDelegate: KVEditTableViewDelegate?
+    weak var editTVDelegate: KVEditTableViewDelegate? {
+        didSet {
+            self.bodyFieldTableView.editTVDelegate = self.editTVDelegate
+        }
+    }
     var optionsData: [String] = ["json", "xml", "raw", "form", "multipart", "binary"]
     var isEditingActive: Bool = false
     var editingIndexPath: IndexPath?
@@ -1513,11 +1519,11 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
                                                                   type: self.selectedType == .form ? .form : .multipart, checkExists: true, ctx: ctx) {
                                 ctx.performAndWait {
                                     file.requestData = form
-                                    if let image = form.image {  // remove previous image
+                                    if let image = form.image {  // remove image if present as file is picked
+                                        // TODO: ck mark image for delete
+                                        // self.db.markForDelete(image: form.image, ctx: form.image?.managedObjectContext)
                                         self.localdbSvc.markEntityForDelete(image: image, ctx: ctx)
                                     }
-                                    // TODO: ck mark image for delete
-                                    // self.db.markForDelete(image: form.image, ctx: form.image?.managedObjectContext)
                                 }
                                 DispatchQueue.main.async {
                                     self.editTVDelegate?.didRequestChange(data, callback: { status in self.editTVDelegate?.getVC().updateDoneButton(status) })
@@ -1703,12 +1709,15 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
             var shouldReload = false
             if let cell = tableView.cellForRow(at: indexPath) as? KVEditBodyFieldTableViewCell  {
                 if !cell.reqDataId.isEmpty {
-                    let elem = self.localdb.getRequestData(id: cell.reqDataId, ctx: ctx)
-//                    if let xs = elem?.files?.allObjects as? [EFile] {
-//                        xs.forEach { file in self.app.addEditRequestDeleteObject(file) }
-//                    }
-                    // TODO: ck: mark request data for delete
-                    // self.db.markEntityForDelete(reqData: elem, ctx: ctx)
+                    if let elem = self.localdb.getRequestData(id: cell.reqDataId, ctx: ctx) {
+//                        if let xs = elem?.files?.allObjects as? [EFile] {
+//                            xs.forEach { file in self.app.addEditRequestDeleteObject(file) }
+//                        }
+                        // TODO: ck: mark request data for delete
+                        // self.db.markEntityForDelete(reqData: elem, ctx: ctx)
+                        self.localdbSvc.markEntityForDelete(reqData: elem, ctx: ctx)
+                        self.editTVDelegate?.getRequestTracker().trackDeletedEntity(elem)
+                    }
                     shouldReload = true
                 }
             }
@@ -1847,14 +1856,19 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
             guard let body = self.localdb.getRequestBodyData(id: id, ctx: ctx) else { return }
             // TODO: ck: mark body for delete
             // self.db.markEntityForDelete(body: body, ctx: ctx)
+            // delete body
+            self.localdbSvc.markEntityForDelete(reqBodyData: body, ctx: ctx)
+            self.delegate?.getRequestTracker().trackDeletedEntity(body)
         } else if type == .header {
             guard let elem = self.localdb.getRequestData(id: id, ctx: ctx) else { return }
             // TODO: ck: mark request data for delete
+            // delete header
             self.localdbSvc.markEntityForDelete(reqData: elem, ctx: ctx)
             self.delegate?.getRequestTracker().trackDeletedEntity(elem)
         } else if type == .param {
             guard let elem = self.localdb.getRequestData(id: id, ctx: ctx) else { return }
             // TODO: ck: mark request data for delete
+            // delete param
             self.localdbSvc.markEntityForDelete(reqData: elem, ctx: ctx)
             self.delegate?.getRequestTracker().trackDeletedEntity(elem)
         }
@@ -1874,10 +1888,12 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
                     let eimage = self.localdb.createImage(data: imageData, wsId: data.getWsId(), name: DocumentPickerState.imageName, type: DocumentPickerState.imageType, ctx: ctx)
                     eimage?.requestData = binary
                     eimage?.isCameraMode = DocumentPickerState.isCameraMode
-                    if let xs = binary.files?.allObjects as? [EFile] {
+                    if let xs = binary.files?.allObjects as? [EFile] {  // binary contains image data, so we remove any files it has
                         xs.forEach { file in
                             // TODO: ck: mark file for delete
                             // self.db.markEntityForDelete(file: file, ctx: ctx)
+                            self.localdbSvc.markEntityForDelete(file: file, ctx: ctx)
+                            self.delegate?.getRequestTracker().trackDeletedEntity(file)
                         }
                     }
                 }
@@ -1906,19 +1922,23 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
                         switch result {
                         case .success(let fileData):
                             Log.debug("bin: file read")
-                            if let xs = binary.files?.allObjects as? [EFile] {
+                            if let xs = binary.files?.allObjects as? [EFile] {  // updated files picked, remove existing ones
                                 xs.forEach { file in
                                     // TODO: ck: mark file for delete
                                     // self.db.markEntityForDelete(file: file, ctx: ctx)
+                                    self.localdbSvc.markEntityForDelete(file: file, ctx: ctx)
+                                    self.delegate?.getRequestTracker().trackDeletedEntity(file)
                                 }
                             }
                             let name = self.app.getFileName(fileURL)
                             if let file = self.localdb.createFile(data: fileData, wsId: data.getWsId(), name: name, path: fileURL,
                                                                   type: .binary, checkExists: true, ctx: ctx) {
                                 file.requestData = binary
-                                if let img = binary.image {
+                                if let img = binary.image {  // remove image if present as file is picked
                                     // TODO: ck: mark image for delete
                                     // self.db.markForDelete(image: img, ctx: ctx)
+                                    self.localdbSvc.markEntityForDelete(image: img, ctx: ctx)
+                                    self.delegate?.getRequestTracker().trackDeletedEntity(img)
                                 }
                                 Log.debug("bin: entity deleted")
                                 DispatchQueue.main.async {

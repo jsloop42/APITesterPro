@@ -126,20 +126,31 @@ class PersistenceService {
         guard let ctx = ctx else { return }
         ctx.performAndWait {
             reqBodyData.setMarkedForDelete(true)
+            // remove backreference
             reqBodyData.request = nil
-            // self.localdb.markEntityForDelete(body, ctx: ctx)
-            //AppState.editRequest?.body = nil
-            //self.app.addEditRequestDeleteObject(body)
         }
     }
     
     /// Mark file for deletion
     func markEntityForDelete(file: EFile, ctx: NSManagedObjectContext?) {
-        
+        let ctx = ctx != nil ? ctx : (file.managedObjectContext != nil ? file.managedObjectContext : nil)
+        guard let ctx = ctx else { return }
+        ctx.performAndWait {
+            file.setMarkedForDelete(true)
+            // remove backreference
+            file.requestData = nil
+        }
     }
     
     /// Delete image
     func markEntityForDelete(image: EImage, ctx: NSManagedObjectContext?) {
+        let ctx = ctx != nil ? ctx : (image.managedObjectContext != nil ? image.managedObjectContext : nil)
+        guard let ctx = ctx else { return }
+        ctx.performAndWait {
+            image.setMarkedForDelete(true)
+            // remove backreference
+            image.requestData = nil
+        }
         
     }
     
