@@ -41,6 +41,8 @@ public class EditRequestTracker {
     private let fnIdReqImage = "request-image-fn"
     /// Edit started ts which will be used for all entities that changed
     var modified: Int64
+    /// If a custom request method which was persisted is deleted this flag is set
+    private var isRequestMethodDelete = false
     
     init(ctx: NSManagedObjectContext, request: ERequest) {
         self.ctx = ctx
@@ -58,6 +60,9 @@ public class EditRequestTracker {
         if entity.objectID.isTemporaryID {  // if entity has temporary ID means it's newly added and then removed. We can safely delete such entities.
             self.localdb.deleteEntity(entity)
             return
+        }
+        if entity is ERequestMethodData {
+            self.isRequestMethodDelete = true
         }
         _ = self.deletedEntites.insert(entity)
     }
@@ -82,6 +87,8 @@ public class EditRequestTracker {
     ///   - x: The request object.
     ///   - callback: The callback function.
     func didRequestChange(_ x: ERequest, callback: @escaping (Bool) -> Void) {
+        // If a custom request method is deleted, we need to save
+        if isRequestMethodDelete { callback(true); return }
         // We need to check the whole object for change because, if a element changes, we set true, if another element did not change, we cannot
         // set false. So we would then have to keep track of which element changed the status and such.
         self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReq, block: { [weak self] () -> Bool in

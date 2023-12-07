@@ -36,7 +36,7 @@ class OptionsPickerViewController: UIViewController, UITableViewDelegate, UITabl
     var modelIndex: Int = 0
     var data: [String] = []
     var reqMethodData: [ERequestMethodData] = []
-    /// Set when option picker is in requestMethod mode
+    /// Set when option picker is in requestMethod mode. This is required to associate new request methods under the given project.
     var project: EProject?
     var name = ""
     var model: Any?  // Any model data, eg: RequestData associated with a body form field

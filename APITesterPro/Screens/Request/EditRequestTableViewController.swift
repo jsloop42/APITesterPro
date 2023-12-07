@@ -419,7 +419,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         guard let data = self.request else { return }
         let model: [String] = self.methods.compactMap { reqData -> String? in reqData.name }
         self.app.presentOptionPicker(type: .requestMethod, title: "Request Method", modelIndex: 0, selectedIndex: data.selectedMethodIndex.toInt(), data: model,
-                                     modelxs: self.methods, storyboard: self.storyboard!, navVC: self.navigationController!)
+                                     modelxs: self.methods, project: self.project, storyboard: self.storyboard!, navVC: self.navigationController!)
     }
     
     @objc func requestMethodDidChange(_ notif: Notification) {
@@ -452,10 +452,11 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     }
     
     @objc func customRequestMethodShouldDelete(_ notif: Notification) {
-        if let info = notif.userInfo as? [String: Any], let data = info[Const.optionModelKey] as? ERequestMethodData {
+        if let info = notif.userInfo as? [String: Any], let data = info[Const.optionModelKey] as? ERequestMethodData, let ctx = data.managedObjectContext {
             if let id = data.id {
                 if let idx = self.methods.firstIndex(of: data) { self.methods.remove(at: idx) }
-                data.shouldDelete = true
+                self.localdbSvc.markEntityForDelete(reqMeth: data, ctx: ctx)
+                self.requestTracker.trackDeletedEntity(data)
                 let selectedIdx = 0
                 self.request.selectedMethodIndex = selectedIdx.toInt64()
                 if let method = self.methods.first { self.methodLabel.text = method.name }
@@ -514,7 +515,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
             let title = info[Const.optionTitleKey] as? String ?? ""
             let model = info[Const.optionModelKey]
             DispatchQueue.main.async {
-                self.app.presentOptionPicker(type: type, title: title, modelIndex: modelIndex, selectedIndex: selectedIndex, data: data, model: model, project: self.project,
+                self.app.presentOptionPicker(type: type, title: title, modelIndex: modelIndex, selectedIndex: selectedIndex, data: data, model: model,
                                              storyboard: self.storyboard!, navVC: self.navigationController!)
             }
         }
@@ -1488,6 +1489,7 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
                         if let files = form.files?.allObjects as? [EFile] {  // remove files if selected previously
                             files.forEach { file in
                                 self.localdbSvc.markEntityForDelete(file: file, ctx: ctx)
+                                self.editTVDelegate?.getRequestTracker().trackDeletedEntity(file)
                             }
                         }
                         self.editTVDelegate?.didRequestChange(data, callback: { status in self.editTVDelegate?.getVC().updateDoneButton(status) })
@@ -1523,6 +1525,7 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
                                         // TODO: ck mark image for delete
                                         // self.db.markForDelete(image: form.image, ctx: form.image?.managedObjectContext)
                                         self.localdbSvc.markEntityForDelete(image: image, ctx: ctx)
+                                        self.editTVDelegate?.getRequestTracker().trackDeletedEntity(image)
                                     }
                                 }
                                 DispatchQueue.main.async {
