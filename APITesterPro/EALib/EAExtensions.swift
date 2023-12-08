@@ -485,6 +485,10 @@ public extension Int {
         return Double(self)
     }
     
+    func toNSDecimal() -> NSDecimalNumber {
+        return NSDecimalNumber(value: self)
+    }
+    
     /// Calls the given block n number of times.
     func times(block: () -> Void) {
         if self <= 0 { return }
@@ -516,6 +520,10 @@ public extension Int64 {
     func toDouble() -> Double {
         return Double(self)
     }
+    
+    func toNSDecimal() -> NSDecimalNumber {
+        return NSDecimalNumber(value: self)
+    }
 }
 
 public extension UInt64 {
@@ -546,6 +554,10 @@ public extension UInt64 {
     func toDouble() -> Double {
         return Double(self)
     }
+    
+    func toNSDecimal() -> NSDecimalNumber {
+        return NSDecimalNumber(value: self)
+    }
 }
 
 public extension Float {
@@ -575,6 +587,10 @@ public extension Float {
     
     func toDouble() -> Double {
         return Double(self)
+    }
+    
+    func toNSDecimal() -> NSDecimalNumber {
+        return NSDecimalNumber(value: self)
     }
 }
 
@@ -613,6 +629,10 @@ public extension Double {
     
     func toFloat64() -> Float64 {
         return Float64(self)
+    }
+    
+    func toNSDecimal() -> NSDecimalNumber {
+        return NSDecimalNumber(value: self)
     }
     
     /// Returns the double rounded to `n` decimal places
