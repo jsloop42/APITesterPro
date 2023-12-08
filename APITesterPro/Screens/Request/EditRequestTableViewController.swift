@@ -302,14 +302,10 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
             self.descTextView.text = data.desc
             if let projId = self.project.id {
                 self.methods = self.localdb.getRequestMethodData(projId: projId, ctx: ctx)
-                let idx = data.selectedMethodIndex.toInt()
-                if self.methods.count > idx {
-                    self.methodLabel.text = self.methods[idx].name
-                } else {
-                    if !self.methods.isEmpty {
-                        self.methodLabel.text = self.methods[0].name
-                        data.selectedMethodIndex = 0
-                    }
+                if let meth = data.method {  // in case of edit, there will be method
+                    self.methodLabel.text = meth.name
+                } else {  // for new request, use GET
+                    self.methodLabel.text = self.methods.first?.name
                 }
             }
         }
@@ -425,7 +421,11 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         Log.debug("method view did tap")
         guard let data = self.request else { return }
         let model: [String] = self.methods.compactMap { reqData -> String? in reqData.name }
-        self.app.presentOptionPicker(type: .requestMethod, title: "Request Method", modelIndex: 0, selectedIndex: data.selectedMethodIndex.toInt(), data: model,
+        var selectedIdx: Int = 0
+        if let meth = data.method {
+            selectedIdx = self.methods.firstIndex(of: meth) ?? 0
+        }
+        self.app.presentOptionPicker(type: .requestMethod, title: "Request Method", modelIndex: 0, selectedIndex: selectedIdx, data: model,
                                      modelxs: self.methods, project: self.project, storyboard: self.storyboard!, navVC: self.navigationController!)
     }
     
@@ -434,8 +434,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
             let idx = info[Const.optionSelectedIndexKey] as? Int {
             DispatchQueue.main.async {
                 self.methodLabel.text = name
-                let i = idx.toInt64()
-                self.request.selectedMethodIndex = i
+                self.request.method = self.methods[idx]
                 self.requestTracker.didRequestChange(self.request) { status in
                     self.updateDoneButton(status)
                 }
@@ -448,11 +447,11 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         if let info = notif.userInfo as? [String: Any], let name = info[Const.requestMethodNameKey] as? String,
            let data = self.request, let ctx = data.managedObjectContext {
             if let method = self.localdb.createRequestMethodData(id: self.localdb.requestMethodDataId(), wsId: data.getWsId(), name: name, checkExists: true, ctx: ctx) {
-                let order = self.localdb.getRequestMethodDataCount(self.project, ctx: ctx)
                 method.order = self.methods.count.toNSDecimal()
                 data.method = method
                 self.methods.append(method)
                 method.project = self.project
+                self.requestTracker.trackNewRequestMethod(method)
                 self.requestTracker.didRequestChange(self.request, callback: { [weak self] status in self?.updateDoneButton(status) })
                 self.nc.post(name: .optionPickerShouldReload, object: self,
                              userInfo: [Const.optionModelKey: method, Const.optionDataActionKey: OptionDataAction.add])
@@ -463,12 +462,15 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     @objc func customRequestMethodShouldDelete(_ notif: Notification) {
         if let info = notif.userInfo as? [String: Any], let data = info[Const.optionModelKey] as? ERequestMethodData, let ctx = data.managedObjectContext {
             if let id = data.id {
+                var selectedIdx = self.methods.firstIndex(of: self.request.method!) ?? 0
+                if self.request.method == data {  // deleting the selected request method => choose GET as the selected
+                  selectedIdx = 0
+                }
                 if let idx = self.methods.firstIndex(of: data) { self.methods.remove(at: idx) }
                 self.localdbSvc.markEntityForDelete(reqMeth: data, ctx: ctx)
                 self.requestTracker.trackDeletedEntity(data)
-                let selectedIdx = 0
-                self.request.selectedMethodIndex = selectedIdx.toInt64()
                 if let method = self.methods.first { self.methodLabel.text = method.name }
+                self.request.method = self.methods.first
                 self.requestTracker.didRequestChange(self.request, callback: { [weak self] status in self?.updateDoneButton(status) })
                 self.nc.post(name: .optionPickerShouldReload, object: self,
                              userInfo: [Const.optionDataActionKey: OptionDataAction.delete, Const.dataKey: id, Const.optionSelectedIndexKey: selectedIdx])

@@ -18,6 +18,8 @@ public class EditRequestTracker {
     var requestDict: [String: Any] = [:]
     /// Holds the entites which are present in the request but deleted. Such entites will have back references removed so that it does not appear in UI. We need to manually delete such entites.
     var deletedEntites: Set<AnyHashable> = Set()
+    /// Track request method data added during add/edit request
+    var addedRequestMethods: Set<AnyHashable> = Set()
     // Entity diff check
     /// Entity diff rescheduler. If user is editing request elements, this will be called in succession and previous timer will be reset.
     var diffRescheduler = EARescheduler(interval: 0.3, type: .everyFn)
@@ -55,9 +57,13 @@ public class EditRequestTracker {
         Log.debug("deinit edit request tracker")
         self.diffRescheduler.done()
     }
+    
     /// Add a marked for delete entity for tracking
     func trackDeletedEntity(_ entity: any Entity) {
         if entity.objectID.isTemporaryID {  // if entity has temporary ID means it's newly added and then removed. We can safely delete such entities.
+            if entity is ERequestMethodData {
+                self.addedRequestMethods.remove(entity)
+            }
             self.localdb.deleteEntity(entity)
             return
         }
@@ -67,9 +73,14 @@ public class EditRequestTracker {
         _ = self.deletedEntites.insert(entity)
     }
     
+    func trackNewRequestMethod(_ reqMeth: ERequestMethodData) {
+        _ = self.addedRequestMethods.insert(reqMeth)
+    }
+ 
     /// Remove all tracked entites. Once the context is saved this can be invoked.
     func clearTrackedEntites() {
         self.deletedEntites.removeAll()
+        self.addedRequestMethods.removeAll()
     }
     
     func updateModified(_ x: (any Entity)?) {
@@ -88,7 +99,7 @@ public class EditRequestTracker {
     ///   - callback: The callback function.
     func didRequestChange(_ x: ERequest, callback: @escaping (Bool) -> Void) {
         // If a custom request method is deleted, we need to save
-        if isRequestMethodDelete { callback(true); return }
+        if self.isRequestMethodDelete || !self.addedRequestMethods.isEmpty { callback(true); return }
         // We need to check the whole object for change because, if a element changes, we set true, if another element did not change, we cannot
         // set false. So we would then have to keep track of which element changed the status and such.
         self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReq, block: { [weak self] () -> Bool in
@@ -111,12 +122,14 @@ public class EditRequestTracker {
         if x.validateSSL != self.requestDict["validateSSL"] as? Bool { self.updateModified(x); return true }
         if self.didRequestURLChangeImp(x.url ?? "") { self.updateModified(x); return true }
         if self.didRequestMetaChangeImp(name: x.name ?? "", desc: x.desc ?? "") { self.updateModified(x); return true }
-        if self.didRequestMethodIndexChangeImp(x.selectedMethodIndex) { self.updateModified(x); return true }
-        if (x.method == nil && self.requestDict["method"] != nil) || (x.method != nil && (x.method!.isInserted || x.method!.isDeleted) && requestDict["method"] == nil) { return true }
-        if let hm = self.requestDict["method"] as? [String: Any], let ida = x.id, let idb = hm["id"] as? String, ida != idb { return true }
-        guard let projId = x.project?.getId() else { return true }
-        let methods = self.localdb.getRequestMethodData(projId: projId, ctx: x.managedObjectContext)
-        if self.didAnyRequestMethodChangeImp(methods) { return true }
+        if let method = x.method {
+            if self.didRequestMethodChangeImp(method) { self.updateModified(x); return true }
+        }
+        // if (x.method == nil && self.requestDict["method"] != nil) || (x.method != nil && (x.method!.isInserted || x.method!.isDeleted) && requestDict["method"] == nil) { return true }
+        // if let hm = self.requestDict["method"] as? [String: Any], let ida = x.id, let idb = hm["id"] as? String, ida != idb { return true }
+        // guard let projId = x.project?.getId() else { return true }
+        //let methods = self.localdb.getRequestMethodData(projId: projId, ctx: x.managedObjectContext)
+//        if self.didAnyRequestMethodChangeImp(methods) { return true }
         if self.didRequestBodyChangeImp(x.body) { return true }
         if let headers = x.headers?.allObjects as? [ERequestData] {
             if self.didAnyRequestHeaderChangeImp(headers) { return true }
@@ -131,36 +144,14 @@ public class EditRequestTracker {
         return false
     }
     
-    /// Checks if the selected request method changed.
-    /// - Parameters:
-    ///   - x: The selected request method index.
-    ///   - callback: The callback function.
-    func didRequestMethodIndexChange(_ x: Int64, callback: @escaping (Bool) -> Void) {
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReqMethodIndex, block: { [weak self] () -> Bool in
-            guard let self else { return true }
-            return self.didRequestMethodIndexChangeImp(x)
-        }, callback: { status in
-            callback(status)
-        }, args: [x]))
-    }
-    
-    /// Checks if the selected request method changed.
-    /// - Parameters:
-    ///   - x: The selected request method index.
-    func didRequestMethodIndexChangeImp(_ x: Int64) -> Bool {
-        if let index = self.requestDict["selectedMethodIndex"] as? Int64 { return x != index }
-        return false
-    }
-    
     /// Checks if the request method changed.
     /// - Parameters:
     ///   - x: The request method.
-    ///   - y: The initial request method dictionary.
     ///   - callback: The callback function.
-    func didRequestMethodChange(_ x: ERequestMethodData, reqMethDict: [String: Any], callback: @escaping (Bool) -> Void) {
+    func didRequestMethodChange(_ x: ERequestMethodData, callback: @escaping (Bool) -> Void) {
         self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReqMethod, block: { [weak self] () -> Bool in
             guard let self else { return true }
-            return self.didRequestMethodChangeImp(x, reqMethDict: reqMethDict)
+            return self.didRequestMethodChangeImp(x)
         }, callback: { status in
             callback(status)
         }, args: [x]))
@@ -169,50 +160,14 @@ public class EditRequestTracker {
     /// Checks if the request method changed.
     /// - Parameters:
     ///   - x: The request method.
-    ///   - reqMethDict: The initial request method dictionary.
-    func didRequestMethodChangeImp(_ x: ERequestMethodData, reqMethDict: [String: Any]) -> Bool {
+    func didRequestMethodChangeImp(_ x: ERequestMethodData) -> Bool {
+        guard let reqMethDict = self.requestDict["method"] as? [String: Any] else { return true }
         if x.created != reqMethDict["created"] as? Int64 ||
             x.isCustom != reqMethDict["isCustom"] as? Bool ||
             x.name != reqMethDict["name"] as? String ||
             x.markForDelete != reqMethDict["markForDelete"] as? Bool {
             self.updateModified(x)
             return true
-        }
-        return false
-    }
-    
-    /// Checks if any request method changed.
-    /// - Parameters:
-    ///   - xs: The list of request methods.
-    ///   - callback: The callback function.
-    func didAnyRequestMethodChange(_ xs: [ERequestMethodData], request: [String: Any], callback: @escaping (Bool) -> Void) {
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdAnyReqMethod, block: { [weak self] () -> Bool in
-            guard let self else { return true }
-            return self.didAnyRequestMethodChangeImp(xs)
-        }, callback: { status in
-            callback(status)
-        }, args: xs))
-    }
-    
-    /// Checks if any custom request method changed.
-    /// - Parameters:
-    ///   - xs: The list of request methods.
-    func didAnyRequestMethodChangeImp(_ xs: [ERequestMethodData]) -> Bool {
-        let xsa = xs.filter { x -> Bool in
-            let flag = x.isCustom && x.hasChanges
-            return flag
-        }
-        let xsb = (self.requestDict["methods"] as? [[String: Any]])?.filter({ hm -> Bool in
-            if let isCustom = hm["isCustom"] as? Bool { return isCustom }
-            return false
-        })
-        let len = xsa.count
-        if xsb == nil && len > 0 { return true }
-        if xsb != nil && xsb!.count != len { return true }
-        if xsb != nil {
-            for i in 0..<len {
-                if self.didRequestMethodChangeImp(xsa[i], reqMethDict: xsb![i]) { return true }
-            }
         }
         return false
     }

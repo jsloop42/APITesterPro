@@ -101,7 +101,7 @@ struct ResponseData: CustomDebugStringConvertible, Equatable {
         self.wsId = request.getWsId()
         self.requestId = request.getId()
         self.hasRequestBody = request.body != nil
-        if let proj = request.project { self.method = self.localdb.getRequestMethodData(at: request.selectedMethodIndex.toInt(), projId: proj.getId())?.name ?? "" }
+        self.method = request.method?.name ?? ""
         if let x = metrics { self.updateFromMetrics(x) }
         if error.code == -1202 {  // Bad SSL certificate
             self.statusCode = ErrorCode.sslCert.rawValue

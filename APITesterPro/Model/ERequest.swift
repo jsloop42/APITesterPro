@@ -95,9 +95,13 @@ public class ERequest: NSManagedObject, Entity {
         if let x = dict["desc"] as? String { req.desc = x }
         if let x = dict["name"] as? String { req.name = x }
         if let x = dict["validateSSL"] as? Bool { req.validateSSL = x }
-        if let x = dict["selectedMethodIndex"] as? Int64 { req.selectedMethodIndex = x }
         if let x = dict["url"] as? String { req.url = x }
         if let x = dict["version"] as? Int64 { req.version = x }
+        if let dict = dict["method"] as? [String: Any] {
+            if let method = ERequestMethodData.fromDictionary(dict) {
+                req.method = method
+            }
+        }
         if let dict = dict["body"] as? [String: Any] {
             if let body = ERequestBodyData.fromDictionary(dict) {
                 req.body = body
@@ -126,17 +130,23 @@ public class ERequest: NSManagedObject, Entity {
         var req: ERequest!
         var ckReq: CKRecord!
         guard let ckProj = EProject.getCKRecord(id: projId, wsId: wsId, ctx: ctx) else { return ckReq }
+        var methId: String?
         ctx.performAndWait {
             req = db.getRequest(id: id, ctx: ctx)
+            methId = req.method?.getId()
+        }
+        guard let methId = methId else { return ckReq }
+        guard let ckMeth = ERequestMethodData.getCKRecord(id: methId, projId: projId, wsId: wsId, ctx: ctx) else { return ckReq }
+        ctx.performAndWait {
             let zoneID = req.getZoneID()
             let ckReqID = self.ck.recordID(entityId: id, zoneID: zoneID)
             ckReq = self.ck.createRecord(recordID: ckReqID, recordType: req.recordType)
-            req.updateCKRecord(ckReq, project: ckProj)
+            req.updateCKRecord(ckReq, project: ckProj, method: ckMeth)
         }
         return ckReq
     }
     
-    func updateCKRecord(_ record: CKRecord, project: CKRecord) {
+    func updateCKRecord(_ record: CKRecord, project: CKRecord, method: CKRecord) {
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created as CKRecordValue
             record["modified"] = self.modified as CKRecordValue
@@ -146,11 +156,12 @@ public class ERequest: NSManagedObject, Entity {
             record["envId"] = (self.envId ?? "") as CKRecordValue
             record["name"] = self.name! as CKRecordValue
             record["validateSSL"] = self.validateSSL as CKRecordValue
-            record["selectedMethodIndex"] = self.selectedMethodIndex as CKRecordValue
             record["url"] = (self.url ?? "") as CKRecordValue
             record["version"] = self.version as CKRecordValue
-            let ref = CKRecord.Reference(record: project, action: .none)
-            record["project"] = ref
+            let projRef = CKRecord.Reference(record: project, action: .deleteSelf)
+            record["project"] = projRef
+            let methRef = CKRecord.Reference(record: method, action: .none)
+            record["method"] = methRef
         }
     }
     
@@ -164,10 +175,10 @@ public class ERequest: NSManagedObject, Entity {
                 if let x = record["desc"] as? String { self.desc = x }
                 if let x = record["name"] as? String { self.name = x }
                 if let x = record["validateSSL"] as? Bool { self.validateSSL = x }
-                if let x = record["selectedMethodIndex"] as? Int64 { self.selectedMethodIndex = x }
                 if let x = record["url"] as? String { self.url = x }
                 if let x = record["version"] as? Int64 { self.version = x }
                 if let ref = record["project"] as? CKRecord.Reference, let proj = EProject.getProjectFromReference(ref, record: record, ctx: moc) { self.project = proj }
+                if let ref = record["method"] as? CKRecord.Reference, let meth = ERequestMethodData.getRequestMethodDataFromReference(ref, record: record, ctx: ctx) { self.method = meth }
             }
         }
     }
@@ -181,9 +192,11 @@ public class ERequest: NSManagedObject, Entity {
         dict["desc"] = self.desc
         dict["name"] = self.name
         dict["validateSSL"] = self.validateSSL
-        dict["selectedMethodIndex"] = self.selectedMethodIndex
         dict["url"] = self.url
         dict["version"] = self.version
+        if let meth = self.method {
+            dict["method"] = meth.toDictionary()
+        }
         if let body = self.body {
             dict["body"] = body.toDictionary()
         }

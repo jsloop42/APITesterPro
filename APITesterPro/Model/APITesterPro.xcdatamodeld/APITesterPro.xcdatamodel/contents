@@ -202,7 +202,6 @@
         <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
         <attribute name="order" attributeType="Decimal" defaultValueString="1"/>
-        <attribute name="selectedMethodIndex" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="url" attributeType="String" defaultValueString=""/>
         <attribute name="validateSSL" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -215,9 +214,6 @@
         <relationship name="project" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EProject" inverseName="requests" inverseEntity="EProject"/>
         <fetchIndex name="byCreated">
             <fetchIndexElement property="created" type="Binary" order="ascending"/>
-        </fetchIndex>
-        <fetchIndex name="bySelectedMethodIndex">
-            <fetchIndexElement property="selectedMethodIndex" type="Binary" order="ascending"/>
         </fetchIndex>
         <fetchIndex name="byMarkForDelete">
             <fetchIndexElement property="markForDelete" type="Binary" order="ascending"/>
