@@ -169,9 +169,7 @@ class RequestCell: UITableViewCell {
 
 extension RequestListViewController: UITableViewDelegate, UITableViewDataSource {
     func getDesc(req: ERequest) -> String {
-        let idx = req.selectedMethodIndex.toInt()
-        guard self.methods.count > idx else { return "" }
-        let method = self.methods[idx].getName()
+        let method = req.method?.name ?? ""
         let url = req.url ?? ""
         var path = ""
         if !url.isEmpty {

@@ -121,6 +121,12 @@ public enum RecordType: String, Hashable {
                                          RecordType.requestMethodData, RecordType.file, RecordType.image, RecordType.env, RecordType.envVar]
 }
 
+/// Entity sort order used in fetch request sort descriptor
+public enum SortOrder: String {
+    case order = "order"
+    case created = "created"
+}
+
 class CoreDataService {
     static var shared = CoreDataService()
     private var storeType: String! = NSSQLiteStoreType
@@ -306,6 +312,7 @@ class CoreDataService {
     func requestToDictionary(_ x: ERequest) -> [String: Any] {
         let attrs = ERequest.entity().attributesByName.map { arg -> String in arg.key }
         var dict = x.dictionaryWithValues(forKeys: attrs)
+        if let method = x.method { dict["method"] = self.requestMethodDataToDictionary(method) }
         if let set = x.headers, let xs = set.allObjects as? [ERequestData] {
             dict["headers"] = self.sortedByCreated(xs.map { y -> [String: Any] in self.requestDataToDictionary(y) })
         }
@@ -1001,16 +1008,17 @@ class CoreDataService {
     /// Retrieves request method data belonging to the given request.
     /// - Parameters:
     ///   - reqId: The request id.
+    ///   - sortOrder: The sort order for fetch
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: A list of request method data entities.
-    func getRequestMethodData(reqId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [ERequestMethodData] {
+    func getRequestMethodData(reqId: String, sortOrder: SortOrder? = SortOrder.order, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [ERequestMethodData] {
         var xs: [ERequestMethodData] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             let fr = NSFetchRequest<ERequestMethodData>(entityName: "ERequestMethodData")
             fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "request.id == %@", reqId) : NSPredicate(format: "request.id == %@ AND markForDelete == %hhd", reqId, isMarkForDelete!)
-            fr.sortDescriptors = [NSSortDescriptor(key: "created", ascending: true)]
+            fr.sortDescriptors = [NSSortDescriptor(key: sortOrder!.rawValue, ascending: true)]
             fr.fetchBatchSize = self.fetchBatchSize
             do {
                 xs = try moc.fetch(fr)
@@ -1024,16 +1032,17 @@ class CoreDataService {
     /// Retrieves request method data belonging to the given project.
     /// - Parameters:
     ///   - projId: The project id.
+    ///   - sortOrder: The sort order for fetch
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: A list of request method data entities.
-    func getRequestMethodData(projId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [ERequestMethodData] {
+    func getRequestMethodData(projId: String, sortOrder: SortOrder? = SortOrder.order, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [ERequestMethodData] {
         var xs: [ERequestMethodData] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             let fr = NSFetchRequest<ERequestMethodData>(entityName: "ERequestMethodData")
             fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "project.id == %@", projId) : NSPredicate(format: "project.id == %@ AND markForDelete == %hhd", projId, isMarkForDelete!)
-            fr.sortDescriptors = [NSSortDescriptor(key: "created", ascending: true)]
+            fr.sortDescriptors = [NSSortDescriptor(key: sortOrder!.rawValue, ascending: true)]
             fr.fetchBatchSize = self.fetchBatchSize
             do {
                 xs = try moc.fetch(fr)
@@ -1047,17 +1056,18 @@ class CoreDataService {
     /// Retrieve the request method data.
     /// - Parameters:
     ///   - index: The index of the method.
+    ///   - sortOrder: The sort order for fetch
     ///   - projId: The project id.
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: The request method data entity.
-    func getRequestMethodData(at index: Int, projId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequestMethodData? {
+    func getRequestMethodData(at index: Int, projId: String, sortOrder: SortOrder? = SortOrder.order, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequestMethodData? {
         var x: ERequestMethodData?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             let fr = NSFetchRequest<ERequestMethodData>(entityName: "ERequestMethodData")
             fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "project.id == %@", projId): NSPredicate(format: "project.id == %@ AND markForDelete == %hhd", projId, isMarkForDelete!)
-            fr.sortDescriptors = [NSSortDescriptor(key: "created", ascending: true)]
+            fr.sortDescriptors = [NSSortDescriptor(key: sortOrder!.rawValue, ascending: true)]
             do {
                 let xs = try moc.fetch(fr)
                 if xs.count > index { x = xs[index] }
@@ -1075,13 +1085,13 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: The count of entities.
-    func getRequestsCountForRequestMethodData(projId: String, index: Int64? = Const.defaultRequestMethodsCount.toInt64(), isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> Int {
+    func getRequestsCountForRequestMethodData(projId: String, reqMethId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> Int {
         var x: Int = 0
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             let fr = NSFetchRequest<ERequest>(entityName: "ERequest")
-            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "selectedMethodIndex == %ld AND project.id == %@", index!, projId)
-                : NSPredicate(format: "selectedMethodIndex == %ld AND markForDelete == %hhd AND project.id == %@", index!, isMarkForDelete!, projId)
+            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "id == %@ AND project.id == %@", reqMethId, projId)
+                : NSPredicate(format: "id == %@ AND markForDelete == %hhd AND project.id == %@", reqMethId, isMarkForDelete!, projId)
             do {
                 x = try moc.count(for: fr)
             } catch let error {
@@ -1090,7 +1100,6 @@ class CoreDataService {
         }
         return x
     }
-    
     
     /// Get the total request methods count for the given project. This can be used to set the order of newly created request method data.
     /// - Parameters:

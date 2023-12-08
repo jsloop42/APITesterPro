@@ -360,11 +360,7 @@ class RequestTableViewController: APITesterProTableViewController {
         self.headerKVTableViewManager.kvTableView?.resetMeta()
         self.paramsKVTableViewManager.kvTableView?.resetMeta()
         guard let proj = request.project else { return }
-        if let method = self.localdb.getRequestMethodData(at: request.selectedMethodIndex.toInt(), projId: proj.getId()) {
-            self.methodLabel.text = method.name
-        } else {
-            self.methodLabel.text = "GET"
-        }
+        self.methodLabel.text = request.method?.name ?? "GET"
         self.urlLabel.text = request.url
         self.nameLabel.text = request.name
         self.nameLabel.sizeToFit()

@@ -221,13 +221,6 @@ class OptionsPickerViewController: UIViewController, UITableViewDelegate, UITabl
         Log.debug("option vc did select \(indexPath)")
         let row = indexPath.row
         self.selectedIndex = row
-//        if self.pickerType == .requestBodyForm {
-//            self.postRequestBodyChangeNotification()
-//        } else if self.pickerType == .requestMethod {
-//            self.postRequestMethodChangeNotification()
-//        } else if self.pickerType == .requestBodyFormField {
-//            self.postRequestBodyFieldChangeNotification()
-//        }
         self.close(false)
     }
     
@@ -236,7 +229,7 @@ class OptionsPickerViewController: UIViewController, UITableViewDelegate, UITabl
         if self.pickerType == .requestMethod {
             if self.modelxs.count > row {
                 // if AppState.editRequest?.project == nil { return false } TODO: check why this was added
-                if self.project == nil { return false }
+                if self.project == nil { return false }  // project is required for checking if any requests uses custom methods
                 return (self.modelxs[row] as? ERequestMethodData)?.isCustom ?? false
             }
         }
@@ -245,11 +238,11 @@ class OptionsPickerViewController: UIViewController, UITableViewDelegate, UITabl
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let row = indexPath.row
-        let elem = self.modelxs[row] as? ERequestMethodData
+        guard let elem = self.modelxs[row] as? ERequestMethodData else { return nil }
         guard let projId = self.project?.getId() else { return nil }
-        let count = self.localdb.getRequestsCountForRequestMethodData(projId: projId, ctx: elem?.managedObjectContext)
+        let count = self.localdb.getRequestsCountForRequestMethodData(projId: projId, reqMethId: elem.getId(), ctx: elem.managedObjectContext)
         let delete = UIContextualAction(style: .destructive, title: "Delete") { action, view, completion in
-            if count > 0, let name = elem?.name {
+            if count > 0, let name = elem.name {
                 UI.viewAlert(vc: self, title: "Delete \"HEAD\"?",
                              message: "\"\(name)\" is associated with \(count) other \(count > 1 ? "requests" : "request"). Deleting this will reset it to \"GET\".",
                              cancelText: "Cancel", otherButtonText: "Delete", cancelStyle: .cancel, otherStyle: .destructive,

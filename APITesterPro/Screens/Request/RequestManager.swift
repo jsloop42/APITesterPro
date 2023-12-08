@@ -234,7 +234,7 @@ final class RequestManager {
             }
         }
         headers["X-API-Tester-Pro-Id"] = UUID().uuidString.lowercased()
-        let method = self.localdb.getRequestMethodData(at: request.selectedMethodIndex.toInt(), projId: projId)
+        let method = request.method
         guard let aUrl = urlComp.url else { return nil }
         var urlReq = URLRequest(url: aUrl, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60)
         if let body = request.body {

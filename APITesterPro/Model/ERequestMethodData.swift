@@ -59,6 +59,15 @@ public class ERequestMethodData: NSManagedObject, Entity {
         //if self.modified < AppState.editRequestSaveTs { self.modified = AppState.editRequestSaveTs }
     }
     
+    /// Returns method data from the given record reference. If the method does not exists, one will be created.
+    static func getRequestMethodDataFromReference(_ ref: CKRecord.Reference, record: CKRecord, ctx: NSManagedObjectContext) -> ERequestMethodData? {
+        let methId = self.ck.entityID(recordID: ref.recordID)
+        let wsId = record.getWsId()
+        if let meth = self.db.getRequestMethodData(id: methId, ctx: ctx) { return meth }
+        let meth = self.db.createRequestMethodData(id: methId, wsId: wsId, name: "", checkExists: false, ctx: ctx)
+        return meth
+    }
+    
     public static func fromDictionary(_ dict: [String: Any]) -> ERequestMethodData? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
         guard let method = self.db.createRequestMethodData(id: id, wsId: wsId, name: "", ctx: self.db.mainMOC) else { return nil }
