@@ -216,6 +216,7 @@ class WorkspaceListViewController: APITesterProViewController {
     
     func addWorkspace(name: String, desc: String, isSyncEnabled: Bool) {
         AppState.totalworkspaces = self.frc.numberOfRows(in: 0)
+        var isSyncEnabled = false  // TODO: ck: disable sync - remove this on icloud sync implementation
         if let ws = self.localdb.createWorkspace(id: self.localdb.workspaceId(), name: name, desc: desc, isSyncEnabled: isSyncEnabled) {
             self.localdb.saveMainContext()
             // TODO: ck: save workspace to cloud
