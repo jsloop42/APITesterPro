@@ -512,7 +512,8 @@ extension RequestTableViewController {
             if self.headers.isEmpty {  // static branch prediction always assumes branches to be false
                 height = 0
             } else {
-                height = self.headerKVTableViewManager.getHeight()
+                self.headersTableView.layoutIfNeeded()
+                height = UITableView.automaticDimension
             }
         } else if indexPath.row == CellId.paramTitle.rawValue {
             height = 44
@@ -521,8 +522,8 @@ extension RequestTableViewController {
             if self.params.isEmpty {
                 height = 0
             } else {
-                height = self.paramsKVTableViewManager.getHeight()
-                //height = self.paramCellHeight
+                self.paramsTableView.layoutIfNeeded()
+                height = UITableView.automaticDimension
             }
         } else if indexPath.row == CellId.bodyTitle.rawValue {
             if self.requestBody == nil { return 0 }
@@ -820,15 +821,7 @@ class KVTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSource {
     }
     
     func getHeight(_ indexPath: IndexPath, tableView: UITableView) -> CGFloat {
-        var height: CGFloat = 0.0
-        if let elem = self.getElem(indexPath) {
-            let key = self.app.getKVText(elem.key)
-            let value = self.app.getKVText(elem.value)
-            // compute height
-            let width = tableView.frame.width
-            height = 85 + UI.getTextHeight(key, width: width, font: labelFont) + UI.getTextHeight(value, width: width, font: labelFont)  // 85 is the padding around UI elements
-        }
-        return height
+        return UITableView.automaticDimension
     }
     
     /// Returns the height of the cell.
