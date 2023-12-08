@@ -40,6 +40,7 @@ class PopupCell: UITableViewCell, UITextFieldDelegate {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.syncView.isHidden = true  // TODO: ck: remove when icloud sync in implemented
         self.nameTextField.delegate = self
         self.descTextField.delegate = self
     }
@@ -87,6 +88,7 @@ class PopupViewController: UIViewController, UITableViewDataSource, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         if let model = self.model, model.shouldValidate { self.rescheduler = EARescheduler(interval: 0.3, type: .everyFn) }
+        self.model?.iCloudSyncFieldEnabled = false  // TODO: ck: remove this line
         self.initUI()
         self.initEvent()
     }
