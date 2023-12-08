@@ -81,7 +81,7 @@ class RequestListViewController: APITesterProViewController {
                 self.frc = _frc
                 self.frc.delegate = self
             }
-            self.methods = self.localdb.getRequestMethodData(projId:  projId, ctx: self.localdb.mainMOC)
+            self.methods = self.localdb.getRequestMethodData(projId: projId, ctx: self.localdb.mainMOC)
         }
         self.reloadData()
     }
