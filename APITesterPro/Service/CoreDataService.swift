@@ -1091,6 +1091,28 @@ class CoreDataService {
         return x
     }
     
+    
+    /// Get the total request methods count for the given project. This can be used to set the order of newly created request method data.
+    /// - Parameters:
+    ///   - proj: The project for which the count needs to be checked
+    ///   - ctx: The managed object context
+    /// - Returns: The integer count
+    func getRequestMethodDataCount(_ proj: EProject, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> Int {
+        var x: Int = 0
+        let moc = self.getMainMOC(ctx: ctx)
+        moc.performAndWait {
+            let fr = NSFetchRequest<ERequestMethodData>(entityName: "ERequestMethodData")
+            fr.predicate = NSPredicate(format: "project.id == %@", proj.getId())
+            do {
+                x = try moc.count(for: fr)
+            } catch let error {
+                Log.error("Error getting method data count: \(error)")
+            }
+        }
+        return x
+    }
+    
+    /// Generates the default HTTP methods for a project
     func genDefaultRequestMethods(_ proj: EProject, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [ERequestMethodData] {
         let names = ["GET", "POST", "PUT", "PATCH", "DELETE"]
         return names.enumerated().compactMap { seq -> ERequestMethodData? in
@@ -1099,6 +1121,7 @@ class CoreDataService {
             if let x = self.createRequestMethodData(id: self.requestMethodDataId(proj.getId(), methodName: elem), wsId: proj.getWsId(), name: elem, isCustom: false, ctx: ctx) {
                 x.created = proj.getCreated() - 6 + idx.toInt64()
                 x.modified = x.created
+                x.order = idx.toNSDecimal()
                 x.project = proj
                 return x
             }

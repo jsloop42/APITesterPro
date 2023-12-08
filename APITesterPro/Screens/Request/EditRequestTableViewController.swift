@@ -89,6 +89,9 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     private var reqName = ""
     private var methods: [ERequestMethodData] = []
     var isEditMode = false
+    /// This will be set when the discard change is tapped from the popup. The popup cancels the navigation back if there are unsaved changes. In this case  we need to manually navigate back by calling pop on nav vc.
+    /// Same when user taps done. Once request changes are saved, we navigate back by calling close. For that we need to set this variable.
+    var shouldPop = false
     
     enum CellId: Int {
         case navbar = 0
@@ -137,15 +140,18 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     public override func shouldPopOnBackButton() -> Bool {
         self.endEditing()
         if self.isDirty {
-            UI.viewActionSheet(vc: self, message: "Are you sure you want to discard your changes?", cancelText: "Keep Editing",
-                               otherButtonText: "Discard Changes", cancelStyle: UIAlertAction.Style.cancel, otherStyle: UIAlertAction.Style.destructive,
-                               // keep editing
-                               cancelCallback: {
-                Log.debug("cancel callback")
-                self.enableDoneButton()
-            },
-                               // discard changes
-                               otherCallback: { self.discardContextChanges() }
+            UI.viewActionSheet(
+                vc: self, message: "Are you sure you want to discard your changes?", cancelText: "Keep Editing", otherButtonText: "Discard Changes", cancelStyle: UIAlertAction.Style.cancel, otherStyle: UIAlertAction.Style.destructive,
+                // keep editing
+                cancelCallback: {
+                    Log.debug("cancel callback")
+                    self.enableDoneButton()
+                },
+                // discard changes
+                otherCallback: {
+                    self.shouldPop = true
+                    self.discardContextChanges()
+                }
             )
             return false
         } else {
@@ -366,7 +372,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         DispatchQueue.main.async {
             self.endEditing()
             self.destroy()
-            self.navigationController?.popViewController(animated: true)
+            if self.shouldPop { self.navigationController?.popViewController(animated: true) }
         }
     }
     
@@ -409,6 +415,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
             // TODO: delete data marked for delete
             // self.db.deleteDataMarkedForDelete(self.app.editReqDelete)
             self.nc.post(name: .requestDidChange, object: self, userInfo: ["request": data])
+            self.shouldPop = true
             self.close()
             
         }
@@ -441,6 +448,8 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         if let info = notif.userInfo as? [String: Any], let name = info[Const.requestMethodNameKey] as? String,
            let data = self.request, let ctx = data.managedObjectContext {
             if let method = self.localdb.createRequestMethodData(id: self.localdb.requestMethodDataId(), wsId: data.getWsId(), name: name, checkExists: true, ctx: ctx) {
+                let order = self.localdb.getRequestMethodDataCount(self.project, ctx: ctx)
+                method.order = self.methods.count.toNSDecimal()
                 data.method = method
                 self.methods.append(method)
                 method.project = self.project
