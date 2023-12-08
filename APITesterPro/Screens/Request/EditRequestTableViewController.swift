@@ -305,7 +305,9 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
                 if let meth = data.method {  // in case of edit, there will be method
                     self.methodLabel.text = meth.name
                 } else {  // for new request, use GET
-                    self.methodLabel.text = self.methods.first?.name
+                    let getMethod = self.methods.first
+                    self.methodLabel.text = getMethod?.name
+                    data.method = getMethod  // for new request, set GET as the default method
                 }
             }
         }
