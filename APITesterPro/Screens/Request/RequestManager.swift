@@ -208,7 +208,6 @@ final class RequestManager {
     
     func requestToURLRequest(_ req: ERequest) throws -> URLRequest? {
         Log.debug("[req-man] request-to-url-request")
-        guard let projId = request.project?.getId() else { return nil }
         guard let url = try self.getURL(req.url) else { return nil }
         guard var urlComp = URLComponents(string: url.absoluteString) else { return nil }
         let qp = self.localdb.getParamsRequestData(request.getId())

@@ -18,9 +18,9 @@ public class EHistory: NSManagedObject, Entity {
     
     static func initFromResponseData(_ respData: ResponseData) -> EHistory {
         let history = EHistory(context: Self.db.mainMOC)
-        let ts = Date().currentTimeNanos()
-        history.created = ts
-        history.modified = ts
+        let date = Date()
+        history.created = date
+        history.modified = date
         history.connection = respData.connectionInfo.connection
         history.connectionTime = respData.connectionInfo.connectionTime
         if let cookies = respData.cookiesData as NSObject? { history.cookies = cookies }
@@ -78,16 +78,28 @@ public class EHistory: NSManagedObject, Entity {
         return ""
     }
     
-    public func getCreated() -> Int64 {
-        return self.created
+    public func getCreated() -> Date {
+        return self.created!.toLocalDate()
     }
     
-    public func getModified() -> Int64 {
-        return self.modified
+    public func getCreatedUTC() -> Date {
+        return self.created!
     }
     
-    public func setModified(_ ts: Int64? = nil) {
-        self.modified = ts ?? Date().currentTimeNanos()
+    public func getModified() -> Date {
+        return self.modified!.toLocalDate()
+    }
+    
+    public func getModitiedUTC() -> Date {
+        return self.modified!
+    }
+    
+    public func setModified(_ date: Date) {
+        self.modified = date.toUTC()
+    }
+    
+    public func setModifiedUTC(_ date: Date) {
+        self.modified = date
     }
     
     public func getVersion() -> Int64 {
@@ -122,8 +134,8 @@ public class EHistory: NSManagedObject, Entity {
     
     public func updateCKRecord(_ record: CKRecord, request: CKRecord) {
         self.managedObjectContext?.performAndWait {
-            record["created"] = self.created as CKRecordValue
-            record["modified"] = self.modified as CKRecordValue
+            record["created"] = self.created! as CKRecordValue
+            record["modified"] = self.modified! as CKRecordValue
             record["connection"] = (self.connection ?? "") as CKRecordValue
             record["connectionTime"] = self.connectionTime as CKRecordValue
             if let id = self.id, let _cookies = self.cookies, let data = self.secureTrans.transformedValue(_cookies) as? Data {
@@ -191,8 +203,8 @@ public class EHistory: NSManagedObject, Entity {
     public func updateFromCKRecord(_ record: CKRecord, ctx: NSManagedObjectContext) {
         if let moc = self.managedObjectContext {
             moc.performAndWait {
-                if let x = record["created"] as? Int64 { self.created = x }
-                if let x = record["modified"] as? Int64 { self.modified = x }
+                if let x = record["created"] as? Date { self.created = x }
+                if let x = record["modified"] as? Date { self.modified = x }
                 if let x = record["connection"] as? String { self.connection = x }
                 if let x = record["connectionTime"] as? Double { self.connectionTime = x }
                 if let x = record["cookies"] as? CKAsset, let url = x.fileURL {

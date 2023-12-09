@@ -319,6 +319,37 @@ public extension Date {
         if isPast { return compare(.isLastYear) ? "last year" : String(format: "%.f years ago", Double(abs(since(Date(), in: .year)))) }
         return compare(.isNextYear) ? "next year" : String(format: "in %.f years", Double(abs(since(Date(), in: .year))))
     }
+    
+    /// Converts the date to the user's time zone
+    func toLocalDate() -> Date {
+        let dateStr = self.toLocalDateStr()
+        return self.toDate(dateStr)
+    }
+    
+    /// Converts the dete to user's time zone and returns it in String format
+    func toLocalDateStr() -> String {
+        let df = DateFormatter()
+        df.timeZone = .current
+        df.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        return df.string(from: self)
+    }
+    
+    /// Converts the date string to user's time zone
+    func toDate(_ str: String) -> Date {
+        let df = DateFormatter()
+        df.timeZone = .current
+        df.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        return df.date(from: str)!
+    }
+    
+    /// Converts a date in local time zone to UTC date
+    func toUTC() -> Date {
+        let df = DateFormatter()
+        df.timeZone = TimeZone(abbreviation: "UTC")
+        df.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        let dateStr = df.string(from: self)
+        return self.toDate(dateStr)
+    }
 }
 
 public extension String {
