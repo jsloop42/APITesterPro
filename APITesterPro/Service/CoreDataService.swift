@@ -654,14 +654,16 @@ class CoreDataService {
         return xs
     }
     
-    /// Get the order of the last project. If no projects are found the order will be -1 so that inc() will work properly throughout.
+    /// Get the order of the last project in the given workspace. If no projects are found the order will be -1 so that inc() will work properly throughout.
+    /// - Parameter wsId: The workspace Id
     /// - Parameter ctx: The managed object context
     /// - Returns: The order
-    func getOrderOfLastProject(ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSDecimalNumber {
+    func getOrderOfLastProject(wsId: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSDecimalNumber {
         var order: NSDecimalNumber = -1
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             let fr = NSFetchRequest<EProject>(entityName: "EProject")
+            fr.predicate = NSPredicate(format: "workspace.id = %@", wsId)
             fr.sortDescriptors = [NSSortDescriptor(key: SortOrder.order.rawValue, ascending: false)]
             fr.fetchLimit = 1
             do {
@@ -757,6 +759,27 @@ class CoreDataService {
             }
         }
         return x
+    }
+    
+    /// Get the order of the last request. If no requests are found the order will be -1 so that inc() will work properly throughout.
+    /// - Parameter projId: The project Id in which the request order needs to be checked
+    /// - Parameter ctx: The managed object context
+    /// - Returns: The order
+    func getOrderOfLastRequest(projId: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSDecimalNumber {
+        var order: NSDecimalNumber = -1
+        let moc = self.getMainMOC(ctx: ctx)
+        moc.performAndWait {
+            let fr = NSFetchRequest<ERequest>(entityName: "ERequest")
+            fr.predicate = NSPredicate(format: "project.id = %@", projId)
+            fr.sortDescriptors = [NSSortDescriptor(key: SortOrder.order.rawValue, ascending: false)]
+            fr.fetchLimit = 1
+            do {
+                order = try moc.fetch(fr).first?.order ?? -1
+            } catch let error {
+                Log.error("Error getting last request order: \(error)")
+            }
+        }
+        return order
     }
     
     // MARK: ERequestData

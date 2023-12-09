@@ -196,7 +196,9 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         if self.requestId == nil {  // add new request mode
             Log.debug("new request")
             self.requestId = self.localdb.requestId()
+            let order = self.localdb.getOrderOfLastRequest(projId: self.project.getId(), ctx: self.ctx).inc()
             self.request = self.localdb.createRequest(id: self.requestId, wsId: self.project.getWsId(), name: self.app.getNewRequestName(), ctx: self.ctx)
+            self.request.order = order
         }
         if self.request == nil {  // edit request mode, load the request using background context
             Log.debug("request not present loading..")
