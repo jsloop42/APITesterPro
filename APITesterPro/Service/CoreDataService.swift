@@ -1176,7 +1176,7 @@ class CoreDataService {
             let elem = seq.element
             let idx = seq.offset
             if let x = self.createRequestMethodData(id: self.requestMethodDataId(proj.getId(), methodName: elem), wsId: proj.getWsId(), name: elem, isCustom: false, ctx: ctx) {
-                x.created = proj.getCreated() - 6 + idx.toInt64()
+                x.created = proj.getCreated().adjust(.second, offset: idx)
                 x.modified = x.created
                 x.order = idx.toNSDecimal()
                 x.project = proj
@@ -1618,7 +1618,7 @@ class CoreDataService {
     /// - Returns: A workspace.
     func createWorkspace(id: String, name: String, desc: String, isSyncEnabled: Bool, isActive: Bool? = true, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC)  -> EWorkspace? {
         var x: EWorkspace?
-        let ts = Date().currentTimeNanos()
+        let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             if let isExist = checkExists, isExist, let ws = self.getWorkspace(id: id, ctx: ctx) { x = ws }
@@ -1628,9 +1628,9 @@ class CoreDataService {
             ws.desc = desc
             ws.isActive = isActive!
             ws.isSyncEnabled = isSyncEnabled
-            if !isSyncEnabled { ws.syncDisabled =  ts }
-            ws.created = x == nil ? ts : x!.created
-            ws.modified = ts
+            if !isSyncEnabled { ws.syncDisabled = date }
+            ws.created = x == nil ? date : x!.created
+            ws.modified = date
             ws.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = ws
         }
@@ -1652,10 +1652,10 @@ class CoreDataService {
     
     func setWorkspaceSyncEnabled(_ state: Bool, ws: EWorkspace, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
         let moc = self.getMainMOC(ctx: ctx)
-        let ts = Date().currentTimeNanos()
+        let date = Date()
         moc.performAndWait {
-            if !state { ws.syncDisabled = ts }
-            ws.modified = ts
+            if !state { ws.syncDisabled = date }
+            ws.modified = date
             ws.isSyncEnabled = state
             do {
                 if !AppState.isRequestEdit {  try moc.save() }
@@ -1678,7 +1678,7 @@ class CoreDataService {
     func createProject(id: String, wsId: String, name: String, desc: String, ws: EWorkspace? = nil, checkExists: Bool? = true,
                        ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EProject? {
         var x: EProject?
-        let ts = Date().currentTimeNanos()
+        let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             if let isExist = checkExists, isExist, let proj = self.getProject(id: id, ctx: ctx) { x = proj }
@@ -1687,8 +1687,8 @@ class CoreDataService {
             proj.wsId = wsId
             proj.name = name
             proj.desc = desc
-            proj.created = x == nil ? ts : x!.created
-            proj.modified = ts
+            proj.created = x == nil ? date : x!.created
+            proj.modified = date
             proj.version = x == nil ? CoreDataService.modelVersion : x!.version
             _ = self.genDefaultRequestMethods(proj, ctx: moc)
             ws?.addToProjects(proj)
@@ -1710,7 +1710,7 @@ class CoreDataService {
     func createRequest(id: String, wsId: String, name: String, project: EProject? = nil, checkExists: Bool? = true,
                        ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequest? {
         var x: ERequest?
-        let ts = Date().currentTimeNanos()
+        let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             if let isExists = checkExists, isExists, let req = self.getRequest(id: id, ctx: ctx) { x = req }
@@ -1718,8 +1718,8 @@ class CoreDataService {
             req.id = id
             req.wsId = wsId
             req.name = name
-            req.created = x == nil ? ts : x!.created
-            req.modified = ts
+            req.created = x == nil ? date : x!.created
+            req.modified = date
             req.version = x == nil ? CoreDataService.modelVersion : x!.version
             project?.addToRequests(req)
             x = req
@@ -1739,15 +1739,15 @@ class CoreDataService {
     func createRequestData(id: String, wsId: String, type: RequestDataType, fieldFormat: RequestBodyFormFieldFormatType, checkExists: Bool? = true,
                            ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequestData? {
         var x: ERequestData?
-        let ts = Date().currentTimeNanos()
+        let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             if let isExists = checkExists, isExists, let data = self.getRequestData(id: id, ctx: ctx) { x = data }
             let data = x != nil ? x! : ERequestData(context: moc)
             data.id = id
             data.wsId = wsId
-            data.created = x == nil ? ts : x!.created
-            data.modified = ts
+            data.created = x == nil ? date : x!.created
+            data.modified = date
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
             data.fieldFormat = fieldFormat.rawValue.toInt64()
             data.type = type.rawValue.toInt64()
@@ -1769,7 +1769,7 @@ class CoreDataService {
     func createRequestMethodData(id: String, wsId: String, name: String, isCustom: Bool? = true, checkExists: Bool? = true,
                                  ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequestMethodData? {
         var x: ERequestMethodData?
-        let ts = Date().currentTimeNanos()
+        let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             if let isExists = checkExists, isExists, let data = self.getRequestMethodData(id: id, ctx: ctx) { x = data }
@@ -1778,8 +1778,8 @@ class CoreDataService {
             data.wsId = wsId
             data.isCustom = isCustom ?? true
             data.name = name
-            data.created = x == nil ? ts : x!.created
-            data.modified = ts
+            data.created = x == nil ? date : x!.created
+            data.modified = date
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
@@ -1795,15 +1795,15 @@ class CoreDataService {
     /// - Returns: A request body data.
     func createRequestBodyData(id: String, wsId: String, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequestBodyData? {
         var x: ERequestBodyData?
-        let ts = Date().currentTimeNanos()
+        let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             if let isExists = checkExists, isExists, let data = self.getRequestBodyData(id: id, ctx: ctx) { x = data }
             let data = x != nil ? x! : ERequestBodyData(context: moc)
             data.id = id
             data.wsId = wsId
-            data.created = x == nil ? ts : x!.created
-            data.modified = ts
+            data.created = x == nil ? date : x!.created
+            data.modified = date
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
@@ -1821,7 +1821,7 @@ class CoreDataService {
     /// - Returns: An image entity.
     func createImage(imageId: String? = CoreDataService.shared.imageId(), data: Data, wsId: String, name: String, type: String, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EImage? {
         var x: EImage?
-        let ts = Date().currentTimeNanos()
+        let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             if let isExists = checkExists, isExists, let data = self.getImageData(id: imageId!, ctx: ctx) { x = data }
@@ -1831,8 +1831,8 @@ class CoreDataService {
             image.data = data
             image.name = name
             image.type = type
-            image.created = x == nil ? ts : x!.created
-            image.modified = ts
+            image.created = x == nil ? date : x!.created
+            image.modified = date
             image.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = image
         }
@@ -1846,7 +1846,7 @@ class CoreDataService {
     func createFile(fileId: String? = CoreDataService.shared.fileId(), data: Data, wsId: String, name: String, path: URL, type: RequestDataType, checkExists: Bool? = true,
                     ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EFile? {
         var x: EFile?
-        let ts = Date().currentTimeNanos()
+        let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             if let isExists = checkExists, isExists, let data = self.getFileData(id: fileId!, ctx: ctx) { x = data }
@@ -1854,8 +1854,8 @@ class CoreDataService {
             file.id = fileId!
             file.wsId = wsId
             file.data = data
-            file.created = x == nil ? ts : x!.created
-            file.modified = ts
+            file.created = x == nil ? date : x!.created
+            file.modified = date
             file.name = name
             file.path = path
             file.type = type.rawValue.toInt64()
@@ -1871,7 +1871,7 @@ class CoreDataService {
                        responseBodyBytes: Int64, url: String, method: String, isSecure: Bool, checkExists: Bool? = true,
                        ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EHistory? {
         var x: EHistory?
-        let ts = Date().currentTimeNanos()
+        let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             if let isExists = checkExists, isExists, let data = self.getHistory(id: id, ctx: ctx) { x = data }
@@ -1887,8 +1887,8 @@ class CoreDataService {
             data.url = url
             data.method = method
             data.isSecure = isSecure
-            data.created = x == nil ? ts : x!.created
-            data.modified = ts
+            data.created = x == nil ? date : x!.created
+            data.modified = date
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
@@ -1897,15 +1897,15 @@ class CoreDataService {
     
     func createHistory(id: String, wsId: String, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EHistory? {
         var x: EHistory?
-        let ts = Date().currentTimeNanos()
+        let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             if let isExists = checkExists, isExists, let data = self.getHistory(id: id, ctx: ctx) { x = data }
             let data = x != nil ? x! : EHistory(context: moc)
             data.id = id
             data.wsId = wsId
-            data.created = x == nil ? ts : x!.created
-            data.modified = ts
+            data.created = x == nil ? date : x!.created
+            data.modified = date
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
@@ -1914,7 +1914,7 @@ class CoreDataService {
     
     func createEnv(name: String, envId: String? = CoreDataService.shared.envId(), wsId: String, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EEnv? {
         var x: EEnv?
-        let ts = Date().currentTimeNanos()
+        let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             if let isExists = checkExists, isExists, let data = self.getEnv(id: envId!, ctx: ctx) { x = data }
@@ -1922,8 +1922,8 @@ class CoreDataService {
             data.id = envId
             data.wsId = wsId
             data.name = name
-            data.created = x == nil ? ts: x!.created
-            data.modified = ts
+            data.created = x == nil ? date: x!.created
+            data.modified = date
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
@@ -1932,7 +1932,7 @@ class CoreDataService {
 
     func createEnvVar(name: String, value: String, id: String? = CoreDataService.shared.envVarId(), checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EEnvVar? {
         var x: EEnvVar?
-        let ts = Date().currentTimeNanos()
+        let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             let envVarId = id == nil ? self.envVarId() : id!
@@ -1941,8 +1941,8 @@ class CoreDataService {
             data.id = envVarId
             data.name = name
             data.value = value as NSString
-            data.created = x == nil ? ts: x!.created
-            data.modified = ts
+            data.created = x == nil ? date: x!.created
+            data.modified = date
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }
@@ -1951,15 +1951,15 @@ class CoreDataService {
     
     func createEnvVar(id: String? = CoreDataService.shared.envVarId(), checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EEnvVar? {
         var x: EEnvVar?
-        let ts = Date().currentTimeNanos()
+        let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             let envVarId = id == nil ? self.envVarId() : id!
             if let isExists = checkExists, isExists, let data = self.getEnvVar(id: envVarId, ctx: ctx) { x = data }
             let data = x != nil ? x! : EEnvVar(context: moc)
             data.id = envVarId
-            data.created = x == nil ? ts: x!.created
-            data.modified = ts
+            data.created = x == nil ? date: x!.created
+            data.modified = date
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
             x = data
         }

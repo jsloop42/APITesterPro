@@ -34,7 +34,7 @@ struct ResponseData: CustomDebugStringConvertible, Equatable {
     }
     private var responseHeaderKeys: [String] = []
     var connectionInfo: ConnectionInfo = ConnectionInfo()
-    var created: Int64 = 0
+    var created: Date = Date()
     private var metricsMap: [String: String] = [:]
     private var metricsKeys: [String] = []
     private var detailsMap: [String: String] = [:]
@@ -89,7 +89,7 @@ struct ResponseData: CustomDebugStringConvertible, Equatable {
     }
     
     init(error: Error, elapsed: Int64, request: ERequest, metrics: URLSessionTaskMetrics?) {
-        self.created = Date().currentTimeNanos()
+        self.created = Date()
         self.error = error
         self.mode = .memory
         self.status = false
@@ -112,7 +112,7 @@ struct ResponseData: CustomDebugStringConvertible, Equatable {
     }
         
     init(history: EHistory) {
-        self.created = history.created
+        self.created = history.created!
         self.mode = .history
         self.history = history
         self.urlRequestString = history.urlRequest ?? ""
@@ -139,7 +139,7 @@ struct ResponseData: CustomDebugStringConvertible, Equatable {
     }
     
     init(response: HTTPURLResponse, request: ERequest, urlRequest: URLRequest, responseData: Data?, elapsed: Int64, metrics: URLSessionTaskMetrics? = nil) {
-        self.created = Date().currentTimeNanos()
+        self.created = Date()
         self.mode = .memory
         self.response = response
         self.request = request
@@ -355,7 +355,7 @@ struct ResponseData: CustomDebugStringConvertible, Equatable {
     
     mutating func updateDetailsMap() {
         let cinfo = self.connectionInfo
-        self.detailsMap["Date"] = Date(timeIntervalSince1970: TimeInterval((self.created > 0 ? self.created : Date().currentTimeNanos()) / 1000_000)).fmt_YYYY_MM_dd_HH_mm_ss
+        self.detailsMap["Date"] = self.created.toLocalDate().fmt_YYYY_MM_dd_HH_mm_ss
         var x = cinfo.localAddress
         if !x.isEmpty { self.detailsMap["Local Address"] = x }
         x = "\(cinfo.localPort)"

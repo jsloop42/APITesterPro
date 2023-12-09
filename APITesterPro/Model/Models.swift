@@ -70,10 +70,15 @@ public protocol Entity: NSManagedObject, Hashable {
     func getWsId() -> String
     func setWsId(_ id: String)
     func getName() -> String
-    func getCreated() -> Int64
-    func getModified() -> Int64
-    /// The modified fields get update on changing any property or relation.
-    func setModified(_ ts: Int64?)
+    /// Returns date converted to user's local time zone
+    func getCreated() -> Date
+    func getCreatedUTC() -> Date
+    /// Returns date converted to user's local time zone
+    func getModified() -> Date
+    func getModitiedUTC() -> Date
+    /// The modified fields get update on changing any property or relation. The date is in user's time zone.
+    func setModified(_ date: Date)
+    func setModifiedUTC(_ date: Date)
     func getVersion() -> Int64
     func getZoneID() -> CKRecordZone.ID
     func getRecordID() -> CKRecord.ID
@@ -85,10 +90,6 @@ public protocol Entity: NSManagedObject, Hashable {
 }
 
 extension Entity {
-    public func setModified(_ ts: Int64? = nil) {
-        return setModified(Date().currentTimeNanos())
-    }
-    
     public func getZoneID() -> CKRecordZone.ID {
         return EACloudKit.shared.zoneID(workspaceId: self.getWsId())
     }

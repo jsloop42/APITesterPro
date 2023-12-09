@@ -31,16 +31,28 @@ public class ERequestBodyData: NSManagedObject, Entity {
         return self.id ?? ""
     }
     
-    public func getCreated() -> Int64 {
-        return created
+    public func getCreated() -> Date {
+        return self.created!.toLocalDate()
     }
     
-    public func getModified() -> Int64 {
-        return self.modified
+    public func getCreatedUTC() -> Date {
+        return self.created!
     }
     
-    public func setModified(_ ts: Int64? = nil) {
-        self.modified = ts ?? Date().currentTimeNanos()
+    public func getModified() -> Date {
+        return self.modified!.toLocalDate()
+    }
+    
+    public func getModitiedUTC() -> Date {
+        return self.modified!
+    }
+    
+    public func setModified(_ date: Date) {
+        self.modified = date.toUTC()
+    }
+    
+    public func setModifiedUTC(_ date: Date) {
+        self.modified = date
     }
     
     public func getVersion() -> Int64 {
@@ -69,8 +81,8 @@ public class ERequestBodyData: NSManagedObject, Entity {
     public static func fromDictionary(_ dict: [String: Any]) -> ERequestBodyData? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
         guard let body = self.db.createRequestBodyData(id: id, wsId: wsId, ctx: self.db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Int64 { body.created = x }
-        if let x = dict["modified"] as? Int64 { body.modified = x }
+        if let x = dict["created"] as? Date { body.created = x }
+        if let x = dict["modified"] as? Date { body.modified = x }
         if let x = dict["json"] as? String { body.json = x }
         if let x = dict["raw"] as? String { body.raw = x }
         if let x = dict["selected"] as? Int64 { body.selected = x }
@@ -115,8 +127,8 @@ public class ERequestBodyData: NSManagedObject, Entity {
     
     func updateCKRecord(_ record: CKRecord, request: CKRecord) {
         self.managedObjectContext?.performAndWait {
-            record["created"] = self.created as CKRecordValue
-            record["modified"] = self.modified as CKRecordValue
+            record["created"] = self.created! as CKRecordValue
+            record["modified"] = self.modified! as CKRecordValue
             record["id"] = self.getId() as CKRecordValue
             record["wsId"] = self.getWsId() as CKRecordValue
             record["json"] = (self.json ?? "") as CKRecordValue
@@ -131,8 +143,8 @@ public class ERequestBodyData: NSManagedObject, Entity {
     
     func updateFromCKRecord(_ record: CKRecord, ctx: NSManagedObjectContext) {
         if let moc = self.managedObjectContext {
-            if let x = record["created"] as? Int64 { self.created = x }
-            if let x = record["modified"] as? Int64 { self.modified = x }
+            if let x = record["created"] as? Date { self.created = x }
+            if let x = record["modified"] as? Date { self.modified = x }
             if let x = record["id"] as? String { self.id = x }
             if let x = record["json"] as? String { self.json = x }
             if let x = record["raw"] as? String { self.raw = x }

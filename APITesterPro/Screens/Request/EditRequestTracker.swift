@@ -42,14 +42,14 @@ public class EditRequestTracker {
     private let fnIdReqFile =  "request-file-fn"
     private let fnIdReqImage = "request-image-fn"
     /// Edit started ts which will be used for all entities that changed
-    var modified: Int64
+    var modified: Date
     /// If a custom request method which was persisted is deleted this flag is set
     private var isRequestMethodDelete = false
     
     init(ctx: NSManagedObjectContext, request: ERequest) {
         self.ctx = ctx
         self.request = request
-        self.modified = Date().currentTimeNanos()
+        self.modified = Date()
         self.requestDict = self.localdb.requestToDictionary(self.request)
     }
     
@@ -162,7 +162,7 @@ public class EditRequestTracker {
     ///   - x: The request method.
     func didRequestMethodChangeImp(_ x: ERequestMethodData) -> Bool {
         guard let reqMethDict = self.requestDict["method"] as? [String: Any] else { return true }
-        if x.created != reqMethDict["created"] as? Int64 ||
+        if x.created != reqMethDict["created"] as? Date ||
             x.isCustom != reqMethDict["isCustom"] as? Bool ||
             x.name != reqMethDict["name"] as? String ||
             x.markForDelete != reqMethDict["markForDelete"] as? Bool {
@@ -367,7 +367,7 @@ public class EditRequestTracker {
         let obin = body["binary"] as? [String: Any]
         if (obin == nil && reqData != nil) || (obin != nil && reqData == nil) { reqData?.isSynced = false; self.updateModified(reqData); return true }
         guard let lbin = reqData, let rbin = obin else { reqData?.isSynced = false; self.updateModified(reqData); return true }
-        if lbin.created != rbin["created"] as? Int64 || lbin.markForDelete != rbin["markForDelete"] as? Bool { reqData?.isSynced = false; self.updateModified(reqData); return true }
+        if lbin.created != rbin["created"] as? Date || lbin.markForDelete != rbin["markForDelete"] as? Bool { reqData?.isSynced = false; self.updateModified(reqData); return true }
         if self.didRequestBodyFormAttachmentChangeImp(lbin, reqData: rbin) { reqData?.isSynced = false; self.updateModified(reqData); return true }
         return false
     }
@@ -438,7 +438,7 @@ public class EditRequestTracker {
     }
     
     func didRequestDataChangeImp(x: ERequestData, reqData: [String: Any], type: RequestDataType) -> Bool {
-        if x.created != reqData["created"] as? Int64 ||
+        if x.created != reqData["created"] as? Date ||
             x.fieldFormat != reqData["fieldFormat"] as? Int64 ||
             x.key != reqData["key"] as? String ||
             x.type != reqData["type"] as? Int64 ||
@@ -464,7 +464,7 @@ public class EditRequestTracker {
     }
     
     func didRequestFileChangeImp(x: EFile, file: [String: Any]) -> Bool {
-        if x.created != file["created"] as? Int64 ||
+        if x.created != file["created"] as? Date ||
             x.name != file["name"] as? String ||
             x.type != file["type"] as? Int64 ||
             x.markForDelete != file["markForDelete"] as? Bool {
@@ -488,7 +488,7 @@ public class EditRequestTracker {
     }
     
     func didRequestImageChangeImp(x: EImage, img: [String: Any]) -> Bool {
-        if x.created != img["created"] as? Int64 ||
+        if x.created != img["created"] as? Date ||
             x.name != img["name"] as? String ||
             x.isCameraMode != img["isCameraMode"] as? Bool ||
             x.type != img["type"] as? String ||

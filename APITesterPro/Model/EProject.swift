@@ -31,16 +31,28 @@ public class EProject: NSManagedObject, Entity {
         return self.name ?? ""
     }
     
-    public func getCreated() -> Int64 {
-        return self.created
+    public func getCreated() -> Date {
+        return self.created!.toLocalDate()
     }
     
-    public func getModified() -> Int64 {
-        return self.modified
+    public func getCreatedUTC() -> Date {
+        return self.created!
     }
     
-    public func setModified(_ ts: Int64? = nil) {
-        self.modified = ts ?? Date().currentTimeNanos()
+    public func getModified() -> Date {
+        return self.modified!.toLocalDate()
+    }
+    
+    public func getModitiedUTC() -> Date {
+        return self.modified!
+    }
+    
+    public func setModified(_ date: Date) {
+        self.modified = date.toUTC()
+    }
+    
+    public func setModifiedUTC(_ date: Date) {
+        self.modified = date
     }
     
     public func getVersion() -> Int64 {
@@ -78,8 +90,8 @@ public class EProject: NSManagedObject, Entity {
     public static func fromDictionary(_ dict: [String: Any]) -> EProject? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
         guard let proj = self.db.createProject(id: id, wsId: wsId, name: "", desc: "", ctx: self.db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Int64 { proj.created = x }
-        if let x = dict["modified"] as? Int64 { proj.modified = x }
+        if let x = dict["created"] as? Date { proj.created = x }
+        if let x = dict["modified"] as? Date { proj.modified = x }
         if let x = dict["desc"] as? String { proj.desc = x }
         if let x = dict["name"] as? String { proj.name = x }
         if let x = dict["version"] as? Int64 { proj.version = x }
@@ -118,8 +130,8 @@ public class EProject: NSManagedObject, Entity {
     
     func updateCKRecord(_ record: CKRecord, workspace: CKRecord) {
         self.managedObjectContext?.performAndWait {
-            record["created"] = self.created as CKRecordValue
-            record["modified"] = self.modified as CKRecordValue
+            record["created"] = self.created! as CKRecordValue
+            record["modified"] = self.modified! as CKRecordValue
             record["desc"] = (self.desc ?? "") as CKRecordValue
             record["id"] = self.getId() as CKRecordValue
             record["wsId"] = self.getWsId() as CKRecordValue
@@ -133,8 +145,8 @@ public class EProject: NSManagedObject, Entity {
     func updateFromCKRecord(_ record: CKRecord, ctx: NSManagedObjectContext) {
         if let moc = self.managedObjectContext {
             moc.performAndWait {
-                if let x = record["created"] as? Int64 { self.created = x }
-                if let x = record["modified"] as? Int64 { self.modified = x }
+                if let x = record["created"] as? Date { self.created = x }
+                if let x = record["modified"] as? Date { self.modified = x }
                 if let x = record["desc"] as? String { self.desc = x }
                 if let x = record["id"] as? String { self.id = x }
                 if let x = record["wsId"] as? String { self.wsId = x }

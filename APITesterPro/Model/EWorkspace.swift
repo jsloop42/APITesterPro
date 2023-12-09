@@ -36,16 +36,28 @@ public class EWorkspace: NSManagedObject, Entity {
         return self.name ?? ""
     }
     
-    public func getCreated() -> Int64 {
-        return self.created
+    public func getCreated() -> Date {
+        return self.created!.toLocalDate()
     }
     
-    public func getModified() -> Int64 {
-        return self.modified
+    public func getCreatedUTC() -> Date {
+        return self.created!
     }
     
-    public func setModified(_ ts: Int64? = nil) {
-        self.modified = ts ?? Date().currentTimeNanos()
+    public func getModified() -> Date {
+        return self.modified!.toLocalDate()
+    }
+    
+    public func getModitiedUTC() -> Date {
+        return self.modified!
+    }
+    
+    public func setModified(_ date: Date) {
+        self.modified = date.toUTC()
+    }
+    
+    public func setModifiedUTC(_ date: Date) {
+        self.modified = date
     }
     
     public func getVersion() -> Int64 {
@@ -75,8 +87,8 @@ public class EWorkspace: NSManagedObject, Entity {
         guard let id = dict["id"] as? String else { return nil }
         let ctx = self.db.mainMOC
         guard let ws = self.db.createWorkspace(id: id, name: "", desc: "", isSyncEnabled: false, ctx: ctx) else { return nil }
-        if let x = dict["created"] as? Int64 { ws.created = x }
-        if let x = dict["modified"] as? Int64 { ws.modified = x }
+        if let x = dict["created"] as? Date { ws.created = x }
+        if let x = dict["modified"] as? Date { ws.modified = x }
         if let x = dict["isActive"] as? Bool { ws.isActive = x }
         if let x = dict["isSyncEnabled"] as? Bool { ws.isSyncEnabled = x }
         if let x = dict["name"] as? String { ws.name = x }
@@ -117,8 +129,8 @@ public class EWorkspace: NSManagedObject, Entity {
     
     func updateCKRecord(_ record: CKRecord) {
         self.managedObjectContext?.performAndWait {
-            record["created"] = self.created as CKRecordValue
-            record["modified"] = self.modified as CKRecordValue
+            record["created"] = self.created! as CKRecordValue
+            record["modified"] = self.modified! as CKRecordValue
             record["desc"] = (self.desc ?? "") as CKRecordValue
             record["id"] = self.getId() as CKRecordValue
             record["wsId"] = self.getWsId() as CKRecordValue
@@ -132,8 +144,8 @@ public class EWorkspace: NSManagedObject, Entity {
     
     func updateFromCKRecord(_ record: CKRecord) {
         self.managedObjectContext?.performAndWait {
-            if let x = record["created"] as? Int64 { self.created = x }
-            if let x = record["modified"] as? Int64 { self.modified = x }
+            if let x = record["created"] as? Date { self.created = x }
+            if let x = record["modified"] as? Date { self.modified = x }
             if let x = record["id"] as? String { self.id = x }
             if let x = record["isActive"] as? Bool { self.isActive = x }
             if let x = record["isSyncEnabled"] as? Bool { self.isSyncEnabled = x }

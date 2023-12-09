@@ -31,16 +31,28 @@ public class EImage: NSManagedObject, Entity {
         return self.name ?? ""
     }
     
-    public func getCreated() -> Int64 {
-        return self.created
+    public func getCreated() -> Date {
+        return self.created!.toLocalDate()
     }
     
-    public func getModified() -> Int64 {
-        return self.modified
+    public func getCreatedUTC() -> Date {
+        return self.created!
     }
     
-    public func setModified(_ ts: Int64? = nil) {
-        self.modified = ts ?? Date().currentTimeNanos()
+    public func getModified() -> Date {
+        return self.modified!.toLocalDate()
+    }
+    
+    public func getModitiedUTC() -> Date {
+        return self.modified!
+    }
+    
+    public func setModified(_ date: Date) {
+        self.modified = date.toUTC()
+    }
+    
+    public func setModifiedUTC(_ date: Date) {
+        self.modified = date
     }
     
     public func getVersion() -> Int64 {
@@ -76,8 +88,8 @@ public class EImage: NSManagedObject, Entity {
         let name = dict["name"] as? String, let type = dict["type"] as? String else { return nil }
         guard let data1 = EAUtils.shared.stringToImageData(data) else { return nil }
         guard let image = self.db.createImage(imageId: id, data: data1, wsId: wsId, name: name, type: type, ctx: self.db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Int64 { image.created = x }
-        if let x = dict["modified"] as? Int64 { image.modified = x }
+        if let x = dict["created"] as? Date { image.created = x }
+        if let x = dict["modified"] as? Date { image.modified = x }
         if let x = dict["isCameraMode"] as? Bool { image.isCameraMode = x }
         if let x = dict["version"] as? Int64 { image.version = x }
         image.markForDelete = false
@@ -102,8 +114,8 @@ public class EImage: NSManagedObject, Entity {
     
     func updateCKRecord(_ record: CKRecord, requestData: CKRecord) {
         self.managedObjectContext?.performAndWait {
-            record["created"] = self.created as CKRecordValue
-            record["modified"] = self.modified as CKRecordValue
+            record["created"] = self.created! as CKRecordValue
+            record["modified"] = self.modified! as CKRecordValue
             if let name = self.name, let data = self.data {
                 let url = EAFileManager.getTemporaryURL(name)
                 do {
@@ -127,8 +139,8 @@ public class EImage: NSManagedObject, Entity {
     func updateFromCKRecord(_ record: CKRecord, ctx: NSManagedObjectContext) {
         if let moc = self.managedObjectContext {
             moc.performAndWait {
-                if let x = record["created"] as? Int64 { self.created = x }
-                if let x = record["modified"] as? Int64 { self.modified = x }
+                if let x = record["created"] as? Date { self.created = x }
+                if let x = record["modified"] as? Date { self.modified = x }
                 if let x = record["data"] as? CKAsset, let url = x.fileURL {
                     do { self.data = try Data(contentsOf: url) } catch let error { Log.error("Error getting data from file url: \(error)") }
                 }

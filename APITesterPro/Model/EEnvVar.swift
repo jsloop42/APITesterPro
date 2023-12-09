@@ -32,16 +32,28 @@ public class EEnvVar: NSManagedObject, Entity {
         return self.name ?? ""
     }
     
-    public func getCreated() -> Int64 {
-        return self.created
+    public func getCreated() -> Date {
+        return self.created!.toLocalDate()
     }
     
-    public func getModified() -> Int64 {
-        return self.modified
+    public func getCreatedUTC() -> Date {
+        return self.created!
     }
     
-    public func setModified(_ ts: Int64? = nil) {
-        self.modified = ts ?? Date().currentTimeNanos()
+    public func getModified() -> Date {
+        return self.modified!.toLocalDate()
+    }
+    
+    public func getModitiedUTC() -> Date {
+        return self.modified!
+    }
+    
+    public func setModified(_ date: Date) {
+        self.modified = date.toUTC()
+    }
+    
+    public func setModifiedUTC(_ date: Date) {
+        self.modified = date
     }
     
     public func getVersion() -> Int64 {
@@ -63,8 +75,8 @@ public class EEnvVar: NSManagedObject, Entity {
     public static func fromDictionary(_ dict: [String: Any]) -> EEnvVar? {
         guard let id = dict["id"] as? String else { return nil }
         guard let envVar = self.db.createEnvVar(name: "", value: "", id: id, checkExists: true, ctx: self.db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Int64 { envVar.created = x }
-        if let x = dict["modified"] as? Int64 { envVar.modified = x }
+        if let x = dict["created"] as? Date { envVar.created = x }
+        if let x = dict["modified"] as? Date { envVar.modified = x }
         if let x = dict["name"] as? String { envVar.name = x }
         if let x = dict["value"] as? String { envVar.value = x as NSObject }
         if let x = dict["version"] as? Int64 { envVar.version = x }
@@ -88,8 +100,8 @@ public class EEnvVar: NSManagedObject, Entity {
     
     func updateCKRecord(_ record: CKRecord, env: CKRecord) {
         self.managedObjectContext?.performAndWait {
-            record["created"] = self.created as CKRecordValue
-            record["modified"] = self.modified as CKRecordValue
+            record["created"] = self.created! as CKRecordValue
+            record["modified"] = self.modified! as CKRecordValue
             record["id"] = self.getId() as CKRecordValue
             record["name"] = (self.name ?? "") as CKRecordValue
             if let name = self.name, let str = self.value as? String, let data = self.secureTrans.transformedValue(str) as? Data {
@@ -110,8 +122,8 @@ public class EEnvVar: NSManagedObject, Entity {
     func updateFromCKRecord(_ record: CKRecord, ctx: NSManagedObjectContext) {
         if let moc = self.managedObjectContext {
             moc.performAndWait {
-                if let x = record["created"] as? Int64 { self.created = x }
-                if let x = record["modified"] as? Int64 { self.modified = x }
+                if let x = record["created"] as? Date { self.created = x }
+                if let x = record["modified"] as? Date { self.modified = x }
                 if let x = record["id"] as? String { self.id = x }
                 if let x = record["name"] as? String { self.name = x }
                 if let x = record["value"] as? CKAsset, let url = x.fileURL {

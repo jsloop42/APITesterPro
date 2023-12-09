@@ -169,7 +169,6 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         let row = indexPath.row
         let isToday = section == Section.today.rawValue
         let history = self.historyForRow(row, isToday: isToday)
-        Log.debug("created: \(history.created)")
         cell.methodLabel.text = history.method
         if let urlStr = history.url, let url = URL(string: urlStr) {
             let path = url.path
@@ -177,7 +176,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         cell.statusCodeLabel.text = history.statusCode > 0 ? "\(history.statusCode)" : ""
         cell.statusCodeLabel.textColor = self.app.getStatusCodeViewColor(history.statusCode.toInt())
-        cell.dateLabel.text = Date(nanos: history.created).fmt_dd_MMM_YYYY_HH_mm_ss
+        cell.dateLabel.text = history.created?.toLocalDate().fmt_dd_MMM_YYYY_HH_mm_ss
         let len = isToday ? self.todayFrc.numberOfRows(in: 0) : self.pastFrc.numberOfRows(in: 0)
         if row == len - 1 {
             cell.displayBottomBorder()

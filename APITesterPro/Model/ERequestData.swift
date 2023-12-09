@@ -31,16 +31,28 @@ public class ERequestData: NSManagedObject, Entity {
         return self.id ?? ""
     }
     
-    public func getCreated() -> Int64 {
-        return self.created
+    public func getCreated() -> Date {
+        return self.created!.toLocalDate()
     }
     
-    public func getModified() -> Int64 {
-        return self.modified
+    public func getCreatedUTC() -> Date {
+        return self.created!
     }
     
-    public func setModified(_ ts: Int64? = nil) {
-        self.modified = ts ?? Date().currentTimeNanos()
+    public func getModified() -> Date {
+        return self.modified!.toLocalDate()
+    }
+    
+    public func getModitiedUTC() -> Date {
+        return self.modified!
+    }
+    
+    public func setModified(_ date: Date) {
+        self.modified = date.toUTC()
+    }
+    
+    public func setModifiedUTC(_ date: Date) {
+        self.modified = date
     }
     
     public func getVersion() -> Int64 {
@@ -112,8 +124,8 @@ public class ERequestData: NSManagedObject, Entity {
             let format = RequestBodyFormFieldFormatType(rawValue: _format.toInt())
             else { return nil }
         guard let reqData = self.db.createRequestData(id: id, wsId: wsId, type: type, fieldFormat: format, ctx: db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Int64 { reqData.created = x }
-        if let x = dict["modified"] as? Int64 { reqData.modified = x }
+        if let x = dict["created"] as? Date { reqData.created = x }
+        if let x = dict["modified"] as? Date { reqData.modified = x }
         if let x = dict["key"] as? String { reqData.key = x }
         if let x = dict["value"] as? String { reqData.value = x }
         if let x = dict["version"] as? Int64 { reqData.version = x }
@@ -166,8 +178,8 @@ public class ERequestData: NSManagedObject, Entity {
     
     private func updateCKRecord(_ record: CKRecord) {
         self.managedObjectContext?.performAndWait {
-            record["created"] = self.created as CKRecordValue
-            record["modified"] = self.modified as CKRecordValue
+            record["created"] = self.created! as CKRecordValue
+            record["modified"] = self.modified! as CKRecordValue
             record["desc"] = (self.desc ?? "") as CKRecordValue
             record["fieldFormat"] = self.fieldFormat as CKRecordValue
             record["id"] = self.getId() as CKRecordValue
@@ -206,8 +218,8 @@ public class ERequestData: NSManagedObject, Entity {
     func updateFromCKRecord(_ record: CKRecord, ctx: NSManagedObjectContext) {
         if let moc = self.managedObjectContext {
             moc.performAndWait {
-                if let x = record["created"] as? Int64 { self.created = x }
-                if let x = record["modified"] as? Int64 { self.modified = x }
+                if let x = record["created"] as? Date { self.created = x }
+                if let x = record["modified"] as? Date { self.modified = x }
                 if let x = record["desc"] as? String { self.desc = x }
                 if let x = record["fieldFormat"] as? Int64 { self.fieldFormat = x }
                 if let x = record["id"] as? String { self.id = x }
