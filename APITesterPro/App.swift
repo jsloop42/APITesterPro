@@ -23,8 +23,8 @@ class App {
     var popupBottomContraints: NSLayoutConstraint?
     // private var dbSvc = PersistenceService.shared
     private let localdb = CoreDataService.shared
-    private let ck = EACloudKit.shared
-    private let utils = EAUtils.shared
+    private let ck = JVCloudKit.shared
+    private let utils = JVUtils.shared
     private let nc = NotificationCenter.default
     private var appLaunched = false
     
@@ -86,22 +86,22 @@ class App {
     
     func willEnterForground() {
         do {
-            self.nc.addObserver(self, selector: #selector(self.reachabilityDidChange(_:)), name: .reachabilityDidChange, object: EAReachability.shared)
-            try EAReachability.shared.startNotifier()
+            self.nc.addObserver(self, selector: #selector(self.reachabilityDidChange(_:)), name: .reachabilityDidChange, object: JVReachability.shared)
+            try JVReachability.shared.startNotifier()
         } catch let error {
             Log.error("Error starting reachability notifier: \(error)")
         }
     }
     
     func didEnterBackground() {
-        self.nc.removeObserver(self, name: .reachabilityDidChange, object: EAReachability.shared)
-        EAReachability.shared.stopNotifier()
+        self.nc.removeObserver(self, name: .reachabilityDidChange, object: JVReachability.shared)
+        JVReachability.shared.stopNotifier()
         self.saveState()
     }
     
     @objc func reachabilityDidChange(_ notif: Notification) {
         Log.debug("reachability did change: \(notif)")
-        if let reachability = notif.object as? EAReachability {
+        if let reachability = notif.object as? JVReachability {
             Log.debug("network status: \(reachability.connection.description)")
             if reachability.connection == .unavailable {
                 self.nc.post(name: .offline, object: self)
@@ -146,7 +146,7 @@ class App {
     }
     
     /// Draws a bottom border to the given text field
-    func updateTextFieldWithBottomBorder(_ tf: EATextField) {
+    func updateTextFieldWithBottomBorder(_ tf: JVTextField) {
         tf.borderStyle = .none
         if #available(iOS 13.0, *) {
             tf.tintColor = .secondaryLabel
@@ -180,9 +180,9 @@ class App {
         UI.viewToast(self.getErrorMessage(for: error), vc: vc)
     }
     
-    func getDataForURL(_ url: URL, completion: EADataResultCallback? = nil) {
-        //if EAFileManager.isFileExists(at: url) {  // since the app is sandboxed, this check will not work.
-            let fm = EAFileManager(url: url)
+    func getDataForURL(_ url: URL, completion: JVDataResultCallback? = nil) {
+        //if JVFileManager.isFileExists(at: url) {  // since the app is sandboxed, this check will not work.
+            let fm = JVFileManager(url: url)
             fm.readToEOF(completion: completion)
         //} else {
          //   if let cb = completion { cb(.failure(AppError.fileNotFound)) }

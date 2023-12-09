@@ -1,5 +1,5 @@
 //
-//  EARetryTimerTests.swift
+//  JVRetryTimerTests.swift
 //  APITesterProTests
 //
 //  Created by Jaseem V V on 17/04/20.
@@ -10,8 +10,8 @@ import Foundation
 import XCTest
 @testable import APITesterPro
 
-class EARepeatTimerTests: XCTestCase {
-    var timer: EARepeatTimer!
+class JVRepeatTimerTests: XCTestCase {
+    var timer: JVRepeatTimer!
     
     override func setUp() {
         super.setUp()
@@ -25,7 +25,7 @@ class EARepeatTimerTests: XCTestCase {
         let exp = expectation(description: "repeat timer execution")
         var c = 0
         var done = false
-        self.timer = EARepeatTimer(block: {
+        self.timer = JVRepeatTimer(block: {
             c += 1
         }, interval: 1.0, limit: 5)
         self.timer.done = {

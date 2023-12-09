@@ -63,7 +63,7 @@ class PopupViewController: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     var model: PopupModel?
-    private var rescheduler: EARescheduler!
+    private var rescheduler: JVRescheduler!
     
     enum CellReuseId: String {
         case popupCell
@@ -87,7 +87,7 @@ class PopupViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let model = self.model, model.shouldValidate { self.rescheduler = EARescheduler(interval: 0.3, type: .everyFn) }
+        if let model = self.model, model.shouldValidate { self.rescheduler = JVRescheduler(interval: 0.3, type: .everyFn) }
         self.model?.iCloudSyncFieldEnabled = false  // TODO: ck: remove this line
         self.initUI()
         self.initEvent()
@@ -151,7 +151,7 @@ class PopupViewController: UIViewController, UITableViewDataSource, UITableViewD
             self.model?.desc = text
         }
         if let model = self.model, model.shouldValidate, let validateFn = model.validateHandler {
-            self.rescheduler.schedule(fn: EAReschedulerFn(id: "validate-scheduler", block: {
+            self.rescheduler.schedule(fn: JVReschedulerFn(id: "validate-scheduler", block: {
                 return validateFn(model)
             }, callback: { res in
                 DispatchQueue.main.async { self.doneBtn.isEnabled = res }

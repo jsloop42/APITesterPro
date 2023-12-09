@@ -1,5 +1,5 @@
 //
-//  EACloudKit.swift
+//  JVCloudKit.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 22/03/20.
@@ -59,8 +59,8 @@ extension Notification.Name {
 }
 
 /// A class to work with CloudKit.
-class EACloudKit {
-    static let shared = EACloudKit()
+class JVCloudKit {
+    static let shared = JVCloudKit()
     let cloudKitContainerId = Const.cloudKitContainerID
     private var _privateDatabase: CKDatabase!
     private var _container: CKContainer!
@@ -82,27 +82,27 @@ class EACloudKit {
     private var maxRetryOpsCount = 3
     /// Retry timers
     struct RetryTimer {
-        static var fetchAllZones: EARepeatTimer!
-        static var fetchZone: EARepeatTimer!
-        static var fetchDatabaseChanges: EARepeatTimer!
-        static var fetchZoneChanges: EARepeatTimer!
-        static var fetchRecords: EARepeatTimer!
-        static var fetchSubscriptions: EARepeatTimer!
-        static var queryRecords: EARepeatTimer!
-        static var createZone: EARepeatTimer!
-        static var createZoneIfNotExist: EARepeatTimer!
-        static var createRecord: EARepeatTimer!
-        static var saveRecords: EARepeatTimer!
-        static var subscribe: EARepeatTimer!
-        static var subscribeToDBChanges: EARepeatTimer!
-        static var deleteZone: EARepeatTimer!
-        static var deleteRecords: EARepeatTimer!
-        static var deleteSubscriptions: EARepeatTimer!
-        static var deleteAllSubscriptions: EARepeatTimer!
+        static var fetchAllZones: JVRepeatTimer!
+        static var fetchZone: JVRepeatTimer!
+        static var fetchDatabaseChanges: JVRepeatTimer!
+        static var fetchZoneChanges: JVRepeatTimer!
+        static var fetchRecords: JVRepeatTimer!
+        static var fetchSubscriptions: JVRepeatTimer!
+        static var queryRecords: JVRepeatTimer!
+        static var createZone: JVRepeatTimer!
+        static var createZoneIfNotExist: JVRepeatTimer!
+        static var createRecord: JVRepeatTimer!
+        static var saveRecords: JVRepeatTimer!
+        static var subscribe: JVRepeatTimer!
+        static var subscribeToDBChanges: JVRepeatTimer!
+        static var deleteZone: JVRepeatTimer!
+        static var deleteRecords: JVRepeatTimer!
+        static var deleteSubscriptions: JVRepeatTimer!
+        static var deleteAllSubscriptions: JVRepeatTimer!
         static let limit = 45  // 3 mins
         static let interval = 4.0
         
-        static var allTimers: [EARepeatTimer?] = [
+        static var allTimers: [JVRepeatTimer?] = [
             RetryTimer.fetchAllZones, RetryTimer.fetchZone, RetryTimer.fetchDatabaseChanges, RetryTimer.fetchZoneChanges, RetryTimer.fetchRecords,
             RetryTimer.fetchSubscriptions, RetryTimer.queryRecords, RetryTimer.createZone, RetryTimer.createZoneIfNotExist, RetryTimer.createRecord, RetryTimer.saveRecords, RetryTimer.subscribe, RetryTimer.subscribeToDBChanges, RetryTimer.deleteZone, RetryTimer.deleteRecords, RetryTimer.deleteSubscriptions, RetryTimer.deleteAllSubscriptions
         ]
@@ -114,7 +114,7 @@ class EACloudKit {
     // There could be records fetched, but the zone change completion has not occured yet. If there is an in-activity or of the record count reaches a
     // limit, we call the handler with the partial result.
     private let zoneFetchChangesTimer: DispatchSourceTimer = DispatchSource.makeTimerSource()
-    private var zoneFetchChangesTimerState: EATimerState = .undefined
+    private var zoneFetchChangesTimerState: JVTimerState = .undefined
     private let zoneFetchChangesLock = NSLock()
     private var isOffline = false
     
@@ -360,9 +360,9 @@ class EACloudKit {
     
     @objc func zoneChangesDidSave(_ notif: Notification) {
         Log.debug("CK: zone changes did save notif.")
-        EACommon.backgroundQueue.async {
+        JVCommon.backgroundQueue.async {
             self.zoneTokenLock.lock()
-            if let info = notif.userInfo, let zoneID = info[EACloudKit.zoneIDKey] as? CKRecordZone.ID, var tokens = self.zoneChangeTokens[zoneID] {
+            if let info = notif.userInfo, let zoneID = info[JVCloudKit.zoneIDKey] as? CKRecordZone.ID, var tokens = self.zoneChangeTokens[zoneID] {
                 if tokens.isEmpty { self.zoneChangeTokens.removeValue(forKey: zoneID); return }
                 let token = tokens.remove(at: 0)
                 self.addServerChangeTokenToCache(token, zoneID: zoneID, persist: true)
@@ -470,7 +470,7 @@ class EACloudKit {
             if let err = error as? CKError {
                 if err.isNetworkFailure() {
                     if RetryTimer.fetchAllZones == nil && self.canRetry() {
-                        RetryTimer.fetchAllZones = EARepeatTimer(block: {
+                        RetryTimer.fetchAllZones = JVRepeatTimer(block: {
                             if !self.isOffline { self.fetchAllZones(completion: completion) }
                             RetryTimer.fetchAllZones.suspend()
                         }, interval: RetryTimer.interval, limit: RetryTimer.limit)
@@ -521,7 +521,7 @@ class EACloudKit {
             if let err = error as? CKError {
                 if err.isNetworkFailure() {
                     if RetryTimer.fetchZone == nil && self.canRetry() {
-                        RetryTimer.fetchZone = EARepeatTimer(block: {
+                        RetryTimer.fetchZone = JVRepeatTimer(block: {
                             if !self.isOffline { self.fetchZone(recordZoneIDs: recordZoneIDs, completion: completion) }
                             RetryTimer.fetchZone.suspend()
                         }, interval: RetryTimer.interval, limit: RetryTimer.limit)
@@ -566,7 +566,7 @@ class EACloudKit {
                 Log.error("CK: Error fetching database changes: \(err)")
                 if err.isNetworkFailure() {
                     if RetryTimer.fetchDatabaseChanges == nil && self.canRetry() {
-                        RetryTimer.fetchDatabaseChanges = EARepeatTimer(block: {
+                        RetryTimer.fetchDatabaseChanges = JVRepeatTimer(block: {
                             if !self.isOffline { self.fetchDatabaseChanges() }
                             RetryTimer.fetchDatabaseChanges.suspend()
                         }, interval: RetryTimer.interval, limit: RetryTimer.limit)
@@ -594,7 +594,7 @@ class EACloudKit {
             if let err = error as? CKError {
                 if err.isNetworkFailure() {
                     if RetryTimer.fetchZoneChanges == nil && self.canRetry() {
-                        RetryTimer.fetchZoneChanges = EARepeatTimer(block: {
+                        RetryTimer.fetchZoneChanges = JVRepeatTimer(block: {
                             if !self.isOffline { self.fetchZoneChanges(zoneID: zoneID, handler: handler, completion: completion) }
                             RetryTimer.fetchZoneChanges.suspend()
                         }, interval: RetryTimer.interval, limit: RetryTimer.limit)
@@ -678,7 +678,7 @@ class EACloudKit {
             if let err = error as? CKError {
                 if err.isNetworkFailure() {
                     if RetryTimer.fetchZoneChanges == nil && self.canRetry() {
-                        RetryTimer.fetchZoneChanges = EARepeatTimer(block: {
+                        RetryTimer.fetchZoneChanges = JVRepeatTimer(block: {
                             if !self.isOffline { self.fetchZoneChanges(zoneIDs: zoneIDs, completion: completion) }
                             RetryTimer.fetchZoneChanges.suspend()
                         }, interval: RetryTimer.interval, limit: RetryTimer.limit)
@@ -764,7 +764,7 @@ class EACloudKit {
             if let err = error as? CKError {
                 if err.isNetworkFailure() {
                     if RetryTimer.fetchRecords == nil && self.canRetry() {
-                        RetryTimer.fetchRecords = EARepeatTimer(block: {
+                        RetryTimer.fetchRecords = JVRepeatTimer(block: {
                             if !self.isOffline { self.fetchRecords(recordIDs: recordIDs, completion: completion) }
                             RetryTimer.fetchRecords.suspend()
                         }, interval: RetryTimer.interval, limit: RetryTimer.limit)
@@ -793,7 +793,7 @@ class EACloudKit {
             if let err = error as? CKError {
                 if err.isNetworkFailure() {
                     if RetryTimer.fetchSubscriptions == nil && self.canRetry() {
-                        RetryTimer.fetchSubscriptions = EARepeatTimer(block: {
+                        RetryTimer.fetchSubscriptions = JVRepeatTimer(block: {
                             if !self.isOffline { self.fetchSubscriptions(completion: completion) }
                             RetryTimer.fetchSubscriptions.suspend()
                         }, interval: RetryTimer.interval, limit: RetryTimer.limit)
@@ -834,7 +834,7 @@ class EACloudKit {
                 if err.isNetworkFailure() {
                     if self.canRetry() {
                         if RetryTimer.queryRecords == nil {
-                            RetryTimer.queryRecords = EARepeatTimer(block: {
+                            RetryTimer.queryRecords = JVRepeatTimer(block: {
                                 if !self.isOffline {
                                     self.queryRecords(zoneID: zoneID, recordType: recordType, predicate: predicate, cursor: cursor, limit: limit, completion: completion)
                                 }
@@ -872,7 +872,7 @@ class EACloudKit {
                 Log.error("CK: Error saving zone: \(err)")
                 if err.isNetworkFailure() {
                     if RetryTimer.createZone == nil && self.canRetry() {
-                        RetryTimer.createZone = EARepeatTimer(block: {
+                        RetryTimer.createZone = JVRepeatTimer(block: {
                             if !self.isOffline { self.createZone(recordZoneId: recordZoneId, completion: completion) }
                             RetryTimer.createZone.suspend()
                         }, interval: RetryTimer.interval, limit: RetryTimer.limit)
@@ -928,7 +928,7 @@ class EACloudKit {
                         }
                     } else if err.isNetworkFailure() {
                         if RetryTimer.createZoneIfNotExist == nil && self.canRetry() {
-                            RetryTimer.createZoneIfNotExist = EARepeatTimer(block: {
+                            RetryTimer.createZoneIfNotExist = JVRepeatTimer(block: {
                                 if !self.isOffline { self.createZoneIfNotExist(recordZoneId: recordZoneId, completion: completion) }
                                 RetryTimer.deleteAllSubscriptions.suspend()
                             }, interval: RetryTimer.interval, limit: RetryTimer.limit)
@@ -990,7 +990,7 @@ class EACloudKit {
 //                    }
                 } else if err.isNetworkFailure() {
                     if RetryTimer.saveRecords == nil && self.canRetry() {
-                        RetryTimer.saveRecords = EARepeatTimer(block: {
+                        RetryTimer.saveRecords = JVRepeatTimer(block: {
                             if !self.isOffline { self.saveRecords(records, count: count, isForce: isForce, completion: completion) }
                             RetryTimer.saveRecords.suspend()
                         }, interval: RetryTimer.interval, limit: RetryTimer.limit)
@@ -1055,7 +1055,7 @@ class EACloudKit {
             if let err = error as? CKError {
                 if err.isNetworkFailure() {
                     if RetryTimer.subscribe == nil && self.canRetry() {
-                        RetryTimer.subscribe = EARepeatTimer(block: {
+                        RetryTimer.subscribe = JVRepeatTimer(block: {
                             if !self.isOffline { self.subscribe(subId, recordType: recordType, zoneID: zoneID) }
                             RetryTimer.subscribe.suspend()
                         }, interval: RetryTimer.interval, limit: RetryTimer.limit)
@@ -1089,7 +1089,7 @@ class EACloudKit {
             if let err = error as? CKError {
                 if err.isNetworkFailure() {
                     if RetryTimer.subscribeToDBChanges == nil && self.canRetry() {
-                        RetryTimer.subscribeToDBChanges = EARepeatTimer(block: {
+                        RetryTimer.subscribeToDBChanges = JVRepeatTimer(block: {
                             if !self.isOffline { self.subscribeToDBChanges(subId: subId) }
                             RetryTimer.subscribeToDBChanges.suspend()
                         }, interval: RetryTimer.interval, limit: RetryTimer.limit)
@@ -1123,7 +1123,7 @@ class EACloudKit {
                 Log.error("Error deleting zone: \(err)")
                 if err.isNetworkFailure() {
                     if RetryTimer.deleteZone == nil && self.canRetry() {
-                        RetryTimer.deleteZone = EARepeatTimer(block: {
+                        RetryTimer.deleteZone = JVRepeatTimer(block: {
                             if !self.isOffline { self.deleteZone(recordZoneIds: recordZoneIds, completion: completion) }
                             RetryTimer.deleteZone.suspend()
                         }, interval: RetryTimer.interval, limit: RetryTimer.limit)
@@ -1159,7 +1159,7 @@ class EACloudKit {
                 Log.error("CK: Error deleteing records: \(err)")
                 if err.isNetworkFailure() {
                     if RetryTimer.deleteRecords == nil && self.canRetry() {
-                        RetryTimer.deleteRecords = EARepeatTimer(block: {
+                        RetryTimer.deleteRecords = JVRepeatTimer(block: {
                             if !self.isOffline { self.deleteRecords(recordIDs: recordIDs, completion: completion) }
                             RetryTimer.deleteRecords.suspend()
                         }, interval: RetryTimer.interval, limit: RetryTimer.limit)
@@ -1193,7 +1193,7 @@ class EACloudKit {
                 Log.error("CK: Error deleting subscriptions: \(err)")
                 if err.isNetworkFailure() {
                     if RetryTimer.deleteSubscriptions == nil && self.canRetry() {
-                        RetryTimer.deleteSubscriptions = EARepeatTimer(block: {
+                        RetryTimer.deleteSubscriptions = JVRepeatTimer(block: {
                             if !self.isOffline { self.deleteSubscriptions(subscriptionIDs: subscriptionIDs, completion: completion) }
                             RetryTimer.deleteSubscriptions.suspend()
                         }, interval: RetryTimer.interval, limit: RetryTimer.limit)
@@ -1228,14 +1228,14 @@ class EACloudKit {
                     case .success(let ids):
                         if RetryTimer.deleteAllSubscriptions != nil { RetryTimer.deleteAllSubscriptions.stop(); RetryTimer.deleteAllSubscriptions = nil }
                         let xs = UserDefaults.standard.array(forKey: self.subscriptionsKey) as? [CKSubscription.ID] ?? []
-                        let diff = EAUtils.shared.subtract(lxs: xs, rxs: ids)  // not deleted subscriptions
+                        let diff = JVUtils.shared.subtract(lxs: xs, rxs: ids)  // not deleted subscriptions
                         UserDefaults.standard.set(diff, forKey: self.subscriptionsKey)
                     case .failure(let error):
                         Log.error("CK: Error deleting subscriptions: \(error)")
                         if let err = error as? CKError {
                             if err.isNetworkFailure() {
                                 if RetryTimer.deleteAllSubscriptions == nil && self.canRetry() {
-                                    RetryTimer.deleteAllSubscriptions = EARepeatTimer(block: {
+                                    RetryTimer.deleteAllSubscriptions = JVRepeatTimer(block: {
                                         if !self.isOffline { self.deleteAllSubscriptions() }
                                         RetryTimer.deleteAllSubscriptions.suspend()
                                     }, interval: RetryTimer.interval, limit: RetryTimer.limit)

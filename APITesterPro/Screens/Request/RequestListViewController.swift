@@ -22,7 +22,7 @@ class RequestListViewController: APITesterProViewController {
     @IBOutlet weak var windowBtn: UIBarButtonItem!
     @IBOutlet weak var addBtn: UIBarButtonItem!
     @IBOutlet weak var helpTextLabel: UILabel!
-    private let utils = EAUtils.shared
+    private let utils = JVUtils.shared
     private let app: App = App.shared
     private lazy var localdb = { CoreDataService.shared }()
     private lazy var localdbSvc = { PersistenceService.shared }()

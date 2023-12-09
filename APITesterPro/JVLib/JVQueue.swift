@@ -1,5 +1,5 @@
 //
-//  EAQueue.swift
+//  JVQueue.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 26/03/20.
@@ -9,18 +9,18 @@
 import Foundation
 
 /// A queue implementation which dequeues based on time elapsed since enqueue.
-public final class EAQueue<T> {
+public final class JVQueue<T> {
     private var queue: [T] = []
     private var timer: DispatchSourceTimer?  // timer
     private var interval: TimeInterval = 4.0  // seconds
     public var completion: ([T]) -> Void
-    private let accessq = EACommon.userInteractiveQueue
+    private let accessq = JVCommon.userInteractiveQueue
     public var count: Int = 0
     
-    private var state: EATimerState = .suspended
+    private var state: JVTimerState = .suspended
     
     deinit {
-        Log.debug("EAQueue deinit")
+        Log.debug("JVQueue deinit")
         self.timer?.cancel()
         self.timer?.resume()
         self.timer?.setEventHandler(handler: {})
@@ -49,7 +49,7 @@ public final class EAQueue<T> {
         }
         self.accessq.sync {
             self.completion(self.queue)
-            Log.debug("EAQueue processed \(self.queue.count) items")
+            Log.debug("JVQueue processed \(self.queue.count) items")
             self.queue = []
         }
     }

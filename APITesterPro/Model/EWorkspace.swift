@@ -12,7 +12,7 @@ import CoreData
 
 public class EWorkspace: NSManagedObject, Entity {
     static let db: CoreDataService = CoreDataService.shared
-    static let ck: EACloudKit = EACloudKit.shared
+    static let ck: JVCloudKit = JVCloudKit.shared
     public var recordType: String { return "Workspace" }
     
     /// Checks if the default workspace does not have any change or is just after a reset (is new)
@@ -78,7 +78,7 @@ public class EWorkspace: NSManagedObject, Entity {
     
     static func getWorkspace(_ record: CKRecord, ctx: NSManagedObjectContext) -> EWorkspace? {
         if let ref = record["workspace"] as? CKRecord.Reference {
-            return self.db.getWorkspace(id: EACloudKit.shared.entityID(recordID: ref.recordID), ctx: ctx)
+            return self.db.getWorkspace(id: JVCloudKit.shared.entityID(recordID: ref.recordID), ctx: ctx)
         }
         return nil
     }

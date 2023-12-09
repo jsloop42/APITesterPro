@@ -12,7 +12,7 @@ import UIKit
 class RequestTableViewController: APITesterProTableViewController {
     private let app = App.shared
     private lazy var localdb = { CoreDataService.shared }()
-    private let utils = EAUtils.shared
+    private let utils = JVUtils.shared
     private let nc = NotificationCenter.default
     var request: ERequest?
     var headers: [ERequestData] = []
@@ -26,8 +26,8 @@ class RequestTableViewController: APITesterProTableViewController {
     @IBOutlet weak var envBtn: UIButton!
     @IBOutlet var headerKVTableViewManager: KVTableViewManager!
     @IBOutlet var paramsKVTableViewManager: KVTableViewManager!
-    @IBOutlet weak var headersTableView: EADynamicSizeTableView!
-    @IBOutlet weak var paramsTableView: EADynamicSizeTableView!
+    @IBOutlet weak var headersTableView: JVDynamicSizeTableView!
+    @IBOutlet weak var paramsTableView: JVDynamicSizeTableView!
     @IBOutlet weak var methodView: UIView!
     @IBOutlet weak var methodLabel: UILabel!
     @IBOutlet weak var urlLabel: UILabel!
@@ -660,7 +660,7 @@ class KVBodyFieldTableViewCell: UITableViewCell, UICollectionViewDelegate, UICol
     }
 }
 
-class KVBodyFieldTableView: EADynamicSizeTableView, UITableViewDelegate, UITableViewDataSource {
+class KVBodyFieldTableView: JVDynamicSizeTableView, UITableViewDelegate, UITableViewDataSource {
     var request: ERequest?
     var body: ERequestBodyData?
     var bodyType: RequestBodyType = .json
@@ -753,7 +753,7 @@ protocol KVTableViewManagerDelegate: AnyObject {
 }
 
 class KVTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSource {
-    weak var kvTableView: EADynamicSizeTableView?
+    weak var kvTableView: JVDynamicSizeTableView?
     var tableViewType: KVTableViewType = .header
     weak var request: ERequest?
     weak var delegate: KVTableViewManagerDelegate?

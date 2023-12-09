@@ -1,5 +1,5 @@
 //
-//  EACrypto.swift
+//  JVCrypto.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 16/05/20.
@@ -209,7 +209,7 @@ public struct Hash {
 // MARK: - TLS
 
 /// An enum reflecting the tsl_cuphersuite_t enum from Security module.
-public enum EATLSCipherSuite: Int {
+public enum JVTLSCipherSuite: Int {
     case rsa_with_3des_ede_cbc_sha = 10
     case rsa_with_aes128_cbc_sha = 47
     case rsa_with_aes256_cbc_sha = 53
@@ -274,7 +274,7 @@ public enum EATLSCipherSuite: Int {
 }
 
 /// An enum reflecting the tls_protocol_version_t enum from Security module.
-public enum EATLSProtocolVersion: Int {
+public enum JVTLSProtocolVersion: Int {
     case tls10 = 769
     case tls11 = 770
     case tls12 = 771

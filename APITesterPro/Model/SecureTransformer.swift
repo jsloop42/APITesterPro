@@ -9,7 +9,7 @@
 import Foundation
 
 public struct SecureTransformerInfo {
-    private static let utils = { EAUtils.shared }()
+    private static let utils = { JVUtils.shared }()
     // 32 bytes
     static var _key: [UInt8] = [102, 50, 54, 115, 49, 76, 67, 48, 100, 105, 89, 80, 71, 56, 118, 108, 99, 51, 83, 86, 110, 109, 88, 79, 103, 84, 77, 101, 55, 104, 52, 122]
     // 16 bytes

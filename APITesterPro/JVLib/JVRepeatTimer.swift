@@ -1,5 +1,5 @@
 //
-//  EARepeatTimer.swift
+//  JVRepeatTimer.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 17/04/20.
@@ -9,7 +9,7 @@
 import Foundation
 
 /// A class that repeats the given block which uses DispatchSourceTimer. Running timers constantly can drain battery.
-public final class EARepeatTimer {
+public final class JVRepeatTimer {
     let interval: TimeInterval
     private lazy var timer: DispatchSourceTimer = {
         let t = DispatchSource.makeTimerSource()
@@ -26,7 +26,7 @@ public final class EARepeatTimer {
     /// The repeat counter.
     private (set) var counter: Int = 0
         
-    private var state: EATimerState = .suspended
+    private var state: JVTimerState = .suspended
     
     deinit {
         self.stop()

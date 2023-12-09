@@ -91,11 +91,11 @@ public protocol Entity: NSManagedObject, Hashable {
 
 extension Entity {
     public func getZoneID() -> CKRecordZone.ID {
-        return EACloudKit.shared.zoneID(workspaceId: self.getWsId())
+        return JVCloudKit.shared.zoneID(workspaceId: self.getWsId())
     }
     
     public func getRecordID() -> CKRecord.ID {
-        return EACloudKit.shared.recordID(entityId: self.getId(), zoneID: self.getZoneID())
+        return JVCloudKit.shared.recordID(entityId: self.getId(), zoneID: self.getZoneID())
     }
     
     // Hashable conformance

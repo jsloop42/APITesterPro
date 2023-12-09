@@ -22,8 +22,8 @@ public class EditRequestTracker {
     var addedRequestMethods: Set<AnyHashable> = Set()
     // Entity diff check
     /// Entity diff rescheduler. If user is editing request elements, this will be called in succession and previous timer will be reset.
-    var diffRescheduler = EARescheduler(interval: 0.3, type: .everyFn)
-    /// Diff ids for `EAReschedulerFn`s
+    var diffRescheduler = JVRescheduler(interval: 0.3, type: .everyFn)
+    /// Diff ids for `JVReschedulerFn`s
     private let fnIdReq = "request-fn"
     private let fnIdReqMethodIndex = "request-method-index-fn"
     private let fnIdReqMethod = "request-method-fn"
@@ -102,7 +102,7 @@ public class EditRequestTracker {
         if self.isRequestMethodDelete || !self.addedRequestMethods.isEmpty { callback(true); return }
         // We need to check the whole object for change because, if a element changes, we set true, if another element did not change, we cannot
         // set false. So we would then have to keep track of which element changed the status and such.
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReq, block: { [weak self] () -> Bool in
+        self.diffRescheduler.schedule(fn: JVReschedulerFn(id: self.fnIdReq, block: { [weak self] () -> Bool in
             guard let self else { return true }
             var status = true
             x.managedObjectContext?.performAndWait { status = self.didRequestChangeImp(x) }
@@ -149,7 +149,7 @@ public class EditRequestTracker {
     ///   - x: The request method.
     ///   - callback: The callback function.
     func didRequestMethodChange(_ x: ERequestMethodData, callback: @escaping (Bool) -> Void) {
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReqMethod, block: { [weak self] () -> Bool in
+        self.diffRescheduler.schedule(fn: JVReschedulerFn(id: self.fnIdReqMethod, block: { [weak self] () -> Bool in
             guard let self else { return true }
             return self.didRequestMethodChangeImp(x)
         }, callback: { status in
@@ -178,7 +178,7 @@ public class EditRequestTracker {
     ///   - request: The initial request dictionary.
     ///   - callback: The callback function.
     func didRequestURLChange(_ url: String, callback: @escaping (Bool) -> Void) {
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReqURL, block: { [weak self] () -> Bool in
+        self.diffRescheduler.schedule(fn: JVReschedulerFn(id: self.fnIdReqURL, block: { [weak self] () -> Bool in
             guard let self else { return true }
             return self.didRequestURLChangeImp(url)
         }, callback: { status in
@@ -199,7 +199,7 @@ public class EditRequestTracker {
     ///   - name: The request name
     ///   - callback: The callback function.
     func didRequestNameChange(_ name: String, callback: @escaping (Bool) -> Void) {
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReqName, block: { [weak self] () -> Bool in
+        self.diffRescheduler.schedule(fn: JVReschedulerFn(id: self.fnIdReqName, block: { [weak self] () -> Bool in
             guard let self else { return true }
             return self.didRequestNameChangeImp(name)
         }, callback: { status in
@@ -220,7 +220,7 @@ public class EditRequestTracker {
     ///   - desc: The request description.
     ///   - callback: The callback function.
     func didRequestDescriptionChange(_ desc: String, callback: @escaping (Bool) -> Void) {
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReqDesc, block: { [weak self] () -> Bool in
+        self.diffRescheduler.schedule(fn: JVReschedulerFn(id: self.fnIdReqDesc, block: { [weak self] () -> Bool in
             guard let self else { return true }
             return self.didRequestDescriptionChangeImp(desc)
         }, callback: { status in
@@ -238,7 +238,7 @@ public class EditRequestTracker {
     
     /// Checks if any of the request's metadata (name, desc) changed.
     func didRequestMetaChange(name: String, desc: String, callback: @escaping (Bool) -> Void) {
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReqMeta, block: { [weak self] () -> Bool in
+        self.diffRescheduler.schedule(fn: JVReschedulerFn(id: self.fnIdReqMeta, block: { [weak self] () -> Bool in
             guard let self else { return true }
             return self.didRequestMetaChangeImp(name: name, desc: desc)
         }, callback: { status in
@@ -251,7 +251,7 @@ public class EditRequestTracker {
     }
     
     func didAnyRequestHeaderChange(_ xs: [ERequestData], callback: @escaping (Bool) -> Void) {
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReqHeader, block: { [weak self] () -> Bool in
+        self.diffRescheduler.schedule(fn: JVReschedulerFn(id: self.fnIdReqHeader, block: { [weak self] () -> Bool in
             guard let self else { return true }
             return self.didAnyRequestHeaderChangeImp(xs)
         }, callback: { status in
@@ -273,7 +273,7 @@ public class EditRequestTracker {
     }
 
     func didAnyRequestParamChange(_ xs: [ERequestData], callback: @escaping (Bool) -> Void) {
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReqParam, block: { [weak self] () -> Bool in
+        self.diffRescheduler.schedule(fn: JVReschedulerFn(id: self.fnIdReqParam, block: { [weak self] () -> Bool in
             guard let self else { return true }
             return self.didAnyRequestParamChangeImp(xs)
         }, callback: { status in
@@ -295,7 +295,7 @@ public class EditRequestTracker {
     }
     
     func didRequestBodyChange(_ x: ERequestBodyData?, callback: @escaping (Bool) -> Void) {
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReqBody, block: { [weak self] () -> Bool in
+        self.diffRescheduler.schedule(fn: JVReschedulerFn(id: self.fnIdReqBody, block: { [weak self] () -> Bool in
             guard let self else { return true }
             return self.didRequestBodyChangeImp(x)
         }, callback: { status in
@@ -323,7 +323,7 @@ public class EditRequestTracker {
     }
     
     func didAnyRequestBodyFormChange(_ x: ERequestBodyData, callback: @escaping (Bool) -> Void) {
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdAnyReqBodyForm, block: { [weak self] () -> Bool in
+        self.diffRescheduler.schedule(fn: JVReschedulerFn(id: self.fnIdAnyReqBodyForm, block: { [weak self] () -> Bool in
             guard let self else { return true }
             return self.didAnyRequestBodyFormChangeImp(x)
         }, callback: { status in
@@ -373,7 +373,7 @@ public class EditRequestTracker {
     }
     
     func didRequestBodyFormChange(_ body: ERequestBodyData, reqData: ERequestData, callback: @escaping (Bool) -> Void) {
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReqBodyForm, block: { () -> Bool in
+        self.diffRescheduler.schedule(fn: JVReschedulerFn(id: self.fnIdReqBodyForm, block: { () -> Bool in
             return self.didRequestBodyFormChangeImp(body, reqData: reqData)
         }, callback: { status in
             callback(status)
@@ -403,7 +403,7 @@ public class EditRequestTracker {
     }
     
     func didRequestBodyFormAttachmentChange(_ x: ERequestData, reqData: [String: Any], callback: @escaping (Bool) -> Void) {
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReqBodyFormAttachment, block: { () -> Bool in
+        self.diffRescheduler.schedule(fn: JVReschedulerFn(id: self.fnIdReqBodyFormAttachment, block: { () -> Bool in
             return self.didRequestBodyFormAttachmentChangeImp(x, reqData: reqData)
         }, callback: { status in
             callback(status)
@@ -430,7 +430,7 @@ public class EditRequestTracker {
     }
     
     func didRequestDataChange(x: ERequestData, reqData: [String: Any], type: RequestDataType, callback: @escaping (Bool) -> Void) {
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReqData, block: { () -> Bool in
+        self.diffRescheduler.schedule(fn: JVReschedulerFn(id: self.fnIdReqData, block: { () -> Bool in
             return self.didRequestDataChangeImp(x: x, reqData: reqData, type: type)
         }, callback: { status in
             callback(status)
@@ -455,7 +455,7 @@ public class EditRequestTracker {
     }
     
     func didRequestFileChange(x: EFile, file: [String: Any], callback: @escaping (Bool) -> Void) {
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReqFile, block: { [weak self] () -> Bool in
+        self.diffRescheduler.schedule(fn: JVReschedulerFn(id: self.fnIdReqFile, block: { [weak self] () -> Bool in
             guard let self else { return true }
             return self.didRequestFileChangeImp(x: x, file: file)
         }, callback: { status in
@@ -479,7 +479,7 @@ public class EditRequestTracker {
     }
     
     func didRequestImageChange(x: EImage, img: [String: Any], callback: @escaping (Bool) -> Void) {
-        self.diffRescheduler.schedule(fn: EAReschedulerFn(id: self.fnIdReqImage, block: { [weak self] () -> Bool in
+        self.diffRescheduler.schedule(fn: JVReschedulerFn(id: self.fnIdReqImage, block: { [weak self] () -> Bool in
             guard let self else { return true }
             return self.didRequestImageChangeImp(x: x, img: img)
         }, callback: { status in

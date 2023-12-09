@@ -25,7 +25,7 @@ class WorkspaceListViewController: APITesterProViewController {
     private var popupBottomContraints: NSLayoutConstraint?
     private var isKeyboardActive = false
     private var keyboardHeight: CGFloat = 0.0
-    private let utils = EAUtils.shared
+    private let utils = JVUtils.shared
     private let app: App = App.shared
     private let nc = NotificationCenter.default
     private lazy var localdb = { CoreDataService.shared }()

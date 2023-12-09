@@ -1,5 +1,5 @@
 //
-//  EACryptoTest.swift
+//  JVCryptoTest.swift
 //  APITesterProTests
 //
 //  Created by Jaseem V V on 25/11/23.
@@ -10,8 +10,8 @@ import XCTest
 import Foundation
 @testable import APITesterPro
 
-class EACryptoTests: XCTestCase {
-    private let utils = EAUtils.shared
+class JVCryptoTests: XCTestCase {
+    private let utils = JVUtils.shared
     
     /// This function can be used to generate a random AES key string
     func testGenRandomAES256Key() {

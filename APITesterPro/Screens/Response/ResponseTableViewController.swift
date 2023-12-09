@@ -61,7 +61,7 @@ final class ResponseWebViewCell: UITableViewCell, WKNavigationDelegate, WKUIDele
     
     func loadTemplate(_ template: Template) {
         if let templateURL = Bundle.main.url(forResource: template.rawValue, withExtension: "html") {
-            let fm = EAFileManager.init(url: templateURL)
+            let fm = JVFileManager.init(url: templateURL)
             fm.openFile(for: .read)
             fm.readToEOF { result in
                 switch result {
@@ -192,7 +192,7 @@ final class ResponseInfoCell: UITableViewCell {
     var mode: ResponseMode = .preview
     var data: ResponseData?
     private lazy var app = { App.shared }()
-    private lazy var utils = { EAUtils.shared }()
+    private lazy var utils = { JVUtils.shared }()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -266,9 +266,9 @@ enum ResponseKVTableType: String {
 // MARK: - ResponseKVCell
 
 final class ResponseKVCell: UITableViewCell, UITableViewDataSource, UITableViewDelegate {
-    @IBOutlet weak var tableView: EADynamicSizeTableView!
+    @IBOutlet weak var tableView: JVDynamicSizeTableView!
     @IBOutlet weak var tvView: UIView!
-    //var tableView: EADynamicSizeTableView!
+    //var tableView: JVDynamicSizeTableView!
     var isInit = false
     var data: ResponseData? {
         didSet { self.updateData() }
@@ -464,9 +464,9 @@ extension Notification.Name {
 
 class ResponseTableViewController: APITesterProTableViewController {
     private let nc = NotificationCenter.default
-    private lazy var ck = { EACloudKit.shared }()
+    private lazy var ck = { JVCloudKit.shared }()
     private lazy var localdb = { CoreDataService.shared }()
-    private lazy var utils = { EAUtils.shared }()
+    private lazy var utils = { JVUtils.shared }()
     private lazy var tabbarController: RequestTabBarController? = { self.tabBarController as? RequestTabBarController }()
     var mode: ResponseMode = .info
     @IBOutlet weak var infoCell: ResponseInfoCell!

@@ -19,7 +19,7 @@ class SettingsTableViewController: APITesterProTableViewController {
     // private lazy var db = { PersistenceService.shared }()
     private lazy var workspace = { self.app.getSelectedWorkspace() }()
     @IBOutlet weak var aboutTitle: UILabel!
-    private lazy var utils = { EAUtils.shared }()
+    private lazy var utils = { JVUtils.shared }()
     private var indicatorView: UIView?
     private var exportFileURL: URL?
     
@@ -149,10 +149,10 @@ class SettingsTableViewController: APITesterProTableViewController {
     }
     
     func writeJSONToTempFile(json: String, ws: EWorkspace) {
-        self.exportFileURL = EAFileManager.getTemporaryURL(ws.getName() + ".json")
+        self.exportFileURL = JVFileManager.getTemporaryURL(ws.getName() + ".json")
         if self.exportFileURL != nil {
-            EAFileManager.createFileIfNotExists(self.exportFileURL!)
-            let fm = EAFileManager(url: self.exportFileURL!)
+            JVFileManager.createFileIfNotExists(self.exportFileURL!)
+            let fm = JVFileManager(url: self.exportFileURL!)
             fm.openFile(for: FileIOMode.write)
             fm.write(json)
             fm.close()
@@ -173,8 +173,8 @@ class SettingsTableViewController: APITesterProTableViewController {
     
     func importWorkspace(_ url: URL) {
         DispatchQueue.main.async { self.showLoadingIndicator() }
-        let fm = EAFileManager(url: url)
-        if EAFileManager.startAccessingSecurityScopedResource(url: url) {
+        let fm = JVFileManager(url: url)
+        if JVFileManager.startAccessingSecurityScopedResource(url: url) {
             fm.openFile(for: FileIOMode.read)
             fm.readToEOF { result in
                 do {
@@ -193,10 +193,10 @@ class SettingsTableViewController: APITesterProTableViewController {
                         Log.error(err)
                     }
                     fm.close()
-                    EAFileManager.stopAccessingSecurityScopedResource(url: url)
+                    JVFileManager.stopAccessingSecurityScopedResource(url: url)
                 } catch let err {
                     fm.close()
-                    EAFileManager.stopAccessingSecurityScopedResource(url: url)
+                    JVFileManager.stopAccessingSecurityScopedResource(url: url)
                     DispatchQueue.main.async { self.hideLoadingIndicator() }
                     Log.error(err)
                 }
@@ -295,8 +295,8 @@ extension SettingsTableViewController: UIDocumentPickerDelegate {
             } else {
                 // iOS 12 and 13 we need to copy the contents of the temp file and delete it
                 if let url = self.exportFileURL {
-                    if EAFileManager.copy(source: url, destination: fileUrl) {
-                        _ = EAFileManager.delete(url: url)
+                    if JVFileManager.copy(source: url, destination: fileUrl) {
+                        _ = JVFileManager.delete(url: url)
                         self.exportFileURL = nil
                     } else {
                         UI.displayToast("Error writing to the selected file")
@@ -309,7 +309,7 @@ extension SettingsTableViewController: UIDocumentPickerDelegate {
     
     func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
         if let url = self.exportFileURL {
-            _ = EAFileManager.delete(url: url)  // remove stale export file
+            _ = JVFileManager.delete(url: url)  // remove stale export file
             self.exportFileURL = nil
             Log.debug("File deleted")
         }
