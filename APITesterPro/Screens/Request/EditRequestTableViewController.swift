@@ -141,7 +141,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         self.endEditing()
         if self.isDirty {
             UI.viewActionSheet(
-                vc: self, message: "Are you sure you want to discard your changes?", cancelText: "Keep Editing", otherButtonText: "Discard Changes", cancelStyle: UIAlertAction.Style.cancel, otherStyle: UIAlertAction.Style.destructive,
+                vc: self, message: "Are you sure you want to discard your changes?", cancelText: "Keep Editing", otherButtonText: "Discard Changes", cancelStyle: UIAlertAction.Style.default, otherStyle: UIAlertAction.Style.destructive,
                 // keep editing
                 cancelCallback: {
                     Log.debug("cancel callback")
