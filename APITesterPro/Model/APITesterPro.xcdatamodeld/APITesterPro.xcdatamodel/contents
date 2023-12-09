@@ -333,7 +333,7 @@
         <attribute name="name" attributeType="String" defaultValueString=""/>
         <attribute name="order" attributeType="Decimal" defaultValueString="0"/>
         <attribute name="saveResponse" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
-        <attribute name="syncDisabled" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="syncDisabled" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="envs" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EEnv" inverseName="workspace" inverseEntity="EEnv"/>
         <relationship name="projects" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EProject" inverseName="workspace" inverseEntity="EProject"/>

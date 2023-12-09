@@ -220,6 +220,7 @@ class WorkspaceListViewController: APITesterProViewController {
         let order = self.localdb.getOrderOfLastWorkspace().inc()
         if let ws = self.localdb.createWorkspace(id: self.localdb.workspaceId(), name: name, desc: desc, isSyncEnabled: isSyncEnabled) {
             ws.order = order
+            ws.syncDisabled = ws.created  // TODO: ck remove. The date at which the sync is disabled
             self.localdb.saveMainContext()
             // TODO: ck: save workspace to cloud
             // self.db.saveWorkspaceToCloud(ws)

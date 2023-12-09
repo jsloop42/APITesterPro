@@ -99,17 +99,17 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func getTodayPredicate() -> NSPredicate {
         guard let reqId = self.request?.getId() else { return NSPredicate(value: true) }
-        return NSPredicate(format: "request.id == %@ AND created >= %ld", reqId, Date().startOfDay.currentTimeNanos())
+        return NSPredicate(format: "request.id == %@ AND created >= %@", reqId, Date().startOfDay as CVarArg)
         //return NSPredicate(format: "requestId == %@", reqId)
     }
     
     func getPastPredicate() -> NSPredicate {
         guard let reqId = self.request?.getId() else { return NSPredicate(value: true) }
-        return NSPredicate(format: "request.id == %@ AND created < %ld", reqId, Date().startOfDay.currentTimeNanos())
+        return NSPredicate(format: "request.id == %@ AND created < %@", reqId, Date().startOfDay as CVarArg)
     }
     
     func getSortDescriptors() -> [NSSortDescriptor] {
-        return [NSSortDescriptor(key: "created", ascending: false)]
+        return [NSSortDescriptor(key: SortOrder.created.rawValue, ascending: false)]
     }
     
     func updateData() {

@@ -355,7 +355,7 @@ struct ResponseData: CustomDebugStringConvertible, Equatable {
     
     mutating func updateDetailsMap() {
         let cinfo = self.connectionInfo
-        self.detailsMap["Date"] = self.created.toLocalDate().fmt_YYYY_MM_dd_HH_mm_ss
+        self.detailsMap["Date"] = self.created.toLocale()
         var x = cinfo.localAddress
         if !x.isEmpty { self.detailsMap["Local Address"] = x }
         x = "\(cinfo.localPort)"

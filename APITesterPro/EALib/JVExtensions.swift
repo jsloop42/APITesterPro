@@ -350,6 +350,18 @@ public extension Date {
         let dateStr = df.string(from: self)
         return Self.toDate(dateStr)
     }
+    
+    /// Get date in user's current locale format.
+    /// For en\_IN: 10-Dec-2023 at 12:27:37 AM
+    /// For en\_US: Dec 10, 2023 at 12:27:14 AM
+    /// For en\_GB: 10 Dec 2023 at 00:28:36
+    func toLocale() -> String {
+        let df = DateFormatter()
+        df.locale = Locale.current
+        df.dateStyle = .medium
+        df.timeStyle = .medium
+        return df.string(from: self)
+    }
 }
 
 public extension String {
