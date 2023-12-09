@@ -7,7 +7,7 @@
         <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
-        <attribute name="order" attributeType="Decimal" defaultValueString="1"/>
+        <attribute name="order" attributeType="Decimal" defaultValueString="0"/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wsId" attributeType="String" defaultValueString=""/>
         <relationship name="variables" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EEnvVar" inverseName="env" inverseEntity="EEnvVar"/>
@@ -165,7 +165,7 @@
         <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
-        <attribute name="order" attributeType="Decimal" defaultValueString="1"/>
+        <attribute name="order" attributeType="Decimal" defaultValueString="0"/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wsId" attributeType="String" defaultValueString=""/>
         <relationship name="requestMethods" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ERequestMethodData" inverseName="project" inverseEntity="ERequestMethodData"/>
@@ -201,7 +201,7 @@
         <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
-        <attribute name="order" attributeType="Decimal" defaultValueString="1"/>
+        <attribute name="order" attributeType="Decimal" defaultValueString="0"/>
         <attribute name="url" attributeType="String" defaultValueString=""/>
         <attribute name="validateSSL" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -299,7 +299,7 @@
         <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
-        <attribute name="order" attributeType="Decimal" defaultValueString="1"/>
+        <attribute name="order" attributeType="Decimal" defaultValueString="0"/>
         <attribute name="shouldDelete" transient="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wsId" attributeType="String" defaultValueString=""/>
@@ -331,7 +331,7 @@
         <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
-        <attribute name="order" attributeType="Decimal" defaultValueString="1"/>
+        <attribute name="order" attributeType="Decimal" defaultValueString="0"/>
         <attribute name="saveResponse" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="syncDisabled" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>

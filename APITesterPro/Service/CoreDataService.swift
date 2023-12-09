@@ -535,6 +535,7 @@ class CoreDataService {
             } else {
                 // We create the default workspace with active flag as false. Only if any change by the user gets made, the flag is enabled. This helps in syncing from cloud.
                 let ws: EWorkspace! = self.createWorkspace(id: self.defaultWorkspaceId, name: self.defaultWorkspaceName, desc: self.defaultWorkspaceDesc, isSyncEnabled: true, isActive: false, ctx: moc)
+                ws.order = 0
                 self.saveMainContext()
                 if let isProj = project, isProj {
                     ws.projects = NSSet()
@@ -544,6 +545,25 @@ class CoreDataService {
             }
         }
         return x
+    }
+    
+    /// Get the order of the last workspace. The default value is 0 as there will be the default workspace all the time.
+    /// - Parameter ctx: The managed object context
+    /// - Returns: The order
+    func getOrderOfLastWorkspace(ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSDecimalNumber {
+        var order: NSDecimalNumber = 0
+        let moc = self.getMainMOC(ctx: ctx)
+        moc.performAndWait {
+            let fr = NSFetchRequest<EWorkspace>(entityName: "EWorkspace")
+            fr.sortDescriptors = [NSSortDescriptor(key: SortOrder.order.rawValue, ascending: false)]
+            fr.fetchLimit = 1
+            do {
+                order = try moc.fetch(fr).first?.order ?? 0
+            } catch let error {
+                Log.error("Error getting last workspace order: \(error)")
+            }
+        }
+        return order
     }
     
     // MARK: EProject
