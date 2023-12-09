@@ -526,7 +526,7 @@ class CoreDataService {
     }
     
     /// Default entities will have the id `default`.
-    func getDefaultWorkspace(with project: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EWorkspace {
+    func getDefaultWorkspace(ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EWorkspace {
         var x: EWorkspace!
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -537,10 +537,6 @@ class CoreDataService {
                 let ws: EWorkspace! = self.createWorkspace(id: self.defaultWorkspaceId, name: self.defaultWorkspaceName, desc: self.defaultWorkspaceDesc, isSyncEnabled: true, isActive: false, ctx: moc)
                 ws.order = 0
                 self.saveMainContext()
-                if let isProj = project, isProj {
-                    ws.projects = NSSet()
-                    ws.projects!.adding(self.getDefaultProject(ctx: ctx) as Any)
-                }
                 x = ws
             }
         }
@@ -641,16 +637,6 @@ class CoreDataService {
         return xs
     }
     
-    func getDefaultProject(ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EProject {
-        var x: EProject!
-        let ctx = self.getMainMOC(ctx: ctx)
-        ctx.performAndWait {
-            if let proj = self.getProject(id: "default", ctx: ctx) { x = proj; return }
-            x = self.createProject(id: "default", wsId: self.defaultWorkspaceId, name: "default", desc: "The default project", ctx: ctx)
-        }
-        return x
-    }
-    
     func getProjectsToSync(wsId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [EProject] {
         var xs: [EProject] = []
         let moc = self.getMainMOC(ctx: ctx)
@@ -666,6 +652,25 @@ class CoreDataService {
             }
         }
         return xs
+    }
+    
+    /// Get the order of the last project. If no projects are found the order will be -1 so that inc() will work properly throughout.
+    /// - Parameter ctx: The managed object context
+    /// - Returns: The order
+    func getOrderOfLastProject(ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSDecimalNumber {
+        var order: NSDecimalNumber = -1
+        let moc = self.getMainMOC(ctx: ctx)
+        moc.performAndWait {
+            let fr = NSFetchRequest<EProject>(entityName: "EProject")
+            fr.sortDescriptors = [NSSortDescriptor(key: SortOrder.order.rawValue, ascending: false)]
+            fr.fetchLimit = 1
+            do {
+                order = try moc.fetch(fr).first?.order ?? -1
+            } catch let error {
+                Log.error("Error getting last project order: \(error)")
+            }
+        }
+        return order
     }
     
     // MARK: ERequest

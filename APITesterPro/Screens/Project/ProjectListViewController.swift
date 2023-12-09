@@ -181,7 +181,9 @@ class ProjectListViewController: APITesterProViewController {
     
     func addProject(name: String, desc: String) {
         if let ctx = self.workspace.managedObjectContext {
+            let order = self.localdb.getOrderOfLastProject(ctx: ctx).inc()
             if let proj = self.localdb.createProject(id: self.localdb.projectId(), wsId: self.workspace.getId(), name: name, desc: desc, ws: self.workspace, ctx: ctx) {
+                proj.order = order
                 proj.workspace = self.workspace
                 self.localdb.saveMainContext()
                 // TODO: ck: save project to cloud
