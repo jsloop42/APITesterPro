@@ -323,22 +323,22 @@ public extension Date {
     /// Converts the date to the user's time zone
     func toLocalDate() -> Date {
         let dateStr = self.toLocalDateStr()
-        return self.toDate(dateStr)
+        return Self.toDate(dateStr)
     }
     
     /// Converts the dete to user's time zone and returns it in String format
     func toLocalDateStr() -> String {
         let df = DateFormatter()
         df.timeZone = .current
-        df.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         return df.string(from: self)
     }
     
     /// Converts the date string to user's time zone
-    func toDate(_ str: String) -> Date {
+    static func toDate(_ str: String) -> Date {
         let df = DateFormatter()
         df.timeZone = .current
-        df.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         return df.date(from: str)!
     }
     
@@ -346,9 +346,9 @@ public extension Date {
     func toUTC() -> Date {
         let df = DateFormatter()
         df.timeZone = TimeZone(abbreviation: "UTC")
-        df.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         let dateStr = df.string(from: self)
-        return self.toDate(dateStr)
+        return Self.toDate(dateStr)
     }
 }
 

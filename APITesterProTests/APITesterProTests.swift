@@ -231,7 +231,8 @@ class APITesterProTests: XCTestCase {
                 XCTAssertEqual(x!.id!, h2.id!)
                 XCTAssertNoThrow(self.localdb.saveBackgroundContext())
                 var id = h1.id!
-                self.localdb.deleteRequestData(dataId: id, req: req, type: .header, ctx: ctx)
+                let _header = self.localdb.getRequestData(id: id, ctx: ctx)
+                self.localdb.deleteEntity(_header, ctx: ctx)
                 XCTAssertEqual(req.headers!.count, 2)
                 x = self.localdb.getRequestData(id: id, ctx: ctx)
                 XCTAssertNil(x)
@@ -344,32 +345,33 @@ class APITesterProTests: XCTestCase {
                 let wsId = "test-ws"
                 let req = self.localdb.createRequest(id: self.localdb.requestId(), wsId: wsId, name: "test-request-change", project: nil, checkExists: false, ctx: ctx)
                 XCTAssertNotNil(req)
+                let tracker = EditRequestTracker(ctx: ctx, request: req!)
                 let reqhma = self.localdb.requestToDictionary(req!)
                 XCTAssertNotNil(reqhma)
                 XCTAssert(reqhma.count > 0)
                 let areq = req!
-                var status = self.app.didRequestChangeImp(areq, request: reqhma)
+                var status = tracker.didRequestChangeImp(areq)
                 XCTAssertFalse(status)
                 areq.url = "https://example.com"
-                status = self.app.didRequestURLChangeImp(areq.url ?? "", request: reqhma)
+                status = tracker.didRequestURLChangeImp(areq.url ?? "")
                 XCTAssertTrue(status)
-                status = self.app.didRequestChangeImp(areq, request: reqhma)
+                status = tracker.didRequestChangeImp(areq)
                 XCTAssertTrue(status)
                 let breq = areq
                 let reqhmb = self.localdb.requestToDictionary(breq)
                 XCTAssertNotNil(reqhmb)
                 XCTAssert(reqhmb.count > 0)
-                status = self.app.didRequestChangeImp(areq, request: reqhmb)
+                status = tracker.didRequestChangeImp(areq)
                 XCTAssertTrue(status)
                 let reqData = self.localdb.createRequestData(id: self.localdb.requestDataId(), wsId: wsId, type: .header, fieldFormat: .text, ctx: ctx)
                 XCTAssertNotNil(reqData)
                 breq.addToHeaders(reqData!)
                 XCTAssertNotNil(breq.headers)
                 let reqDataxs = breq.headers!.allObjects as! [APITesterPro.ERequestData]
-                XCTAssertTrue(self.app.didAnyRequestHeaderChangeImp(reqDataxs, request: reqhmb))
-                XCTAssertTrue(self.app.didRequestChangeImp(areq, request: reqhmb))
+                XCTAssertTrue(tracker.didAnyRequestHeaderChangeImp(reqDataxs))
+                XCTAssertTrue(tracker.didRequestChangeImp(areq))
                 breq.removeFromHeaders(reqData!)
-                XCTAssertTrue(self.app.didRequestChangeImp(areq, request: reqhmb))
+                XCTAssertTrue(tracker.didRequestChangeImp(areq))
                 exp.fulfill()
             }
         }
@@ -496,7 +498,7 @@ class APITesterProTests: XCTestCase {
                 XCTAssertEqual(wsCKRecord!.id(), wsId)
                 XCTAssertTrue(wsCKRecord!.isSyncEnabled())
                 // cleanup
-                self.localdb.deleteWorkspace(id: wsId)
+                self.localdb.deleteEntity(ws, ctx: ctx)
                 self.localdb.saveMainContext()
                 let ws1 = self.localdb.getWorkspace(id: wsId, ctx: ctx)
                 XCTAssertNil(ws1)
@@ -717,7 +719,7 @@ class APITesterProTests: XCTestCase {
                 XCTAssertNotNil(envVar1!.env)
                 self.localdb.saveMainContext()
                 // delete workspace
-                self.localdb.deleteWorkspace(id: wsId)
+                self.localdb.deleteEntity(ws)
                 self.localdb.saveMainContext()
                 // ensure rest of the referenced entities are also deleted
                 let _envVar1 = self.localdb.getEnvVar(id: envVarId1, ctx: ctx)
