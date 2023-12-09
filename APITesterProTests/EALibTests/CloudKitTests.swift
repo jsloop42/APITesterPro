@@ -82,10 +82,12 @@ class CloudKitTests: XCTestCase {
         let wsId = "workspace-id-1"
         let reqId = "test-request-2"
         let projId = "test-project-1"
+        let reqMethId = "test-request-method-data-1"
         let zoneID = self.ck.zoneID(with: wsId)
         let wsRecordID = self.ck.recordID(entityId: wsId, zoneID: zoneID)
         let projRecordID = self.ck.recordID(entityId: projId, zoneID: zoneID)
         let reqRecordID = self.ck.recordID(entityId: reqId, zoneID: zoneID)
+        let reqMethRecordID = self.ck.recordID(entityId: reqMethId, zoneID: zoneID)
         guard let ws = self.localdb.createWorkspace(id: wsId, name: wsId, desc: "test workspace", isSyncEnabled: true) else { XCTFail(); return }
         guard let proj = self.localdb.createProject(id: projId, wsId: wsId, name: projId, desc: "test project description") else { XCTFail(); return }
         proj.workspace = ws
@@ -97,7 +99,8 @@ class CloudKitTests: XCTestCase {
         let ckproj = self.ck.createRecord(recordID: projRecordID, recordType: "Project")
         proj.updateCKRecord(ckproj, workspace: ckws)
         let ckreq = self.ck.createRecord(recordID: reqRecordID, recordType: "Request")
-        req.updateCKRecord(ckreq, project: ckproj)
+        let ckMeth = self.ck.createRecord(recordID: reqMethRecordID, recordType: "RequestMethodData")
+        req.updateCKRecord(ckreq, project: ckproj, method: ckMeth)
         self.ck.saveRecords([ckws, ckproj, ckreq]) { result in
             if case .failure(_) = result { XCTFail("Error saving record") }
             self.ck.deleteRecords(recordIDs: [wsRecordID, projRecordID, reqRecordID]) { result in
