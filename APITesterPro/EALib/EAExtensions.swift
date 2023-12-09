@@ -648,6 +648,23 @@ extension Decimal {
     }
 }
 
+extension NSDecimalNumber {
+    /// Adds 1 to the number
+    func inc() -> NSDecimalNumber {
+        return self.adding(NSDecimalNumber(string: "1.0"))
+    }
+    
+    /// Returns an NSDecimalNumber that is Int
+    func int() -> NSDecimalNumber {
+        return NSDecimalNumber(value: self.intValue)
+    }
+    
+    /// Converts the NSDecimalNumber to Int
+    func toInt() -> Int {
+        return self.intValue
+    }
+}
+
 public extension Set {
     var isEmpty: Bool { self.first == nil }
     

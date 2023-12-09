@@ -449,7 +449,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         if let info = notif.userInfo as? [String: Any], let name = info[Const.requestMethodNameKey] as? String,
            let data = self.request, let ctx = data.managedObjectContext {
             if let method = self.localdb.createRequestMethodData(id: self.localdb.requestMethodDataId(), wsId: data.getWsId(), name: name, checkExists: true, ctx: ctx) {
-                method.order = self.methods.count.toNSDecimal()
+                method.order = self.methods.last!.order!.inc().int()
                 data.method = method
                 self.methods.append(method)
                 method.project = self.project
