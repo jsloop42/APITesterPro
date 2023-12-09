@@ -12,7 +12,7 @@ import CoreData
 
 public class ERequestData: NSManagedObject, Entity {
     static let db: CoreDataService = CoreDataService.shared
-    static let ck: EACloudKit = EACloudKit.shared
+    static let ck: JVCloudKit = JVCloudKit.shared
     public var recordType: String { return "RequestData" }
     
     public func getId() -> String {

@@ -1,15 +1,15 @@
 //
-//  EAOperationQueue.swift
+//  JVOperationQueue.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 14/04/20.
-//  Copyright © 2020 EJaseem V V. All rights reserved.
+//  Copyright © 2020 Jaseem V V. All rights reserved.
 //
 
 import Foundation
 
 /// An operation queue class to work with operation objects with dynamic limits.
-public final class EAOperationQueue {
+public final class JVOperationQueue {
     private var opqueue: OperationQueue!
     public var count: Int { opqueue.operationCount }
     
@@ -31,8 +31,8 @@ public final class EAOperationQueue {
     }
     
     public func maxConcurrentOpCount() -> Int {
-        let used: Double = (EASystem.memoryFootprint() ?? 0.0).toDouble()
-        let total: Double = EASystem.totalMemory().toDouble()
+        let used: Double = (JVSystem.memoryFootprint() ?? 0.0).toDouble()
+        let total: Double = JVSystem.totalMemory().toDouble()
         let avail: Double =  used / total
         if avail >= 0.5 { return 128 }
         if avail >= 0.25 { return 32 }

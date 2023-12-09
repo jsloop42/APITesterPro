@@ -1,5 +1,5 @@
 //
-//  EATextField.swift
+//  JVTextField.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 12/12/19.
@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class EATextField: UITextField {
+class JVTextField: UITextField {
     var isColor = true
     /// Indiciates whether the textfield can resign as first responder.
     var canResign = true

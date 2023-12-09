@@ -1,5 +1,5 @@
 //
-//  EADocumentPicker.swift
+//  JVDocumentPicker.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 24/02/20.
@@ -12,8 +12,8 @@ import MobileCoreServices
 import AVFoundation
 import Photos
 
-final class EADocumentPicker: NSObject {
-    static let shared = EADocumentPicker()
+final class JVDocumentPicker: NSObject {
+    static let shared = JVDocumentPicker()
     let docTypes = ["com.apple.iwork.pages.pages", "com.apple.iwork.numbers.numbers",
                     "com.apple.iwork.keynote.key", "public.image", "com.apple.application", "public.item",
                     "public.content", "public.audiovisual-content", "public.movie",

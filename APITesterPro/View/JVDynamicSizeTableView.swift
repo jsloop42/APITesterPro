@@ -1,5 +1,5 @@
 //
-//  EADynamicSizeTableView.swift
+//  JVDynamicSizeTableView.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 09/05/20.
@@ -10,13 +10,13 @@ import Foundation
 import UIKit
 
 public extension Notification.Name {
-    static var dynamicSizeTableViewHeightDidChange = Notification.Name("ea-dynamic-size-table-view-height-did-change")
+    static var dynamicSizeTableViewHeightDidChange = Notification.Name("jv-dynamic-size-table-view-height-did-change")
 }
 
 /// A table view that resizes itself to the content size. Useful when we use a table view within another table view and wants to display the inner table view to
 /// its full height, making the outer one cell increase in height and making the view scrollable.
 /// In the cell height delegate return `UITableView.automaticDimension` and on bootstrap, set the `estimatedRowHeight` to `44`.
-public class EADynamicSizeTableView: UITableView {
+public class JVDynamicSizeTableView: UITableView {
     public override var intrinsicContentSize: CGSize { self.contentSize }
     /// Returns height of the whole table view.
     public var height: CGFloat { self.heightForAllSections() }
@@ -31,7 +31,7 @@ public class EADynamicSizeTableView: UITableView {
     public var drawBorders = false {
         didSet { self._drawBorders() }
     }
-    private let bottomBorderId = "ea-bottom-border"
+    private let bottomBorderId = "jv-bottom-border"
     private var heightInfo: [Int: HeightInfo] = [:]  // [Section: [Row: Height]]
     private var reloadCount = 0
     

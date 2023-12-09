@@ -1,5 +1,5 @@
 //
-//  EATextView.swift
+//  JVTextView.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 08/02/20.
@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 @IBDesignable
-open class EATextView: UITextView {
+open class JVTextView: UITextView {
     public let placeholderLabel: UILabel = UILabel()
     private var placeholderLabelConstraints = [NSLayoutConstraint]()
     private let nc = NotificationCenter.default
@@ -30,7 +30,7 @@ open class EATextView: UITextView {
     }
     
     @IBInspectable
-    open var placeholderColor: UIColor = EATextView.defaultiOSPlaceholderColor {
+    open var placeholderColor: UIColor = JVTextView.defaultiOSPlaceholderColor {
         didSet {
             self.placeholderLabel.textColor = self.placeholderColor
         }

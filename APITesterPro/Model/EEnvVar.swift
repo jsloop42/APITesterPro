@@ -12,7 +12,7 @@ import CloudKit
 
 public class EEnvVar: NSManagedObject, Entity {
     static let db: CoreDataService = CoreDataService.shared
-    static let ck: EACloudKit = EACloudKit.shared
+    static let ck: JVCloudKit = JVCloudKit.shared
     public var recordType: String { return "EnvVar" }
     private let secureTrans = SecureTransformerString()
     
@@ -105,7 +105,7 @@ public class EEnvVar: NSManagedObject, Entity {
             record["id"] = self.getId() as CKRecordValue
             record["name"] = (self.name ?? "") as CKRecordValue
             if let name = self.name, let str = self.value as? String, let data = self.secureTrans.transformedValue(str) as? Data {
-                let url = EAFileManager.getTemporaryURL(name)
+                let url = JVFileManager.getTemporaryURL(name)
                 do {
                     try data.write(to: url)
                     record["value"] = CKAsset(fileURL: url)

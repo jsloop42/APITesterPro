@@ -12,7 +12,7 @@ import CoreData
 
 public class EImage: NSManagedObject, Entity {
     static let db: CoreDataService = CoreDataService.shared
-    static let ck: EACloudKit = EACloudKit.shared
+    static let ck: JVCloudKit = JVCloudKit.shared
     public var recordType: String { return "Image" }
     
     public func getId() -> String {
@@ -86,7 +86,7 @@ public class EImage: NSManagedObject, Entity {
     public static func fromDictionary(_ dict: [String: Any]) -> EImage? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String, let data = dict["data"] as? String,
         let name = dict["name"] as? String, let type = dict["type"] as? String else { return nil }
-        guard let data1 = EAUtils.shared.stringToImageData(data) else { return nil }
+        guard let data1 = JVUtils.shared.stringToImageData(data) else { return nil }
         guard let image = self.db.createImage(imageId: id, data: data1, wsId: wsId, name: name, type: type, ctx: self.db.mainMOC) else { return nil }
         if let x = dict["created"] as? Date { image.created = x }
         if let x = dict["modified"] as? Date { image.modified = x }
@@ -117,7 +117,7 @@ public class EImage: NSManagedObject, Entity {
             record["created"] = self.created! as CKRecordValue
             record["modified"] = self.modified! as CKRecordValue
             if let name = self.name, let data = self.data {
-                let url = EAFileManager.getTemporaryURL(name)
+                let url = JVFileManager.getTemporaryURL(name)
                 do {
                     try data.write(to: url)
                     record["data"] = CKAsset(fileURL: url)
@@ -164,7 +164,7 @@ public class EImage: NSManagedObject, Entity {
         dict["wsId"] = self.wsId
         dict["name"] = self.name
         dict["type"] = self.type
-        dict["data"] = EAUtils.shared.imageDataToString(self.data)
+        dict["data"] = JVUtils.shared.imageDataToString(self.data)
         dict["version"] = self.version
         return dict
     }

@@ -1,5 +1,5 @@
 //
-//  EAUtils.swift
+//  JVUtils.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 03/12/19.
@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 import CommonCrypto
 
-public final class EAUtils {
-    static let shared: EAUtils = EAUtils()
+public final class JVUtils {
+    static let shared: JVUtils = JVUtils()
     private let userDefaults = UserDefaults.standard
     
     // MARK: - UserDefaults

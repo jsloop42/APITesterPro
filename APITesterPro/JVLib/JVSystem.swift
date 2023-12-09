@@ -1,5 +1,5 @@
 //
-//  EASystem.swift
+//  JVSystem.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 14/04/20.
@@ -9,7 +9,7 @@
 import Foundation
 
 /// A class that provides system information.
-public final class EASystem: NSObject {
+public final class JVSystem: NSObject {
     static func taskVMInfo() -> task_vm_info_data_t? {
         // The `TASK_VM_INFO_COUNT` and `TASK_VM_INFO_REV1_COUNT` macros are too complex for the Swift C importer, so we have to define them ourselves.
         let TASK_VM_INFO_COUNT = mach_msg_type_number_t(MemoryLayout<task_vm_info_data_t>.size / MemoryLayout<integer_t>.size)

@@ -20,7 +20,7 @@
     {
       "skippedTests" : [
         "CloudKitTests",
-        "EAQueueTests"
+        "JVQueueTests"
       ],
       "target" : {
         "containerPath" : "container:APITesterPro.xcodeproj",

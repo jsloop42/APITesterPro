@@ -35,9 +35,9 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     // @IBOutlet weak var doneBtn: UIButton!
     @IBOutlet weak var methodView: UIView!
     @IBOutlet weak var methodLabel: UILabel!
-    @IBOutlet weak var urlTextField: EATextField!
-    @IBOutlet weak var nameTextField: EATextField!
-    @IBOutlet weak var descTextView: EATextView!
+    @IBOutlet weak var urlTextField: JVTextField!
+    @IBOutlet weak var nameTextField: JVTextField!
+    @IBOutlet weak var descTextView: JVTextView!
     @IBOutlet var headerKVTableViewManager: KVEditTableViewManager!
     @IBOutlet var paramsKVTableViewManager: KVEditTableViewManager!
     @IBOutlet var bodyKVTableViewManager: KVEditTableViewManager!
@@ -62,8 +62,8 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     let app = App.shared
     var isEndEditing = false
     var isOptionFromNotif = false
-    private let docPicker = EADocumentPicker.shared
-    private let utils = EAUtils.shared
+    private let docPicker = JVDocumentPicker.shared
+    private let utils = JVUtils.shared
     private lazy var localdb = { CoreDataService.shared }()
     private lazy var localdbSvc = { PersistenceService.shared }()
     /// The projectId to which the request belongs
@@ -811,8 +811,8 @@ class KVEditHeaderCell: UITableViewCell {
 // MARK: - Key-Value content cell
 
 class KVEditContentCell: UITableViewCell, KVEditContentCellType, UITextFieldDelegate {
-    @IBOutlet weak var keyTextField: EATextField!
-    @IBOutlet weak var valueTextField: EATextField!
+    @IBOutlet weak var keyTextField: JVTextField!
+    @IBOutlet weak var valueTextField: JVTextField!
     @IBOutlet weak var deleteBtn: UIButton!
     @IBOutlet weak var deleteView: UIView!
     @IBOutlet weak var containerView: UIView!
@@ -902,13 +902,13 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
     @IBOutlet weak var deleteView: UIView!
     @IBOutlet weak var typeNameBtn: UIButton!
     @IBOutlet weak var rawTextViewContainer: UIView!
-    @IBOutlet weak var rawTextView: EATextView!
+    @IBOutlet weak var rawTextView: JVTextView!
     @IBOutlet var bodyLabelViewWidth: NSLayoutConstraint!
     @IBOutlet weak var typeLabel: UILabel!
     @IBOutlet weak var bodyFieldTableView: KVEditBodyFieldTableView!
     // binary fields
     @IBOutlet weak var binaryTextFieldView: UIView!
-    @IBOutlet weak var binaryTextField: EATextField!
+    @IBOutlet weak var binaryTextField: JVTextField!
     @IBOutlet var bodyLabelContainerBottom: NSLayoutConstraint!
     @IBOutlet var typeNameBtnTop: NSLayoutConstraint!
     @IBOutlet weak var imageFileView: UIImageView!  // binary image attachment
@@ -1234,8 +1234,8 @@ protocol KVEditBodyFieldTableViewCellDelegate: AnyObject {
 }
 
 class KVEditBodyFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    @IBOutlet weak var keyTextField: EATextField!
-    @IBOutlet weak var valueTextField: EATextField!
+    @IBOutlet weak var keyTextField: JVTextField!
+    @IBOutlet weak var valueTextField: JVTextField!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var fieldTypeView: UIView!
     @IBOutlet weak var fieldTypeBtn: UIButton!
@@ -1252,7 +1252,7 @@ class KVEditBodyFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIColl
     var selectedFieldFormat: RequestBodyFormFieldFormatType = .text
     private let app = App.shared
     private let localdb = CoreDataService.shared
-    private let utils = EAUtils.shared
+    private let utils = JVUtils.shared
     var reqDataId = ""  // Will be empty if there are no fields added
 
     override func awakeFromNib() {
@@ -1442,7 +1442,7 @@ class KVEditBodyFieldTableView: UITableView, UITableViewDelegate, UITableViewDat
     private let app = App.shared
     private lazy var localdb = { CoreDataService.shared }()
     private lazy var localdbSvc = { PersistenceService.shared }()
-    private let utils = EAUtils.shared
+    private let utils = JVUtils.shared
     weak var editTVDelegate: KVEditTableViewDelegate?
     
     deinit {
@@ -1801,7 +1801,7 @@ class KVEditTableViewManager: NSObject, UITableViewDelegate, UITableViewDataSour
     var tableViewType: KVTableViewType = .header
     private lazy var localdb = { CoreDataService.shared }()
     private lazy var localdbSvc = { PersistenceService.shared }()
-    private let utils = EAUtils.shared
+    private let utils = JVUtils.shared
     private let app = App.shared
     private let nc = NotificationCenter.default
     

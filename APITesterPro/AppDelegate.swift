@@ -13,7 +13,7 @@ import UserNotifications
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     var window: UIWindow?
     private let app = App.shared
-    private lazy var ck = { EACloudKit.shared }()
+    private lazy var ck = { JVCloudKit.shared }()
     // private lazy var db = { PersistenceService.shared }()
     private let nc = NotificationCenter.default
 

@@ -1,5 +1,5 @@
 //
-//  EAQueueTests.swift
+//  JVQueueTests.swift
 //  APITesterProTests
 //
 //  Created by Jaseem V V on 26/03/20.
@@ -11,10 +11,10 @@ import Foundation
 @testable import APITesterPro
 
 // This test needs to be run individually. Enabling from test plan is causing failure.
-class EAQueueTests: XCTestCase {
+class JVQueueTests: XCTestCase {
     private var timer: Timer?
-    private let ck = EACloudKit.shared
-    private let opq = EAOperationQueue()
+    private let ck = JVCloudKit.shared
+    private let opq = JVOperationQueue()
     
     override func setUp() {
         super.setUp()
@@ -28,7 +28,7 @@ class EAQueueTests: XCTestCase {
         var count = 0
         var flag = 0
         let exp = expectation(description: "enqueue dequeue")
-        let q = EAQueue<Int>(interval: 1.0) { xs in
+        let q = JVQueue<Int>(interval: 1.0) { xs in
             flag += 1
             if flag == 2 { exp.fulfill() }
         }
@@ -43,7 +43,7 @@ class EAQueueTests: XCTestCase {
     
     func testOpQueue() {
         let exp = expectation(description: "test operation queue")
-        let op = EACloudOperation {op in
+        let op = JVCloudOperation {op in
             op?.finish()
             exp.fulfill()
         }

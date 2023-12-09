@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		9E04F4F22B12138C007A0773 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A52AF5A36A0029E83E /* MessageUI.framework */; };
-		9E04F4F52B122577007A0773 /* EACloudOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F32B122577007A0773 /* EACloudOperation.swift */; };
-		9E04F4F62B122577007A0773 /* EACloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F42B122577007A0773 /* EACloudKit.swift */; };
+		9E04F4F52B122577007A0773 /* JVCloudOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F32B122577007A0773 /* JVCloudOperation.swift */; };
+		9E04F4F62B122577007A0773 /* JVCloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F42B122577007A0773 /* JVCloudKit.swift */; };
 		9E04F4F82B122585007A0773 /* CloudKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F72B122585007A0773 /* CloudKitTests.swift */; };
-		9E04F4FA2B122CF0007A0773 /* EACryptoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F92B122CF0007A0773 /* EACryptoTest.swift */; };
+		9E04F4FA2B122CF0007A0773 /* JVCryptoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F92B122CF0007A0773 /* JVCryptoTest.swift */; };
 		9E04F4FD2B138F38007A0773 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4FC2B138F38007A0773 /* PersistenceService.swift */; };
 		9E4875E72AF56DD000D624DA /* APITesterPro.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9E4875E52AF56DD000D624DA /* APITesterPro.xcdatamodeld */; };
 		9E4875E82AF5856A00D624DA /* AppDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0812AF44CBF004095CF /* AppDelegateMock.swift */; };
@@ -28,20 +28,20 @@
 		9E81D0A32AF44F4F004095CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0952AF44F4E004095CF /* AppDelegate.swift */; };
 		9E81D0A42AF44F4F004095CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E81D0962AF44F4E004095CF /* Assets.xcassets */; };
 		9E81D0A52AF44F4F004095CF /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0972AF44F4E004095CF /* AppState.swift */; };
-		9E81D0C52AF451E9004095CF /* EACommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0B52AF451E9004095CF /* EACommon.swift */; };
-		9E81D0C62AF451E9004095CF /* EANetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0B62AF451E9004095CF /* EANetwork.swift */; };
-		9E81D0C72AF451E9004095CF /* EAHTTPCookie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0B72AF451E9004095CF /* EAHTTPCookie.swift */; };
-		9E81D0C92AF451E9004095CF /* EAQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0B92AF451E9004095CF /* EAQueue.swift */; };
-		9E81D0CA2AF451E9004095CF /* EADocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0BA2AF451E9004095CF /* EADocumentPicker.swift */; };
-		9E81D0CB2AF451E9004095CF /* EAOperationQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0BB2AF451E9004095CF /* EAOperationQueue.swift */; };
-		9E81D0CC2AF451EA004095CF /* EACrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0BC2AF451E9004095CF /* EACrypto.swift */; };
-		9E81D0CD2AF451EA004095CF /* EARepeatTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0BD2AF451E9004095CF /* EARepeatTimer.swift */; };
-		9E81D0CE2AF451EA004095CF /* EALFUCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0BE2AF451E9004095CF /* EALFUCache.swift */; };
-		9E81D0CF2AF451EA004095CF /* EAUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0BF2AF451E9004095CF /* EAUtils.swift */; };
+		9E81D0C52AF451E9004095CF /* JVCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0B52AF451E9004095CF /* JVCommon.swift */; };
+		9E81D0C62AF451E9004095CF /* JVNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0B62AF451E9004095CF /* JVNetwork.swift */; };
+		9E81D0C72AF451E9004095CF /* JVHTTPCookie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0B72AF451E9004095CF /* JVHTTPCookie.swift */; };
+		9E81D0C92AF451E9004095CF /* JVQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0B92AF451E9004095CF /* JVQueue.swift */; };
+		9E81D0CA2AF451E9004095CF /* JVDocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0BA2AF451E9004095CF /* JVDocumentPicker.swift */; };
+		9E81D0CB2AF451E9004095CF /* JVOperationQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0BB2AF451E9004095CF /* JVOperationQueue.swift */; };
+		9E81D0CC2AF451EA004095CF /* JVCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0BC2AF451E9004095CF /* JVCrypto.swift */; };
+		9E81D0CD2AF451EA004095CF /* JVRepeatTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0BD2AF451E9004095CF /* JVRepeatTimer.swift */; };
+		9E81D0CE2AF451EA004095CF /* JVLFUCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0BE2AF451E9004095CF /* JVLFUCache.swift */; };
+		9E81D0CF2AF451EA004095CF /* JVUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0BF2AF451E9004095CF /* JVUtils.swift */; };
 		9E81D0D02AF451EA004095CF /* JVExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0C02AF451E9004095CF /* JVExtensions.swift */; };
-		9E81D0D22AF451EA004095CF /* EAFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0C22AF451E9004095CF /* EAFileManager.swift */; };
-		9E81D0D32AF451EA004095CF /* EARescheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0C32AF451E9004095CF /* EARescheduler.swift */; };
-		9E81D0D42AF451EA004095CF /* EASystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0C42AF451E9004095CF /* EASystem.swift */; };
+		9E81D0D22AF451EA004095CF /* JVFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0C22AF451E9004095CF /* JVFileManager.swift */; };
+		9E81D0D32AF451EA004095CF /* JVRescheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0C32AF451E9004095CF /* JVRescheduler.swift */; };
+		9E81D0D42AF451EA004095CF /* JVSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0C42AF451E9004095CF /* JVSystem.swift */; };
 		9E81D0D82AF451F7004095CF /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0D62AF451F7004095CF /* CoreDataService.swift */; };
 		9E81D0E92AF451FF004095CF /* EWorkspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0D92AF451FE004095CF /* EWorkspace.swift */; };
 		9E81D0EA2AF451FF004095CF /* EHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0DA2AF451FF004095CF /* EHistory.swift */; };
@@ -81,11 +81,11 @@
 		9E81D1222AF45235004095CF /* WorkspaceListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1212AF45235004095CF /* WorkspaceListViewController.swift */; };
 		9E81D12A2AF45241004095CF /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1232AF45241004095CF /* PopupViewController.swift */; };
 		9E81D12B2AF45241004095CF /* OptionsPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1242AF45241004095CF /* OptionsPickerViewController.swift */; };
-		9E81D12C2AF45241004095CF /* EADynamicSizeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1252AF45241004095CF /* EADynamicSizeTableView.swift */; };
+		9E81D12C2AF45241004095CF /* JVDynamicSizeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1252AF45241004095CF /* JVDynamicSizeTableView.swift */; };
 		9E81D12D2AF45241004095CF /* KVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1262AF45241004095CF /* KVCell.swift */; };
-		9E81D12E2AF45241004095CF /* EATextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1272AF45241004095CF /* EATextField.swift */; };
+		9E81D12E2AF45241004095CF /* JVTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1272AF45241004095CF /* JVTextField.swift */; };
 		9E81D12F2AF45241004095CF /* UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1282AF45241004095CF /* UI.swift */; };
-		9E81D1302AF45242004095CF /* EATextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1292AF45241004095CF /* EATextView.swift */; };
+		9E81D1302AF45242004095CF /* JVTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1292AF45241004095CF /* JVTextView.swift */; };
 		9E81D1352AF45253004095CF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9E81D1312AF45253004095CF /* LaunchScreen.storyboard */; };
 		9E81D1362AF45253004095CF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9E81D1332AF45253004095CF /* Main.storyboard */; };
 		9E81D13D2AF4529D004095CF /* preview.html in Resources */ = {isa = PBXBuildFile; fileRef = 9E81D1372AF4529D004095CF /* preview.html */; };
@@ -94,11 +94,11 @@
 		9E81D1402AF4529D004095CF /* prism-light.css in Resources */ = {isa = PBXBuildFile; fileRef = 9E81D13A2AF4529D004095CF /* prism-light.css */; };
 		9E81D1412AF4529D004095CF /* rawview.html in Resources */ = {isa = PBXBuildFile; fileRef = 9E81D13B2AF4529D004095CF /* rawview.html */; };
 		9E81D1422AF4529D004095CF /* prism-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 9E81D13C2AF4529D004095CF /* prism-dark.css */; };
-		9E81D14A2AF452DE004095CF /* EALFUCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1442AF452DE004095CF /* EALFUCacheTests.swift */; };
-		9E81D14C2AF452DE004095CF /* EAReschedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1462AF452DE004095CF /* EAReschedulerTests.swift */; };
-		9E81D14D2AF452DE004095CF /* EARepeatTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1472AF452DE004095CF /* EARepeatTimerTests.swift */; };
-		9E81D14E2AF452DE004095CF /* EAUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1482AF452DE004095CF /* EAUtilsTests.swift */; };
-		9E81D14F2AF452DE004095CF /* EAQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1492AF452DE004095CF /* EAQueueTests.swift */; };
+		9E81D14A2AF452DE004095CF /* JVLFUCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1442AF452DE004095CF /* JVLFUCacheTests.swift */; };
+		9E81D14C2AF452DE004095CF /* JVReschedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1462AF452DE004095CF /* JVReschedulerTests.swift */; };
+		9E81D14D2AF452DE004095CF /* JVRepeatTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1472AF452DE004095CF /* JVRepeatTimerTests.swift */; };
+		9E81D14E2AF452DE004095CF /* JVUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1482AF452DE004095CF /* JVUtilsTests.swift */; };
+		9E81D14F2AF452DE004095CF /* JVQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1492AF452DE004095CF /* JVQueueTests.swift */; };
 		9ED969A42AF5A35F0029E83E /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A32AF5A35F0029E83E /* WebKit.framework */; };
 		9ED969A82AF5A38B0029E83E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A72AF5A38B0029E83E /* CloudKit.framework */; };
 		9EDDE3B72B1BC0A20074141A /* EditRequestTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDE3B62B1BC0A20074141A /* EditRequestTracker.swift */; };
@@ -124,10 +124,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9E04F4F32B122577007A0773 /* EACloudOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EACloudOperation.swift; sourceTree = "<group>"; };
-		9E04F4F42B122577007A0773 /* EACloudKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EACloudKit.swift; sourceTree = "<group>"; };
+		9E04F4F32B122577007A0773 /* JVCloudOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVCloudOperation.swift; sourceTree = "<group>"; };
+		9E04F4F42B122577007A0773 /* JVCloudKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVCloudKit.swift; sourceTree = "<group>"; };
 		9E04F4F72B122585007A0773 /* CloudKitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitTests.swift; sourceTree = "<group>"; };
-		9E04F4F92B122CF0007A0773 /* EACryptoTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EACryptoTest.swift; sourceTree = "<group>"; };
+		9E04F4F92B122CF0007A0773 /* JVCryptoTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JVCryptoTest.swift; sourceTree = "<group>"; };
 		9E04F4FB2B131A3C007A0773 /* APITesterPro.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = APITesterPro.entitlements; sourceTree = "<group>"; };
 		9E04F4FC2B138F38007A0773 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
 		9E4875E62AF56DD000D624DA /* APITesterPro.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = APITesterPro.xcdatamodel; sourceTree = "<group>"; };
@@ -150,20 +150,20 @@
 		9E81D0952AF44F4E004095CF /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9E81D0962AF44F4E004095CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9E81D0972AF44F4E004095CF /* AppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
-		9E81D0B52AF451E9004095CF /* EACommon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EACommon.swift; sourceTree = "<group>"; };
-		9E81D0B62AF451E9004095CF /* EANetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EANetwork.swift; sourceTree = "<group>"; };
-		9E81D0B72AF451E9004095CF /* EAHTTPCookie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAHTTPCookie.swift; sourceTree = "<group>"; };
-		9E81D0B92AF451E9004095CF /* EAQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAQueue.swift; sourceTree = "<group>"; };
-		9E81D0BA2AF451E9004095CF /* EADocumentPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EADocumentPicker.swift; sourceTree = "<group>"; };
-		9E81D0BB2AF451E9004095CF /* EAOperationQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAOperationQueue.swift; sourceTree = "<group>"; };
-		9E81D0BC2AF451E9004095CF /* EACrypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EACrypto.swift; sourceTree = "<group>"; };
-		9E81D0BD2AF451E9004095CF /* EARepeatTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EARepeatTimer.swift; sourceTree = "<group>"; };
-		9E81D0BE2AF451E9004095CF /* EALFUCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EALFUCache.swift; sourceTree = "<group>"; };
-		9E81D0BF2AF451E9004095CF /* EAUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAUtils.swift; sourceTree = "<group>"; };
+		9E81D0B52AF451E9004095CF /* JVCommon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVCommon.swift; sourceTree = "<group>"; };
+		9E81D0B62AF451E9004095CF /* JVNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVNetwork.swift; sourceTree = "<group>"; };
+		9E81D0B72AF451E9004095CF /* JVHTTPCookie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVHTTPCookie.swift; sourceTree = "<group>"; };
+		9E81D0B92AF451E9004095CF /* JVQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVQueue.swift; sourceTree = "<group>"; };
+		9E81D0BA2AF451E9004095CF /* JVDocumentPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVDocumentPicker.swift; sourceTree = "<group>"; };
+		9E81D0BB2AF451E9004095CF /* JVOperationQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVOperationQueue.swift; sourceTree = "<group>"; };
+		9E81D0BC2AF451E9004095CF /* JVCrypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVCrypto.swift; sourceTree = "<group>"; };
+		9E81D0BD2AF451E9004095CF /* JVRepeatTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVRepeatTimer.swift; sourceTree = "<group>"; };
+		9E81D0BE2AF451E9004095CF /* JVLFUCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVLFUCache.swift; sourceTree = "<group>"; };
+		9E81D0BF2AF451E9004095CF /* JVUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVUtils.swift; sourceTree = "<group>"; };
 		9E81D0C02AF451E9004095CF /* JVExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVExtensions.swift; sourceTree = "<group>"; };
-		9E81D0C22AF451E9004095CF /* EAFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAFileManager.swift; sourceTree = "<group>"; };
-		9E81D0C32AF451E9004095CF /* EARescheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EARescheduler.swift; sourceTree = "<group>"; };
-		9E81D0C42AF451E9004095CF /* EASystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EASystem.swift; sourceTree = "<group>"; };
+		9E81D0C22AF451E9004095CF /* JVFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVFileManager.swift; sourceTree = "<group>"; };
+		9E81D0C32AF451E9004095CF /* JVRescheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVRescheduler.swift; sourceTree = "<group>"; };
+		9E81D0C42AF451E9004095CF /* JVSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVSystem.swift; sourceTree = "<group>"; };
 		9E81D0D62AF451F7004095CF /* CoreDataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		9E81D0D92AF451FE004095CF /* EWorkspace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EWorkspace.swift; sourceTree = "<group>"; };
 		9E81D0DA2AF451FF004095CF /* EHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHistory.swift; sourceTree = "<group>"; };
@@ -203,11 +203,11 @@
 		9E81D1212AF45235004095CF /* WorkspaceListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkspaceListViewController.swift; sourceTree = "<group>"; };
 		9E81D1232AF45241004095CF /* PopupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
 		9E81D1242AF45241004095CF /* OptionsPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsPickerViewController.swift; sourceTree = "<group>"; };
-		9E81D1252AF45241004095CF /* EADynamicSizeTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EADynamicSizeTableView.swift; sourceTree = "<group>"; };
+		9E81D1252AF45241004095CF /* JVDynamicSizeTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVDynamicSizeTableView.swift; sourceTree = "<group>"; };
 		9E81D1262AF45241004095CF /* KVCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KVCell.swift; sourceTree = "<group>"; };
-		9E81D1272AF45241004095CF /* EATextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EATextField.swift; sourceTree = "<group>"; };
+		9E81D1272AF45241004095CF /* JVTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVTextField.swift; sourceTree = "<group>"; };
 		9E81D1282AF45241004095CF /* UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UI.swift; sourceTree = "<group>"; };
-		9E81D1292AF45241004095CF /* EATextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EATextView.swift; sourceTree = "<group>"; };
+		9E81D1292AF45241004095CF /* JVTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVTextView.swift; sourceTree = "<group>"; };
 		9E81D1322AF45253004095CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9E81D1342AF45253004095CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9E81D1372AF4529D004095CF /* preview.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = preview.html; sourceTree = "<group>"; };
@@ -216,11 +216,11 @@
 		9E81D13A2AF4529D004095CF /* prism-light.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "prism-light.css"; sourceTree = "<group>"; };
 		9E81D13B2AF4529D004095CF /* rawview.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = rawview.html; sourceTree = "<group>"; };
 		9E81D13C2AF4529D004095CF /* prism-dark.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "prism-dark.css"; sourceTree = "<group>"; };
-		9E81D1442AF452DE004095CF /* EALFUCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EALFUCacheTests.swift; sourceTree = "<group>"; };
-		9E81D1462AF452DE004095CF /* EAReschedulerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAReschedulerTests.swift; sourceTree = "<group>"; };
-		9E81D1472AF452DE004095CF /* EARepeatTimerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EARepeatTimerTests.swift; sourceTree = "<group>"; };
-		9E81D1482AF452DE004095CF /* EAUtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAUtilsTests.swift; sourceTree = "<group>"; };
-		9E81D1492AF452DE004095CF /* EAQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAQueueTests.swift; sourceTree = "<group>"; };
+		9E81D1442AF452DE004095CF /* JVLFUCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVLFUCacheTests.swift; sourceTree = "<group>"; };
+		9E81D1462AF452DE004095CF /* JVReschedulerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVReschedulerTests.swift; sourceTree = "<group>"; };
+		9E81D1472AF452DE004095CF /* JVRepeatTimerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVRepeatTimerTests.swift; sourceTree = "<group>"; };
+		9E81D1482AF452DE004095CF /* JVUtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVUtilsTests.swift; sourceTree = "<group>"; };
+		9E81D1492AF452DE004095CF /* JVQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JVQueueTests.swift; sourceTree = "<group>"; };
 		9E81D1502AF45302004095CF /* APITesterProTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "APITesterProTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		9ED969A32AF5A35F0029E83E /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		9ED969A52AF5A36A0029E83E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -283,7 +283,7 @@
 			isa = PBXGroup;
 			children = (
 				9E04F4FB2B131A3C007A0773 /* APITesterPro.entitlements */,
-				9E81D0A62AF44F85004095CF /* EALib */,
+				9E81D0A62AF44F85004095CF /* JVLib */,
 				9E81D0AA2AF44FC8004095CF /* Service */,
 				9E81D0A72AF44F98004095CF /* Model */,
 				9E81D0A92AF44FBE004095CF /* Screens */,
@@ -305,7 +305,7 @@
 		9E81D0442AF44BE9004095CF /* APITesterProTests */ = {
 			isa = PBXGroup;
 			children = (
-				9E81D1432AF452B3004095CF /* EALibTests */,
+				9E81D1432AF452B3004095CF /* JVLibTests */,
 				9E4875EB2AF590A300D624DA /* APITesterPro.xctestplan */,
 				9E81D1502AF45302004095CF /* APITesterProTests-Bridging-Header.h */,
 				9E81D07D2AF44CBD004095CF /* APITesterProTests.swift */,
@@ -324,29 +324,29 @@
 			path = APITesterProUITests;
 			sourceTree = "<group>";
 		};
-		9E81D0A62AF44F85004095CF /* EALib */ = {
+		9E81D0A62AF44F85004095CF /* JVLib */ = {
 			isa = PBXGroup;
 			children = (
 				9EEA0E292B152E0200DFB42B /* BackgroundWorker.swift */,
-				9E04F4F42B122577007A0773 /* EACloudKit.swift */,
-				9E04F4F32B122577007A0773 /* EACloudOperation.swift */,
-				9E81D0B52AF451E9004095CF /* EACommon.swift */,
-				9E81D0BC2AF451E9004095CF /* EACrypto.swift */,
-				9E81D0BA2AF451E9004095CF /* EADocumentPicker.swift */,
+				9E04F4F42B122577007A0773 /* JVCloudKit.swift */,
+				9E04F4F32B122577007A0773 /* JVCloudOperation.swift */,
+				9E81D0B52AF451E9004095CF /* JVCommon.swift */,
+				9E81D0BC2AF451E9004095CF /* JVCrypto.swift */,
+				9E81D0BA2AF451E9004095CF /* JVDocumentPicker.swift */,
 				9E81D0C02AF451E9004095CF /* JVExtensions.swift */,
-				9E81D0C22AF451E9004095CF /* EAFileManager.swift */,
-				9E81D0B72AF451E9004095CF /* EAHTTPCookie.swift */,
-				9E81D0BE2AF451E9004095CF /* EALFUCache.swift */,
-				9E81D0B62AF451E9004095CF /* EANetwork.swift */,
-				9E81D0BB2AF451E9004095CF /* EAOperationQueue.swift */,
-				9E81D0B92AF451E9004095CF /* EAQueue.swift */,
-				9E81D0BD2AF451E9004095CF /* EARepeatTimer.swift */,
-				9E81D0C32AF451E9004095CF /* EARescheduler.swift */,
-				9E81D0C42AF451E9004095CF /* EASystem.swift */,
-				9E81D0BF2AF451E9004095CF /* EAUtils.swift */,
+				9E81D0C22AF451E9004095CF /* JVFileManager.swift */,
+				9E81D0B72AF451E9004095CF /* JVHTTPCookie.swift */,
+				9E81D0BE2AF451E9004095CF /* JVLFUCache.swift */,
+				9E81D0B62AF451E9004095CF /* JVNetwork.swift */,
+				9E81D0BB2AF451E9004095CF /* JVOperationQueue.swift */,
+				9E81D0B92AF451E9004095CF /* JVQueue.swift */,
+				9E81D0BD2AF451E9004095CF /* JVRepeatTimer.swift */,
+				9E81D0C32AF451E9004095CF /* JVRescheduler.swift */,
+				9E81D0C42AF451E9004095CF /* JVSystem.swift */,
+				9E81D0BF2AF451E9004095CF /* JVUtils.swift */,
 				9EDDE3B82B1C4C8B0074141A /* JVLogger.swift */,
 			);
-			path = EALib;
+			path = JVLib;
 			sourceTree = "<group>";
 		};
 		9E81D0A72AF44F98004095CF /* Model */ = {
@@ -412,9 +412,9 @@
 			children = (
 				9E81D1312AF45253004095CF /* LaunchScreen.storyboard */,
 				9E81D1332AF45253004095CF /* Main.storyboard */,
-				9E81D1252AF45241004095CF /* EADynamicSizeTableView.swift */,
-				9E81D1272AF45241004095CF /* EATextField.swift */,
-				9E81D1292AF45241004095CF /* EATextView.swift */,
+				9E81D1252AF45241004095CF /* JVDynamicSizeTableView.swift */,
+				9E81D1272AF45241004095CF /* JVTextField.swift */,
+				9E81D1292AF45241004095CF /* JVTextView.swift */,
 				9E81D1262AF45241004095CF /* KVCell.swift */,
 				9E81D1242AF45241004095CF /* OptionsPickerViewController.swift */,
 				9E81D1232AF45241004095CF /* PopupViewController.swift */,
@@ -487,19 +487,19 @@
 			path = Workspace;
 			sourceTree = "<group>";
 		};
-		9E81D1432AF452B3004095CF /* EALibTests */ = {
+		9E81D1432AF452B3004095CF /* JVLibTests */ = {
 			isa = PBXGroup;
 			children = (
 				9E04F4F72B122585007A0773 /* CloudKitTests.swift */,
-				9E04F4F92B122CF0007A0773 /* EACryptoTest.swift */,
-				9E81D1442AF452DE004095CF /* EALFUCacheTests.swift */,
-				9E81D1492AF452DE004095CF /* EAQueueTests.swift */,
-				9E81D1472AF452DE004095CF /* EARepeatTimerTests.swift */,
-				9E81D1462AF452DE004095CF /* EAReschedulerTests.swift */,
-				9E81D1482AF452DE004095CF /* EAUtilsTests.swift */,
+				9E04F4F92B122CF0007A0773 /* JVCryptoTest.swift */,
+				9E81D1442AF452DE004095CF /* JVLFUCacheTests.swift */,
+				9E81D1492AF452DE004095CF /* JVQueueTests.swift */,
+				9E81D1472AF452DE004095CF /* JVRepeatTimerTests.swift */,
+				9E81D1462AF452DE004095CF /* JVReschedulerTests.swift */,
+				9E81D1482AF452DE004095CF /* JVUtilsTests.swift */,
 				9E571CE52B24B7F60090F1CF /* JVExtensionsTests.swift */,
 			);
-			path = EALibTests;
+			path = JVLibTests;
 			sourceTree = "<group>";
 		};
 		9ED969A22AF5A35F0029E83E /* Frameworks */ = {
@@ -655,50 +655,50 @@
 			files = (
 				9E81D10D2AF45218004095CF /* RequestManager.swift in Sources */,
 				9E81D0F12AF451FF004095CF /* EEnv.swift in Sources */,
-				9E81D12E2AF45241004095CF /* EATextField.swift in Sources */,
+				9E81D12E2AF45241004095CF /* JVTextField.swift in Sources */,
 				9E4875E82AF5856A00D624DA /* AppDelegateMock.swift in Sources */,
-				9E81D0CC2AF451EA004095CF /* EACrypto.swift in Sources */,
+				9E81D0CC2AF451EA004095CF /* JVCrypto.swift in Sources */,
 				9E81D1202AF4522C004095CF /* EnvironmentEditViewController.swift in Sources */,
 				9E81D0FC2AF45208004095CF /* APITesterProNavigationController.swift in Sources */,
-				9E81D1302AF45242004095CF /* EATextView.swift in Sources */,
+				9E81D1302AF45242004095CF /* JVTextView.swift in Sources */,
 				9E81D11E2AF4522C004095CF /* EnvironmentVariableTableViewController.swift in Sources */,
 				9E81D12A2AF45241004095CF /* PopupViewController.swift in Sources */,
 				9E81D0992AF44F4F004095CF /* main.swift in Sources */,
-				9E81D0C72AF451E9004095CF /* EAHTTPCookie.swift in Sources */,
-				9E81D0C52AF451E9004095CF /* EACommon.swift in Sources */,
+				9E81D0C72AF451E9004095CF /* JVHTTPCookie.swift in Sources */,
+				9E81D0C52AF451E9004095CF /* JVCommon.swift in Sources */,
 				9E04F4FD2B138F38007A0773 /* PersistenceService.swift in Sources */,
-				9E81D0C62AF451E9004095CF /* EANetwork.swift in Sources */,
+				9E81D0C62AF451E9004095CF /* JVNetwork.swift in Sources */,
 				9E81D09D2AF44F4F004095CF /* App.swift in Sources */,
 				9E81D11C2AF4522C004095CF /* SettingsTableViewController.swift in Sources */,
 				9EDDE3B92B1C4C8B0074141A /* JVLogger.swift in Sources */,
 				9E81D10B2AF45218004095CF /* EnvironmentPickerViewController.swift in Sources */,
-				9E81D0D22AF451EA004095CF /* EAFileManager.swift in Sources */,
+				9E81D0D22AF451EA004095CF /* JVFileManager.swift in Sources */,
 				9E81D0A52AF44F4F004095CF /* AppState.swift in Sources */,
 				9E81D0F72AF451FF004095CF /* ERequestBodyData.swift in Sources */,
 				9E81D09B2AF44F4F004095CF /* SceneDelegate.swift in Sources */,
-				9E04F4F62B122577007A0773 /* EACloudKit.swift in Sources */,
-				9E81D12C2AF45241004095CF /* EADynamicSizeTableView.swift in Sources */,
+				9E04F4F62B122577007A0773 /* JVCloudKit.swift in Sources */,
+				9E81D12C2AF45241004095CF /* JVDynamicSizeTableView.swift in Sources */,
 				9E81D10C2AF45218004095CF /* EditRequestTableViewController.swift in Sources */,
 				9E81D11B2AF4522C004095CF /* Base64ViewController.swift in Sources */,
 				9E81D10E2AF45218004095CF /* RequestStateMachine.swift in Sources */,
 				9E81D0F42AF451FF004095CF /* EImage.swift in Sources */,
 				9E81D0EA2AF451FF004095CF /* EHistory.swift in Sources */,
-				9E81D0CE2AF451EA004095CF /* EALFUCache.swift in Sources */,
+				9E81D0CE2AF451EA004095CF /* JVLFUCache.swift in Sources */,
 				9E81D0E92AF451FF004095CF /* EWorkspace.swift in Sources */,
 				9E81D0EB2AF451FF004095CF /* Zone.swift in Sources */,
-				9E81D0D32AF451EA004095CF /* EARescheduler.swift in Sources */,
+				9E81D0D32AF451EA004095CF /* JVRescheduler.swift in Sources */,
 				9E81D11F2AF4522C004095CF /* ImportExportViewController.swift in Sources */,
 				9E81D10F2AF45218004095CF /* RequestTableViewController.swift in Sources */,
 				9E81D0D82AF451F7004095CF /* CoreDataService.swift in Sources */,
 				9E81D0A32AF44F4F004095CF /* AppDelegate.swift in Sources */,
 				9E81D0F62AF451FF004095CF /* ResponseData.swift in Sources */,
 				9E4875E72AF56DD000D624DA /* APITesterPro.xcdatamodeld in Sources */,
-				9E81D0CF2AF451EA004095CF /* EAUtils.swift in Sources */,
+				9E81D0CF2AF451EA004095CF /* JVUtils.swift in Sources */,
 				9E81D1142AF45221004095CF /* HistoryViewController.swift in Sources */,
 				9E81D0ED2AF451FF004095CF /* EFile.swift in Sources */,
 				9E81D1002AF45211004095CF /* ProjectListViewController.swift in Sources */,
 				9E81D0F82AF451FF004095CF /* Models.swift in Sources */,
-				9E81D0CB2AF451E9004095CF /* EAOperationQueue.swift in Sources */,
+				9E81D0CB2AF451E9004095CF /* JVOperationQueue.swift in Sources */,
 				9E81D0F32AF451FF004095CF /* EProject.swift in Sources */,
 				9E81D12B2AF45241004095CF /* OptionsPickerViewController.swift in Sources */,
 				9E81D10A2AF45218004095CF /* RequestTabBarViewController.swift in Sources */,
@@ -707,14 +707,14 @@
 				9E81D1092AF45218004095CF /* RequestStates.swift in Sources */,
 				9E81D1222AF45235004095CF /* WorkspaceListViewController.swift in Sources */,
 				9E81D1132AF45221004095CF /* ResponseTableViewController.swift in Sources */,
-				9E04F4F52B122577007A0773 /* EACloudOperation.swift in Sources */,
+				9E04F4F52B122577007A0773 /* JVCloudOperation.swift in Sources */,
 				9E81D1102AF45218004095CF /* RequestListViewController.swift in Sources */,
 				9E81D12F2AF45241004095CF /* UI.swift in Sources */,
-				9E81D0CD2AF451EA004095CF /* EARepeatTimer.swift in Sources */,
+				9E81D0CD2AF451EA004095CF /* JVRepeatTimer.swift in Sources */,
 				9E81D0A12AF44F4F004095CF /* Const.swift in Sources */,
 				9E81D0EC2AF451FF004095CF /* ERequestData.swift in Sources */,
 				9E81D11D2AF4522C004095CF /* EnvironmentGroupViewController.swift in Sources */,
-				9E81D0D42AF451EA004095CF /* EASystem.swift in Sources */,
+				9E81D0D42AF451EA004095CF /* JVSystem.swift in Sources */,
 				9EDDE3B72B1BC0A20074141A /* EditRequestTracker.swift in Sources */,
 				9E81D12D2AF45241004095CF /* KVCell.swift in Sources */,
 				9E81D0EE2AF451FF004095CF /* ERequestMethodData.swift in Sources */,
@@ -723,8 +723,8 @@
 				9E81D0F02AF451FF004095CF /* EEnvVar.swift in Sources */,
 				9E81D0FD2AF45208004095CF /* APITesterProTableViewController.swift in Sources */,
 				9E81D0FE2AF45208004095CF /* APITesterProViewController.swift in Sources */,
-				9E81D0CA2AF451E9004095CF /* EADocumentPicker.swift in Sources */,
-				9E81D0C92AF451E9004095CF /* EAQueue.swift in Sources */,
+				9E81D0CA2AF451E9004095CF /* JVDocumentPicker.swift in Sources */,
+				9E81D0C92AF451E9004095CF /* JVQueue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -734,14 +734,14 @@
 			files = (
 				9E04F4F82B122585007A0773 /* CloudKitTests.swift in Sources */,
 				9E571CE62B24B7F60090F1CF /* JVExtensionsTests.swift in Sources */,
-				9E81D14D2AF452DE004095CF /* EARepeatTimerTests.swift in Sources */,
-				9E81D14C2AF452DE004095CF /* EAReschedulerTests.swift in Sources */,
-				9E81D14F2AF452DE004095CF /* EAQueueTests.swift in Sources */,
-				9E81D14E2AF452DE004095CF /* EAUtilsTests.swift in Sources */,
+				9E81D14D2AF452DE004095CF /* JVRepeatTimerTests.swift in Sources */,
+				9E81D14C2AF452DE004095CF /* JVReschedulerTests.swift in Sources */,
+				9E81D14F2AF452DE004095CF /* JVQueueTests.swift in Sources */,
+				9E81D14E2AF452DE004095CF /* JVUtilsTests.swift in Sources */,
 				9E81D0862AF44CC0004095CF /* AppDelegateMock.swift in Sources */,
-				9E81D14A2AF452DE004095CF /* EALFUCacheTests.swift in Sources */,
+				9E81D14A2AF452DE004095CF /* JVLFUCacheTests.swift in Sources */,
 				9E81D0822AF44CC0004095CF /* APITesterProTests.swift in Sources */,
-				9E04F4FA2B122CF0007A0773 /* EACryptoTest.swift in Sources */,
+				9E04F4FA2B122CF0007A0773 /* JVCryptoTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

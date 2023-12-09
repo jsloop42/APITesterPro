@@ -1,5 +1,5 @@
 //
-//  EALFUCache.swift
+//  JVLFUCache.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 25/03/20.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol EACacheValue: AnyObject {
+public protocol JVCacheValue: AnyObject {
     // Getters
     func value() -> Any
     /// The key pointing to the value in the cache list which can be correlated to the value field.
@@ -23,7 +23,7 @@ public protocol EACacheValue: AnyObject {
     func setAccessCount(_ c: Int)
 }
 
-public protocol EACacheListValue: AnyObject {
+public protocol JVCacheListValue: AnyObject {
     // Getters
     /// The key
     func key() -> String
@@ -33,7 +33,7 @@ public protocol EACacheListValue: AnyObject {
     func setAccessCount(_ c: Int)
 }
 
-private final class CacheListValue: EACacheListValue {
+private final class CacheListValue: JVCacheListValue {
     private var _key: String
     private var _accessCount: Int
 
@@ -60,9 +60,9 @@ private final class CacheListValue: EACacheListValue {
 }
 
 /// A Least Frequently Used cache
-public struct EALFUCache {
+public struct JVLFUCache {
     public var cache: NSMutableDictionary = [:]
-    public var cacheList: NSMutableArray = []  // Used in tracking LFU [EACacheListValue]
+    public var cacheList: NSMutableArray = []  // Used in tracking LFU [JVCacheListValue]
     public var cacheHint: Data?
     public var maxLimit: Int = 8
     
@@ -74,16 +74,16 @@ public struct EALFUCache {
     
     mutating func maintainCacheSize() {
         if self.cacheList.count >= self.maxLimit {  // remove the least frequently used element
-            if let last = self.cacheList.lastObject as? EACacheListValue {
+            if let last = self.cacheList.lastObject as? JVCacheListValue {
                 self.cache.removeObject(forKey: last.key())
                 self.cacheList.removeLastObject()
             }
         }
     }
     
-    mutating func add(_ value: EACacheValue) {
+    mutating func add(_ value: JVCacheValue) {
         self.maintainCacheSize()
-        if let val = self.cache[value.key()] as? EACacheValue {
+        if let val = self.cache[value.key()] as? JVCacheValue {
             value.setAccessCount(val.accessCount())
         } else {
             self.cacheList.add(CacheListValue(key: value.key(), accessCount: value.accessCount()))
@@ -91,15 +91,15 @@ public struct EALFUCache {
         self.cache[value.key()] = value
     }
     
-    mutating func get(_ key: String) -> EACacheValue? {
-        guard let val = self.cache[key] as? EACacheValue else { return nil }
+    mutating func get(_ key: String) -> JVCacheValue? {
+        guard let val = self.cache[key] as? JVCacheValue else { return nil }
         let key = val.key()
         let ts = Date().currentTimeNanos()
         val.setTs(ts)
         val.setAccessCount(val.accessCount() + 1)
         self.cache[key] = val
         let elem = cacheList.first { elem -> Bool in
-            if let x = elem as? EACacheListValue { return x.key() == key }
+            if let x = elem as? JVCacheListValue { return x.key() == key }
             return false
         }
         if let x = elem as? CacheListValue { x.setAccessCount(val.accessCount()) }  // todo: check this gets updated
@@ -108,8 +108,8 @@ public struct EALFUCache {
     }
     
     /// Return the element from the cache without incrementing the counter.
-    func peek(_ key: String) -> EACacheValue? {
-        return self.cache[key] as? EACacheValue
+    func peek(_ key: String) -> JVCacheValue? {
+        return self.cache[key] as? JVCacheValue
     }
     
     /// Check if the given key is present in the cache.
@@ -120,7 +120,7 @@ public struct EALFUCache {
     /// Sort workspace cache
     mutating func updateCacheOrder() {
         self.cacheList.sortedArray({ (a, b, nil) -> Int in
-            if let x = a as? EACacheListValue, let y = b as? EACacheListValue {
+            if let x = a as? JVCacheListValue, let y = b as? JVCacheListValue {
                 if x.accessCount() > y.accessCount() { return ComparisonResult.orderedDescending.rawValue }
                 if x.accessCount() < y.accessCount() { return ComparisonResult.orderedAscending.rawValue }
                 return ComparisonResult.orderedSame.rawValue
