@@ -10,6 +10,7 @@
         <attribute name="order" attributeType="Decimal" defaultValueString="0"/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wsId" attributeType="String" defaultValueString=""/>
+        <relationship name="requests" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequest"/>
         <relationship name="variables" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EEnvVar" inverseName="env" inverseEntity="EEnvVar"/>
         <relationship name="workspace" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EWorkspace" inverseName="envs" inverseEntity="EWorkspace"/>
         <fetchIndex name="byId">
@@ -34,7 +35,7 @@
         <attribute name="markForDelete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
-        <attribute name="value" optional="YES" attributeType="Transformable" valueTransformerName="SecureTransformerString"/>
+        <attribute name="value" optional="YES" attributeType="Transformable" valueTransformerName="APITesterPro.SecureTransformerString.name"/>
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="env" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EEnv" inverseName="variables" inverseEntity="EEnv"/>
         <fetchIndex name="byId">
@@ -75,7 +76,7 @@
     <entity name="EHistory" representedClassName=".EHistory" syncable="YES" codeGenerationType="category">
         <attribute name="connection" attributeType="String" defaultValueString=""/>
         <attribute name="connectionTime" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="cookies" optional="YES" attributeType="Transformable" valueTransformerName="SecureTransformerData"/>
+        <attribute name="cookies" optional="YES" attributeType="Transformable" valueTransformerName="APITesterPro.SecureTransformerData.name"/>
         <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="dnsResolutionTime" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="elapsed" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -207,6 +208,7 @@
         <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wsId" attributeType="String" defaultValueString=""/>
         <relationship name="body" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ERequestBodyData" inverseName="request" inverseEntity="ERequestBodyData"/>
+        <relationship name="env" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EEnv"/>
         <relationship name="headers" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ERequestData" inverseName="header" inverseEntity="ERequestData"/>
         <relationship name="histories" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EHistory" inverseName="request" inverseEntity="EHistory"/>
         <relationship name="method" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ERequestMethodData" inverseName="request" inverseEntity="ERequestMethodData"/>

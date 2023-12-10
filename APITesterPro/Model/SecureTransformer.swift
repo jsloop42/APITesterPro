@@ -26,36 +26,39 @@ public struct SecureTransformerInfo {
 }
 
 /// A class that can be used for encrypting and decrypting core data `String` values on the fly.
-class SecureTransformerString: NSSecureUnarchiveFromDataTransformer {
+@objc(SecureTransformerString)
+public class SecureTransformerString: NSSecureUnarchiveFromDataTransformer {
     private let aes = try? AESCBC(key: SecureTransformerInfo.key, iv: SecureTransformerInfo.iv)
     
-    override class var allowedTopLevelClasses: [AnyClass] {
+    public override class var allowedTopLevelClasses: [AnyClass] {
         return [NSString.self]
     }
     
-    override class func transformedValueClass() -> AnyClass {
+    public override class func transformedValueClass() -> AnyClass {
         return NSString.self
     }
     
-    override class func allowsReverseTransformation() -> Bool {
+    public override class func allowsReverseTransformation() -> Bool {
         return true
     }
     
     static let name = NSValueTransformerName(rawValue: String(describing: SecureTransformerString.self))
     
     public static func register() {
+        // There is a bug in momc which prints the below, but can be ignored. Value gets saved to the DB.
+        // CoreData: warning: no NSValueTransformer with class name 'APITesterPro.SecureTransformerString.name' was found for attribute 'value' on entity 'EEnvVar'
         let transformer = SecureTransformerString()
-        ValueTransformer.setValueTransformer(transformer, forName: name)
+        ValueTransformer.setValueTransformer(transformer, forName: self.name)
     }
 
     /// Encrypt the value.
-    override func transformedValue(_ value: Any?) -> Any? {
+    public override func transformedValue(_ value: Any?) -> Any? {
         guard let text = value as? String else { return nil }
         return self.aes?.encrypt(string: text)
     }
 
     /// Decrypt the value.
-    override func reverseTransformedValue(_ value: Any?) -> Any? {
+    public override func reverseTransformedValue(_ value: Any?) -> Any? {
         guard let data = value as? Data else { return nil }
         if let res = self.aes?.decrypt(data: data) {
             return String(data: res, encoding: .utf8)
@@ -65,18 +68,19 @@ class SecureTransformerString: NSSecureUnarchiveFromDataTransformer {
 }
 
 /// A class that can be used for encrypting and decrypting core data `Data` values on the fly.
-class SecureTransformerData: NSSecureUnarchiveFromDataTransformer {
+@objc(SecureTransformerData)
+public class SecureTransformerData: NSSecureUnarchiveFromDataTransformer {
     private let aes = try? AESCBC(key: SecureTransformerInfo.key, iv: SecureTransformerInfo.iv)
     
-    override class var allowedTopLevelClasses: [AnyClass] {
+    public override class var allowedTopLevelClasses: [AnyClass] {
         return [NSData.self]
     }
     
-    override class func transformedValueClass() -> AnyClass {
+    public override class func transformedValueClass() -> AnyClass {
         return NSData.self
     }
     
-    override class func allowsReverseTransformation() -> Bool {
+    public override class func allowsReverseTransformation() -> Bool {
         return true
     }
     
@@ -84,13 +88,13 @@ class SecureTransformerData: NSSecureUnarchiveFromDataTransformer {
     
     public static func register() {
         let transformer = SecureTransformerData()
-        ValueTransformer.setValueTransformer(transformer, forName: name)
+        ValueTransformer.setValueTransformer(transformer, forName: self.name)
     }
 
     /// Decrypt the value.
     /// - Parameter value: A data value
     /// - Returns: Encrypted binary data
-    override func transformedValue(_ value: Any?) -> Any? {
+    public override func transformedValue(_ value: Any?) -> Any? {
         guard let data = value as? Data else { return nil }
         return self.aes?.encrypt(data: data)
     }
@@ -98,7 +102,7 @@ class SecureTransformerData: NSSecureUnarchiveFromDataTransformer {
     /// Decrypt the value.
     /// - Parameter value: A transformed data value
     /// - Returns: Decrypted binary data
-    override func reverseTransformedValue(_ value: Any?) -> Any? {
+    public override func reverseTransformedValue(_ value: Any?) -> Any? {
         guard let data = value as? Data else { return nil }
         return self.aes?.decrypt(data: data)  // returns Data
     }
