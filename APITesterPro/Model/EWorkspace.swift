@@ -87,8 +87,8 @@ public class EWorkspace: NSManagedObject, Entity {
         guard let id = dict["id"] as? String else { return nil }
         let ctx = self.db.mainMOC
         guard let ws = self.db.createWorkspace(id: id, name: "", desc: "", isSyncEnabled: false, ctx: ctx) else { return nil }
-        if let x = dict["created"] as? Date { ws.created = x }
-        if let x = dict["modified"] as? Date { ws.modified = x }
+        if let x = dict["created"] as? String { ws.created = Date.toUTCDate(x) }
+        if let x = dict["modified"] as? String { ws.modified = Date.toUTCDate(x) }
         if let x = dict["isActive"] as? Bool { ws.isActive = x }
         if let x = dict["isSyncEnabled"] as? Bool { ws.isSyncEnabled = x }
         if let x = dict["name"] as? String { ws.name = x }
@@ -158,8 +158,8 @@ public class EWorkspace: NSManagedObject, Entity {
     
     public func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [:]
-        dict["created"] = self.created
-        dict["modified"] = self.modified
+        dict["created"] = self.created?.toUTCStr()
+        dict["modified"] = self.modified?.toUTCStr()
         dict["id"] = self.id
         dict["isActive"] = self.isActive
         dict["isSyncEnabled"] = self.isSyncEnabled

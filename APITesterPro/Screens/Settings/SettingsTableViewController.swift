@@ -166,6 +166,7 @@ class SettingsTableViewController: APITesterProTableViewController {
         if let data = try? JSONSerialization.data(withJSONObject: wsDict, options: .fragmentsAllowed), let json = String(data: data, encoding: .utf8) {
             self.writeJSONToTempFile(json: json, ws: ws)
             if let url = self.exportFileURL {
+                self.hideLoadingIndicator()
                 UI.displayDocumentPickerForExport(url: url, delegate: self, tvVc: self, vc: nil)
             }
         }

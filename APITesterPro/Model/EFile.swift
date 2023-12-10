@@ -89,8 +89,8 @@ public class EFile: NSManagedObject, Entity {
         }
         guard let data1 = data else { return nil }
         guard let file = self.db.createFile(fileId: id, data: data1, wsId: wsId, name: name, path: URL(fileURLWithPath: "/tmp/"), type: type, checkExists: true, ctx: self.db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Date { file.created = x }
-        if let x = dict["modified"] as? Date { file.modified = x }
+        if let x = dict["created"] as? String { file.created = Date.toUTCDate(x) }
+        if let x = dict["modified"] as? String { file.modified = Date.toUTCDate(x) }
         if let x = dict["version"] as? Int64 { file.version = x }
         file.markForDelete = false
         return file
@@ -156,8 +156,8 @@ public class EFile: NSManagedObject, Entity {
     
     public func toDictionary() -> [String : Any] {
         var dict: [String: Any] = [:]
-        dict["created"] = self.created
-        dict["modified"] = self.modified
+        dict["created"] = self.created?.toUTCStr()
+        dict["modified"] = self.modified?.toUTCStr()
         dict["id"] = self.id
         dict["name"] = self.name
         dict["type"] = self.type

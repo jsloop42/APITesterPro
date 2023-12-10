@@ -124,8 +124,8 @@ public class ERequestData: NSManagedObject, Entity {
             let format = RequestBodyFormFieldFormatType(rawValue: _format.toInt())
             else { return nil }
         guard let reqData = self.db.createRequestData(id: id, wsId: wsId, type: type, fieldFormat: format, ctx: db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Date { reqData.created = x }
-        if let x = dict["modified"] as? Date { reqData.modified = x }
+        if let x = dict["created"] as? String { reqData.created = Date.toUTCDate(x) }
+        if let x = dict["modified"] as? String { reqData.modified = Date.toUTCDate(x) }
         if let x = dict["key"] as? String { reqData.key = x }
         if let x = dict["value"] as? String { reqData.value = x }
         if let x = dict["version"] as? Int64 { reqData.version = x }
@@ -234,8 +234,8 @@ public class ERequestData: NSManagedObject, Entity {
     
     public func toDictionary() -> [String : Any] {
         var dict: [String: Any] = [:]
-        dict["created"] = self.created
-        dict["modified"] = self.modified
+        dict["created"] = self.created?.toUTCStr()
+        dict["modified"] = self.modified?.toUTCStr()
         dict["desc"] = self.desc
         dict["fieldFormat"] = self.fieldFormat
         dict["id"] = self.id
