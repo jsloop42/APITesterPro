@@ -104,6 +104,7 @@ public class ERequest: NSManagedObject, Entity {
         guard let req = self.db.createRequest(id: id, wsId: wsId, name: "") else { return nil }
         if let x = dict["created"] as? String { req.created = Date.toUTCDate(x) }
         if let x = dict["modified"] as? String { req.modified = Date.toUTCDate(x) }
+        if let x = dict["envId"] as? String { req.envId = x }
         if let x = dict["desc"] as? String { req.desc = x }
         if let x = dict["name"] as? String { req.name = x }
         if let x = dict["order"] as? NSDecimalNumber { req.order = x }
@@ -188,6 +189,7 @@ public class ERequest: NSManagedObject, Entity {
                 if let x = record["wsId"] as? String { self.wsId = x }
                 if let x = record["desc"] as? String { self.desc = x }
                 if let x = record["name"] as? String { self.name = x }
+                if let x = record["envId"] as? String { self.envId = x }
                 if let x = record["order"] as? NSDecimalNumber { self.order = x }
                 if let x = record["validateSSL"] as? Bool { self.validateSSL = x }
                 if let x = record["url"] as? String { self.url = x }
@@ -206,6 +208,7 @@ public class ERequest: NSManagedObject, Entity {
         dict["wsId"] = self.wsId
         dict["desc"] = self.desc
         dict["name"] = self.name
+        dict["envId"] = self.envId
         dict["order"] = self.order
         dict["validateSSL"] = self.validateSSL
         dict["url"] = self.url
