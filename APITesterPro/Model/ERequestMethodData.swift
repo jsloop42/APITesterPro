@@ -83,8 +83,8 @@ public class ERequestMethodData: NSManagedObject, Entity {
     public static func fromDictionary(_ dict: [String: Any]) -> ERequestMethodData? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
         guard let method = self.db.createRequestMethodData(id: id, wsId: wsId, name: "", ctx: self.db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Date { method.created = x }
-        if let x = dict["modified"] as? Date { method.modified = x }
+        if let x = dict["created"] as? String { method.created = Date.toUTCDate(x) }
+        if let x = dict["modified"] as? String { method.modified = Date.toUTCDate(x) }
         if let x = dict["name"] as? String { method.name = x }
         if let x = dict["version"] as? Int64 { method.version = x }
         method.markForDelete = false
@@ -138,8 +138,8 @@ public class ERequestMethodData: NSManagedObject, Entity {
     
     public func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [:]
-        dict["created"] = self.created
-        dict["modified"] = self.modified
+        dict["created"] = self.created?.toUTCStr()
+        dict["modified"] = self.modified?.toUTCStr()
         dict["id"] = self.id
         dict["isCustom"] = self.isCustom
         dict["name"] = self.name

@@ -88,8 +88,8 @@ public class EImage: NSManagedObject, Entity {
         let name = dict["name"] as? String, let type = dict["type"] as? String else { return nil }
         guard let data1 = JVUtils.shared.stringToImageData(data) else { return nil }
         guard let image = self.db.createImage(imageId: id, data: data1, wsId: wsId, name: name, type: type, ctx: self.db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Date { image.created = x }
-        if let x = dict["modified"] as? Date { image.modified = x }
+        if let x = dict["created"] as? String { image.created = Date.toUTCDate(x) }
+        if let x = dict["modified"] as? String { image.modified = Date.toUTCDate(x) }
         if let x = dict["isCameraMode"] as? Bool { image.isCameraMode = x }
         if let x = dict["version"] as? Int64 { image.version = x }
         image.markForDelete = false
@@ -158,8 +158,8 @@ public class EImage: NSManagedObject, Entity {
     
     public func toDictionary() -> [String : Any] {
         var dict: [String: Any] = [:]
-        dict["created"] = self.created
-        dict["modified"] = self.modified
+        dict["created"] = self.created?.toUTCStr()
+        dict["modified"] = self.modified?.toUTCStr()
         dict["id"] = self.id
         dict["wsId"] = self.wsId
         dict["name"] = self.name

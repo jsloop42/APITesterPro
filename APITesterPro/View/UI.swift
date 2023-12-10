@@ -304,8 +304,8 @@ class UI {
     /// Remove the custom activity indicator from the parent view
     /// - Parameter bgView: The activity indicator view
     static func removeCustomActivityIndicator(_ bgView: UIView) {
-        bgView.removeFromSuperview()
         bgView.superview?.isUserInteractionEnabled = true
+        bgView.removeFromSuperview()
     }
         
     static func getTextHeight(_ text: String, width: CGFloat, font: UIFont) -> CGFloat {

@@ -81,8 +81,8 @@ public class EEnv: NSManagedObject, Entity {
     public static func fromDictionary(_ dict: [String: Any]) -> EEnv? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
         guard let env = self.db.createEnv(name: "", envId: id, wsId: wsId, checkExists: true, ctx: self.db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Date { env.created = x }
-        if let x = dict["modified"] as? Date { env.modified = x }
+        if let x = dict["created"] as? String { env.created = Date.toUTCDate(x) }
+        if let x = dict["modified"] as? String { env.modified = Date.toUTCDate(x) }
         if let x = dict["name"] as? String { env.name = x }
         if let x = dict["version"] as? Int64 { env.version = x }
         if let xs = dict["variables"] as? [[String: Any]] {
@@ -140,8 +140,8 @@ public class EEnv: NSManagedObject, Entity {
     
     func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [:]
-        dict["created"] = self.created
-        dict["modified"] = self.modified
+        dict["created"] = self.created?.toUTCStr()
+        dict["modified"] = self.modified?.toUTCStr()
         dict["id"] = self.id
         dict["name"] = self.name
         dict["version"] = self.version

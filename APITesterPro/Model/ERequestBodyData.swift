@@ -81,8 +81,8 @@ public class ERequestBodyData: NSManagedObject, Entity {
     public static func fromDictionary(_ dict: [String: Any]) -> ERequestBodyData? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
         guard let body = self.db.createRequestBodyData(id: id, wsId: wsId, ctx: self.db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Date { body.created = x }
-        if let x = dict["modified"] as? Date { body.modified = x }
+        if let x = dict["created"] as? String { body.created = Date.toUTCDate(x) }
+        if let x = dict["modified"] as? String { body.modified = Date.toUTCDate(x) }
         if let x = dict["json"] as? String { body.json = x }
         if let x = dict["raw"] as? String { body.raw = x }
         if let x = dict["selected"] as? Int64 { body.selected = x }
@@ -157,8 +157,8 @@ public class ERequestBodyData: NSManagedObject, Entity {
     
     public func toDictionary() -> [String : Any] {
         var dict: [String: Any] = [:]
-        dict["created"] = self.created
-        dict["modified"] = self.modified
+        dict["created"] = self.created?.toUTCStr()
+        dict["modified"] = self.modified?.toUTCStr()
         dict["id"] = self.id
         dict["wsId"] = self.wsId
         dict["json"] = self.json

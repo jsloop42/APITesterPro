@@ -75,8 +75,8 @@ public class EEnvVar: NSManagedObject, Entity {
     public static func fromDictionary(_ dict: [String: Any]) -> EEnvVar? {
         guard let id = dict["id"] as? String else { return nil }
         guard let envVar = self.db.createEnvVar(name: "", value: "", id: id, checkExists: true, ctx: self.db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Date { envVar.created = x }
-        if let x = dict["modified"] as? Date { envVar.modified = x }
+        if let x = dict["created"] as? String { envVar.created = Date.toUTCDate(x) }
+        if let x = dict["modified"] as? String { envVar.modified = Date.toUTCDate(x) }
         if let x = dict["name"] as? String { envVar.name = x }
         if let x = dict["value"] as? String { envVar.value = x as NSObject }
         if let x = dict["version"] as? Int64 { envVar.version = x }
@@ -145,8 +145,8 @@ public class EEnvVar: NSManagedObject, Entity {
     
     func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [:]
-        dict["created"] = self.created
-        dict["modified"] = self.modified
+        dict["created"] = self.created?.toUTCStr()
+        dict["modified"] = self.modified?.toUTCStr()
         dict["id"] = self.id
         dict["name"] = self.name
         dict["value"] = self.value as? String ?? ""

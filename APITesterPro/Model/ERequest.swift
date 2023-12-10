@@ -102,8 +102,8 @@ public class ERequest: NSManagedObject, Entity {
     public static func fromDictionary(_ dict: [String: Any]) -> ERequest? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
         guard let req = self.db.createRequest(id: id, wsId: wsId, name: "") else { return nil }
-        if let x = dict["created"] as? Date { req.created = x }
-        if let x = dict["modified"] as? Date { req.modified = x }
+        if let x = dict["created"] as? String { req.created = Date.toUTCDate(x) }
+        if let x = dict["modified"] as? String { req.modified = Date.toUTCDate(x) }
         if let x = dict["desc"] as? String { req.desc = x }
         if let x = dict["name"] as? String { req.name = x }
         if let x = dict["validateSSL"] as? Bool { req.validateSSL = x }
@@ -197,8 +197,8 @@ public class ERequest: NSManagedObject, Entity {
     
     public func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [:]
-        dict["created"] = self.created
-        dict["modified"] = self.modified
+        dict["created"] = self.created?.toUTCStr()
+        dict["modified"] = self.modified?.toUTCStr()
         dict["id"] = self.id
         dict["wsId"] = self.wsId
         dict["desc"] = self.desc

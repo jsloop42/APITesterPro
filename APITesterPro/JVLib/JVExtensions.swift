@@ -326,7 +326,7 @@ public extension Date {
         return Self.toDate(dateStr)
     }
     
-    /// Converts the dete to user's time zone and returns it in String format
+    /// Converts the date to user's time zone and returns it in String format
     func toLocalDateStr() -> String {
         let df = DateFormatter()
         df.timeZone = .current
@@ -342,6 +342,14 @@ public extension Date {
         return df.date(from: str)!
     }
     
+    /// Converts the date string to UTC date
+    static func toUTCDate(_ str: String) -> Date {
+        let df = DateFormatter()
+        df.timeZone = TimeZone(abbreviation: "UTC")
+        df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+        return df.date(from: str)!
+    }
+    
     /// Converts a date in local time zone to UTC date
     func toUTC() -> Date {
         let df = DateFormatter()
@@ -349,6 +357,14 @@ public extension Date {
         df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         let dateStr = df.string(from: self)
         return Self.toDate(dateStr)
+    }
+    
+    /// Converts the UTC date to string format
+    func toUTCStr() -> String {
+        let df = DateFormatter()
+        df.timeZone = TimeZone(abbreviation: "UTC")
+        df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+        return df.string(from: self)
     }
     
     /// Get date in user's current locale format.

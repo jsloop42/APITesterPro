@@ -90,8 +90,8 @@ public class EProject: NSManagedObject, Entity {
     public static func fromDictionary(_ dict: [String: Any]) -> EProject? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
         guard let proj = self.db.createProject(id: id, wsId: wsId, name: "", desc: "", ctx: self.db.mainMOC) else { return nil }
-        if let x = dict["created"] as? Date { proj.created = x }
-        if let x = dict["modified"] as? Date { proj.modified = x }
+        if let x = dict["created"] as? String { proj.created = Date.toUTCDate(x) }
+        if let x = dict["modified"] as? String { proj.modified = Date.toUTCDate(x) }
         if let x = dict["desc"] as? String { proj.desc = x }
         if let x = dict["name"] as? String { proj.name = x }
         if let x = dict["version"] as? Int64 { proj.version = x }
@@ -159,8 +159,8 @@ public class EProject: NSManagedObject, Entity {
     
     public func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [:]
-        dict["created"] = self.created
-        dict["modified"] = self.modified
+        dict["created"] = self.created?.toUTCStr()
+        dict["modified"] = self.modified?.toUTCStr()
         dict["desc"] = self.desc
         dict["id"] = self.id
         dict["wsId"] = self.wsId
