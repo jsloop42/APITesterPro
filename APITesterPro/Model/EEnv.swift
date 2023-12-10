@@ -11,8 +11,8 @@ import CoreData
 import CloudKit
 
 public class EEnv: NSManagedObject, Entity {
-    static let db: CoreDataService = CoreDataService.shared
-    static let ck: JVCloudKit = JVCloudKit.shared
+    static var db: CoreDataService = { CoreDataService.shared }()
+    static var ck: JVCloudKit = { JVCloudKit.shared }()
     public var recordType: String { return "Env" }
     
     public func getId() -> String {

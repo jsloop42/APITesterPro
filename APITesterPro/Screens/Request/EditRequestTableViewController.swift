@@ -924,7 +924,7 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
     var editingIndexPath: IndexPath?
     var bodyDataId = ""
     private let nc = NotificationCenter.default
-    private let localdb = CoreDataService.shared
+    private lazy var localdb = { CoreDataService.shared }()
     private let app = App.shared
     private var rawTextViewPrevHeight: CGFloat = 89
     private var rawTextViewText = ""
@@ -1251,7 +1251,7 @@ class KVEditBodyFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIColl
     private let nc = NotificationCenter.default
     var selectedFieldFormat: RequestBodyFormFieldFormatType = .text
     private let app = App.shared
-    private let localdb = CoreDataService.shared
+    private lazy var localdb = { CoreDataService.shared }()
     private let utils = JVUtils.shared
     var reqDataId = ""  // Will be empty if there are no fields added
 

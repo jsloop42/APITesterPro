@@ -22,8 +22,8 @@ class App {
     static let shared: App = App()
     var popupBottomContraints: NSLayoutConstraint?
     // private var dbSvc = PersistenceService.shared
-    private let localdb = CoreDataService.shared
-    private let ck = JVCloudKit.shared
+    private lazy var localdb = { CoreDataService.shared }()
+    private lazy var ck = { JVCloudKit.shared }()
     private let utils = JVUtils.shared
     private let nc = NotificationCenter.default
     private var appLaunched = false
