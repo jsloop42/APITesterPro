@@ -152,6 +152,7 @@ class EnvironmentPickerViewController: UIViewController, UITableViewDelegate, UI
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if self.selectedIndex == indexPath.row {
             self.selectedIndex = -1  // de-select
+            self.env = nil  // clear any selected env
         } else {
             self.selectedIndex = indexPath.row
         }
