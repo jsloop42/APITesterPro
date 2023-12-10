@@ -301,7 +301,7 @@ class RequestTableViewController: APITesterProTableViewController {
             man.cancelRequest()
             return
         }
-        self.reqMan?.env = self.env
+        man.env = self.env
         man.start()
         self.isRequestInProgress = true
         UIView.animate(withDuration: 0.3) {

@@ -17,8 +17,8 @@ class EnvGroupCell: UITableViewCell {
 class EnvironmentGroupViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     private let app = App.shared
-    private lazy var localDB = { CoreDataService.shared }()
-    // private lazy var db = { PersistenceService.shared }()
+    private lazy var localdb = { CoreDataService.shared }()
+    private lazy var localdbSvc = { PersistenceService.shared }()
     private var frc: NSFetchedResultsController<EEnv>!
     private var workspace: EWorkspace?
     
@@ -49,7 +49,7 @@ class EnvironmentGroupViewController: UIViewController {
         guard self.frc == nil else { return }
         if self.workspace == nil { self.workspace = self.app.getSelectedWorkspace() }
         guard let wsId = self.workspace?.getId() else { return }
-        if let _frc = self.localDB.getFetchResultsController(obj: EEnv.self, predicate: NSPredicate(format: "wsId == %@ AND markForDelete == %hhd", wsId, false), ctx: self.localDB.mainMOC) as? NSFetchedResultsController<EEnv> {
+        if let _frc = self.localdb.getFetchResultsController(obj: EEnv.self, predicate: NSPredicate(format: "wsId == %@ AND markForDelete == %hhd", wsId, false), ctx: self.localdb.mainMOC) as? NSFetchedResultsController<EEnv> {
             self.frc = _frc
             self.frc.delegate = self
             try? self.frc.performFetch()
@@ -112,8 +112,8 @@ extension EnvironmentGroupViewController: UITableViewDelegate, UITableViewDataSo
         let delete = UIContextualAction(style: .destructive, title: "Delete") { action, view, completion in
             Log.debug("delete row: \(indexPath)")
             let env = self.frc.object(at: indexPath)
-            env.markForDelete = true
-            self.localDB.saveMainContext()
+            self.localdbSvc.deleteEntity(env: env)
+            self.localdb.saveMainContext()
             // TODO: delete data marked for delete env
             // self.db.deleteDataMarkedForDelete(env, ctx: self.localDB.mainMOC)
             self.updateData()

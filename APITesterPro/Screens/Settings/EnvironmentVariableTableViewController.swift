@@ -21,8 +21,8 @@ class EnvVarCell: UITableViewCell {
 
 class EnvironmentVariableTableViewController: UITableViewController {
     private let app = App.shared
-    private lazy var localDB = { CoreDataService.shared }()
-    // private lazy var db = { PersistenceService.shared }()
+    private lazy var localdb = { CoreDataService.shared }()
+    private lazy var localdbSvc = { PersistenceService.shared }()
     var env: EEnv?
     var frc: NSFetchedResultsController<EEnvVar>!
     
@@ -51,7 +51,7 @@ class EnvironmentVariableTableViewController: UITableViewController {
     
     func initData() {
         guard self.frc == nil, let envId = self.env?.getId() else { return }
-        if let _frc = self.localDB.getFetchResultsController(obj: EEnvVar.self, predicate: NSPredicate(format: "env.id == %@ AND markForDelete == %hhd", envId, false), ctx: self.localDB.mainMOC) as? NSFetchedResultsController<EEnvVar> {
+        if let _frc = self.localdb.getFetchResultsController(obj: EEnvVar.self, predicate: NSPredicate(format: "env.id == %@ AND markForDelete == %hhd", envId, false), ctx: self.localdb.mainMOC) as? NSFetchedResultsController<EEnvVar> {
             self.frc = _frc
             self.frc.delegate = self
             try? self.frc.performFetch()
@@ -106,8 +106,8 @@ class EnvironmentVariableTableViewController: UITableViewController {
         let delete = UIContextualAction(style: .destructive, title: "Delete") { action, view, completion in
             Log.debug("delete row: \(indexPath)")
             let envVar = self.frc.object(at: indexPath)
-            envVar.markForDelete = true
-            self.localDB.saveMainContext()
+            self.localdbSvc.deleteEntity(envVar: envVar)
+            self.localdb.saveMainContext()
             // TODO: delete data marked for delete envvar
             // self.db.deleteDataMarkedForDelete(envVar, ctx: self.localDB.mainMOC)
             self.updateData()
