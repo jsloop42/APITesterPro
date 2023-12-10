@@ -313,10 +313,15 @@ final class RequestManager {
         let bodyId = body.getId()
         let mpart = self.localdb.getFormRequestData(bodyId, type: .multipart)
         var acc: String!
-        mpart.forEach { data in
-            if !data.disabled {
+        mpart.enumerated().forEach { iter in
+            let idx = iter.offset
+            let elem = iter.element
+            if !elem.disabled {
                 if acc == nil { acc = "" }
-                acc += "\(data.key ?? "")=\(data.value ?? "")"
+                acc += "\(elem.key ?? "")=\(elem.value ?? "")"
+                if idx < mpart.count - 1 {
+                    acc += "&"
+                }
             }
         }
         var _urlReq = urlReq
