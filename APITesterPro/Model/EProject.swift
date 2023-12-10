@@ -94,6 +94,7 @@ public class EProject: NSManagedObject, Entity {
         if let x = dict["modified"] as? String { proj.modified = Date.toUTCDate(x) }
         if let x = dict["desc"] as? String { proj.desc = x }
         if let x = dict["name"] as? String { proj.name = x }
+        if let x = dict["order"] as? NSDecimalNumber { proj.order = x }
         if let x = dict["version"] as? Int64 { proj.version = x }
         if let xs = dict["requests"] as? [[String: Any]] {
             xs.forEach { dict in
@@ -136,6 +137,7 @@ public class EProject: NSManagedObject, Entity {
             record["id"] = self.getId() as CKRecordValue
             record["wsId"] = self.getWsId() as CKRecordValue
             record["name"] = (self.name ?? "") as CKRecordValue
+            record["order"] = self.order! as CKRecordValue
             record["version"] = self.version as CKRecordValue
             let ref = CKRecord.Reference(record: workspace, action: .deleteSelf)
             record["workspace"] = ref
@@ -151,6 +153,7 @@ public class EProject: NSManagedObject, Entity {
                 if let x = record["id"] as? String { self.id = x }
                 if let x = record["wsId"] as? String { self.wsId = x }
                 if let x = record["name"] as? String { self.name = x }
+                if let x = record["order"] as? NSDecimalNumber { self.order = x }
                 if let x = record["version"] as? Int64 { self.version = x }
                 if let ws = EWorkspace.getWorkspace(record, ctx: moc) { self.workspace = ws }
             }
@@ -165,6 +168,7 @@ public class EProject: NSManagedObject, Entity {
         dict["id"] = self.id
         dict["wsId"] = self.wsId
         dict["name"] = self.name
+        dict["order"] = self.order
         dict["version"] = self.version
         var xs: [[String: Any]] = []
         // requests

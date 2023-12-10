@@ -84,6 +84,7 @@ public class EEnv: NSManagedObject, Entity {
         if let x = dict["created"] as? String { env.created = Date.toUTCDate(x) }
         if let x = dict["modified"] as? String { env.modified = Date.toUTCDate(x) }
         if let x = dict["name"] as? String { env.name = x }
+        if let x = dict["order"] as? NSDecimalNumber? { env.order = x }
         if let x = dict["version"] as? Int64 { env.version = x }
         if let xs = dict["variables"] as? [[String: Any]] {
             xs.forEach { hm in
@@ -118,6 +119,7 @@ public class EEnv: NSManagedObject, Entity {
             record["id"] = (self.id ?? "") as CKRecordValue
             record["wsId"] = (self.wsId ?? "") as CKRecordValue
             record["name"] = (self.name ?? "") as CKRecordValue
+            record["order"] = self.order! as CKRecordValue
             record["version"] = self.version as CKRecordValue
             let ref = CKRecord.Reference(record: workspace, action: .deleteSelf)
             record["workspace"] = ref
@@ -132,6 +134,7 @@ public class EEnv: NSManagedObject, Entity {
                 if let x = record["id"] as? String { self.id = x }
                 if let x = record["wsId"] as? String { self.wsId = x }
                 if let x = record["name"] as? String { self.name = x }
+                if let x = record["order"] as? NSDecimalNumber { self.order = x }
                 if let x = record["version"] as? Int64 { self.version = x }
                 if let ws = EWorkspace.getWorkspace(record, ctx: moc) { self.workspace = ws }
             }
@@ -144,6 +147,7 @@ public class EEnv: NSManagedObject, Entity {
         dict["modified"] = self.modified?.toUTCStr()
         dict["id"] = self.id
         dict["name"] = self.name
+        dict["order"] = self.order
         dict["version"] = self.version
         dict["wsId"] = self.wsId
         let vars = Self.db.getEnvVars(envId: self.getId())

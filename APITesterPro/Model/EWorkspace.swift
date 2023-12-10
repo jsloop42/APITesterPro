@@ -93,6 +93,7 @@ public class EWorkspace: NSManagedObject, Entity {
         if let x = dict["isSyncEnabled"] as? Bool { ws.isSyncEnabled = x }
         if let x = dict["name"] as? String { ws.name = x }
         if let x = dict["desc"] as? String { ws.desc = x }
+        if let x = dict["order"] as? NSDecimalNumber { ws.order = x }
         if let x = dict["saveResponse"] as? Bool { ws.saveResponse = x }
         if let x = dict["version"] as? Int64 { ws.version = x }
         self.db.saveMainContext()
@@ -137,6 +138,7 @@ public class EWorkspace: NSManagedObject, Entity {
             record["isActive"] = self.isActive as CKRecordValue
             record["isSyncEnabled"] = self.isSyncEnabled as CKRecordValue
             record["name"] = self.name! as CKRecordValue
+            record["order"] = self.order! as CKRecordValue
             record["saveResponse"] = self.saveResponse as CKRecordValue
             record["version"] = self.version as CKRecordValue
         }
@@ -151,6 +153,7 @@ public class EWorkspace: NSManagedObject, Entity {
             if let x = record["isSyncEnabled"] as? Bool { self.isSyncEnabled = x }
             if let x = record["name"] as? String { self.name = x }
             if let x = record["desc"] as? String { self.desc = x }
+            if let x = record["order"] as? NSDecimalNumber { self.order = x }
             if let x = record["saveResponse"] as? Bool { self.saveResponse = x }
             if let x = record["version"] as? Int64 { self.version = x }
         }
@@ -165,6 +168,7 @@ public class EWorkspace: NSManagedObject, Entity {
         dict["isSyncEnabled"] = self.isSyncEnabled
         dict["name"] = self.name
         dict["desc"] = self.desc
+        dict["order"] = self.order
         dict["saveResponse"] = self.saveResponse
         dict["version"] = self.version
         var xs: [[String: Any]] = []

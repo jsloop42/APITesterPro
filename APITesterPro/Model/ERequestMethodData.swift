@@ -86,6 +86,7 @@ public class ERequestMethodData: NSManagedObject, Entity {
         if let x = dict["created"] as? String { method.created = Date.toUTCDate(x) }
         if let x = dict["modified"] as? String { method.modified = Date.toUTCDate(x) }
         if let x = dict["name"] as? String { method.name = x }
+        if let x = dict["order"] as? NSDecimalNumber { method.order = x }
         if let x = dict["version"] as? Int64 { method.version = x }
         method.markForDelete = false
         self.db.saveMainContext()
@@ -114,6 +115,7 @@ public class ERequestMethodData: NSManagedObject, Entity {
             record["wsId"] = self.getWsId() as CKRecordValue
             record["isCustom"] = self.isCustom as CKRecordValue
             record["name"] = (self.name ?? "") as CKRecordValue
+            record["order"] = self.order! as CKRecordValue
             record["shouldDelete"] = self.shouldDelete as CKRecordValue
             record["version"] = self.version as CKRecordValue
             let ref = CKRecord.Reference(record: project, action: .none)
@@ -129,6 +131,7 @@ public class ERequestMethodData: NSManagedObject, Entity {
                 if let x = record["id"] as? String { self.id = x }
                 if let x = record["isCustom"] as? Bool { self.isCustom = x }
                 if let x = record["name"] as? String { self.name = x }
+                if let x = record["order"] as? NSDecimalNumber { self.order = x }
                 if let x = record["shouldDelete"] as? Bool { self.shouldDelete = x }
                 if let x = record["version"] as? Int64 { self.version = x }
                 if let ref = record["project"] as? CKRecord.Reference, let proj = EProject.getProjectFromReference(ref, record: record, ctx: moc) { self.project = proj }
@@ -143,6 +146,7 @@ public class ERequestMethodData: NSManagedObject, Entity {
         dict["id"] = self.id
         dict["isCustom"] = self.isCustom
         dict["name"] = self.name
+        dict["order"] = self.order
         dict["version"] = self.version
         dict["wsId"] = self.wsId
         return dict
