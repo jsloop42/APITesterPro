@@ -11,8 +11,8 @@ import CloudKit
 import CoreData
 
 public class EWorkspace: NSManagedObject, Entity {
-    static let db: CoreDataService = CoreDataService.shared
-    static let ck: JVCloudKit = JVCloudKit.shared
+    static var db: CoreDataService = { CoreDataService.shared }()
+    static var ck: JVCloudKit = { JVCloudKit.shared }()
     public var recordType: String { return "Workspace" }
     
     /// Checks if the default workspace does not have any change or is just after a reset (is new)
@@ -157,7 +157,6 @@ public class EWorkspace: NSManagedObject, Entity {
     }
     
     public func toDictionary() -> [String: Any] {
-        let db = CoreDataService.shared
         var dict: [String: Any] = [:]
         dict["created"] = self.created
         dict["modified"] = self.modified
@@ -174,7 +173,7 @@ public class EWorkspace: NSManagedObject, Entity {
             xs.append(proj.toDictionary())
         }
         dict["projects"] = xs
-        let envxs = db.getEnvs(wsId: self.getWsId())
+        let envxs = Self.db.getEnvs(wsId: self.getWsId())
         xs = []
         envxs.forEach { env in
             xs.append(env.toDictionary())

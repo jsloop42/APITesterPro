@@ -11,8 +11,8 @@ import CoreData
 import CloudKit
 
 public class EHistory: NSManagedObject, Entity {
-    static let db: CoreDataService = CoreDataService.shared
-    static let ck: JVCloudKit = JVCloudKit.shared
+    static var db: CoreDataService = { CoreDataService.shared }()
+    static var ck: JVCloudKit = { JVCloudKit.shared }()
     public var recordType: String { return "History" }
     private let secureTrans = SecureTransformerData()
     

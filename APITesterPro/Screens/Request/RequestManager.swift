@@ -25,7 +25,7 @@ final class RequestManager {
     }
     var envVars: [EEnvVar] = []
     var fsm: RequestStateMachine
-    private let localdb = CoreDataService.shared
+    private lazy var localdb = { CoreDataService.shared }()
     private let http: JVHTTPClient
     private let nc = NotificationCenter.default
     private var validateSSL = true

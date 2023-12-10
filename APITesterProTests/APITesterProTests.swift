@@ -11,7 +11,7 @@ import XCTest
 import CoreData
 
 class APITesterProTests: XCTestCase {
-    private var localdb = CoreDataService.shared
+    private lazy var localdb = { CoreDataService.shared }()
     // private var dbSvc = PersistenceService.shared
     private let utils = JVUtils.shared
     private let serialQueue = DispatchQueue(label: "serial-queue")

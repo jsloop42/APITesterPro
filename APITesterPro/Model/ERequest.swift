@@ -11,8 +11,8 @@ import CloudKit
 import CoreData
 
 public class ERequest: NSManagedObject, Entity {
-    static let db: CoreDataService = CoreDataService.shared
-    static let ck: JVCloudKit = JVCloudKit.shared
+    static var db: CoreDataService = { CoreDataService.shared }()
+    static var ck: JVCloudKit = { JVCloudKit.shared }()
     public var recordType: String { return "Request" }
     
     public func getId() -> String {

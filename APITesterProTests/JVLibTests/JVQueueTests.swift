@@ -13,7 +13,6 @@ import Foundation
 // This test needs to be run individually. Enabling from test plan is causing failure.
 class JVQueueTests: XCTestCase {
     private var timer: Timer?
-    private let ck = JVCloudKit.shared
     private let opq = JVOperationQueue()
     
     override func setUp() {
