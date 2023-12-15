@@ -53,7 +53,7 @@ Utility
 
 Jaseem Valiya Valappil
 +919633964987
-jaseemvv@gmail.com
+jaseemvv@icloud.com
 
 ### Notes
 
@@ -84,3 +84,8 @@ https://www.jsloop.net/p/api-tester-pro-privacy-policy.html
 ## Marketing URL
 
 https://www.jsloop.net/p/api-tester-pro.html
+
+## Support URL
+
+https://www.jsloop.net/p/contact.html
+
