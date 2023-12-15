@@ -124,7 +124,7 @@ final class RequestManager {
             if history != nil {
                 history.request = self.request
                 info.history = history
-                if let cookies = info.cookiesData as NSObject? { history.cookies = cookies }
+                history.cookies = info.cookiesData
                 self.localdb.saveMainContext()
                 if let ws = self.localdb.getWorkspace(id: history.getWsId()), ws.isSyncEnabled {
                     // TODO: save history to cloud
@@ -182,7 +182,7 @@ final class RequestManager {
         if !isExp { return (string, false, false) }
         let substr = string.slice(from: "{{", to: "}}") ?? ""
         if substr.isEmpty { return (string, isExp, false) }
-        if let envVar = (self.envVars.first { x in x.name == substr }), let val = envVar.value as? String {
+        if let envVar = (self.envVars.first { x in x.name == substr }), let val = envVar.value {
             let ret = string.replacingOccurrences(of: "{{\(substr)}}", with: val, options: .caseInsensitive)
             return (ret, isExp, string != ret)
         }

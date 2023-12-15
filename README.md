@@ -23,7 +23,6 @@ Main features
 • View all response history
 • SSL validation per request
 • Environment group with variables per workspace with option to select different environment per request
-• Sensitive data like environment variables and cookies are encrypted locally
 • Supports dark mode
 • Import/Export workspace data
 
