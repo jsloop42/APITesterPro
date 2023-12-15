@@ -14,7 +14,6 @@ public class EEnvVar: NSManagedObject, Entity {
     static var db: CoreDataService = { CoreDataService.shared }()
     static var ck: JVCloudKit = { JVCloudKit.shared }()
     public var recordType: String { return "EnvVar" }
-    private let secureTrans = SecureTransformerString()
     
     public func getId() -> String {
         return self.id ?? ""
@@ -78,7 +77,7 @@ public class EEnvVar: NSManagedObject, Entity {
         if let x = dict["created"] as? String { envVar.created = Date.toUTCDate(x) }
         if let x = dict["modified"] as? String { envVar.modified = Date.toUTCDate(x) }
         if let x = dict["name"] as? String { envVar.name = x }
-        if let x = dict["value"] as? String { envVar.value = x as NSObject }
+        if let x = dict["value"] as? String { envVar.value = x as String }
         if let x = dict["version"] as? Int64 { envVar.version = x }
         envVar.markForDelete = false
         return envVar
@@ -104,15 +103,7 @@ public class EEnvVar: NSManagedObject, Entity {
             record["modified"] = self.modified! as CKRecordValue
             record["id"] = self.getId() as CKRecordValue
             record["name"] = (self.name ?? "") as CKRecordValue
-            if let name = self.name, let str = self.value as? String, let data = self.secureTrans.transformedValue(str) as? Data {
-                let url = JVFileManager.getTemporaryURL(name)
-                do {
-                    try data.write(to: url)
-                    record["value"] = CKAsset(fileURL: url)
-                } catch let error {
-                    Log.error("Error: \(error)")
-                }
-            }
+            record["value"] = (self.value ?? "") as CKRecordValue
             record["version"] = self.version as CKRecordValue
             let ref = CKRecord.Reference(record: env, action: .deleteSelf)
             record["env"] = ref
@@ -126,15 +117,7 @@ public class EEnvVar: NSManagedObject, Entity {
                 if let x = record["modified"] as? Date { self.modified = x }
                 if let x = record["id"] as? String { self.id = x }
                 if let x = record["name"] as? String { self.name = x }
-                if let x = record["value"] as? CKAsset, let url = x.fileURL {
-                    do {
-                        let data = try Data(contentsOf: url)
-                        if let str = self.secureTrans.reverseTransformedValue(data) as? String {
-                            self.value = str as NSObject
-                        }
-                        
-                    } catch let error { Log.error("Error getting data from file url: \(error)") }
-                }
+                if let x = record["value"] as? String { self.value = x }
                 if let x = record["version"] as? Int64 { self.version = x }
                 if let ref = record["env"] as? CKRecord.Reference, let env = EEnv.getEnvFromReference(ref, record: record, ctx: moc) {
                     self.env = env
@@ -149,7 +132,7 @@ public class EEnvVar: NSManagedObject, Entity {
         dict["modified"] = self.modified?.toUTCStr()
         dict["id"] = self.id
         dict["name"] = self.name
-        dict["value"] = self.value as? String ?? ""
+        dict["value"] = self.value ?? ""
         return dict
     }
 }

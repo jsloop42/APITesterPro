@@ -184,7 +184,7 @@ class EnvironmentEditViewController: UITableViewController, UITextFieldDelegate 
             self.saveEnvVar()
         case .editEnvVar:
             self.envVar?.name = self.name
-            self.envVar?.value = self.value as NSString
+            self.envVar?.value = self.value
             self.saveEnvVar()
         default:
             break
@@ -223,7 +223,7 @@ class EnvironmentEditViewController: UITableViewController, UITextFieldDelegate 
         } else if self.mode == .viewEnvVar || self.mode == .editEnvVar {
             if self.envVar != nil {
                 self.nameCell.textField.text = self.envVar!.name
-                self.valueCell.textField.text = self.envVar!.value as? String ?? ""
+                self.valueCell.textField.text = self.envVar!.value ?? ""
             } else {
                 self.nameCell.textField.text = self.name
                 self.valueCell.textField.text = self.value
@@ -260,7 +260,7 @@ class EnvironmentEditViewController: UITableViewController, UITextFieldDelegate 
             case .editEnvVar:
                 type == .name ? (self.name = text) : (self.value = text)
                 if self.envVar != nil {
-                    if self.envVar!.name != self.name || self.envVar!.value as? String != self.value {
+                    if self.envVar!.name != self.name || self.envVar!.value != self.value {
                         self.editok = true
                     }
                 }

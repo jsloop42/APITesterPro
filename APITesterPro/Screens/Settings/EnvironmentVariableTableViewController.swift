@@ -85,7 +85,7 @@ class EnvironmentVariableTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "envVarCell", for: indexPath) as! EnvVarCell
         let envVar = self.frc.object(at: indexPath)
         cell.nameLabel.text = envVar.name
-        cell.valueLabel.text = envVar.value as? String
+        cell.valueLabel.text = envVar.value
         return cell
     }
     

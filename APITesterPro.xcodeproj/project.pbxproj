@@ -49,7 +49,6 @@
 		9E81D0EC2AF451FF004095CF /* ERequestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0DC2AF451FF004095CF /* ERequestData.swift */; };
 		9E81D0ED2AF451FF004095CF /* EFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0DD2AF451FF004095CF /* EFile.swift */; };
 		9E81D0EE2AF451FF004095CF /* ERequestMethodData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0DE2AF451FF004095CF /* ERequestMethodData.swift */; };
-		9E81D0EF2AF451FF004095CF /* SecureTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0DF2AF451FF004095CF /* SecureTransformer.swift */; };
 		9E81D0F02AF451FF004095CF /* EEnvVar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0E02AF451FF004095CF /* EEnvVar.swift */; };
 		9E81D0F12AF451FF004095CF /* EEnv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0E12AF451FF004095CF /* EEnv.swift */; };
 		9E81D0F22AF451FF004095CF /* ERequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0E22AF451FF004095CF /* ERequest.swift */; };
@@ -171,7 +170,6 @@
 		9E81D0DC2AF451FF004095CF /* ERequestData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ERequestData.swift; sourceTree = "<group>"; };
 		9E81D0DD2AF451FF004095CF /* EFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EFile.swift; sourceTree = "<group>"; };
 		9E81D0DE2AF451FF004095CF /* ERequestMethodData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ERequestMethodData.swift; sourceTree = "<group>"; };
-		9E81D0DF2AF451FF004095CF /* SecureTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureTransformer.swift; sourceTree = "<group>"; };
 		9E81D0E02AF451FF004095CF /* EEnvVar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EEnvVar.swift; sourceTree = "<group>"; };
 		9E81D0E12AF451FF004095CF /* EEnv.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EEnv.swift; sourceTree = "<group>"; };
 		9E81D0E22AF451FF004095CF /* ERequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ERequest.swift; sourceTree = "<group>"; };
@@ -366,7 +364,6 @@
 				9E81D0D92AF451FE004095CF /* EWorkspace.swift */,
 				9E81D0E82AF451FF004095CF /* Models.swift */,
 				9E81D0E62AF451FF004095CF /* ResponseData.swift */,
-				9E81D0DF2AF451FF004095CF /* SecureTransformer.swift */,
 				9E81D0DB2AF451FF004095CF /* Zone.swift */,
 			);
 			path = Model;
@@ -719,7 +716,6 @@
 				9E81D12D2AF45241004095CF /* KVCell.swift in Sources */,
 				9E81D0EE2AF451FF004095CF /* ERequestMethodData.swift in Sources */,
 				9E81D0F22AF451FF004095CF /* ERequest.swift in Sources */,
-				9E81D0EF2AF451FF004095CF /* SecureTransformer.swift in Sources */,
 				9E81D0F02AF451FF004095CF /* EEnvVar.swift in Sources */,
 				9E81D0FD2AF45208004095CF /* APITesterProTableViewController.swift in Sources */,
 				9E81D0FE2AF45208004095CF /* APITesterProViewController.swift in Sources */,
@@ -913,7 +909,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = APITesterPro/APITesterPro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = TPAP6QPH98;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = APITesterPro/Info.plist;
@@ -950,7 +946,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = APITesterPro/APITesterPro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = TPAP6QPH98;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = APITesterPro/Info.plist;

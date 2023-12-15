@@ -132,12 +132,10 @@ class CoreDataService {
     private var storeType: String! = NSSQLiteStoreType
     lazy var peristentContainerTest: NSPersistentContainer = {
         let model = self.model
-        self.registerTransformers()
         return NSPersistentContainer(name: self.containerName, managedObjectModel: model)
     }()
     lazy var persistentContainer: NSPersistentContainer = {
         let model = self.model
-        self.registerTransformers()
         return NSPersistentContainer(name: self.containerName, managedObjectModel: model)
     }()
     lazy var model: NSManagedObjectModel = {
@@ -172,11 +170,6 @@ class CoreDataService {
     init(containerName: String) {
         self.containerName = containerName
         self.bootstrap()
-    }
-    
-    func registerTransformers() {
-        SecureTransformerString.register()
-        SecureTransformerData.register()
     }
 
     func bootstrap() {
@@ -1940,7 +1933,7 @@ class CoreDataService {
             let data = x != nil ? x! : EEnvVar(context: moc)
             data.id = envVarId
             data.name = name
-            data.value = value as NSString
+            data.value = value
             data.created = x == nil ? date: x!.created
             data.modified = date
             data.version = x == nil ? CoreDataService.modelVersion : x!.version
