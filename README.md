@@ -25,6 +25,7 @@ Main features
 • Environment group with variables per workspace with option to select different environment per request
 • Sensitive data like environment variables and cookies are encrypted locally
 • Supports dark mode
+• Import/Export workspace data
 
 ## Keywords
 
@@ -78,3 +79,9 @@ Make this app available: Automatic macOS 11.0
 ## App Privacy
 
 Data not collected
+
+https://www.jsloop.net/p/api-tester-pro-privacy-policy.html
+
+## Marketing URL
+
+https://www.jsloop.net/p/api-tester-pro.html
