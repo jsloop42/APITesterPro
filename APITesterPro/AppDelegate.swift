@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         } else {
             self.window?.makeKeyAndVisible()
         }
-        application.registerForRemoteNotifications()
+        // application.registerForRemoteNotifications()  // Getting warning ITMS-90078: Missing Push Notification Entitlement on uploading to testflight
         self.app.didFinishLaunching(app: application, window: self.window!)
         return true
     }
@@ -52,29 +52,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
     }
     
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        Log.debug("Remote notification did receive: \(userInfo)")
-        // TODO: ck: enable back
-//        if let info = userInfo as? [String: NSObject], let notif = CKNotification(fromRemoteNotificationDictionary: info) {
-//            if let subID = notif.subscriptionID, self.ck.isSubscribed(to: subID) {
-//                if let ckhm = userInfo["ck"] as? [String: Any], let meta = ckhm["met"] as? [String: Any], let zid = meta["zid"] as? String {
-//                    // TODO: ck: handle sync notification
-//                    // self.db.handleSyncNotification(self.ck.zoneID(with: zid))
-//                    completionHandler(.newData)
-//                    return
-//                }
-//            }
-//            completionHandler(.noData)
-//        }
-    }
+//    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+//        Log.debug("Remote notification did receive: \(userInfo)")
+//        // TODO: ck: enable back
+////        if let info = userInfo as? [String: NSObject], let notif = CKNotification(fromRemoteNotificationDictionary: info) {
+////            if let subID = notif.subscriptionID, self.ck.isSubscribed(to: subID) {
+////                if let ckhm = userInfo["ck"] as? [String: Any], let meta = ckhm["met"] as? [String: Any], let zid = meta["zid"] as? String {
+////                    // TODO: ck: handle sync notification
+////                    // self.db.handleSyncNotification(self.ck.zoneID(with: zid))
+////                    completionHandler(.newData)
+////                    return
+////                }
+////            }
+////            completionHandler(.noData)
+////        }
+//    }
     
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        //Log.debug("did register for remote notification with token: \(String(bytes: deviceToken, encoding: .utf8) ?? "")")
-    }
+//    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+//        //Log.debug("did register for remote notification with token: \(String(bytes: deviceToken, encoding: .utf8) ?? "")")
+//    }
     
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.alert, .sound, .badge])
-    }
+//    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+//        completionHandler([.alert, .sound, .badge])
+//    }
     
     // MARK: UISceneSession Lifecycle
 
