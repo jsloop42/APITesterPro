@@ -21,8 +21,8 @@ struct Zone {
     /// If a workspace is deleted if we delete the zone record in the default zone, we cannot propagate the delete change to other devices on sync. So we instead set this flag and keep the zone record.
     /// The zone will be deleted on deleting the workspace. If this flag is set on sync, all local data can be deleted.
     var isDisabled: Bool
-    var created: Int64 = Date().currentTimeNanos()
-    var modified: Int64 = Date().currentTimeNanos()
+    var created: Date = Date()  // date in UTC
+    var modified: Date = Date()
     var version: Int64 = CoreDataService.modelVersion
     
     func updateCKRecord(_ record: CKRecord) {
@@ -38,8 +38,8 @@ struct Zone {
     
     mutating func updateFromCKRecord(_ record: CKRecord) {
         if let x = record["id"] as? String { self.id = x }
-        if let x = record["created"] as? Int64 { self.created = x }
-        if let x = record["modified"] as? Int64 { self.modified = x }
+        if let x = record["created"] as? Date { self.created = x }
+        if let x = record["modified"] as? Date { self.modified = x }
         if let x = record["name"] as? String { self.name = x }
         if let x = record["desc"] as? String { self.desc = x }
         if let x = record["isSyncEnabled"] as? Bool { self.isSyncEnabled = x }
