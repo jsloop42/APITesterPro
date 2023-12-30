@@ -21,8 +21,8 @@ class RequestTabBarController: UITabBarController, UITabBarControllerDelegate {
     private var request: ERequest?
     var responseData: ResponseData?
     var segView: UISegmentedControl!
-    private lazy var ck = { JVCloudKit.shared }()
-    private lazy var utils = { JVUtils.shared }()
+    private lazy var ck = { EACloudKit.shared }()
+    private lazy var utils = { EAUtils.shared }()
     private lazy var localdb = { CoreDataService.shared }()
     private let nc = NotificationCenter.default
     private var selectedTab: Tab = .request

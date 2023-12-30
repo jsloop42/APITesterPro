@@ -13,7 +13,7 @@ import CoreData
 class APITesterProTests: XCTestCase {
     private lazy var localdb = { CoreDataService.shared }()
     // private var dbSvc = PersistenceService.shared
-    private let utils = JVUtils.shared
+    private let utils = EAUtils.shared
     private let serialQueue = DispatchQueue(label: "serial-queue")
     private let app = App.shared
 
@@ -275,7 +275,7 @@ class APITesterProTests: XCTestCase {
         let exp = expectation(description: "read file")
         if let path = Bundle.init(for: type(of: self)).path(forResource: "IMG_6109", ofType: "jpeg") {
             Log.debug("path: \(path)")
-            let fm = JVFileManager(url: URL(fileURLWithPath: path))
+            let fm = EAFileManager(url: URL(fileURLWithPath: path))
             fm.readToEOF { result in
                 switch result {
                 case .success(let data):
@@ -293,7 +293,7 @@ class APITesterProTests: XCTestCase {
     
     func testBackgroundWorker() {
         let exp = self.expectation(description: "test background worker")
-        let w = BackgroundWorker()
+        let w = EABackgroundWorker()
         w.start {
             var acc: [Bool] = []
             for _ in 0...4 {
@@ -418,17 +418,17 @@ class APITesterProTests: XCTestCase {
     func testWritingToFile() {
         let exp = expectation(description: "Copy contents of a the source file to destination")
         let str = "ok"
-        let url = JVFileManager.getTemporaryURL("source.txt")
-        JVFileManager.createFileIfNotExists(url)
-        let fm = JVFileManager(url: url)
+        let url = EAFileManager.getTemporaryURL("source.txt")
+        EAFileManager.createFileIfNotExists(url)
+        let fm = EAFileManager(url: url)
         fm.openFile(for: FileIOMode.write)
         XCTAssertTrue(fm.isFileOpened)
         fm.write(str)
         fm.close()
-        if let docURL = JVFileManager.getDocumentDirectoryURL("dest.txt") {
-            if JVFileManager.copy(source: url, destination: docURL) {
-                XCTAssertTrue(JVFileManager.delete(url: url))
-                let fm = JVFileManager(url: docURL)
+        if let docURL = EAFileManager.getDocumentDirectoryURL("dest.txt") {
+            if EAFileManager.copy(source: url, destination: docURL) {
+                XCTAssertTrue(EAFileManager.delete(url: url))
+                let fm = EAFileManager(url: docURL)
                 fm.openFile(for: .read)
                 XCTAssertTrue(fm.isFileOpened)
                 fm.readToEOF { result in
@@ -441,7 +441,7 @@ class APITesterProTests: XCTestCase {
                         XCTFail()
                     }
                     fm.close()
-                    XCTAssertTrue(JVFileManager.delete(url: docURL))
+                    XCTAssertTrue(EAFileManager.delete(url: docURL))
                     exp.fulfill()
                 }
             }

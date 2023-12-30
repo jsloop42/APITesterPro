@@ -1,5 +1,5 @@
 //
-//  JVRescheduler.swift
+//  EARescheduler.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 13/03/20.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum JVReschedulerType {
+public enum EAReschedulerType {
     /// All functions should produce a truthy value. If any function returns false, the evaluation short circuits.
     case allSatisfies
     /// At least one function should produce a truthy value.
@@ -17,16 +17,16 @@ public enum JVReschedulerType {
     case everyFn
 }
 
-public protocol JVReschedulable: AnyObject {
+public protocol EAReschedulable: AnyObject {
     var interval: TimeInterval { get set }
-    var type: JVReschedulerType! { get set }
+    var type: EAReschedulerType! { get set }
     
-    init(interval: TimeInterval, type: JVReschedulerType)
+    init(interval: TimeInterval, type: EAReschedulerType)
     func schedule()
-    func schedule(fn: JVReschedulerFn)
+    func schedule(fn: EAReschedulerFn)
 }
 
-public struct JVReschedulerFn: Equatable, Hashable {
+public struct EAReschedulerFn: Equatable, Hashable {
     /// The block identifier
     var id: String
     /// The block which needs to be executed returning a status which is passed to the callback function
@@ -42,7 +42,7 @@ public struct JVReschedulerFn: Equatable, Hashable {
         self.args = args
     }
     
-    public static func == (lhs: JVReschedulerFn, rhs: JVReschedulerFn) -> Bool {
+    public static func == (lhs: EAReschedulerFn, rhs: EAReschedulerFn) -> Bool {
         lhs.id == rhs.id && lhs.args == rhs.args
     }
     
@@ -52,31 +52,31 @@ public struct JVReschedulerFn: Equatable, Hashable {
 }
 
 /// A class which provides a scheduler which gets rescheduled if invoked before the schedule.
-public final class JVRescheduler: JVReschedulable {
-    public typealias JVEquatable = String
+public final class EARescheduler: EAReschedulable {
+    public typealias EAEquatable = String
     private var timer: DispatchSourceTimer!
     public var interval: TimeInterval = 0.3  // seconds
-    public var type: JVReschedulerType!
-    private var blocks: [JVReschedulerFn] = []
-    private let queue = JVCommon.userInteractiveQueue
+    public var type: EAReschedulerType!
+    private var blocks: [EAReschedulerFn] = []
+    private let queue = EACommon.userInteractiveQueue
     private let dispatchGroup = DispatchGroup()
     private var isLimitEnabled = false
     private var counter = 0
 
-    private var state: JVTimerState = .suspended
+    private var state: EATimerState = .suspended
     
     deinit {
-        Log.debug("JVRescheduler deinit")
+        Log.debug("Rescheduler deinit")
         self.done()
     }
     
-    public required init(interval: TimeInterval, type: JVReschedulerType) {
+    public required init(interval: TimeInterval, type: EAReschedulerType) {
         self.interval = interval
         self.type = type
     }
     
     private func initTimer() {
-        Log.debug("JVRescheduler: init timer")
+        Log.debug("Rescheduler: init timer")
         if self.timer != nil { self.destroy() }
         self.timer = DispatchSource.makeTimerSource()
         self.timer.schedule(deadline: .now() + self.interval)
@@ -86,7 +86,7 @@ public final class JVRescheduler: JVReschedulable {
     }
     
     private func destroy() {
-        Log.debug("JVRescheduler: destroy")
+        Log.debug("Rescheduler: destroy")
         if self.timer != nil {
             self.timer.setEventHandler {}
             if self.state == .resumed {
@@ -99,20 +99,20 @@ public final class JVRescheduler: JVReschedulable {
     
     /// Clears all data that this class holds and releases resources
     public func done() {
-        Log.debug("JVRescheduler: done")
+        Log.debug("Rescheduler: done")
         self.destroy()
         self.blocks = []
     }
     
     /// Event handler function which will be invoked when timer is realized. It takes an optional completion handler which will be invoked when all functions in the block are executed. Since the functions are executed in an async queue we use completion handler.
     func eventHandler(_ completion: (() -> Void)? = nil) {
-        Log.debug("JVRescheduler: event handler \(self.state)")
-        if self.state == .resumed && self.type == JVReschedulerType.everyFn {  // Invoke the callback function with the result of each block execution
+        Log.debug("Rescheduler: event handler \(self.state)")
+        if self.state == .resumed && self.type == EAReschedulerType.everyFn {  // Invoke the callback function with the result of each block execution
             self.queue.async(group: self.dispatchGroup) { [weak self] in
                 self?.blocks.forEach { fn in fn.callback(fn.block()) }  // The block is invoked when the timer completes
             }
             self.dispatchGroup.notify(queue: DispatchQueue.main) {
-                Log.debug("JVRescheduler: all tasks complete")
+                Log.debug("Rescheduler: all tasks complete")
                 self.done()  // release objects
                 completion?()
             }
@@ -120,21 +120,21 @@ public final class JVRescheduler: JVReschedulable {
     }
     
     public func schedule() {
-        Log.debug("JVRescheduler: schedule")
+        Log.debug("Rescheduler: schedule")
         self.initTimer()
         self.counter += 1
     }
     
     /// Used to set a function to be executed when the timer is realized.
-    public func schedule(fn: JVReschedulerFn) {
-        Log.debug("JVRescheduler: schedule fn")
+    public func schedule(fn: EAReschedulerFn) {
+        Log.debug("Rescheduler: schedule fn")
         self.addToBlock(fn)
         self.schedule()
     }
     
     /// Adds the given function to the block of functions to be executed when timer realizes. If the function is already present, it's replaced.
-    private func addToBlock(_ fn: JVReschedulerFn) {
-        Log.debug("JVRescheduler: add to block")
+    private func addToBlock(_ fn: EAReschedulerFn) {
+        Log.debug("Rescheduler: add to block")
         if let idx = (self.blocks.firstIndex { afn -> Bool in afn.id == fn.id }) {
             self.blocks[idx] = fn
         } else {

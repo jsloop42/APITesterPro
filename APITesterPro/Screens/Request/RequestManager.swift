@@ -26,14 +26,14 @@ final class RequestManager {
     var envVars: [EEnvVar] = []
     var fsm: RequestStateMachine
     private lazy var localdb = { CoreDataService.shared }()
-    private let http: JVHTTPClient
+    private let http: EAHTTPClient
     private let nc = NotificationCenter.default
     private var validateSSL = true
     
     init(request: ERequest, env: EEnv? = nil) {
         self.request = request
         self.env = env
-        self.http = JVHTTPClient()
+        self.http = EAHTTPClient()
         self.fsm = RequestStateMachine(states: RequestManager.getAllRequestStates(request), request: request)
         self.fsm.manager = self
         self.http.delegate = self
@@ -342,7 +342,7 @@ final class RequestManager {
     }
 }
 
-extension RequestManager: JVHTTPClientDelegate {
+extension RequestManager: EAHTTPClientDelegate {
     func shouldValidateSSL() -> Bool {
         return self.validateSSL
     }

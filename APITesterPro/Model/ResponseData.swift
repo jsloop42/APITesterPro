@@ -10,7 +10,7 @@ import Foundation
 
 struct ResponseData: CustomDebugStringConvertible, Equatable {
     private lazy var localdb = { CoreDataService.shared }()
-    private lazy var utils = { JVUtils.shared }()
+    private lazy var utils = { EAUtils.shared }()
     var status: Bool = false
     var mode: Mode = .memory
     var statusCode: Int = 0
@@ -27,7 +27,7 @@ struct ResponseData: CustomDebugStringConvertible, Equatable {
     var metrics: URLSessionTaskMetrics?
     var error: Error?
     var cookiesData: Data?
-    var cookies: [JVHTTPCookie] = []
+    var cookies: [EAHTTPCookie] = []
     var isSecure = false
     private var responseHeaders: [String: String] = [:] {
         didSet { self.updateResponseHeaderKeys() }
@@ -79,7 +79,7 @@ struct ResponseData: CustomDebugStringConvertible, Equatable {
         var isMultipath: Bool = false
         var negotiatedTLSCipherSuite: String = ""  // TLS Cipher Suite
         var negotiatedTLSProtocolVersion: String = ""  // TLS Protocol
-        var connection: String = JVReachability.Connection.cellular.description
+        var connection: String = EAReachability.Connection.cellular.description
     }
     
     /// Indicates if the response object is created from a live response or from history.
@@ -245,14 +245,14 @@ struct ResponseData: CustomDebugStringConvertible, Equatable {
                 cInfo.localPort = (tmetrics.localPort ?? 0).toInt64()
                 cInfo.remotePort = (tmetrics.remotePort ?? 0).toInt64()
                 cInfo.isCellular = (tmetrics.isCellular || tmetrics.isExpensive || tmetrics.isConstrained)
-                cInfo.connection = (tmetrics.isCellular || tmetrics.isExpensive || tmetrics.isConstrained) ? JVReachability.Connection.cellular.description
-                    : JVReachability.Connection.wifi.description
+                cInfo.connection = (tmetrics.isCellular || tmetrics.isExpensive || tmetrics.isConstrained) ? EAReachability.Connection.cellular.description
+                    : EAReachability.Connection.wifi.description
                 cInfo.isMultipath = tmetrics.isMultipath
                 if let x = tmetrics.negotiatedTLSCipherSuite?.rawValue {
-                    cInfo.negotiatedTLSCipherSuite = JVTLSCipherSuite(x)?.toString() ?? ""
+                    cInfo.negotiatedTLSCipherSuite = EATLSCipherSuite(x)?.toString() ?? ""
                 }
                 if let x = tmetrics.negotiatedTLSProtocolVersion {
-                    cInfo.negotiatedTLSProtocolVersion = JVTLSProtocolVersion(x.rawValue)?.toString() ?? ""
+                    cInfo.negotiatedTLSProtocolVersion = EATLSProtocolVersion(x.rawValue)?.toString() ?? ""
                 }
             } else {
                 self.updateResponseBodySizeFromHeaders()
@@ -299,12 +299,12 @@ struct ResponseData: CustomDebugStringConvertible, Equatable {
     mutating func updateCookies() {
         if self.mode == .memory {
             if let url = self.urlRequest?.url {
-                self.cookies = JVHTTPCookie.from(headers: self.responseHeaders, for: url)
+                self.cookies = EAHTTPCookie.from(headers: self.responseHeaders, for: url)
                 self.cookiesData = try? JSONEncoder().encode(self.cookies)
             }
         } else if self.mode == .history {
             if let cookies = self.history?.cookies as? Data { self.cookiesData = cookies }
-            if let data = self.cookiesData, let xs = try? JSONDecoder().decode([JVHTTPCookie].self, from: data) {
+            if let data = self.cookiesData, let xs = try? JSONDecoder().decode([EAHTTPCookie].self, from: data) {
                 self.cookies = xs
             }
         }

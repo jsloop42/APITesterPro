@@ -1,5 +1,5 @@
 //
-//  JVCloudOperation.swift
+//  EACloudOperation.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 02/04/20.
@@ -10,7 +10,7 @@ import Foundation
 import CloudKit
 
 /// A class to work with CloudKit record fetch using Operation.
-public final class JVCloudOperation: Operation, NSSecureCoding {
+public final class EACloudOperation: Operation, NSSecureCoding {
     private var parentId: String = ""
     private var record: CKRecord?
     private var savedRecords: [CKRecord] = []
@@ -26,7 +26,7 @@ public final class JVCloudOperation: Operation, NSSecureCoding {
     private var zoneID: CKRecordZone.ID!
     private var error: Error?
     public var completionHandler: ((Result<[CKRecord], Error>) -> Void)!
-    private var block: ((JVCloudOperation?) -> Void)?
+    private var block: ((EACloudOperation?) -> Void)?
     private var recordIDs: [CKRecord.ID] = []
     private var deleteRecordBlock: ((Result<[CKRecord.ID], Error>) -> Void)?
     
@@ -78,7 +78,7 @@ public final class JVCloudOperation: Operation, NSSecureCoding {
         self.completionHandler = completion
     }
     
-    public init(recordType: RecordType, opType: OpType, zoneID: CKRecordZone.ID, parentId: String? = nil, predicate: NSPredicate? = nil, modified: Int? = 0, block: ((JVCloudOperation?) -> Void)? = nil) {
+    public init(recordType: RecordType, opType: OpType, zoneID: CKRecordZone.ID, parentId: String? = nil, predicate: NSPredicate? = nil, modified: Int? = 0, block: ((EACloudOperation?) -> Void)? = nil) {
         self.recordType = recordType
         self._recordType = self.recordType.rawValue
         self.opType = opType
@@ -109,7 +109,7 @@ public final class JVCloudOperation: Operation, NSSecureCoding {
     ///   - deleteRecordIDs: The ID of the records.
     ///   - zoneID: The zone ID for the records.
     ///   - completion: The completion callback function.
-    public init(deleteRecordIDs: [CKRecord.ID], block: ((JVCloudOperation?) -> Void)? = nil) {
+    public init(deleteRecordIDs: [CKRecord.ID], block: ((EACloudOperation?) -> Void)? = nil) {
         self.recordIDs = deleteRecordIDs
         self.opType = .deleteRecord
         self._opType = self.opType.rawValue
@@ -118,7 +118,7 @@ public final class JVCloudOperation: Operation, NSSecureCoding {
     
     /// Initialises in block opertion mode.
     /// - Parameter block: The block to be executed.
-    public init(block: @escaping (JVCloudOperation?) -> Void) {
+    public init(block: @escaping (EACloudOperation?) -> Void) {
         self.block = block
         self.opType = .block
     }
@@ -147,16 +147,16 @@ public final class JVCloudOperation: Operation, NSSecureCoding {
         if let xs = coder.decodeObject(forKey: "recordIDs") as? [CKRecord.ID] { self.recordIDs = xs }
     }
     
-    static func encode(_ op: JVCloudOperation) -> Data? {
+    static func encode(_ op: EACloudOperation) -> Data? {
         return try? NSKeyedArchiver.archivedData(withRootObject: op, requiringSecureCoding: true)
     }
     
     func encode() -> Data? {
-        return JVCloudOperation.encode(self)
+        return EACloudOperation.encode(self)
     }
     
-    static func decode(_ data: Data) -> JVCloudOperation? {
-        return try? NSKeyedUnarchiver.unarchivedObject(ofClass: JVCloudOperation.self, from: data)
+    static func decode(_ data: Data) -> EACloudOperation? {
+        return try? NSKeyedUnarchiver.unarchivedObject(ofClass: EACloudOperation.self, from: data)
     }
     
     public static var supportsSecureCoding: Bool = true

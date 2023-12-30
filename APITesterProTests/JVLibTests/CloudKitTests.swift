@@ -12,7 +12,7 @@ import XCTest
 import CloudKit
 
 class CloudKitTests: XCTestCase {
-    private lazy var ck = { JVCloudKit.shared }()
+    private lazy var ck = { EACloudKit.shared }()
     private lazy var localdb = { CoreDataService.shared }()
     private var zoneIDs: Set<CKRecordZone.ID> = Set()
     static var testsCount = testInvocations.count

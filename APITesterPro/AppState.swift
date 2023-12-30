@@ -101,8 +101,8 @@ struct AppState {
 
 /// Holds a map with the MD5 hash of the response data and the temporary file URL to the data.
 struct ResponseCache {
-    private var hashes: [String: JVTemporaryFile] = [:]
-    private lazy var utils = { JVUtils.shared }()
+    private var hashes: [String: EATemporaryFile] = [:]
+    private lazy var utils = { EAUtils.shared }()
     
     mutating func getURL(_ data: Data) -> URL? {
         let hash = self.hash(data)
@@ -148,7 +148,7 @@ struct ResponseCache {
         return self.hashes.allKeys()
     }
     
-    func getAllValues() -> [JVTemporaryFile] {
+    func getAllValues() -> [EATemporaryFile] {
         return self.hashes.allValues()
     }
     
@@ -174,8 +174,8 @@ struct ResponseCache {
         return Hash.md5(data: data)
     }
     
-    private func writeToTemporaryURL(_ hash: String, data: Data) throws -> JVTemporaryFile {
-        let file = try JVTemporaryFile(fileName: hash)
+    private func writeToTemporaryURL(_ hash: String, data: Data) throws -> EATemporaryFile {
+        let file = try EATemporaryFile(fileName: hash)
         try data.write(to: file.fileURL)
         return file
     }

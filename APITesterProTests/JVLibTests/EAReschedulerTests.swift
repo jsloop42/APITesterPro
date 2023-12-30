@@ -1,5 +1,5 @@
 //
-//  JVReschedulerTests.swift
+//  EAReschedulerTests.swift
 //  APITesterProTests
 //
 //  Created by Jaseem V V on 14/03/20.
@@ -10,7 +10,7 @@ import XCTest
 import Foundation
 @testable import APITesterPro
 
-class JVReschedulerTests: XCTestCase {
+class EAReschedulerTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
@@ -22,7 +22,7 @@ class JVReschedulerTests: XCTestCase {
     
     func testRescheduler() {
         let exp = expectation(description: "execute the reschedule block with every fn callback")
-        let r = JVRescheduler(interval: 1.0, type: .everyFn)
+        let r = EARescheduler(interval: 1.0, type: .everyFn)
         var acc: [Bool] = []
         let count = 3
         let lock = NSLock()
@@ -34,7 +34,7 @@ class JVReschedulerTests: XCTestCase {
                 lock.unlock()
             }
         }
-        var fn = JVReschedulerFn(id: "fn-a", block: { () -> Bool in
+        var fn = EAReschedulerFn(id: "fn-a", block: { () -> Bool in
             acc.append(true)
             return true
         }, callback: { res in
@@ -51,7 +51,7 @@ class JVReschedulerTests: XCTestCase {
     
     func testReschedulerMultipleFns() {
         let exp = expectation(description: "execute the reschedule block with every fn callback where fns can be different")
-        let r = JVRescheduler(interval: 1.0, type: .everyFn)
+        let r = EARescheduler(interval: 1.0, type: .everyFn)
         var acc: [Bool] = []
         let count = 2
         let lock = NSLock()
@@ -63,7 +63,7 @@ class JVReschedulerTests: XCTestCase {
                 lock.unlock()
             }
         }
-        var fn = JVReschedulerFn(id: "fn-a", block: { () -> Bool in
+        var fn = EAReschedulerFn(id: "fn-a", block: { () -> Bool in
             acc.append(true)
             return true
         }, callback: { res in

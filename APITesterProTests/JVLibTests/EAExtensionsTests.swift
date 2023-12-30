@@ -1,5 +1,5 @@
 //
-//  JVExtensionsTests.swift
+//  EAExtensionsTests.swift
 //  APITesterProTests
 //
 //  Created by Jaseem V V on 09/12/23.
@@ -10,7 +10,7 @@ import XCTest
 import Foundation
 @testable import APITesterPro
 
-class JVExtensionsTests: XCTestCase {
+class EAExtensionsTests: XCTestCase {
     func testDateConversion() {
         let date = Date()  // date in UTC
         let localStr = date.toLocalDateStr()  // convert to local date string

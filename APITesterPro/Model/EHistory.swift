@@ -12,7 +12,7 @@ import CloudKit
 
 public class EHistory: NSManagedObject, Entity {
     static var db: CoreDataService = { CoreDataService.shared }()
-    static var ck: JVCloudKit = { JVCloudKit.shared }()
+    static var ck: EACloudKit = { EACloudKit.shared }()
     public var recordType: String { return "History" }
     
     static func initFromResponseData(_ respData: ResponseData) -> EHistory {
@@ -138,7 +138,7 @@ public class EHistory: NSManagedObject, Entity {
             record["connection"] = (self.connection ?? "") as CKRecordValue
             record["connectionTime"] = self.connectionTime as CKRecordValue
             if let id = self.id, let data = self.cookies {
-                let url = JVFileManager.getTemporaryURL(id)
+                let url = EAFileManager.getTemporaryURL(id)
                 do {
                     try data.write(to: url)
                     record["cookies"] = CKAsset(fileURL: url)
@@ -165,7 +165,7 @@ public class EHistory: NSManagedObject, Entity {
             record["responseTime"] = self.responseTime as CKRecordValue
             record["responseBodyBytes"] = self.responseBodyBytes as CKRecordValue
             if let id = self.id, let data = self.responseData {
-                let url = JVFileManager.getTemporaryURL(id)
+                let url = EAFileManager.getTemporaryURL(id)
                 do {
                     try data.write(to: url)
                     record["responseData"] = CKAsset(fileURL: url)
@@ -175,7 +175,7 @@ public class EHistory: NSManagedObject, Entity {
             }
             record["responseHeaderBytes"] = self.responseHeaderBytes as CKRecordValue
             if let id = self.id, let data = self.responseHeaders {
-                let url = JVFileManager.getTemporaryURL(id)
+                let url = EAFileManager.getTemporaryURL(id)
                 do {
                     try data.write(to: url)
                     record["responseHeaders"] = CKAsset(fileURL: url)

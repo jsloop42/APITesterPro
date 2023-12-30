@@ -1,5 +1,5 @@
 //
-//  JVLFUCacheTests.swift
+//  EALFUCacheTests.swift
 //  APITesterProTests
 //
 //  Created by Jaseem V V on 25/03/20.
@@ -10,7 +10,7 @@ import XCTest
 import Foundation
 @testable import APITesterPro
 
-class PersonCacheValue: JVCacheValue {
+class PersonCacheValue: EACacheValue {
     private var name: String
     private var _key: String
     private var accessed: Int64  // timestamp
@@ -56,8 +56,8 @@ class PersonCacheValue: JVCacheValue {
     }
 }
 
-class JVLFUCacheTests: XCTestCase {
-    private var cache = JVLFUCache(size: 2)
+class EALFUCacheTests: XCTestCase {
+    private var cache = EALFUCache(size: 2)
     private var val = PersonCacheValue(name: "Olive", key: "ea-olive", ts: Date().currentTimeNanos(), accessCount: 0)
     private var val1 = PersonCacheValue(name: "Olivia", key: "ea-olivia", ts: Date().currentTimeNanos(), accessCount: 0)
     private var val2 = PersonCacheValue(name: "Liv", key: "ea-live", ts: Date().currentTimeNanos(), accessCount: 0)
@@ -81,7 +81,7 @@ class JVLFUCacheTests: XCTestCase {
         XCTAssertEqual(self.cache.cacheList.count, 2)
         XCTAssertNotNil(self.cache.get(val.key()))
         XCTAssertNotNil(self.cache.get(val.key()))
-        guard let obj = self.cache.cacheList.firstObject as? JVCacheListValue else { XCTFail("Error geting cache value"); return }
+        guard let obj = self.cache.cacheList.firstObject as? EACacheListValue else { XCTFail("Error geting cache value"); return }
         XCTAssertEqual(obj.accessCount(), 2)
         self.cache.add(self.val2)
         XCTAssertEqual(self.cache.cache.count, 2)
