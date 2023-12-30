@@ -61,12 +61,12 @@ extension Notification.Name {
 /// A class to work with CloudKit.
 class EACloudKit {
     static let shared = EACloudKit()
-    let cloudKitContainerId = Const.cloudKitContainerID
+    var cloudKitContainerId: String!
     private var _privateDatabase: CKDatabase!
     private var _container: CKContainer!
     private let nc = NotificationCenter.default
-    private lazy var kvstore = { NSUbiquitousKeyValueStore.default }()
-    private let store = UserDefaults.standard
+    private lazy var ckStore = { NSUbiquitousKeyValueStore.default }()
+    private let localStore = UserDefaults.standard
     /// CloudKit user defaults subscriptions key
     private let subscriptionsKey = "ck-subscriptions"
     /// A dictionary of all zones [String: Data]  // [zone-name: zone-info]
@@ -143,7 +143,8 @@ class EACloudKit {
 //        self.nc.addObserver(self, selector: #selector(self.networkDidBecomeUnavailable(_:)), name: .offline, object: nil)
     }
     
-    func bootstrap() {
+    func bootstrap(containerId: String) {
+        self.cloudKitContainerId = containerId
         if isRunningTests { return }
         // TODO: ck: enable back
 //        self.loadSubscriptions()
@@ -166,15 +167,15 @@ class EACloudKit {
     // MARK: - KV Store
     
     func getValue(key: String) -> Any? {
-        return self.kvstore.object(forKey: key)
+        return self.ckStore.object(forKey: key)
     }
     
     func saveValue(key: String, value: Any) {
-        self.kvstore.set(value, forKey: key)
+        self.ckStore.set(value, forKey: key)
     }
     
     func removeValue(key: String) {
-        self.kvstore.removeObject(forKey: key)
+        self.ckStore.removeObject(forKey: key)
     }
     
     func addKVChangeObserver() {
@@ -218,19 +219,19 @@ class EACloudKit {
     /// Returns whether the zone has been created for the given zone ID.
     func isZoneCreated(_ zoneID: CKRecordZone.ID) -> Bool {
         let key = "\(zoneID.zoneName)-created"
-        return self.kvstore.bool(forKey: key)
+        return self.ckStore.bool(forKey: key)
     }
     
     /// Set zone created flag in kv store for the given zone ID.
     func setZoneCreated(_ zoneID: CKRecordZone.ID) {
         let key = "\(zoneID.zoneName)-created"
-        self.kvstore.set(true, forKey: key)
+        self.ckStore.set(true, forKey: key)
     }
     
     /// Removes the zone created flag from kv store for the given zone ID.
     func removeZoneCreated(_ zoneID: CKRecordZone.ID) {
         let key = "\(zoneID.zoneName)-created"
-        self.kvstore.removeObject(forKey: key)
+        self.ckStore.removeObject(forKey: key)
     }
     
     /// Returns a zone ID with the given name.
@@ -305,27 +306,27 @@ class EACloudKit {
     // MARK: - Database change token cache
     
     func getDBChangeToken() -> CKServerChangeToken? {
-        guard let data = self.store.data(forKey: self.dbChangeTokenKey) else { return nil }
+        guard let data = self.localStore.data(forKey: self.dbChangeTokenKey) else { return nil }
         return CKServerChangeToken.decode(data)
     }
     
     func setDBChangeToken(_ token: CKServerChangeToken?) {
         guard let token = token else { self.removeDBChangeToken(); return }
-        if let data = token.encode() { self.store.set(data, forKey: self.dbChangeTokenKey) }
+        if let data = token.encode() { self.localStore.set(data, forKey: self.dbChangeTokenKey) }
     }
     
     func removeDBChangeToken() {
-        self.store.removeObject(forKey: self.dbChangeTokenKey)
+        self.localStore.removeObject(forKey: self.dbChangeTokenKey)
     }
     
     // MARK: - Local Zone Records
     
     func getCachedZones() -> [String: Data] {
-        return self.store.dictionary(forKey: self.zonesKey) as? [String: Data] ?? [:]
+        return self.localStore.dictionary(forKey: self.zonesKey) as? [String: Data] ?? [:]
     }
     
     func setCachedZones(_ hm: [String: Data]) {
-        self.store.set(hm, forKey: self.zonesKey)
+        self.localStore.set(hm, forKey: self.zonesKey)
     }
     
     func addToCachedZones(_ zone: CKRecordZone) {
@@ -406,7 +407,7 @@ class EACloudKit {
     // MARK: - Subscription Local Cache
     
     func getCachedSubscriptions() -> [CKSubscription.ID] {
-        return self.store.array(forKey: self.subscriptionsKey) as? [CKSubscription.ID] ?? []
+        return self.localStore.array(forKey: self.subscriptionsKey) as? [CKSubscription.ID] ?? []
     }
     
     func containsCachedSubscription(_ subID: CKSubscription.ID) -> Bool {
@@ -432,7 +433,7 @@ class EACloudKit {
     }
     
     func setCachedSubscriptions(_ xs: [CKSubscription.ID]) {
-        self.store.set(xs, forKey: self.subscriptionsKey)
+        self.localStore.set(xs, forKey: self.subscriptionsKey)
     }
     
     func removeCachedSubscription(_ subID: CKSubscription.ID) {
