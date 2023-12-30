@@ -66,7 +66,7 @@ class App {
     private func didFinishLaunchingImpl(window: UIWindow) {
         if !self.appLaunched {
             self.localdb.bootstrap()
-            self.ck.bootstrap()
+            self.ck.bootstrap(containerId: Const.cloudKitContainerID)
             self.initUI(window.rootViewController as! UINavigationController)
             self.appLaunched = true
         }
