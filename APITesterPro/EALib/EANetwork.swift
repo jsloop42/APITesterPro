@@ -1,5 +1,5 @@
 //
-//  JVNetwork.swift
+//  EANetwork.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 17/04/20.
@@ -11,7 +11,7 @@ import SystemConfiguration
 
 // MARK: - Reachability
 
-public enum JVReachabilityError: Error {
+public enum EAReachabilityError: Error {
     case failedToCreateWithAddress(sockaddr, Int32)
     case failedToCreateWithHostname(String, Int32)
     case unableToSetCallback(Int32)
@@ -20,8 +20,8 @@ public enum JVReachabilityError: Error {
 }
 
 /// A class used to check if internet connectivity is present.
-public final class JVReachability {
-    static let shared = JVReachability()
+public final class EAReachability {
+    static let shared = EAReachability()
     
     static func isConnectedToNetwork() -> Bool {
         var flags: SCNetworkReachabilityFlags = SCNetworkReachabilityFlags(rawValue: 0)
@@ -81,8 +81,8 @@ public final class JVReachability {
         #endif
     }()
     
-    public var whenReachable: ((JVReachability) -> Void)?
-    public var whenUnreachable: ((JVReachability) -> Void)?
+    public var whenReachable: ((EAReachability) -> Void)?
+    public var whenUnreachable: ((EAReachability) -> Void)?
     
     public var connection: Connection {
         if flags == nil { try? self.setReachabilityFlags() }
@@ -102,16 +102,16 @@ public final class JVReachability {
     
     required public init(reachabilityRef: SCNetworkReachability) {
         self.reachabilityRef = reachabilityRef
-        self.serialQueue = JVCommon.defaultQueue
+        self.serialQueue = EACommon.defaultQueue
     }
     
     public convenience init(hostname: String) throws {
-        guard let ref = SCNetworkReachabilityCreateWithName(nil, hostname) else { throw JVReachabilityError.failedToCreateWithHostname(hostname, SCError()) }
+        guard let ref = SCNetworkReachabilityCreateWithName(nil, hostname) else { throw EAReachabilityError.failedToCreateWithHostname(hostname, SCError()) }
         self.init(reachabilityRef: ref)
     }
     
     public convenience init() {
-        self.init(reachabilityRef: JVReachability.getReachabilityForZeroAddress()!)
+        self.init(reachabilityRef: EAReachability.getReachabilityForZeroAddress()!)
     }
     
     func notifyReachabilityChanged() {
@@ -128,7 +128,7 @@ public final class JVReachability {
             var flags = SCNetworkReachabilityFlags()
             if !SCNetworkReachabilityGetFlags(self.reachabilityRef, &flags) {
                 self.stopNotifier()
-                throw JVReachabilityError.unableToGetFlags(SCError())
+                throw EAReachabilityError.unableToGetFlags(SCError())
             }
             self.flags = flags
         }
@@ -139,35 +139,35 @@ public final class JVReachability {
         let callback: SCNetworkReachabilityCallBack = { reachability, flags, info in
             guard let info = info else { return }
             // This variable will be retained because of the callbacks we give to `SCNetworkReachablityContext`
-            let weakReachability = Unmanaged<JVReachabilityBridge>.fromOpaque(info).takeUnretainedValue()
+            let weakReachability = Unmanaged<EAReachabilityBridge>.fromOpaque(info).takeUnretainedValue()
             // The weak object may not exist if it's been deallocated and the callback was already in flight.
             weakReachability.reachability?.flags = flags
         }
-        let weakReachability = JVReachabilityBridge(reachability: self)
-        let opaqueWeakReachability = Unmanaged<JVReachabilityBridge>.passUnretained(weakReachability).toOpaque()
+        let weakReachability = EAReachabilityBridge(reachability: self)
+        let opaqueWeakReachability = Unmanaged<EAReachabilityBridge>.passUnretained(weakReachability).toOpaque()
         var context = SCNetworkReachabilityContext(
             version: 0,
             info: UnsafeMutableRawPointer(opaqueWeakReachability),
             retain: { (info: UnsafeRawPointer) -> UnsafeRawPointer in
-                let unmanagedWeakReachability = Unmanaged<JVReachabilityBridge>.fromOpaque(info)
+                let unmanagedWeakReachability = Unmanaged<EAReachabilityBridge>.fromOpaque(info)
                 _ = unmanagedWeakReachability.retain()
                 return UnsafeRawPointer(unmanagedWeakReachability.toOpaque())
             }, release: { (info: UnsafeRawPointer) in
-                let unmanagedWeakReachability = Unmanaged<JVReachabilityBridge>.fromOpaque(info)
+                let unmanagedWeakReachability = Unmanaged<EAReachabilityBridge>.fromOpaque(info)
                 unmanagedWeakReachability.release()
             }, copyDescription: { (info: UnsafeRawPointer) -> Unmanaged<CFString> in
-                let unmanagedWeakReachability = Unmanaged<JVReachabilityBridge>.fromOpaque(info)
+                let unmanagedWeakReachability = Unmanaged<EAReachabilityBridge>.fromOpaque(info)
                 let weakReachability = unmanagedWeakReachability.takeUnretainedValue()
                 let desc = weakReachability.reachability?.description ?? "nil"
                 return Unmanaged.passRetained(desc as CFString)
             })
         if !SCNetworkReachabilitySetCallback(self.reachabilityRef, callback, &context) {
             self.stopNotifier()
-            throw JVReachabilityError.unableToSetCallback(SCError())
+            throw EAReachabilityError.unableToSetCallback(SCError())
         }
         if !SCNetworkReachabilitySetDispatchQueue(reachabilityRef, self.serialQueue) {
             self.stopNotifier()
-            throw JVReachabilityError.unableToSetDispatchQueue(SCError())
+            throw EAReachabilityError.unableToSetDispatchQueue(SCError())
         }
         try self.setReachabilityFlags()
         self.isNotifierRunning = true
@@ -187,7 +187,7 @@ public extension Notification.Name {
 }
 
 extension SCNetworkReachabilityFlags {
-    typealias Connection = JVReachability.Connection
+    typealias Connection = EAReachability.Connection
     
     var isReachableFlagSet: Bool { contains(.reachable) }
     var isConnectionRequiredFlagSet: Bool { contains(.connectionRequired) }
@@ -241,14 +241,14 @@ extension SCNetworkReachabilityFlags {
  
  ### Race Condition
  
- If we pass `SCNetworkReachabilitySetCallback` a direct reference to our `JVReachability` class without providing the retain/release callbacks, then a race
+ If we pass `SCNetworkReachabilitySetCallback` a direct reference to our `EAReachability` class without providing the retain/release callbacks, then a race
  condition could lead to a crash when:
  - `Reachability` is deallocated on thread X
  - A `SCNetworkReachability` callback(s) are already in flight on thread Y
  
  ### Retain Cycle
  
- If we pass `JVReachability` to CoreFoundation and also provide the retain/release callback functions, this would create a retain cycle once CoreFoundation retains
+ If we pass `EAReachability` to CoreFoundation and also provide the retain/release callback functions, this would create a retain cycle once CoreFoundation retains
  the class. This fixes the crash as this is an expected way from CoreFoundation perspective, but not much with Swift/ARC. This reference will be release only
  by manually calling the `stopNotifier()` method. The `deinit` does not gets called.
  
@@ -257,22 +257,22 @@ extension SCNetworkReachabilityFlags {
  of the notifier on `deinit`.
  */
 
-private final class JVReachabilityBridge {
-    weak var reachability: JVReachability?
-    init(reachability: JVReachability) {
+private final class EAReachabilityBridge {
+    weak var reachability: EAReachability?
+    init(reachability: EAReachability) {
         self.reachability = reachability
     }
 }
 
 // MARK: - HTTP Client
 
-public protocol JVHTTPClientDelegate: AnyObject {
+public protocol EAHTTPClientDelegate: AnyObject {
     /// Returns the certificate data and the password associated with it
     func getClientCertificate() -> (Data, String)
     func shouldValidateSSL() -> Bool
 }
 
-public final class JVHTTPClient: NSObject {
+public final class EAHTTPClient: NSObject {
     private lazy var queue: OperationQueue = {
         let q = OperationQueue()
         q.name = "net.jsloop.APITesterPro.NetworkQueue"
@@ -284,7 +284,7 @@ public final class JVHTTPClient: NSObject {
     private var isOffline = false
     private var url: URL?
     private var method: Method = .get
-    public weak var delegate: JVHTTPClientDelegate?
+    public weak var delegate: EAHTTPClientDelegate?
     private var metrics: URLSessionTaskMetrics?
     
     public enum Method {
@@ -415,7 +415,7 @@ public final class JVHTTPClient: NSObject {
     }
 }
 
-extension JVHTTPClient: URLSessionDelegate {
+extension EAHTTPClient: URLSessionDelegate {
     public func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         let protectionSpace = challenge.protectionSpace
         if protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
@@ -449,7 +449,7 @@ extension JVHTTPClient: URLSessionDelegate {
     }
 }
 
-extension JVHTTPClient: URLSessionDataDelegate {
+extension EAHTTPClient: URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
         Log.debug("url-session metrics: \(metrics)")
         self.metrics = metrics

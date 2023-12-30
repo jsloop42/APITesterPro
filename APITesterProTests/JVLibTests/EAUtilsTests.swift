@@ -1,5 +1,5 @@
 //
-//  JVUtilsTests.swift
+//  EAUtilsTests.swift
 //  APITesterProTests
 //
 //  Created by Jaseem V V on 29/03/20.
@@ -10,8 +10,8 @@ import XCTest
 import Foundation
 @testable import APITesterPro
 
-class JVUtilsTests: XCTestCase {
-    private let utils = JVUtils.shared
+class EAUtilsTests: XCTestCase {
+    private let utils = EAUtils.shared
     
     override func setUp() {
         super.setUp()
@@ -34,11 +34,11 @@ class JVUtilsTests: XCTestCase {
     }
     
     func testSysInfo() {
-        let mem: Float = JVSystem.memoryFootprint() ?? 0.0
+        let mem: Float = EASystem.memoryFootprint() ?? 0.0
         Log.debug("mem: \(mem / 1024 / 1024)")
-        Log.debug("phy mem: \(JVSystem.totalMemory())")
-        Log.debug("active cpu: \(JVSystem.activeProcessorCount())")
-        Log.debug("total cpu: \(JVSystem.processorCount())")
+        Log.debug("phy mem: \(EASystem.totalMemory())")
+        Log.debug("active cpu: \(EASystem.activeProcessorCount())")
+        Log.debug("total cpu: \(EASystem.processorCount())")
         XCTAssertTrue(mem > 0.0)
     }
     

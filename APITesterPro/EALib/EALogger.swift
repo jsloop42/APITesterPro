@@ -1,5 +1,5 @@
 //
-//  JVLogger.swift
+//  EALogger.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 03/12/23.

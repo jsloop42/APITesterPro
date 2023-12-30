@@ -1,5 +1,5 @@
 //
-//  BackgroundWorker.swift
+//  EABackgroundWorker.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 10/03/20.
@@ -8,10 +8,10 @@
 
 import Foundation
 
-public class BackgroundWorker: NSObject {
+public class EABackgroundWorker: NSObject {
     private var thread: Thread!
     private var block: (() -> Void)!
-    private let utils = JVUtils.shared
+    private let utils = EAUtils.shared
     
     @objc func runBlock() { self.block() }
     

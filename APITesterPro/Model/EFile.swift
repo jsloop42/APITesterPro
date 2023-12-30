@@ -12,7 +12,7 @@ import CoreData
 
 public class EFile: NSManagedObject, Entity {
     static var db: CoreDataService = { CoreDataService.shared }()
-    static var ck: JVCloudKit = { JVCloudKit.shared }()
+    static var ck: EACloudKit = { EACloudKit.shared }()
     public var recordType: String { return "File" }
     
     public func getId() -> String {
@@ -85,7 +85,7 @@ public class EFile: NSManagedObject, Entity {
         if let aData = _data.data(using: .utf8) {
             data = aData
         } else {
-            data = JVUtils.shared.stringToImageData(_data)
+            data = EAUtils.shared.stringToImageData(_data)
         }
         guard let data1 = data else { return nil }
         guard let file = self.db.createFile(fileId: id, data: data1, wsId: wsId, name: name, path: URL(fileURLWithPath: "/tmp/"), type: type, checkExists: true, ctx: self.db.mainMOC) else { return nil }
@@ -117,7 +117,7 @@ public class EFile: NSManagedObject, Entity {
             record["created"] = self.created! as CKRecordValue
             record["modified"] = self.modified! as CKRecordValue
             if let name = self.name, let data = self.data {
-                let url = JVFileManager.getTemporaryURL(name)
+                let url = EAFileManager.getTemporaryURL(name)
                 do {
                     try data.write(to: url)
                     record["data"] = CKAsset(fileURL: url)
@@ -166,7 +166,7 @@ public class EFile: NSManagedObject, Entity {
             if let str = String(data: data, encoding: .utf8) {
                 dict["data"] = str
             } else {
-                dict["data"] = JVUtils.shared.imageDataToString(data)
+                dict["data"] = EAUtils.shared.imageDataToString(data)
             }
         }
         dict["wsId"] = self.wsId

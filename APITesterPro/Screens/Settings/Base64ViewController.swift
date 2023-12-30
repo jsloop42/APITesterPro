@@ -12,7 +12,7 @@ import UIKit
 class Base64ViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var menu: UISegmentedControl!
     @IBOutlet weak var containerView: UIView!
-    private lazy var utils = { JVUtils.shared }()
+    private lazy var utils = { EAUtils.shared }()
     private let nc = NotificationCenter.default
     private var keyboardHeight: CGFloat = 0.0
     private var isViewDidOffset = false

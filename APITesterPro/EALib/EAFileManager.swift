@@ -1,5 +1,5 @@
 //
-//  JVFileManager.swift
+//  EAFileManager.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 10/03/20.
@@ -16,21 +16,21 @@ public enum FileIOMode {
 }
 
 /// A result type of `Data`.
-public typealias JVDataResultCallback = ((Result<Data, Error>) -> Void)
+public typealias EADataResultCallback = ((Result<Data, Error>) -> Void)
 
-public final class JVFileManager: NSObject {
+public final class EAFileManager: NSObject {
     public let url: URL!
-    private var callback: JVDataResultCallback?
+    private var callback: EADataResultCallback?
     private var data: Data?
     private let fm = FileManager.default
     private static let fm = FileManager.default
     private var fileHandle: FileHandle?
-    private let queue = JVCommon.userInitiatedQueue
+    private let queue = EACommon.userInitiatedQueue
     public var isFileOpened = false
     private let writeLock = NSLock()
 
     deinit {
-        Log.debug("JVFileManager deinit")
+        Log.debug("FileManager deinit")
         self.fileHandle?.closeFile()
     }
     
@@ -140,7 +140,7 @@ public final class JVFileManager: NSObject {
     }
     
     /// Reads the entire file and return the data object
-    public func readToEOF(completion: JVDataResultCallback? = nil) {
+    public func readToEOF(completion: EADataResultCallback? = nil) {
         self.queue.async {
             do {
                 self.data = try Data(contentsOf: self.url)
@@ -179,7 +179,7 @@ public final class JVFileManager: NSObject {
     }
 }
 
-struct JVTemporaryFile {
+struct EATemporaryFile {
     let dirURL: URL
     let fileURL: URL
     
@@ -189,7 +189,7 @@ struct JVTemporaryFile {
     }
     
     func delete() -> Bool {
-        return JVFileManager.delete(url: self.dirURL)
+        return EAFileManager.delete(url: self.dirURL)
     }
 }
 

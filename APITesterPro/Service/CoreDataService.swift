@@ -155,7 +155,7 @@ class CoreDataService {
         return ctx
     }()
     private let fetchBatchSize: Int = 50
-    private let utils = JVUtils.shared
+    private let utils = EAUtils.shared
     var containerName = isRunningTests ? "APITesterProTest" : "APITesterPro"
     let defaultWorkspaceId = "default"
     let defaultWorkspaceName = "Default workspace"

@@ -1,5 +1,5 @@
 //
-//  JVHTTPCookie.swift
+//  EAHTTPCookie.swift
 //  APITesterPro
 //
 //  Created by Jaseem V V on 27/05/20.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct JVHTTPCookie: Codable, CustomStringConvertible {
+struct EAHTTPCookie: Codable, CustomStringConvertible {
     var name: String
     var value: String
     var expires: Date?
@@ -38,9 +38,9 @@ struct JVHTTPCookie: Codable, CustomStringConvertible {
         }
     }
     
-    static func from(headers: [String: String], for url: URL) -> [JVHTTPCookie] {
+    static func from(headers: [String: String], for url: URL) -> [EAHTTPCookie] {
         let cookies = HTTPCookie.cookies(withResponseHeaderFields: headers, for: url)
-        return cookies.map { cookie in JVHTTPCookie(with: cookie) }
+        return cookies.map { cookie in EAHTTPCookie(with: cookie) }
     }
     
     func toHTTPCookie() -> HTTPCookie? {

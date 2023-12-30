@@ -12,7 +12,7 @@ import UIKit
 class ImportExportViewController: UIViewController {
     @IBOutlet weak var cancelBtn: UIButton!
     @IBOutlet weak var actionBtn: UIButton!
-    @IBOutlet weak var textView: JVTextView!
+    @IBOutlet weak var textView: EATextView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var titleLabel: UILabel!
     var mode: Mode = .import

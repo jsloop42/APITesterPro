@@ -16,7 +16,7 @@ extension Notification.Name {
 }
 
 class EnvEditCell: UITableViewCell, UITextFieldDelegate {
-    @IBOutlet weak var textField: JVTextField!
+    @IBOutlet weak var textField: EATextField!
     private let nc = NotificationCenter.default
     var mode: EnvironmentEditViewController.Mode = .addEnv
     var cellType: CellType = .name
