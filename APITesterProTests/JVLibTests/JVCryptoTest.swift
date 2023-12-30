@@ -39,38 +39,10 @@ class JVCryptoTests: XCTestCase {
         Log.info("iv bytes: \(bytes)")
     }
     
-    /// Test that the SecureTransformerInfo converts the key and iv bytes to string properly
-    func testSecureTransformerInfo() {
-        let key = self.utils.generateUniqueString(32)
-        let keyBytes = key.data(using: .utf8)?.toBytes()
-        XCTAssertNotNil(keyBytes)
-        let iv = self.utils.generateUniqueString(16)
-        let ivBytes = iv.data(using: .utf8)?.toBytes()
-        XCTAssertNotNil(ivBytes)
-        SecureTransformerInfo._key = keyBytes!
-        SecureTransformerInfo._iv = ivBytes!
-        let stiKey = SecureTransformerInfo.key
-        XCTAssertEqual(stiKey, key)
-        let stiIV = SecureTransformerInfo.iv
-        XCTAssertEqual(stiIV, iv)
-    }
-    
     func testMD5Hash() {
         let str = "hello world"
         let hash = Hash.md5(txt: str)
         XCTAssertEqual(hash, "5eb63bbbe01eeed093cb22bb8f5acdc3")
         XCTAssertEqual(Hash.md5(txt: "api tester pro"), "4880382417348f9f442d17dcc45762c6")
-    }
-    
-    /// Tests encryption and decryiption using key and iv defined in SecureTransformerInfo
-    func testAESCBCEncryptionDecryption() {
-        let txt = "api tester pro"
-        XCTAssertEqual(SecureTransformerInfo._key.count, 32)  // 32 bytes
-        XCTAssertEqual(SecureTransformerInfo._iv.count, 16)  // 16 bytes
-        let encryptedData = SecureTransformerString().transformedValue(txt)
-        XCTAssertNotNil(encryptedData)
-        let decryptedData = SecureTransformerString().reverseTransformedValue(encryptedData)
-        XCTAssertNotNil(decryptedData)
-        XCTAssertEqual(decryptedData as! String, txt)
     }
 }

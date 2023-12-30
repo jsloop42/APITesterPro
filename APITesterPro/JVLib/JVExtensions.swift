@@ -777,12 +777,17 @@ public extension Data {
         ba = withUnsafeBytes { $0.compactMap { byte -> UInt8? in byte } }
         return ba
     }
+    
+    /// Returns a hex string
+    func toHex() -> String {
+        return String(self.map { String(format: "%02.2hhx", $0) }.joined())  // enforces that each hexadecimal string should have 2 characters
+    }
 }
 
 public extension Insecure.MD5Digest {
     /// Returns a hex string
     func toHex() -> String {
-        return String(self.map { String(format: "%02hhx", $0) }.joined().prefix(32))
+        return String(self.map { String(format: "%02.2hhx", $0) }.joined())
     }
 }
 
