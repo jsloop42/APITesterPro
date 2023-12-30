@@ -151,12 +151,16 @@ class PersistenceService {
             // remove backreference
             image.requestData = nil
         }
-        
     }
     
     ///Delete request method data
     func markEntityForDelete(reqMeth: ERequestMethodData, ctx: NSManagedObjectContext?) {
-        
+        let ctx = ctx != nil ? ctx : (reqMeth.managedObjectContext != nil ? reqMeth.managedObjectContext : nil)
+        guard let ctx = ctx else { return }
+        ctx.performAndWait {
+            reqMeth.setMarkedForDelete(true)
+            // remove backreference
+            reqMeth.project = nil
+        }
     }
-    
 }
