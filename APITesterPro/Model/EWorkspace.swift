@@ -88,13 +88,14 @@ public class EWorkspace: NSManagedObject, Entity {
         let ctx = self.db.mainMOC
         guard let ws = self.db.createWorkspace(id: id, name: "", desc: "", isSyncEnabled: false, ctx: ctx) else { return nil }
         if let x = dict["created"] as? String { ws.created = Date.toUTCDate(x) }
-        if let x = dict["modified"] as? String { ws.modified = Date.toUTCDate(x) }
+        if let x = dict["desc"] as? String { ws.desc = x }
         if let x = dict["isActive"] as? Bool { ws.isActive = x }
         if let x = dict["isSyncEnabled"] as? Bool { ws.isSyncEnabled = x }
+        if let x = dict["modified"] as? String { ws.modified = Date.toUTCDate(x) }
         if let x = dict["name"] as? String { ws.name = x }
-        if let x = dict["desc"] as? String { ws.desc = x }
         if let x = dict["order"] as? NSDecimalNumber { ws.order = x }
         if let x = dict["saveResponse"] as? Bool { ws.saveResponse = x }
+        if let x = dict["syncDisabled"] as? Date { ws.syncDisabled = x }
         if let x = dict["version"] as? Int64 { ws.version = x }
         self.db.saveMainContext()
         if let xs = dict["projects"] as? [[String: Any]] {
@@ -121,7 +122,7 @@ public class EWorkspace: NSManagedObject, Entity {
         let ckWsID = self.ck.recordID(entityId: id, zoneID: zoneID)
         var ckWs: CKRecord!
         ctx.performAndWait {
-            ws = db.getWorkspace(id: id, ctx: ctx)
+            ws = self.db.getWorkspace(id: id, ctx: ctx)
             ckWs = self.ck.createRecord(recordID: ckWsID, recordType: ws.recordType)
             ws.updateCKRecord(ckWs)
         }
@@ -129,17 +130,18 @@ public class EWorkspace: NSManagedObject, Entity {
     }
     
     func updateCKRecord(_ record: CKRecord) {
+        // isZoneSynced is not added to cloud because it requires one additional write operation. Zone and workspace are saved together as a list.
         self.managedObjectContext?.performAndWait {
             record["created"] = self.created! as CKRecordValue
-            record["modified"] = self.modified! as CKRecordValue
             record["desc"] = (self.desc ?? "") as CKRecordValue
             record["id"] = self.getId() as CKRecordValue
-            record["wsId"] = self.getWsId() as CKRecordValue
-            record["isActive"] = self.isActive as CKRecordValue
+            record["isActive"] = self.isActive as CKRecordValue  // Is set for default workspace when a project gets added which enables syncing. For custom workspaces, this is enabled.
             record["isSyncEnabled"] = self.isSyncEnabled as CKRecordValue
+            record["modified"] = self.modified! as CKRecordValue
             record["name"] = self.name! as CKRecordValue
             record["order"] = self.order! as CKRecordValue
             record["saveResponse"] = self.saveResponse as CKRecordValue
+            record["syncDisabled"] = (self.syncDisabled ?? Date.distantPast) as CKRecordValue
             record["version"] = self.version as CKRecordValue
         }
     }
@@ -147,14 +149,15 @@ public class EWorkspace: NSManagedObject, Entity {
     func updateFromCKRecord(_ record: CKRecord) {
         self.managedObjectContext?.performAndWait {
             if let x = record["created"] as? Date { self.created = x }
-            if let x = record["modified"] as? Date { self.modified = x }
+            if let x = record["desc"] as? String { self.desc = x }
             if let x = record["id"] as? String { self.id = x }
             if let x = record["isActive"] as? Bool { self.isActive = x }
             if let x = record["isSyncEnabled"] as? Bool { self.isSyncEnabled = x }
+            if let x = record["modified"] as? Date { self.modified = x }
             if let x = record["name"] as? String { self.name = x }
-            if let x = record["desc"] as? String { self.desc = x }
             if let x = record["order"] as? NSDecimalNumber { self.order = x }
             if let x = record["saveResponse"] as? Bool { self.saveResponse = x }
+            if let x = record["syncDisabled"] as? Date { self.syncDisabled = x }
             if let x = record["version"] as? Int64 { self.version = x }
         }
     }
@@ -162,14 +165,15 @@ public class EWorkspace: NSManagedObject, Entity {
     public func toDictionary() -> [String: Any] {
         var dict: [String: Any] = [:]
         dict["created"] = self.created?.toUTCStr()
-        dict["modified"] = self.modified?.toUTCStr()
+        dict["desc"] = self.desc
         dict["id"] = self.id
         dict["isActive"] = self.isActive
         dict["isSyncEnabled"] = self.isSyncEnabled
+        dict["modified"] = self.modified?.toUTCStr()
         dict["name"] = self.name
-        dict["desc"] = self.desc
         dict["order"] = self.order
         dict["saveResponse"] = self.saveResponse
+        dict["syncDisabled"] = self.syncDisabled
         dict["version"] = self.version
         var xs: [[String: Any]] = []
         let projs = Self.db.getProjects(wsId: self.getId())
