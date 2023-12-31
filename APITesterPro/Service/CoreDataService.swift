@@ -1605,7 +1605,7 @@ class CoreDataService {
     ///   - name: The workspace name.
     ///   - desc: The workspace description.
     ///   - isSyncEnabled: Is syncing with iCloud enabled.
-    ///   - isActive: Is the workspace active (applies to default workspace only).
+    ///   - isActive: Is the workspace active (applies to default workspace only). If a project is added to the default workspace, isActive is enabled. Only then we need to sync the default workspace since it will be created automatically on app launch.
     ///   - checkExists: Check whether the workspace exists before creating.
     ///   - ctx: The managed object context.
     /// - Returns: A workspace.
@@ -1628,19 +1628,6 @@ class CoreDataService {
             x = ws
         }
         return x
-    }
-    
-    func setWorkspaceActive(_ wsId: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-        let moc = self.getMainMOC(ctx: ctx)
-        moc.performAndWait {
-            let ws = self.getWorkspace(id: wsId, ctx: ctx)
-            ws?.isActive = true
-            do {
-                if !AppState.isRequestEdit { try moc.save() }
-            } catch let error {
-                Log.error("Error saving workspace with active flag set: \(error)")
-            }
-        }
     }
     
     func setWorkspaceSyncEnabled(_ state: Bool, ws: EWorkspace, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
