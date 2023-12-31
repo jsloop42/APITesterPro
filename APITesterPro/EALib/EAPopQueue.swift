@@ -1,21 +1,25 @@
 //
-//  EAQueue.swift
+//  EAPopQueue.swift
 //  APITesterPro
 //
-//  Created by Jaseem V V on 26/03/20.
-//  Copyright © 2020 Jaseem V V. All rights reserved.
+//  Created by Jaseem V V on 31/12/23.
+//  Copyright © 2023 Jaseem V V. All rights reserved.
 //
 
 import Foundation
 
-/// A queue implementation which dequeues based on time elapsed since enqueue.
-public final class EAQueue<T> {
+/// A queue implementation which dequeues the last element after the set time interval until empty.
+public final class EAPopQueue<T> {
     private var queue: [T] = []
     private var timer: DispatchSourceTimer?  // timer
-    private var interval: TimeInterval = 4.0  // seconds
-    public var completion: ([T]) -> Void
+    private var interval: TimeInterval = 2.0  // seconds
+    /// The block that needs to be executed with the popped value
+    public var block: (T?) -> Void
     private let accessq = EACommon.userInteractiveQueue
-    public var count: Int = 0
+    /// Number of items in the queue
+    public var count: Int {
+        return self.queue.count
+    }
     
     private var state: EATimerState = .suspended
     
@@ -27,9 +31,9 @@ public final class EAQueue<T> {
         self.queue = []
     }
     
-    init(interval: TimeInterval, completion: @escaping ([T]) -> Void) {
+    init(interval: TimeInterval, block: @escaping (T?) -> Void) {
         self.interval = interval
-        self.completion = completion
+        self.block = block
         self.initTimer()
     }
     
@@ -40,17 +44,12 @@ public final class EAQueue<T> {
     }
     
     private func eventHandler() {
-        self.count = self.queue.count
         Log.debug("in timer queue len: \(self.queue.count)")
-        if self.isEmpty() && self.state == .resumed {
-            self.timer?.suspend()
-            self.state = .suspended
-            return
-        }
+        // self.updateTimer()
         self.accessq.sync {
-            self.completion(self.queue)
-            Log.debug("Queue processed \(self.queue.count) items")
-            self.queue = []
+            self.block(self.dequeue())
+            Log.debug("Queue processed. Remaining \(self.queue.count) items")
+            self.updateTimer()
         }
     }
         
@@ -58,6 +57,9 @@ public final class EAQueue<T> {
         if !self.isEmpty() && self.state == .suspended {
             self.timer?.resume()
             self.state = .resumed
+        } else if self.isEmpty() && self.state == .resumed {
+            self.timer?.suspend()
+            self.state = .suspended
         }
         Log.debug("Queue state \(self.state) - count: \(self.queue.count)")
     }
@@ -66,7 +68,6 @@ public final class EAQueue<T> {
     public func enqueue(_ xs: [T]) {
         self.accessq.sync {
             self.queue.append(contentsOf: xs); Log.debug("enqueued: \(xs)")
-            self.count = self.queue.count
             self.updateTimer()
         }
     }
@@ -76,7 +77,6 @@ public final class EAQueue<T> {
         Log.debug("enqueue: \(x)")
         self.accessq.sync {
             self.queue.append(x);
-            self.count = self.queue.count
             Log.debug("enqueued: \(x)")
             self.updateTimer()
         }
@@ -87,7 +87,6 @@ public final class EAQueue<T> {
         var x: T?
         self.accessq.sync {
             x = self.queue.popLast()
-            self.count = self.queue.count
         }
         Log.debug("dequeued: \(String(describing: x))")
         return x
