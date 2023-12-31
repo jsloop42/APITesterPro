@@ -15,7 +15,7 @@ public final class EAPopQueue<T> {
     private var interval: TimeInterval = 2.0  // seconds
     /// The block that needs to be executed with the popped value when timer realizes
     public var block: ((T?) -> Void)!
-    private let accessq = EACommon.userInteractiveQueue
+    private var accessq = EACommon.defaultQueue
     /// Number of items in the queue
     public var count: Int {
         return self.queue.count
@@ -29,6 +29,13 @@ public final class EAPopQueue<T> {
         self.timer?.resume()
         self.timer?.setEventHandler(handler: {})
         self.queue = []
+    }
+    
+    init(interval: TimeInterval, block: @escaping (T?) -> Void, queue: DispatchQueue) {
+        self.interval = interval
+        self.block = block
+        self.accessq = queue
+        self.initTimer()
     }
     
     init(interval: TimeInterval, block: @escaping (T?) -> Void) {
@@ -47,6 +54,11 @@ public final class EAPopQueue<T> {
         self.block = block
     }
     
+    /// Set the dispatch queue against which the timer will run and the list gets processed
+    public func setQueue(_ queue: DispatchQueue) {
+        self.accessq = queue
+    }
+    
     /// If not using the initializer set interval and block manually and call this to start the timer.
     public func startTimer() {
         self.initTimer()
@@ -54,7 +66,7 @@ public final class EAPopQueue<T> {
     
     private func initTimer() {
         if self.timer == nil {
-            self.timer = DispatchSource.makeTimerSource()
+            self.timer = DispatchSource.makeTimerSource(queue: self.accessq)
             self.timer?.schedule(deadline: .now() + self.interval, repeating: self.interval)
             self.timer?.setEventHandler(handler: { [weak self] in self?.eventHandler() })
         }

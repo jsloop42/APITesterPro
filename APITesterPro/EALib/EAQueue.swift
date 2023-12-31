@@ -14,8 +14,8 @@ public final class EAQueue<T> {
     private var timer: DispatchSourceTimer?  // timer
     private var interval: TimeInterval = 4.0  // seconds
     /// Block that will be executed passing in all the elements of the queue when the timer realizes
-    public var completion: ([T]) -> Void
-    private let accessq = EACommon.userInteractiveQueue
+    public var completion: (([T]) -> Void)!
+    private var accessq = EACommon.defaultQueue
     /// Number of items in the queue
     public var count: Int {
         return self.queue.count
@@ -31,15 +31,42 @@ public final class EAQueue<T> {
         self.queue = []
     }
     
+    init(interval: TimeInterval, completion: @escaping ([T]) -> Void, queue: DispatchQueue) {
+        self.interval = interval
+        self.completion = completion
+        self.accessq = queue
+        self.initTimer()
+    }
+    
     init(interval: TimeInterval, completion: @escaping ([T]) -> Void) {
         self.interval = interval
         self.completion = completion
         self.initTimer()
     }
     
+    init() {}
+    
+    public func setInterval(_ interval: TimeInterval) {
+        self.interval = interval
+    }
+    
+    public func setCompletion(_ completion: @escaping ([T]) -> Void) {
+        self.completion = completion
+    }
+    
+    /// Set the dispatch queue against which the timer will run and the list gets processed
+    public func setQueue(_ queue: DispatchQueue) {
+        self.accessq = queue
+    }
+    
+    /// If not using the initializer set interval and block manually and call this to start the timer.
+    public func startTimer() {
+        self.initTimer()
+    }
+    
     private func initTimer() {
         if self.timer == nil {
-            self.timer = DispatchSource.makeTimerSource()
+            self.timer = DispatchSource.makeTimerSource(queue: self.accessq)
             self.timer?.schedule(deadline: .now() + self.interval, repeating: self.interval)
             self.timer?.setEventHandler(handler: { [weak self] in self?.eventHandler() })
         }
