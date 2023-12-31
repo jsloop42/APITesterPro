@@ -22,7 +22,9 @@ class PersistenceService {
         if let ws = self.db.createWorkspace(id: self.db.workspaceId(), name: name, desc: desc, isSyncEnabled: isSyncEnabled, ctx: ctx) {
             ws.order = order
             self.db.saveMainContext()
-            self.ckSvc.saveWorkspace(ws)
+            if isSyncEnabled {
+                self.ckSvc.saveWorkspace(ws)
+            }
         }
     }
     
