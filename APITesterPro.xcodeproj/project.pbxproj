@@ -13,6 +13,7 @@
 		9E04F4F82B122585007A0773 /* CloudKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F72B122585007A0773 /* CloudKitTests.swift */; };
 		9E04F4FA2B122CF0007A0773 /* EACryptoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F92B122CF0007A0773 /* EACryptoTest.swift */; };
 		9E04F4FD2B138F38007A0773 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4FC2B138F38007A0773 /* PersistenceService.swift */; };
+		9E419AF42B407075002FA0D1 /* CloudSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E419AF32B407075002FA0D1 /* CloudSyncService.swift */; };
 		9E4875E72AF56DD000D624DA /* APITesterPro.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9E4875E52AF56DD000D624DA /* APITesterPro.xcdatamodeld */; };
 		9E4875E82AF5856A00D624DA /* AppDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0812AF44CBF004095CF /* AppDelegateMock.swift */; };
 		9E571CE62B24B7F60090F1CF /* EAExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E571CE52B24B7F60090F1CF /* EAExtensionsTests.swift */; };
@@ -98,6 +99,9 @@
 		9E81D14D2AF452DE004095CF /* EARepeatTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1472AF452DE004095CF /* EARepeatTimerTests.swift */; };
 		9E81D14E2AF452DE004095CF /* EAUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1482AF452DE004095CF /* EAUtilsTests.swift */; };
 		9E81D14F2AF452DE004095CF /* EAQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1492AF452DE004095CF /* EAQueueTests.swift */; };
+		9ECA32FD2B415F5700B4B937 /* CloudSyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECA32FC2B415F5700B4B937 /* CloudSyncTests.swift */; };
+		9ECA32FF2B417D4000B4B937 /* EAPopQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECA32FE2B417D4000B4B937 /* EAPopQueue.swift */; };
+		9ECA33012B41825100B4B937 /* EAPopQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECA33002B41825100B4B937 /* EAPopQueueTests.swift */; };
 		9ED969A42AF5A35F0029E83E /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A32AF5A35F0029E83E /* WebKit.framework */; };
 		9ED969A82AF5A38B0029E83E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A72AF5A38B0029E83E /* CloudKit.framework */; };
 		9EDDE3B72B1BC0A20074141A /* EditRequestTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDE3B62B1BC0A20074141A /* EditRequestTracker.swift */; };
@@ -129,6 +133,7 @@
 		9E04F4F92B122CF0007A0773 /* EACryptoTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EACryptoTest.swift; sourceTree = "<group>"; };
 		9E04F4FB2B131A3C007A0773 /* APITesterPro.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = APITesterPro.entitlements; sourceTree = "<group>"; };
 		9E04F4FC2B138F38007A0773 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
+		9E419AF32B407075002FA0D1 /* CloudSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSyncService.swift; sourceTree = "<group>"; };
 		9E4875E62AF56DD000D624DA /* APITesterPro.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = APITesterPro.xcdatamodel; sourceTree = "<group>"; };
 		9E4875EB2AF590A300D624DA /* APITesterPro.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = APITesterPro.xctestplan; sourceTree = "<group>"; };
 		9E571CE52B24B7F60090F1CF /* EAExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EAExtensionsTests.swift; sourceTree = "<group>"; };
@@ -220,6 +225,9 @@
 		9E81D1482AF452DE004095CF /* EAUtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAUtilsTests.swift; sourceTree = "<group>"; };
 		9E81D1492AF452DE004095CF /* EAQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAQueueTests.swift; sourceTree = "<group>"; };
 		9E81D1502AF45302004095CF /* APITesterProTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "APITesterProTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		9ECA32FC2B415F5700B4B937 /* CloudSyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSyncTests.swift; sourceTree = "<group>"; };
+		9ECA32FE2B417D4000B4B937 /* EAPopQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EAPopQueue.swift; sourceTree = "<group>"; };
+		9ECA33002B41825100B4B937 /* EAPopQueueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EAPopQueueTests.swift; sourceTree = "<group>"; };
 		9ED969A32AF5A35F0029E83E /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		9ED969A52AF5A36A0029E83E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		9ED969A72AF5A38B0029E83E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -303,11 +311,12 @@
 		9E81D0442AF44BE9004095CF /* APITesterProTests */ = {
 			isa = PBXGroup;
 			children = (
-				9E81D1432AF452B3004095CF /* JVLibTests */,
+				9E81D1432AF452B3004095CF /* EALibTests */,
 				9E4875EB2AF590A300D624DA /* APITesterPro.xctestplan */,
 				9E81D1502AF45302004095CF /* APITesterProTests-Bridging-Header.h */,
 				9E81D07D2AF44CBD004095CF /* APITesterProTests.swift */,
 				9E81D0812AF44CBF004095CF /* AppDelegateMock.swift */,
+				9ECA32FC2B415F5700B4B937 /* CloudSyncTests.swift */,
 				9E81D07F2AF44CBE004095CF /* IMG_6109.jpeg */,
 			);
 			path = APITesterProTests;
@@ -338,6 +347,7 @@
 				9E81D0B62AF451E9004095CF /* EANetwork.swift */,
 				9E81D0BB2AF451E9004095CF /* EAOperationQueue.swift */,
 				9E81D0B92AF451E9004095CF /* EAQueue.swift */,
+				9ECA32FE2B417D4000B4B937 /* EAPopQueue.swift */,
 				9E81D0BD2AF451E9004095CF /* EARepeatTimer.swift */,
 				9E81D0C32AF451E9004095CF /* EARescheduler.swift */,
 				9E81D0C42AF451E9004095CF /* EASystem.swift */,
@@ -400,6 +410,7 @@
 			children = (
 				9E81D0D62AF451F7004095CF /* CoreDataService.swift */,
 				9E04F4FC2B138F38007A0773 /* PersistenceService.swift */,
+				9E419AF32B407075002FA0D1 /* CloudSyncService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -484,19 +495,20 @@
 			path = Workspace;
 			sourceTree = "<group>";
 		};
-		9E81D1432AF452B3004095CF /* JVLibTests */ = {
+		9E81D1432AF452B3004095CF /* EALibTests */ = {
 			isa = PBXGroup;
 			children = (
 				9E04F4F72B122585007A0773 /* CloudKitTests.swift */,
 				9E04F4F92B122CF0007A0773 /* EACryptoTest.swift */,
+				9E571CE52B24B7F60090F1CF /* EAExtensionsTests.swift */,
 				9E81D1442AF452DE004095CF /* EALFUCacheTests.swift */,
+				9ECA33002B41825100B4B937 /* EAPopQueueTests.swift */,
 				9E81D1492AF452DE004095CF /* EAQueueTests.swift */,
 				9E81D1472AF452DE004095CF /* EARepeatTimerTests.swift */,
 				9E81D1462AF452DE004095CF /* EAReschedulerTests.swift */,
 				9E81D1482AF452DE004095CF /* EAUtilsTests.swift */,
-				9E571CE52B24B7F60090F1CF /* EAExtensionsTests.swift */,
 			);
-			path = JVLibTests;
+			path = EALibTests;
 			sourceTree = "<group>";
 		};
 		9ED969A22AF5A35F0029E83E /* Frameworks */ = {
@@ -704,6 +716,8 @@
 				9E81D1092AF45218004095CF /* RequestStates.swift in Sources */,
 				9E81D1222AF45235004095CF /* WorkspaceListViewController.swift in Sources */,
 				9E81D1132AF45221004095CF /* ResponseTableViewController.swift in Sources */,
+				9ECA32FF2B417D4000B4B937 /* EAPopQueue.swift in Sources */,
+				9E419AF42B407075002FA0D1 /* CloudSyncService.swift in Sources */,
 				9E04F4F52B122577007A0773 /* EACloudOperation.swift in Sources */,
 				9E81D1102AF45218004095CF /* RequestListViewController.swift in Sources */,
 				9E81D12F2AF45241004095CF /* UI.swift in Sources */,
@@ -732,10 +746,12 @@
 				9E571CE62B24B7F60090F1CF /* EAExtensionsTests.swift in Sources */,
 				9E81D14D2AF452DE004095CF /* EARepeatTimerTests.swift in Sources */,
 				9E81D14C2AF452DE004095CF /* EAReschedulerTests.swift in Sources */,
+				9ECA32FD2B415F5700B4B937 /* CloudSyncTests.swift in Sources */,
 				9E81D14F2AF452DE004095CF /* EAQueueTests.swift in Sources */,
 				9E81D14E2AF452DE004095CF /* EAUtilsTests.swift in Sources */,
 				9E81D0862AF44CC0004095CF /* AppDelegateMock.swift in Sources */,
 				9E81D14A2AF452DE004095CF /* EALFUCacheTests.swift in Sources */,
+				9ECA33012B41825100B4B937 /* EAPopQueueTests.swift in Sources */,
 				9E81D0822AF44CC0004095CF /* APITesterProTests.swift in Sources */,
 				9E04F4FA2B122CF0007A0773 /* EACryptoTest.swift in Sources */,
 			);
