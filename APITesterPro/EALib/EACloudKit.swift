@@ -58,7 +58,8 @@ extension Notification.Name {
     static let zoneChangesDidSave = Notification.Name("zone-changes-did-save")
 }
 
-/// A class to work with CloudKit.
+/// A class to work with CloudKit. Should be used for performing basic CRUD operations for records and subscriptions. Logic for syncing, managing sync queues should be handled separately based on the entities to keep this class generic
+/// Enable iCloud capability with CloudKit container. This will also enable push notification which is used to notify app on DB changes by CloudKit.
 class EACloudKit {
     static let shared = EACloudKit()
     var cloudKitContainerId: String!
@@ -465,12 +466,13 @@ class EACloudKit {
     
     // MARK: - Fetch
     
+    
     func fetchAllZones(completion: @escaping (Result<(all: [CKRecordZone], new: [CKRecordZone.ID]), Error>) -> Void) {
         Log.debug("CK: fetch all zones")
         self.privateDatabase().fetchAllRecordZones { [unowned self] zones, error in
             if let err = error as? CKError {
                 if err.isNetworkFailure() {
-                    if RetryTimer.fetchAllZones == nil && self.canRetry() {
+                    if RetryTimer.fetchAllZones == nil && self.canRetry() {  // TODO: refactor to common function
                         RetryTimer.fetchAllZones = EARepeatTimer(block: {
                             if !self.isOffline { self.fetchAllZones(completion: completion) }
                             RetryTimer.fetchAllZones.suspend()
