@@ -9,9 +9,22 @@
 import Foundation
 import CoreData
 
+/// Class for persisting entities. Created entities are first saved to local and then synced to cloud. Deleted entites needs to be first removed from iCloud and then from local.
 class PersistenceService {
     static var shared = PersistenceService()
     private lazy var db = { CoreDataService.shared }()
+    private lazy var ckSvc = { CloudSyncService.shared }()
+    
+    // MARK: - Create entities
+    
+    func createWorkspace(name: String, desc: String, isSyncEnabled: Bool, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+        let order = self.db.getOrderOfLastWorkspace().inc()
+        if let ws = self.db.createWorkspace(id: self.db.workspaceId(), name: name, desc: desc, isSyncEnabled: isSyncEnabled, ctx: ctx) {
+            ws.order = order
+            self.db.saveMainContext()
+            self.ckSvc.saveWorkspace(ws)
+        }
+    }
     
     // MARK: - Delete entities
     

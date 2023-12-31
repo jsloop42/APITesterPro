@@ -28,8 +28,8 @@ class WorkspaceListViewController: APITesterProViewController {
     private let utils = EAUtils.shared
     private let app: App = App.shared
     private let nc = NotificationCenter.default
-    private lazy var localdb = { CoreDataService.shared }()
-    private lazy var localdbSvc = { PersistenceService.shared }()
+    private lazy var db = { CoreDataService.shared }()
+    private lazy var dbSvc = { PersistenceService.shared }()
     private var frc: NSFetchedResultsController<EWorkspace>!
     // private lazy var db = { PersistenceService.shared }()
     private var wsSelected: EWorkspace!
@@ -80,7 +80,7 @@ class WorkspaceListViewController: APITesterProViewController {
     
     func initData() {
         if self.frc == nil {
-            if let _frc = self.localdb.getFetchResultsController(obj: EWorkspace.self, predicate: NSPredicate(format: "markForDelete == %hhd AND name != %@", false, ""), ctx: self.localdb.mainMOC) as? NSFetchedResultsController<EWorkspace> {
+            if let _frc = self.db.getFetchResultsController(obj: EWorkspace.self, predicate: NSPredicate(format: "markForDelete == %hhd AND name != %@", false, ""), ctx: self.db.mainMOC) as? NSFetchedResultsController<EWorkspace> {
                 self.frc = _frc
                 self.frc.delegate = self
             }
@@ -182,7 +182,7 @@ class WorkspaceListViewController: APITesterProViewController {
                 didChange = true
             }
             if didChange {
-                self.localdb.saveMainContext()
+                self.db.saveMainContext()
                 self.updateData()
             }
         }, validateHandler: { model in
@@ -216,16 +216,8 @@ class WorkspaceListViewController: APITesterProViewController {
     
     func addWorkspace(name: String, desc: String, isSyncEnabled: Bool) {
         AppState.totalworkspaces = self.frc.numberOfRows(in: 0)
-        let isSyncEnabled = false  // TODO: ck: disable sync - remove this on icloud sync implementation
-        let order = self.localdb.getOrderOfLastWorkspace().inc()
-        if let ws = self.localdb.createWorkspace(id: self.localdb.workspaceId(), name: name, desc: desc, isSyncEnabled: isSyncEnabled) {
-            ws.order = order
-            ws.syncDisabled = ws.created  // TODO: ck remove. The date at which the sync is disabled
-            self.localdb.saveMainContext()
-            // TODO: ck: save workspace to cloud
-            // self.db.saveWorkspaceToCloud(ws)
-            self.reloadData()
-        }
+        self.dbSvc.createWorkspace(name: name, desc: desc, isSyncEnabled: isSyncEnabled)
+        self.reloadData()
     }
 }
 
@@ -285,10 +277,10 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
         let delete = UIContextualAction(style: .destructive, title: "Delete") { action, view, completion in
             Log.debug("delete row: \(indexPath)")
             if ws == self.wsSelected {  // Reset selection to the default workspace
-                let wss = self.localdb.getAllWorkspaces(offset: 0, limit: 1, isMarkForDelete: false, ctx: self.localdb.mainMOC)
-                self.wsSelected = !wss.isEmpty ? wss.first! : self.localdb.getDefaultWorkspace()
+                let wss = self.db.getAllWorkspaces(offset: 0, limit: 1, isMarkForDelete: false, ctx: self.db.mainMOC)
+                self.wsSelected = !wss.isEmpty ? wss.first! : self.db.getDefaultWorkspace()
             }
-            self.localdbSvc.deleteEntity(ws: ws)
+            self.dbSvc.deleteEntity(ws: ws)
             // TODO: ck: delete ws marked for delete
             // self.db.deleteDataMarkedForDelete(ws, ctx: self.localdb.mainMOC)
             self.updateData()
