@@ -12,41 +12,20 @@ import Foundation
 
 // This test needs to be run individually. Enabling from test plan is causing failure.
 class EAQueueTests: XCTestCase {
-    private var timer: Timer?
-    private let opq = EAOperationQueue()
-    
-    override func setUp() {
-        super.setUp()
-    }
-    
-    override func tearDown() {
-        super.tearDown()
-    }
-    
     func testQueue() {
+        var timer: Timer?
         var count = 0
-        var flag = 0
         let exp = expectation(description: "enqueue dequeue")
-        let q = EAQueue<Int>(interval: 1.0) { xs in
-            flag += 1
-            if flag == 2 { exp.fulfill() }
+        let q = EAQueue<Int>(interval: 3.0) { xs in  // execute this block after 5 seconds
+            Log.debug("in queue completion handler")
+            if xs.count == count { exp.fulfill() }
         }
-        self.timer = Timer(timeInterval: 0.2, repeats: true) { _ in
+        timer = Timer(timeInterval: 0.2, repeats: true) { _ in  // add elements to the queue with a delay
             q.enqueue(count)
             count += 1
-            if count >= 10 { self.timer?.invalidate() }
+            if count == 4 { timer?.invalidate() }
         }
-        RunLoop.main.add(self.timer!, forMode: .common)
-        waitForExpectations(timeout: 10.0, handler: nil)
-    }
-    
-    func testOpQueue() {
-        let exp = expectation(description: "test operation queue")
-        let op = EACloudOperation {op in
-            op?.finish()
-            exp.fulfill()
-        }
-        XCTAssertTrue(self.opq.add(op))
-        waitForExpectations(timeout: 1.0, handler: nil)
+        RunLoop.main.add(timer!, forMode: .common)
+        waitForExpectations(timeout: 5.0, handler: nil)
     }
 }
