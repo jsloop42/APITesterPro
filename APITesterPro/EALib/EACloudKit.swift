@@ -217,6 +217,20 @@ class EACloudKit {
         }
     }
     
+    /// Get iCloud account status async.
+    func accountStatus() async throws -> CKAccountStatus {
+        try await withCheckedThrowingContinuation { continuation in
+            self.accountStatus { result in
+                switch (result) {
+                case .success(let status):
+                    continuation.resume(returning: status)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+    
     /// Returns whether the zone has been created for the given zone ID.
     func isZoneCreated(_ zoneID: CKRecordZone.ID) -> Bool {
         let key = "\(zoneID.zoneName)-created"
