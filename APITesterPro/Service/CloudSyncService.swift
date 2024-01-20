@@ -48,19 +48,15 @@ class CloudSyncService {
         self.ck.saveRecords(saveRecord.records, completion: saveRecord.completion)
     }
     
-    func accountStatus() async -> Bool {
-        return true
-    }
-    
     /// Saves the given workspace to cloud. A corresponding Zone record will also be saved.
     func saveWorkspace(_ ws: EWorkspace) {
         // TODO: check icloud account status
         Task {
-            let status = await accountStatus()
-            if !status {
-                Log.info("iCloud account fail: \(status)")
-                return
-            }
+            let accStatus = try? await self.ck.accountStatus()
+//            if !status {
+//                Log.info("iCloud account fail: \(status)")
+//                return
+//            }
             Log.debug("ck save workspace \(ws.getId())")
             let ctx = ws.managedObjectContext!
             guard let ckWs = EWorkspace.getCKRecord(id: ws.getId(), ctx: ctx) else { Log.error("Error getting ckWs"); return }

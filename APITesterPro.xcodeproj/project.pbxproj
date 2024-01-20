@@ -534,6 +534,8 @@
 			dependencies = (
 			);
 			name = APITesterPro;
+			packageProductDependencies = (
+			);
 			productName = APITesterPro;
 			productReference = 9E81D0282AF44BE7004095CF /* APITesterPro.app */;
 			productType = "com.apple.product-type.application";
@@ -609,6 +611,8 @@
 				Base,
 			);
 			mainGroup = 9E81D01F2AF44BE7004095CF;
+			packageReferences = (
+			);
 			productRefGroup = 9E81D0292AF44BE7004095CF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
