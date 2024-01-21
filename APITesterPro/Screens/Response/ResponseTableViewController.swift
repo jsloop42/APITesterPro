@@ -30,7 +30,6 @@ final class ResponseWebViewCell: UITableViewCell, WKNavigationDelegate, WKUIDele
     }
     var doneLoading = false
     let nc = NotificationCenter.default
-    var height: CGFloat = 44
     var rawTemplate = ""
     var previewTemplate = ""
     var responseCache: ResponseCache!
@@ -750,11 +749,15 @@ extension ResponseTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return CGFloat.leastNormalMagnitude
+        return 0
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return nil
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0
     }
     
     func getMaxHeightForText(keyText: String, valueText: String, viewWidth: Double) -> Double {
@@ -816,6 +819,13 @@ extension ResponseTableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:  // info section
+            self.infoCell.isHidden = false
+            self.headersViewCell.isHidden = false
+            self.cookiesViewCell.isHidden = false
+            self.metricsViewCell.isHidden = false
+            self.detailsViewCell.isHidden = false
+            self.rawCell.isHidden = true
+            self.previewCell.isHidden = true
             if self.mode == .info {
                 if self.data == nil {  // For requests which has not been sent once
                     if indexPath.row == InfoCellId.helpCell.rawValue { return 44 }
@@ -872,15 +882,29 @@ extension ResponseTableViewController {
                 }
             }
         case 1:  // raw section
+            self.infoCell.isHidden = true
+            self.headersViewCell.isHidden = true
+            self.cookiesViewCell.isHidden = true
+            self.metricsViewCell.isHidden = true
+            self.detailsViewCell.isHidden = true
+            self.rawCell.isHidden = false
+            self.previewCell.isHidden = true
             if indexPath.row == RawCellId.spacerBeforeRawCell.rawValue {
                 return 24
             }
-            let h: CGFloat = UIScreen.main.bounds.height 
+            let h: CGFloat = UIScreen.main.bounds.height
                 - (48 + (self.tabbarController?.tabBar.frame.height ?? 0)
                       + self.navigationController!.navigationBar.frame.height
                       + (UI.getKeyWindow()?.safeAreaInsets.top ?? 0))
             return h
         case 2:  // preview section
+            self.infoCell.isHidden = true
+            self.headersViewCell.isHidden = true
+            self.cookiesViewCell.isHidden = true
+            self.metricsViewCell.isHidden = true
+            self.detailsViewCell.isHidden = true
+            self.rawCell.isHidden = true
+            self.previewCell.isHidden = false
             if indexPath.row == PreviewCellId.spacerBeforePreviewCell.rawValue {
                 return 24
             }
