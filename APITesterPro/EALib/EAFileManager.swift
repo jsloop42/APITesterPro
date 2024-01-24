@@ -58,10 +58,26 @@ public final class EAFileManager: NSObject {
         return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(name)
     }
     
-    /// Returns a file URL that's located in the app's document directory
-    public static func getDocumentDirectoryURL(_ name: String) -> URL? {
-        if let docDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-            return docDirectory.appendingPathComponent(name)
+    /// Returns a file URL that's located in the app's document directory. If the directory is not present it will be created.
+    public static func getDocumentDirectoryURL(_ name: String? = nil) -> URL? {
+        if let docDir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true) {
+            if #available(iOS 16.0, *) {
+                return name != nil ? docDir.appending(path: name!) : docDir
+            } else {
+                return name != nil ? docDir.appendingPathComponent(name!) : docDir
+            }
+        }
+        return nil
+    }
+    
+    /// Returns a file URL that's located in the app's application support  directory. If the directory is not present it will be created. Application Support directory is where the default Core Data SQLite file is stored.
+    public static func getApplicationSupportDirectoryURL(_ name: String? = nil) -> URL? {
+        if let docDir = try? FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true) {
+            if #available(iOS 16.0, *) {
+                return name != nil ? docDir.appending(path: name!) : docDir
+            } else {
+                return name != nil ? docDir.appendingPathComponent(name!) : docDir
+            }
         }
         return nil
     }
