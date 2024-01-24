@@ -223,6 +223,7 @@
 		9E81D1482AF452DE004095CF /* EAUtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAUtilsTests.swift; sourceTree = "<group>"; };
 		9E81D1492AF452DE004095CF /* EAQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAQueueTests.swift; sourceTree = "<group>"; };
 		9E81D1502AF45302004095CF /* APITesterProTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "APITesterProTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		9EBAD0992B60D76F00E172A1 /* APITesterPro 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "APITesterPro 2.xcdatamodel"; sourceTree = "<group>"; };
 		9ECA32FC2B415F5700B4B937 /* CloudSyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSyncTests.swift; sourceTree = "<group>"; };
 		9ECA32FE2B417D4000B4B937 /* EAPopQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EAPopQueue.swift; sourceTree = "<group>"; };
 		9ECA33002B41825100B4B937 /* EAPopQueueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EAPopQueueTests.swift; sourceTree = "<group>"; };
@@ -1116,6 +1117,7 @@
 		9E4875E52AF56DD000D624DA /* APITesterPro.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				9EBAD0992B60D76F00E172A1 /* APITesterPro 2.xcdatamodel */,
 				9E4875E62AF56DD000D624DA /* APITesterPro.xcdatamodel */,
 			);
 			currentVersion = 9E4875E62AF56DD000D624DA /* APITesterPro.xcdatamodel */;
