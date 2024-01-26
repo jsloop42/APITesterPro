@@ -23,7 +23,7 @@ class PersistenceService {
             ws.order = order
             self.db.saveMainContext()
             if isSyncEnabled {
-                self.ckSvc.saveWorkspace(ws)
+                // self.ckSvc.saveWorkspace(ws)
             }
         }
     }

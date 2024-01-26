@@ -243,7 +243,7 @@ class SettingsTableViewController: APITesterProTableViewController {
         case CellId.spacerAfterWorkspace.rawValue:
             return 24
         case CellId.syncWorkspace.rawValue:
-            return 0  // TODO: ck: set back to 44 - hiding sync
+            return 44
         case CellId.saveHistory.rawValue:
             return 44
         case CellId.spacerAfterSaveHistory.rawValue:
