@@ -144,7 +144,7 @@ class CoreDataService {
         localStoreDescription.type = NSSQLiteStoreType
         localStoreDescription.shouldMigrateStoreAutomatically = true
         localStoreDescription.shouldInferMappingModelAutomatically = true
-        localStoreDescription.configuration = self.localConfigurationName
+        // localStoreDescription.configuration = self.localConfigurationName  // Existing default is PF_DEFAULT_CONFIGURATION_NAME. To prevent any issues this is not set now.
         if (container.persistentStoreDescriptions.first == nil) {
             container.persistentStoreDescriptions = [localStoreDescription]
         }
