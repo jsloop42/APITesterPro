@@ -131,25 +131,80 @@ class CoreDataService {
     static var shared = CoreDataService()
     private var storeType: String! = NSSQLiteStoreType
     lazy var peristentContainerTest: NSPersistentContainer = {
-        let model = self.model
-        return NSPersistentContainer(name: self.containerName, managedObjectModel: model)
+        return NSPersistentContainer(name: self.containerName, managedObjectModel: self.model)
     }()
     lazy var persistentContainer: NSPersistentContainer = {
-        let model = self.model
-        return NSPersistentContainer(name: self.containerName, managedObjectModel: model)
+        let container = NSPersistentContainer(name: self.containerName, managedObjectModel: self.model)
+        let localStoreDescription: NSPersistentStoreDescription!
+        if let desc = container.persistentStoreDescriptions.first {
+            localStoreDescription = desc
+        } else {
+            localStoreDescription = NSPersistentStoreDescription()
+        }
+        localStoreDescription.type = NSSQLiteStoreType
+        localStoreDescription.shouldMigrateStoreAutomatically = true
+        localStoreDescription.shouldInferMappingModelAutomatically = true
+        localStoreDescription.configuration = self.localConfigurationName
+        if (container.persistentStoreDescriptions.first == nil) {
+            container.persistentStoreDescriptions = [localStoreDescription]
+        }
+        container.loadPersistentStores { description, error in
+            if let error = error {
+                fatalError("Unable to load local persistent store: \(error)")
+            }
+        }
+        return container
+    }()
+    lazy var ckPersistentContainer: NSPersistentCloudKitContainer = {
+        let container = NSPersistentCloudKitContainer(name: self.ckContainerName, managedObjectModel: self.model)
+        let cloudStoreDescription: NSPersistentStoreDescription!
+        if let desc = container.persistentStoreDescriptions.first {
+            cloudStoreDescription = desc
+        } else {
+            cloudStoreDescription = NSPersistentStoreDescription()
+        }
+        cloudStoreDescription.type = NSSQLiteStoreType
+        cloudStoreDescription.shouldMigrateStoreAutomatically = true
+        cloudStoreDescription.shouldInferMappingModelAutomatically = true
+        cloudStoreDescription.configuration = self.cloudConfigurationName
+        // TODO: set iCloud identifier
+        if (container.persistentStoreDescriptions.first == nil) {
+            container.persistentStoreDescriptions = [cloudStoreDescription]
+        }
+        container.loadPersistentStores { description, error in
+            if let error = error {
+                fatalError("Unable to load cloud persistent store: \(error)")
+            }
+        }
+        return container
     }()
     lazy var model: NSManagedObjectModel = {
-        let modelPath = Bundle(for: type(of: self)).path(forResource: "APITesterPro", ofType: "momd")
+        let modelPath = Bundle(for: type(of: self)).path(forResource: self.modelName, ofType: "momd")
         let url = URL(fileURLWithPath: modelPath!)
         return NSManagedObjectModel(contentsOf: url)!
     }()
+    /// Get local store main managed object context
     lazy var mainMOC: NSManagedObjectContext = {
         let ctx = self.persistentContainer.viewContext
         ctx.automaticallyMergesChangesFromParent = true
         return ctx
     }()
+    /// Get local store background managed object context
     lazy var bgMOC: NSManagedObjectContext = {
         let ctx = self.persistentContainer.newBackgroundContext()
+        ctx.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+        ctx.automaticallyMergesChangesFromParent = true
+        return ctx
+    }()
+    /// Get cloud store main managed object context
+    lazy var ckMainMOC: NSManagedObjectContext = {
+        let ctx = self.ckPersistentContainer.viewContext
+        ctx.automaticallyMergesChangesFromParent = true
+        return ctx
+    }()
+    /// Get cloud store background managed object context
+    lazy var ckBgMOC: NSManagedObjectContext = {
+        let ctx = self.ckPersistentContainer.newBackgroundContext()
         ctx.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         ctx.automaticallyMergesChangesFromParent = true
         return ctx
@@ -157,11 +212,15 @@ class CoreDataService {
     private let fetchBatchSize: Int = 50
     private let utils = EAUtils.shared
     var containerName = isRunningTests ? "APITesterProTest" : "APITesterPro"
+    let ckContainerName = "APITesterProCloud"
+    let modelName = "APITesterPro"  // core data model name
+    let localConfigurationName = "Default"  // core data configuration name as defined in the model
+    let cloudConfigurationName = "Cloud"  // core data configuration name as defined in the model
     let defaultWorkspaceId = "default"
     let defaultWorkspaceName = "Default workspace"
     let defaultWorkspaceDesc = "The default workspace"
     let cloudKitContainerId = Const.cloudKitContainerID
-    static let modelVersion: Int64 = 1
+    static let modelVersion: Int64 = 2
     
     init() {
         self.bootstrap()
@@ -173,27 +232,12 @@ class CoreDataService {
     }
 
     func bootstrap() {
-        let desc = self.persistentContainer.persistentStoreDescriptions.first
-        desc?.type = self.storeType
-        self.setup()
-    }
-    
-    func setup(storeType: String = NSSQLiteStoreType, completion: (() -> Void)? = nil) {
-        if (self.persistentContainer.persistentStoreCoordinator.persistentStores.firstIndex(where: { store -> Bool in store.type == storeType })) != nil {
-            completion?()
-        } else {
-            self.storeType = storeType
-            self.loadPersistentStore { completion?() }
-        }
-    }
-    
-    private func loadPersistentStore(completion: @escaping () -> Void) {
-        // Handle data migration on a different thread / queue
-        self.persistentContainer.loadPersistentStores { description, error  in
-            guard error == nil else { fatalError("Unable to load store \(error!)") }
-            self.persistentContainer.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
-            completion()
-        }
+        // test
+        Log.debug("ck \(self.ckPersistentContainer)")
+        let ws = self.createWorkspace(id: "ck-ws-test", name: "ck-ws-test", desc: "", isSyncEnabled: true, ctx: self.ckMainMOC)
+        Log.debug("ws: \(ws)")
+        try? self.ckMainMOC.save()
+        // end test
     }
     
     /// Returns the context if present or the main context

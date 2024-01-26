@@ -65,7 +65,7 @@ class App {
     
     private func didFinishLaunchingImpl(window: UIWindow) {
         if !self.appLaunched {
-            self.localdb.bootstrap()
+            //self.localdb.bootstrap()
             self.ckSvc.bootstrap()
             self.initUI(window.rootViewController as! UINavigationController)
             self.appLaunched = true
