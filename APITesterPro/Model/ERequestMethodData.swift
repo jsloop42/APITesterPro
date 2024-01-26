@@ -59,10 +59,6 @@ public class ERequestMethodData: NSManagedObject, Entity {
         return self.version
     }
     
-    public func setIsSynced(_ status: Bool) {
-        self.isSynced = status
-    }
-    
     public func setMarkedForDelete(_ status: Bool) {
         self.markForDelete = status
     }
