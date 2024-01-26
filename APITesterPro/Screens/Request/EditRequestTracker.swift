@@ -117,7 +117,7 @@ public class EditRequestTracker {
     ///   - x: The request object.
     ///   - request: The initial request dictionary.
     func didRequestChangeImp(_ x: ERequest) -> Bool {
-        if x.markForDelete != self.requestDict["markForDelete"] as? Bool { x.isSynced = false; self.updateModified(x); return true }
+        if x.markForDelete != self.requestDict["markForDelete"] as? Bool { self.updateModified(x); return true }
         if x.url == nil || x.url!.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { return false }
         if x.validateSSL != self.requestDict["validateSSL"] as? Bool { self.updateModified(x); return true }
         if self.didRequestURLChangeImp(x.url ?? "") { self.updateModified(x); return true }
@@ -305,7 +305,7 @@ public class EditRequestTracker {
     
     /// Checks if the request body changed
     func didRequestBodyChangeImp(_ x: ERequestBodyData?) -> Bool {
-        if (x == nil && self.requestDict["body"] != nil) || (x != nil && self.requestDict["body"] == nil) { x?.isSynced = false; return true }
+        if (x == nil && self.requestDict["body"] != nil) || (x != nil && self.requestDict["body"] == nil) { return true }
         if let body = self.requestDict["body"] as? [String: Any] {
             if x?.json != body["json"] as? String ||
                 x?.raw != body["raw"] as? String ||
@@ -313,7 +313,6 @@ public class EditRequestTracker {
                 x?.xml != body["xml"] as? String ||
                 // x?.markForDelete != self.requestDict["markForDelete"] as? Bool {  // TODO: check this is correct - orig
                 x?.markForDelete != body["markForDelete"] as? Bool {
-                x?.isSynced = false
                 self.updateModified(x)
                 return true
             }
@@ -333,7 +332,7 @@ public class EditRequestTracker {
     
     /// Checks if the any of the request body form elements changed.
     func didAnyRequestBodyFormChangeImp(_ x: ERequestBodyData) -> Bool {
-        if self.requestDict["body"] == nil { x.isSynced = false; return true }
+        if self.requestDict["body"] == nil { return true }
         if let body = self.requestDict["body"] as? [String: Any] {
             if (x.form != nil && body["form"] == nil) || (x.form == nil && body["form"] != nil) { return true }
             if (x.multipart != nil && body["multipart"] == nil) || (x.multipart == nil && body["multipart"] != nil) { return true }
@@ -365,10 +364,10 @@ public class EditRequestTracker {
     
     func didRequestBodyBinaryChangeImp(_ reqData: ERequestData?, body: [String: Any]) -> Bool {
         let obin = body["binary"] as? [String: Any]
-        if (obin == nil && reqData != nil) || (obin != nil && reqData == nil) { reqData?.isSynced = false; self.updateModified(reqData); return true }
-        guard let lbin = reqData, let rbin = obin else { reqData?.isSynced = false; self.updateModified(reqData); return true }
-        if lbin.created != rbin["created"] as? Date || lbin.markForDelete != rbin["markForDelete"] as? Bool { reqData?.isSynced = false; self.updateModified(reqData); return true }
-        if self.didRequestBodyFormAttachmentChangeImp(lbin, reqData: rbin) { reqData?.isSynced = false; self.updateModified(reqData); return true }
+        if (obin == nil && reqData != nil) || (obin != nil && reqData == nil) { self.updateModified(reqData); return true }
+        guard let lbin = reqData, let rbin = obin else { self.updateModified(reqData); return true }
+        if lbin.created != rbin["created"] as? Date || lbin.markForDelete != rbin["markForDelete"] as? Bool { self.updateModified(reqData); return true }
+        if self.didRequestBodyFormAttachmentChangeImp(lbin, reqData: rbin) { self.updateModified(reqData); return true }
         return false
     }
     
@@ -392,7 +391,7 @@ public class EditRequestTracker {
                        dict["id"] as! String == reqDataId
                    }) {
                     // if self.didRequestDataChangeImp(x: reqData, y: request, type: type) { body.isSynced = false; return true }  // TODO: check if this is correct - orig
-                    if self.didRequestDataChangeImp(x: reqData, reqData: formDict, type: type) { body.isSynced = false; return true }
+                    if self.didRequestDataChangeImp(x: reqData, reqData: formDict, type: type) { return true }
                 }
                 
             }
@@ -412,13 +411,13 @@ public class EditRequestTracker {
     
     /// Checks if the given form's attachments changed.
     func didRequestBodyFormAttachmentChangeImp(_ x: ERequestData, reqData: [String: Any]) -> Bool {
-        if (x.image != nil && reqData["image"] == nil) || (x.image == nil && reqData["image"] != nil) { x.isSynced = false; self.updateModified(x); return true }
+        if (x.image != nil && reqData["image"] == nil) || (x.image == nil && reqData["image"] != nil) { self.updateModified(x); return true }
         if let ximage = x.image, let yimage = reqData["image"] as? [String: Any]  {
-            if self.didRequestImageChangeImp(x: ximage, img: yimage) { x.isSynced = false; self.updateModified(x); return true }
+            if self.didRequestImageChangeImp(x: ximage, img: yimage) { self.updateModified(x); return true }
         }
         if (x.files != nil && reqData["files"] == nil) || (x.files == nil && reqData["file"] != nil) { return true }
         let yfiles = reqData["files"] as! [[String: Any]]
-        if x.files!.count != yfiles.count { x.isSynced = false; return true }
+        if x.files!.count != yfiles.count { return true }
         if let set = x.files, var xs = set.allObjects as? [any Entity] {
             self.localdb.sortByCreated(&xs)
             let len = xs.count
@@ -444,7 +443,6 @@ public class EditRequestTracker {
             x.type != reqData["type"] as? Int64 ||
             x.value != reqData["value"] as? String ||
             x.markForDelete != reqData["markForDelete"] as? Bool {
-            x.isSynced = false
             self.updateModified(x)
             return true
         }
@@ -468,12 +466,11 @@ public class EditRequestTracker {
             x.name != file["name"] as? String ||
             x.type != file["type"] as? Int64 ||
             x.markForDelete != file["markForDelete"] as? Bool {
-            x.isSynced = false
             self.updateModified(x)
             return true
         }
         if let id = x.id, let xdata = x.data, let _file = self.localdb.getFileData(id: id), let ydata = _file.data {
-            if xdata != ydata { x.isSynced = false; self.updateModified(x); return true }
+            if xdata != ydata { self.updateModified(x); return true }
         }
         return false
     }
@@ -493,12 +490,11 @@ public class EditRequestTracker {
             x.isCameraMode != img["isCameraMode"] as? Bool ||
             x.type != img["type"] as? String ||
             x.markForDelete != img["markForDelete"] as? Bool {
-            x.isSynced = false
             self.updateModified(x)
             return true
         }
         if let id = x.id, let xdata = x.data, let image = self.localdb.getImageData(id: id), let ydata = image.data {
-            if xdata != ydata { x.isSynced = false; self.updateModified(x); return true }
+            if xdata != ydata { self.updateModified(x); return true }
         }
         return false
     }

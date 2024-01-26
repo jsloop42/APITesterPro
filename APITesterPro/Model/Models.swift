@@ -82,7 +82,6 @@ public protocol Entity: NSManagedObject, Hashable {
     func getVersion() -> Int64
     func getZoneID() -> CKRecordZone.ID
     func getRecordID() -> CKRecord.ID
-    func setIsSynced(_ status: Bool)
     func setMarkedForDelete(_ status: Bool)
     func willSave()
 //    func fromDictionary(_ dict: [String: Any])

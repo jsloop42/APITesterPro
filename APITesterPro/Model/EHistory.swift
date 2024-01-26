@@ -33,7 +33,6 @@ public class EHistory: NSManagedObject, Entity {
         history.isProxyConnection = respData.connectionInfo.isProxyConnection
         history.isReusedConnection = respData.connectionInfo.isReusedConnection
         history.isSecure = respData.isSecure
-        history.isSynced = false
         history.localAddress = respData.connectionInfo.localAddress
         history.localPort = respData.connectionInfo.localPort
         history.method = respData.method
@@ -103,10 +102,6 @@ public class EHistory: NSManagedObject, Entity {
     
     public func getVersion() -> Int64 {
         return self.version
-    }
-    
-    public func setIsSynced(_ status: Bool) {
-        self.isSynced = status
     }
     
     public func setMarkedForDelete(_ status: Bool) {
