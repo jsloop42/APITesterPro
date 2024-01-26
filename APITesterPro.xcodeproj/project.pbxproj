@@ -12,6 +12,8 @@
 		9E04F4F82B122585007A0773 /* CloudKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F72B122585007A0773 /* CloudKitTests.swift */; };
 		9E04F4FA2B122CF0007A0773 /* EACryptoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4F92B122CF0007A0773 /* EACryptoTest.swift */; };
 		9E04F4FD2B138F38007A0773 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E04F4FC2B138F38007A0773 /* PersistenceService.swift */; };
+		9E23EAB92B63F885008B6374 /* APITesterProModel2Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E23EAB82B63F885008B6374 /* APITesterProModel2Migration.swift */; };
+		9E23EABB2B640039008B6374 /* APITesterPro2MappingModel.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 9E23EABA2B640039008B6374 /* APITesterPro2MappingModel.xcmappingmodel */; };
 		9E419AF42B407075002FA0D1 /* CloudSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E419AF32B407075002FA0D1 /* CloudSyncService.swift */; };
 		9E4875E72AF56DD000D624DA /* APITesterPro.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9E4875E52AF56DD000D624DA /* APITesterPro.xcdatamodeld */; };
 		9E4875E82AF5856A00D624DA /* AppDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0812AF44CBF004095CF /* AppDelegateMock.swift */; };
@@ -131,6 +133,8 @@
 		9E04F4F92B122CF0007A0773 /* EACryptoTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EACryptoTest.swift; sourceTree = "<group>"; };
 		9E04F4FB2B131A3C007A0773 /* APITesterPro.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = APITesterPro.entitlements; sourceTree = "<group>"; };
 		9E04F4FC2B138F38007A0773 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
+		9E23EAB82B63F885008B6374 /* APITesterProModel2Migration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITesterProModel2Migration.swift; sourceTree = "<group>"; };
+		9E23EABA2B640039008B6374 /* APITesterPro2MappingModel.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = APITesterPro2MappingModel.xcmappingmodel; sourceTree = "<group>"; };
 		9E419AF32B407075002FA0D1 /* CloudSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSyncService.swift; sourceTree = "<group>"; };
 		9E4875E62AF56DD000D624DA /* APITesterPro.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = APITesterPro.xcdatamodel; sourceTree = "<group>"; };
 		9E4875EB2AF590A300D624DA /* APITesterPro.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = APITesterPro.xctestplan; sourceTree = "<group>"; };
@@ -263,6 +267,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9E23EAB52B63F7B5008B6374 /* Model Migration */ = {
+			isa = PBXGroup;
+			children = (
+				9E23EABA2B640039008B6374 /* APITesterPro2MappingModel.xcmappingmodel */,
+				9E23EAB82B63F885008B6374 /* APITesterProModel2Migration.swift */,
+			);
+			path = "Model Migration";
+			sourceTree = "<group>";
+		};
 		9E81D01F2AF44BE7004095CF = {
 			isa = PBXGroup;
 			children = (
@@ -358,6 +371,7 @@
 		9E81D0A72AF44F98004095CF /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				9E23EAB52B63F7B5008B6374 /* Model Migration */,
 				9E4875E52AF56DD000D624DA /* APITesterPro.xcdatamodeld */,
 				9E81D0E12AF451FF004095CF /* EEnv.swift */,
 				9E81D0E02AF451FF004095CF /* EEnvVar.swift */,
@@ -704,6 +718,7 @@
 				9E81D0A32AF44F4F004095CF /* AppDelegate.swift in Sources */,
 				9E81D0F62AF451FF004095CF /* ResponseData.swift in Sources */,
 				9E4875E72AF56DD000D624DA /* APITesterPro.xcdatamodeld in Sources */,
+				9E23EAB92B63F885008B6374 /* APITesterProModel2Migration.swift in Sources */,
 				9E81D0CF2AF451EA004095CF /* EAUtils.swift in Sources */,
 				9E81D1142AF45221004095CF /* HistoryViewController.swift in Sources */,
 				9E81D0ED2AF451FF004095CF /* EFile.swift in Sources */,
@@ -736,6 +751,7 @@
 				9E81D0FE2AF45208004095CF /* APITesterProViewController.swift in Sources */,
 				9E81D0CA2AF451E9004095CF /* EADocumentPicker.swift in Sources */,
 				9E81D0C92AF451E9004095CF /* EAQueue.swift in Sources */,
+				9E23EABB2B640039008B6374 /* APITesterPro2MappingModel.xcmappingmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
