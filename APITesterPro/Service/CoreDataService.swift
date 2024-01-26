@@ -167,7 +167,7 @@ class CoreDataService {
         cloudStoreDescription.shouldMigrateStoreAutomatically = true
         cloudStoreDescription.shouldInferMappingModelAutomatically = true
         cloudStoreDescription.configuration = self.cloudConfigurationName
-        // TODO: set iCloud identifier
+        cloudStoreDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: self.cloudKitContainerId)
         if (container.persistentStoreDescriptions.first == nil) {
             container.persistentStoreDescriptions = [cloudStoreDescription]
         }
@@ -232,6 +232,15 @@ class CoreDataService {
     }
 
     func bootstrap() {
+        #if DEBUG
+        do {
+            // Use the cloud container to initialize the development schema.
+            Log.debug("ck: initializing cloudkit schema in dev mode")
+            try self.ckPersistentContainer.initializeCloudKitSchema(options: [])
+        } catch let error {
+            Log.error(error)
+        }
+        #endif
         // test
         Log.debug("ck \(self.ckPersistentContainer)")
         let ws = self.createWorkspace(id: "ck-ws-test", name: "ck-ws-test", desc: "", isSyncEnabled: true, ctx: self.ckMainMOC)
