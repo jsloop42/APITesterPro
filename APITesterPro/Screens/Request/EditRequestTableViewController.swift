@@ -390,7 +390,6 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         self.requestTracker.diffRescheduler.done()
         if self.isDirty, let data = self.request, let proj = self.project {
             self.request.project = proj
-            data.isSynced = false
 //            if let set = proj.requestMethods, let xs = set.allObjects as? [ERequestMethodData] {
 //                xs.forEach { method in
 //                    if method.shouldDelete {
