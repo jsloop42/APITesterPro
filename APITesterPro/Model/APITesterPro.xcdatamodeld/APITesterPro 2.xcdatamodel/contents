@@ -21,11 +21,6 @@
         <fetchIndex name="byWsId">
             <fetchIndexElement property="wsId" type="Binary" order="ascending"/>
         </fetchIndex>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <entity name="EEnvVar" representedClassName=".EEnvVar" syncable="YES" codeGenerationType="category">
         <attribute name="created" attributeType="Date" defaultDateTimeInterval="-978327000" usesScalarValueType="NO"/>
@@ -66,11 +61,6 @@
         <fetchIndex name="byMarkForDelete">
             <fetchIndexElement property="markForDelete" type="Binary" order="ascending"/>
         </fetchIndex>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <entity name="EHistory" representedClassName=".EHistory" syncable="YES" codeGenerationType="category">
         <attribute name="connection" attributeType="String" defaultValueString=""/>
@@ -123,11 +113,6 @@
         <fetchIndex name="byId">
             <fetchIndexElement property="id" type="Binary" order="ascending"/>
         </fetchIndex>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <entity name="EImage" representedClassName=".EImage" syncable="YES" codeGenerationType="category">
         <attribute name="created" attributeType="Date" defaultDateTimeInterval="-978327000" usesScalarValueType="NO"/>
@@ -151,11 +136,6 @@
         <fetchIndex name="byMarkForDelete">
             <fetchIndexElement property="markForDelete" type="Binary" order="ascending"/>
         </fetchIndex>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <entity name="EProject" representedClassName=".EProject" syncable="YES" codeGenerationType="category">
         <attribute name="created" attributeType="Date" defaultDateTimeInterval="-978327000" usesScalarValueType="NO"/>
@@ -186,11 +166,6 @@
         <fetchIndex name="byOrder">
             <fetchIndexElement property="order" type="Binary" order="ascending"/>
         </fetchIndex>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <entity name="ERequest" representedClassName=".ERequest" syncable="YES" codeGenerationType="category">
         <attribute name="created" attributeType="Date" defaultDateTimeInterval="-978327000" usesScalarValueType="NO"/>
@@ -221,11 +196,6 @@
         <fetchIndex name="byOrder">
             <fetchIndexElement property="order" type="Binary" order="ascending"/>
         </fetchIndex>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <entity name="ERequestBodyData" representedClassName=".ERequestBodyData" syncable="YES" codeGenerationType="category">
         <attribute name="created" attributeType="Date" defaultDateTimeInterval="-978327000" usesScalarValueType="NO"/>
@@ -249,11 +219,6 @@
         <fetchIndex name="byMarkForDelete">
             <fetchIndexElement property="markForDelete" type="Binary" order="ascending"/>
         </fetchIndex>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <entity name="ERequestData" representedClassName=".ERequestData" syncable="YES" codeGenerationType="category">
         <attribute name="created" attributeType="Date" defaultDateTimeInterval="-978327000" usesScalarValueType="NO"/>
@@ -285,11 +250,6 @@
         <fetchIndex name="byMarkForDelete">
             <fetchIndexElement property="markForDelete" type="Binary" order="ascending"/>
         </fetchIndex>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <entity name="ERequestMethodData" representedClassName=".ERequestMethodData" syncable="YES" codeGenerationType="category">
         <attribute name="created" attributeType="Date" defaultDateTimeInterval="-978327000" usesScalarValueType="NO"/>
@@ -314,11 +274,6 @@
         <fetchIndex name="byMarkForDelete">
             <fetchIndexElement property="markForDelete" type="Binary" order="ascending"/>
         </fetchIndex>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <entity name="EWorkspace" representedClassName=".EWorkspace" syncable="YES" codeGenerationType="category">
         <attribute name="created" attributeType="Date" defaultDateTimeInterval="-978327000" usesScalarValueType="NO"/>
@@ -361,11 +316,6 @@
         <fetchIndex name="byOrder">
             <fetchIndexElement property="order" type="Binary" order="ascending"/>
         </fetchIndex>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <configuration name="Cloud" usedWithCloudKit="YES">
         <memberEntity name="EEnv"/>
