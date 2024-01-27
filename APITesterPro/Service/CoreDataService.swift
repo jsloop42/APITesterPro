@@ -128,7 +128,7 @@ public enum SortOrder: String {
 }
 
 class CoreDataService {
-    static var shared = CoreDataService()
+    static let shared = CoreDataService()
     private var storeType: String! = NSSQLiteStoreType
     lazy var peristentContainerTest: NSPersistentContainer = {
         return NSPersistentContainer(name: self.containerName, managedObjectModel: self.model)
