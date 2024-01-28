@@ -80,9 +80,9 @@ class ProjectListViewController: APITesterProViewController {
     
     func initData() {
         self.workspace = self.app.getSelectedWorkspace()
-        if self.frc == nil, let wsId = self.workspace.id {
+        if self.frc == nil, let wsId = self.workspace.id, let ctx = self.workspace.managedObjectContext {
             let predicate = self.getFRCPredicate(wsId)
-            if let _frc = self.localdb.getFetchResultsController(obj: EProject.self, predicate: predicate, ctx: self.localdb.localMainMOC) as? NSFetchedResultsController<EProject> {
+            if let _frc = self.localdb.getFetchResultsController(obj: EProject.self, predicate: predicate, ctx: ctx) as? NSFetchedResultsController<EProject> {
                 self.frc = _frc
                 self.frc.delegate = self
             }
@@ -150,9 +150,9 @@ class ProjectListViewController: APITesterProViewController {
     func updateListingWorkspace(_ ws: EWorkspace) {
         if self.workspace == ws { return }
         self.workspace = ws
-        if let wsId = ws.id {
+        if let wsId = ws.id, let ctx = self.workspace.managedObjectContext {
             let predicate = self.getFRCPredicate(wsId)
-            if let _frc = self.localdb.updateFetchResultsController(self.frc as! NSFetchedResultsController<NSFetchRequestResult>, predicate: predicate, ctx: self.localdb.localMainMOC) as? NSFetchedResultsController<EProject> {
+            if let _frc = self.localdb.updateFetchResultsController(self.frc as! NSFetchedResultsController<NSFetchRequestResult>, predicate: predicate, ctx: ctx) as? NSFetchedResultsController<EProject> {
                 self.frc = _frc
                 self.frc.delegate = self
                 self.reloadData()
@@ -305,7 +305,7 @@ extension ProjectListViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.frc == nil { return 0 }
-        return self.frc.numberOfRows(in: section)
+            return self.frc.numberOfRows(in: section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
