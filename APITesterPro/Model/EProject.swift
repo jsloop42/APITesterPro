@@ -83,9 +83,9 @@ public class EProject: NSManagedObject, Entity {
         return []
     }
     
-    public static func fromDictionary(_ dict: [String: Any]) -> EProject? {
+    public static func fromDictionary(_ dict: [String: Any], ctx: NSManagedObjectContext) -> EProject? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
-        guard let proj = self.db.createProject(id: id, wsId: wsId, name: "", desc: "", ctx: self.db.mainMOC) else { return nil }
+        guard let proj = self.db.createProject(id: id, wsId: wsId, name: "", desc: "", ctx: ctx) else { return nil }
         if let x = dict["created"] as? String { proj.created = Date.toUTCDate(x) }
         if let x = dict["modified"] as? String { proj.modified = Date.toUTCDate(x) }
         if let x = dict["desc"] as? String { proj.desc = x }
@@ -94,14 +94,14 @@ public class EProject: NSManagedObject, Entity {
         if let x = dict["version"] as? Int64 { proj.version = x }
         if let xs = dict["requests"] as? [[String: Any]] {
             xs.forEach { dict in
-                if let req = ERequest.fromDictionary(dict) {
+                if let req = ERequest.fromDictionary(dict, ctx: ctx) {
                     req.project = proj
                 }
             }
         }
         if let xs = dict["methods"] as? [[String: Any]] {
             xs.forEach { dict in
-                if let method = ERequestMethodData.fromDictionary(dict) {
+                if let method = ERequestMethodData.fromDictionary(dict, ctx: ctx) {
                     method.project = proj
                 }
             }

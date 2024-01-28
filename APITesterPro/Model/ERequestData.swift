@@ -114,12 +114,12 @@ public class ERequestData: NSManagedObject, Entity {
         }
     }
     
-    public static func fromDictionary(_ dict: [String: Any]) -> ERequestData? {
+    public static func fromDictionary(_ dict: [String: Any], ctx: NSManagedObjectContext) -> ERequestData? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String, let _type = dict["type"] as? Int64,
             let type = RequestDataType(rawValue: _type.toInt()), let _format = dict["fieldFormat"] as? Int64,
             let format = RequestBodyFormFieldFormatType(rawValue: _format.toInt())
             else { return nil }
-        guard let reqData = self.db.createRequestData(id: id, wsId: wsId, type: type, fieldFormat: format, ctx: db.mainMOC) else { return nil }
+        guard let reqData = self.db.createRequestData(id: id, wsId: wsId, type: type, fieldFormat: format, ctx: ctx) else { return nil }
         if let x = dict["created"] as? String { reqData.created = Date.toUTCDate(x) }
         if let x = dict["modified"] as? String { reqData.modified = Date.toUTCDate(x) }
         if let x = dict["key"] as? String { reqData.key = x }
@@ -127,13 +127,13 @@ public class ERequestData: NSManagedObject, Entity {
         if let x = dict["version"] as? Int64 { reqData.version = x }
         if let files = dict["files"] as? [[String: Any]] {
             files.forEach { hm in
-                if let file = EFile.fromDictionary(hm) {
+                if let file = EFile.fromDictionary(hm, ctx: ctx) {
                     file.requestData = reqData
                 }
             }
         }
         if let image = dict["image"] as? [String: Any] {
-            if let img = EImage.fromDictionary(image) {
+            if let img = EImage.fromDictionary(image, ctx: ctx) {
                 img.requestData = reqData
             }
         }

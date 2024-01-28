@@ -95,9 +95,9 @@ public class ERequest: NSManagedObject, Entity {
         return req
     }
     
-    public static func fromDictionary(_ dict: [String: Any]) -> ERequest? {
+    public static func fromDictionary(_ dict: [String: Any], ctx: NSManagedObjectContext) -> ERequest? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
-        guard let req = self.db.createRequest(id: id, wsId: wsId, name: "") else { return nil }
+        guard let req = self.db.createRequest(id: id, wsId: wsId, name: "", ctx: ctx) else { return nil }
         if let x = dict["created"] as? String { req.created = Date.toUTCDate(x) }
         if let x = dict["modified"] as? String { req.modified = Date.toUTCDate(x) }
         if let x = dict["envId"] as? String { req.envId = x }
@@ -108,25 +108,25 @@ public class ERequest: NSManagedObject, Entity {
         if let x = dict["url"] as? String { req.url = x }
         if let x = dict["version"] as? Int64 { req.version = x }
         if let dict = dict["method"] as? [String: Any] {
-            if let method = ERequestMethodData.fromDictionary(dict) {
+            if let method = ERequestMethodData.fromDictionary(dict, ctx: ctx) {
                 req.method = method
             }
         }
         if let dict = dict["body"] as? [String: Any] {
-            if let body = ERequestBodyData.fromDictionary(dict) {
+            if let body = ERequestBodyData.fromDictionary(dict, ctx: ctx) {
                 req.body = body
             }
         }
         if let xs = dict["headers"] as? [[String: Any]] {
             xs.forEach { dict in
-                if let reqData = ERequestData.fromDictionary(dict) {
+                if let reqData = ERequestData.fromDictionary(dict, ctx: ctx) {
                     reqData.header = req
                 }
             }
         }
         if let xs = dict["params"] as? [[String: Any]] {
             xs.forEach { dict in
-                if let reqData = ERequestData.fromDictionary(dict) {
+                if let reqData = ERequestData.fromDictionary(dict, ctx: ctx) {
                     reqData.param = req
                 }
             }

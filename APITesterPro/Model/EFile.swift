@@ -74,7 +74,7 @@ public class EFile: NSManagedObject, Entity {
         return nil
     }
     
-    public static func fromDictionary(_ dict: [String: Any]) -> EFile? {
+    public static func fromDictionary(_ dict: [String: Any], ctx: NSManagedObjectContext) -> EFile? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String, let _data = dict["data"] as? String,
             let name = dict["name"] as? String, let _type = dict["type"] as? Int64, let type = RequestDataType(rawValue: _type.toInt()) else { return nil }
         var data: Data?
@@ -84,7 +84,7 @@ public class EFile: NSManagedObject, Entity {
             data = EAUtils.shared.stringToImageData(_data)
         }
         guard let data1 = data else { return nil }
-        guard let file = self.db.createFile(fileId: id, data: data1, wsId: wsId, name: name, path: URL(fileURLWithPath: "/tmp/"), type: type, checkExists: true, ctx: self.db.mainMOC) else { return nil }
+        guard let file = self.db.createFile(fileId: id, data: data1, wsId: wsId, name: name, path: URL(fileURLWithPath: "/tmp/"), type: type, checkExists: true, ctx: ctx) else { return nil }
         if let x = dict["created"] as? String { file.created = Date.toUTCDate(x) }
         if let x = dict["modified"] as? String { file.modified = Date.toUTCDate(x) }
         if let x = dict["version"] as? Int64 { file.version = x }

@@ -79,11 +79,11 @@ public class EImage: NSManagedObject, Entity {
         return nil
     }
     
-    public static func fromDictionary(_ dict: [String: Any]) -> EImage? {
+    public static func fromDictionary(_ dict: [String: Any], ctx: NSManagedObjectContext) -> EImage? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String, let data = dict["data"] as? String,
         let name = dict["name"] as? String, let type = dict["type"] as? String else { return nil }
         guard let data1 = EAUtils.shared.stringToImageData(data) else { return nil }
-        guard let image = self.db.createImage(imageId: id, data: data1, wsId: wsId, name: name, type: type, ctx: self.db.mainMOC) else { return nil }
+        guard let image = self.db.createImage(imageId: id, data: data1, wsId: wsId, name: name, type: type, ctx: ctx) else { return nil }
         if let x = dict["created"] as? String { image.created = Date.toUTCDate(x) }
         if let x = dict["modified"] as? String { image.modified = Date.toUTCDate(x) }
         if let x = dict["isCameraMode"] as? Bool { image.isCameraMode = x }
