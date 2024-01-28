@@ -184,19 +184,19 @@ class CoreDataService {
         return NSManagedObjectModel(contentsOf: url)!
     }()
     /// Get local store main managed object context
-    lazy var mainMOC: NSManagedObjectContext = {
+    lazy var localMainMOC: NSManagedObjectContext = {
         let ctx = self.persistentContainer.viewContext
         ctx.automaticallyMergesChangesFromParent = true
         return ctx
     }()
     /// Get local store background managed object context
-    lazy var bgMOC: NSManagedObjectContext = {
+    lazy var localBgMOC: NSManagedObjectContext = {
         let ctx = self.persistentContainer.newBackgroundContext()
         ctx.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         ctx.automaticallyMergesChangesFromParent = true
         return ctx
     }()
-    /// Get cloud store main managed object context
+    /// Get cloud store main managed object context. Cloud store is the default container for new workspaces unless sync is disabled during create.
     lazy var ckMainMOC: NSManagedObjectContext = {
         let ctx = self.ckPersistentContainer.viewContext
         ctx.automaticallyMergesChangesFromParent = true
@@ -249,21 +249,22 @@ class CoreDataService {
         // end test
     }
     
-    /// Returns the context if present or the main context
+    /// Returns the context if present or the cloudkit main context
     private func getMainMOC(ctx: NSManagedObjectContext?) -> NSManagedObjectContext {
         if ctx != nil { return ctx! }
-        return self.mainMOC
+        return self.ckMainMOC
     }
     
+    /// Returns the context if present or the cloudkit background context
     private func getBgMOC(ctx: NSManagedObjectContext?) -> NSManagedObjectContext {
         if ctx != nil { return ctx! }
-        return self.bgMOC
+        return self.ckBgMOC
     }
     
     /// Returns a child managed object context.
     func getChildMOC() -> NSManagedObjectContext {
         let moc = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.privateQueueConcurrencyType)
-        moc.parent = self.mainMOC
+        moc.parent = self.localMainMOC
         moc.automaticallyMergesChangesFromParent = true
         moc.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         return moc
@@ -431,7 +432,7 @@ class CoreDataService {
     ///   - predicate: An optional fetch predicate.
     ///   - ctx: The managed object context.
     /// - Returns: The fetch results controller.
-    func getFetchResultsController(obj: any Entity.Type, predicate: NSPredicate? = nil, sortDesc: [NSSortDescriptor]? = nil, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSFetchedResultsController<NSFetchRequestResult> {
+    func getFetchResultsController(obj: any Entity.Type, predicate: NSPredicate? = nil, sortDesc: [NSSortDescriptor]? = nil, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSFetchedResultsController<NSFetchRequestResult> {
         let moc = self.getMainMOC(ctx: ctx)
         var frc: NSFetchedResultsController<NSFetchRequestResult>!
         moc.performAndWait {
@@ -458,12 +459,12 @@ class CoreDataService {
     ///   - predicate: A fetch predicate.
     ///   - ctx: The managed object context.
     /// - Returns: The fetch results controller.
-    func updateFetchResultsController(_ frc: NSFetchedResultsController<NSFetchRequestResult>, predicate: NSPredicate, ctx: NSManagedObjectContext = CoreDataService.shared.mainMOC) -> NSFetchedResultsController<NSFetchRequestResult> {
+    func updateFetchResultsController(_ frc: NSFetchedResultsController<NSFetchRequestResult>, predicate: NSPredicate, ctx: NSManagedObjectContext = CoreDataService.shared.localMainMOC) -> NSFetchedResultsController<NSFetchRequestResult> {
         ctx.performAndWait { frc.fetchRequest.predicate = predicate }
         return frc
     }
     
-    func getEntity(recordType: RecordType, id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> (any Entity)? {
+    func getEntity(recordType: RecordType, id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> (any Entity)? {
         let moc = self.getMainMOC(ctx: ctx)
         switch recordType {
         case .workspace:
@@ -489,7 +490,7 @@ class CoreDataService {
     
     // MARK: EWorkspace
     
-    func getWorkspace(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EWorkspace? {
+    func getWorkspace(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EWorkspace? {
         var x: EWorkspace?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -512,7 +513,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context
     /// - Returns: A list of workspaces
-    func getAllWorkspaces(offset: Int? = 0, limit: Int? = 0, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [EWorkspace] {
+    func getAllWorkspaces(offset: Int? = 0, limit: Int? = 0, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [EWorkspace] {
         var xs: [EWorkspace] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -532,7 +533,7 @@ class CoreDataService {
         return xs
     }
     
-    func getWorkspaces(offset: Int? = 0, limit: Int? = 0, isMarkForDelete: Bool? = false, completion: @escaping (Result<[EWorkspace], Error>) -> Void, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+    func getWorkspaces(offset: Int? = 0, limit: Int? = 0, isMarkForDelete: Bool? = false, completion: @escaping (Result<[EWorkspace], Error>) -> Void, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) {
         var xs: [EWorkspace] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.perform {
@@ -556,7 +557,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context
     /// - Returns: The count of workspaces
-    func getWorkspaceCount(isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> Int {
+    func getWorkspaceCount(isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> Int {
         var x: Int = 0
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -572,7 +573,7 @@ class CoreDataService {
     }
     
     /// Default entities will have the id `default`.
-    func getDefaultWorkspace(ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EWorkspace {
+    func getDefaultWorkspace(ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EWorkspace {
         var x: EWorkspace!
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -592,7 +593,7 @@ class CoreDataService {
     /// Get the order of the last workspace. The default value is 0 as there will be the default workspace all the time.
     /// - Parameter ctx: The managed object context
     /// - Returns: The order
-    func getOrderOfLastWorkspace(ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSDecimalNumber {
+    func getOrderOfLastWorkspace(ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSDecimalNumber {
         var order: NSDecimalNumber = 0
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -610,7 +611,7 @@ class CoreDataService {
     
     // MARK: EProject
     
-    func getProject(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EProject? {
+    func getProject(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EProject? {
         var x: EProject?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -633,7 +634,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: The project.
-    func getProject(at index: Int, wsId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EProject? {
+    func getProject(at index: Int, wsId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EProject? {
         var x: EProject?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -666,7 +667,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to return only entities marked for deletion
     ///   - ctx: The managed object context.
     /// - Returns: A list of projects.
-    func getProjects(wsId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [EProject] {
+    func getProjects(wsId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [EProject] {
         var xs: [EProject] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -683,7 +684,7 @@ class CoreDataService {
         return xs
     }
     
-    func getProjectsToSync(wsId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [EProject] {
+    func getProjectsToSync(wsId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [EProject] {
         var xs: [EProject] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -704,7 +705,7 @@ class CoreDataService {
     /// - Parameter wsId: The workspace Id
     /// - Parameter ctx: The managed object context
     /// - Returns: The order
-    func getOrderOfLastProject(wsId: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSDecimalNumber {
+    func getOrderOfLastProject(wsId: String, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSDecimalNumber {
         var order: NSDecimalNumber = -1
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -723,7 +724,7 @@ class CoreDataService {
     
     // MARK: ERequest
     
-    func getRequest(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequest? {
+    func getRequest(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> ERequest? {
         var x: ERequest?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -745,7 +746,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: A list of requests.
-    func getRequests(projectId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [ERequest] {
+    func getRequests(projectId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [ERequest] {
         var xs: [ERequest] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -769,7 +770,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: The request.
-    func getRequest(at index: Int, projectId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequest? {
+    func getRequest(at index: Int, projectId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> ERequest? {
         var x: ERequest?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -792,7 +793,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: The count of requests.
-    func getRequestsCount(projectId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> Int {
+    func getRequestsCount(projectId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> Int {
         var x: Int = 0
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -811,7 +812,7 @@ class CoreDataService {
     /// - Parameter projId: The project Id in which the request order needs to be checked
     /// - Parameter ctx: The managed object context
     /// - Returns: The order
-    func getOrderOfLastRequest(projId: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSDecimalNumber {
+    func getOrderOfLastRequest(projId: String, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSDecimalNumber {
         var order: NSDecimalNumber = -1
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -830,7 +831,7 @@ class CoreDataService {
     
     // MARK: ERequestData
     
-    func getRequestData(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequestData? {
+    func getRequestData(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> ERequestData? {
         var x: ERequestData?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -860,7 +861,7 @@ class CoreDataService {
         }
     }
     
-    func getRequestData(at index: Int, reqId: String, type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequestData? {
+    func getRequestData(at index: Int, reqId: String, type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> ERequestData? {
         var x: ERequestData?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -878,7 +879,7 @@ class CoreDataService {
         return x
     }
     
-    func getLastRequestData(type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequestData? {
+    func getLastRequestData(type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> ERequestData? {
         var x: ERequestData?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -902,7 +903,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: The count of request data entities.
-    func getRequestDataCount(reqId: String, type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> Int {
+    func getRequestDataCount(reqId: String, type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> Int {
         var x: Int = 0
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -925,7 +926,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context of the request body data object.
     /// - Returns: A list of request data entities.
-    func getFormRequestData(_ bodyDataId: String, type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [ERequestData] {
+    func getFormRequestData(_ bodyDataId: String, type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [ERequestData] {
         var xs: [ERequestData] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -964,7 +965,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: The request data entity.
-    func getFormRequestData(at index: Int, bodyDataId: String, type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC)
+    func getFormRequestData(at index: Int, bodyDataId: String, type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC)
         -> ERequestData? {
         var x: ERequestData?
         let moc = self.getMainMOC(ctx: ctx)
@@ -996,7 +997,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: A list of request data entities.
-    func getHeadersRequestData(_ reqId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [ERequestData] {
+    func getHeadersRequestData(_ reqId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [ERequestData] {
         var xs: [ERequestData] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1019,7 +1020,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: A list of request data entities.
-    func getParamsRequestData(_ reqId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [ERequestData] {
+    func getParamsRequestData(_ reqId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [ERequestData] {
         var xs: [ERequestData] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1036,7 +1037,7 @@ class CoreDataService {
         return xs
     }
     
-    func getRequestData(reqId: String, type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequestData? {
+    func getRequestData(reqId: String, type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> ERequestData? {
         var x: ERequestData?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1059,7 +1060,7 @@ class CoreDataService {
     ///   - type: The request data type
     ///   - ctx: The managed object context.
     /// - Returns: A list of request data entities.
-    func getRequestDataMarkedForDelete(reqId: String, type: RequestDataType, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [ERequestData] {
+    func getRequestDataMarkedForDelete(reqId: String, type: RequestDataType, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [ERequestData] {
         var xs: [ERequestData] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1084,7 +1085,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: The request method data entity.
-    func getRequestMethodData(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequestMethodData? {
+    func getRequestMethodData(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> ERequestMethodData? {
         var x: ERequestMethodData?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1106,7 +1107,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: A list of request method data entities.
-    func getRequestMethodData(reqId: String, sortOrder: SortOrder? = SortOrder.order, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [ERequestMethodData] {
+    func getRequestMethodData(reqId: String, sortOrder: SortOrder? = SortOrder.order, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [ERequestMethodData] {
         var xs: [ERequestMethodData] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1130,7 +1131,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: A list of request method data entities.
-    func getRequestMethodData(projId: String, sortOrder: SortOrder? = SortOrder.order, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [ERequestMethodData] {
+    func getRequestMethodData(projId: String, sortOrder: SortOrder? = SortOrder.order, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [ERequestMethodData] {
         var xs: [ERequestMethodData] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1155,7 +1156,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: The request method data entity.
-    func getRequestMethodData(at index: Int, projId: String, sortOrder: SortOrder? = SortOrder.order, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequestMethodData? {
+    func getRequestMethodData(at index: Int, projId: String, sortOrder: SortOrder? = SortOrder.order, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> ERequestMethodData? {
         var x: ERequestMethodData?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1179,7 +1180,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: The count of entities.
-    func getRequestsCountForRequestMethodData(projId: String, reqMethId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> Int {
+    func getRequestsCountForRequestMethodData(projId: String, reqMethId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> Int {
         var x: Int = 0
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1200,7 +1201,7 @@ class CoreDataService {
     ///   - proj: The project for which the count needs to be checked
     ///   - ctx: The managed object context
     /// - Returns: The integer count
-    func getRequestMethodDataCount(_ proj: EProject, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> Int {
+    func getRequestMethodDataCount(_ proj: EProject, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> Int {
         var x: Int = 0
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1216,7 +1217,7 @@ class CoreDataService {
     }
     
     /// Generates the default HTTP methods for a project
-    func genDefaultRequestMethods(_ proj: EProject, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [ERequestMethodData] {
+    func genDefaultRequestMethods(_ proj: EProject, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [ERequestMethodData] {
         let names = ["GET", "POST", "PUT", "PATCH", "DELETE"]
         return names.enumerated().compactMap { seq -> ERequestMethodData? in
             let elem = seq.element
@@ -1232,7 +1233,7 @@ class CoreDataService {
         }
     }
     
-    func getRequestMethodDataMarkedForDelete(projId: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [ERequestMethodData] {
+    func getRequestMethodDataMarkedForDelete(projId: String, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [ERequestMethodData] {
         var xs: [ERequestMethodData] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1250,7 +1251,7 @@ class CoreDataService {
     
     // MARK: ERequestBodyData
     
-    func getRequestBodyData(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequestBodyData? {
+    func getRequestBodyData(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> ERequestBodyData? {
         var x: ERequestBodyData?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1274,7 +1275,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context of the request data.
     /// - Returns: The count of files.
-    func getFilesCount(_ reqDataId: String, type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> Int {
+    func getFilesCount(_ reqDataId: String, type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> Int {
         var x: Int = 0
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1299,7 +1300,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context of the request data.
     /// - Returns: A list of file entities.
-    func getFiles(_ reqDataId: String, type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [EFile] {
+    func getFiles(_ reqDataId: String, type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [EFile] {
         var xs: [EFile] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1325,7 +1326,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: The file entity.
-    func getFile(at index: Int, reqDataId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EFile? {
+    func getFile(at index: Int, reqDataId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EFile? {
         var x: EFile?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1349,7 +1350,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: The file entity.
-    func getFileData(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EFile? {
+    func getFileData(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EFile? {
         var x: EFile?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1365,7 +1366,7 @@ class CoreDataService {
         return x
     }
     
-    func getFilesMarkedForDelete(reqDataId: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [EFile] {
+    func getFilesMarkedForDelete(reqDataId: String, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [EFile] {
         var xs: [EFile] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1389,7 +1390,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: The image entity.
-    func getImageData(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EImage? {
+    func getImageData(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EImage? {
         var x: EImage?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1407,7 +1408,7 @@ class CoreDataService {
     
     // MARK: EHistory
     
-    func getHistory(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EHistory? {
+    func getHistory(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EHistory? {
         var x: EHistory?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1423,7 +1424,7 @@ class CoreDataService {
         return x
     }
     
-    func getLatestHistory(reqId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EHistory? {
+    func getLatestHistory(reqId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EHistory? {
         var x: EHistory?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1443,7 +1444,7 @@ class CoreDataService {
     
     // MARK: EEnv
     
-    func getEnv(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EEnv? {
+    func getEnv(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EEnv? {
         var x: EEnv?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1460,7 +1461,7 @@ class CoreDataService {
         return x
     }
 
-    func getEnvs(isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [EEnv] {
+    func getEnvs(isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [EEnv] {
         var xs: [EEnv] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1477,7 +1478,7 @@ class CoreDataService {
     }
     
     /// Retrieves envs belonging to the given workspace.
-    func getEnvs(wsId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [EEnv] {
+    func getEnvs(wsId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [EEnv] {
         var xs: [EEnv] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1499,7 +1500,7 @@ class CoreDataService {
     
     // MARK: EEnvVar
     
-    func getEnvVar(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EEnvVar? {
+    func getEnvVar(id: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EEnvVar? {
         var x: EEnvVar?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1517,7 +1518,7 @@ class CoreDataService {
     }
     
     /// Retrieves env variables belonging to the given env.
-    func getEnvVars(envId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> [EEnvVar] {
+    func getEnvVars(envId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [EEnvVar] {
         var xs: [EEnvVar] = []
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -1539,7 +1540,7 @@ class CoreDataService {
     
     // MARK: - Entities to sync
     
-    func getWorkspacesToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSFetchedResultsController<EWorkspace> {
+    func getWorkspacesToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSFetchedResultsController<EWorkspace> {
         let moc = self.getMainMOC(ctx: ctx)
         let fr = NSFetchRequest<EWorkspace>(entityName: "EWorkspace")
         fr.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
@@ -1557,7 +1558,7 @@ class CoreDataService {
         return frc
     }
     
-    func getProjectsToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSFetchedResultsController<EProject> {
+    func getProjectsToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSFetchedResultsController<EProject> {
         let moc = self.getMainMOC(ctx: ctx)
         let fr = NSFetchRequest<EProject>(entityName: "EProject")
         fr.predicate = NSPredicate(format: "isSynced == %hhd AND markForDelete == %hhd", false, false)  // Deleted items will be fetched separately
@@ -1572,7 +1573,7 @@ class CoreDataService {
         return frc
     }
     
-    func getRequestsToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSFetchedResultsController<ERequest> {
+    func getRequestsToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSFetchedResultsController<ERequest> {
         let moc = self.getMainMOC(ctx: ctx)
         let fr = NSFetchRequest<ERequest>(entityName: "ERequest")
         fr.predicate = NSPredicate(format: "isSynced == %hhd AND markForDelete == %hhd", false, false)
@@ -1587,7 +1588,7 @@ class CoreDataService {
         return frc
     }
     
-    func getHistoriesToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSFetchedResultsController<EHistory> {
+    func getHistoriesToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSFetchedResultsController<EHistory> {
         let moc = self.getMainMOC(ctx: ctx)
         let fr = NSFetchRequest<EHistory>(entityName: "EHistory")
         fr.predicate = NSPredicate(format: "isSynced == %hhd AND markForDelete == %hhd", false, false)
@@ -1602,7 +1603,7 @@ class CoreDataService {
         return frc
     }
     
-    func getEnvsToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSFetchedResultsController<EEnv> {
+    func getEnvsToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSFetchedResultsController<EEnv> {
         let moc = self.getMainMOC(ctx: ctx)
         let fr = NSFetchRequest<EEnv>(entityName: "EEnv")
         fr.predicate = NSPredicate(format: "isSynced == %hhd AND markForDelete == %hhd", false, false)
@@ -1617,7 +1618,7 @@ class CoreDataService {
         return frc
     }
     
-    func getEnvVarsToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSFetchedResultsController<EEnvVar> {
+    func getEnvVarsToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSFetchedResultsController<EEnvVar> {
         let moc = self.getMainMOC(ctx: ctx)
         let fr = NSFetchRequest<EEnvVar>(entityName: "EEnvVar")
         fr.predicate = NSPredicate(format: "isSynced == %hhd AND markForDelete == %hhd", false, false)
@@ -1632,7 +1633,7 @@ class CoreDataService {
         return frc
     }
     
-    func getDataMarkedForDelete(obj: any Entity.Type, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> NSFetchedResultsController<NSFetchRequestResult> {
+    func getDataMarkedForDelete(obj: any Entity.Type, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSFetchedResultsController<NSFetchRequestResult> {
         let moc = self.getMainMOC(ctx: ctx)
         var frc: NSFetchedResultsController<NSFetchRequestResult>!
         moc.performAndWait {
@@ -1662,7 +1663,7 @@ class CoreDataService {
     ///   - checkExists: Check whether the workspace exists before creating.
     ///   - ctx: The managed object context.
     /// - Returns: A workspace.
-    func createWorkspace(id: String, name: String, desc: String, isSyncEnabled: Bool, isActive: Bool? = true, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC)  -> EWorkspace? {
+    func createWorkspace(id: String, name: String, desc: String, isSyncEnabled: Bool, isActive: Bool? = true, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC)  -> EWorkspace? {
         var x: EWorkspace?
         let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
@@ -1683,7 +1684,7 @@ class CoreDataService {
         return x
     }
     
-    func setWorkspaceSyncEnabled(_ state: Bool, ws: EWorkspace, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+    func setWorkspaceSyncEnabled(_ state: Bool, ws: EWorkspace, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) {
         let moc = self.getMainMOC(ctx: ctx)
         let date = Date()
         moc.performAndWait {
@@ -1709,7 +1710,7 @@ class CoreDataService {
     ///   - ctx: The managed object context.
     /// - Returns: A project.
     func createProject(id: String, wsId: String, name: String, desc: String, ws: EWorkspace? = nil, checkExists: Bool? = true,
-                       ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EProject? {
+                       ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EProject? {
         var x: EProject?
         let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
@@ -1741,7 +1742,7 @@ class CoreDataService {
     ///   - ctx: The managed object context.
     /// - Returns: A request.
     func createRequest(id: String, wsId: String, name: String, project: EProject? = nil, checkExists: Bool? = true,
-                       ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequest? {
+                       ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> ERequest? {
         var x: ERequest?
         let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
@@ -1770,7 +1771,7 @@ class CoreDataService {
     ///   - ctx: The managed object context.
     /// - Returns: A request data.
     func createRequestData(id: String, wsId: String, type: RequestDataType, fieldFormat: RequestBodyFormFieldFormatType, checkExists: Bool? = true,
-                           ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequestData? {
+                           ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> ERequestData? {
         var x: ERequestData?
         let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
@@ -1800,7 +1801,7 @@ class CoreDataService {
     ///   - ctx: The managed object context.
     /// - Returns: A request method data.
     func createRequestMethodData(id: String, wsId: String, name: String, isCustom: Bool? = true, checkExists: Bool? = true,
-                                 ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequestMethodData? {
+                                 ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> ERequestMethodData? {
         var x: ERequestMethodData?
         let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
@@ -1826,7 +1827,7 @@ class CoreDataService {
     ///   - checkExists: Check if the request body data exists before creating.
     ///   - ctx: The managed object context.
     /// - Returns: A request body data.
-    func createRequestBodyData(id: String, wsId: String, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> ERequestBodyData? {
+    func createRequestBodyData(id: String, wsId: String, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> ERequestBodyData? {
         var x: ERequestBodyData?
         let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
@@ -1852,7 +1853,7 @@ class CoreDataService {
     ///   - checkExists: Check if the image exists already before creating.
     ///   - ctx: The managed object context.
     /// - Returns: An image entity.
-    func createImage(imageId: String? = CoreDataService.shared.imageId(), data: Data, wsId: String, name: String, type: String, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EImage? {
+    func createImage(imageId: String? = CoreDataService.shared.imageId(), data: Data, wsId: String, name: String, type: String, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EImage? {
         var x: EImage?
         let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
@@ -1872,12 +1873,12 @@ class CoreDataService {
         return x
     }
     
-    func createFile(data: Data, wsId: String, name: String, path: URL, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EFile? {
+    func createFile(data: Data, wsId: String, name: String, path: URL, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EFile? {
         return self.createFile(data: data, wsId: wsId, name: name, path: path, type: .form, checkExists: checkExists, ctx: ctx)
     }
     
     func createFile(fileId: String? = CoreDataService.shared.fileId(), data: Data, wsId: String, name: String, path: URL, type: RequestDataType, checkExists: Bool? = true,
-                    ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EFile? {
+                    ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EFile? {
         var x: EFile?
         let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
@@ -1902,7 +1903,7 @@ class CoreDataService {
     // FIXME: Probably remove as it's not used
     func createHistory(id: String, wsId: String, urlRequest: String, responseData: Data?, responseHeaders: Data?, statusCode: Int64, elapsed: Int64,
                        responseBodyBytes: Int64, url: String, method: String, isSecure: Bool, checkExists: Bool? = true,
-                       ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EHistory? {
+                       ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EHistory? {
         var x: EHistory?
         let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
@@ -1928,7 +1929,7 @@ class CoreDataService {
         return x
     }
     
-    func createHistory(id: String, wsId: String, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EHistory? {
+    func createHistory(id: String, wsId: String, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EHistory? {
         var x: EHistory?
         let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
@@ -1945,7 +1946,7 @@ class CoreDataService {
         return x
     }
     
-    func createEnv(name: String, envId: String? = CoreDataService.shared.envId(), wsId: String, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EEnv? {
+    func createEnv(name: String, envId: String? = CoreDataService.shared.envId(), wsId: String, checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EEnv? {
         var x: EEnv?
         let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
@@ -1963,7 +1964,7 @@ class CoreDataService {
         return x
     }
 
-    func createEnvVar(name: String, value: String, id: String? = CoreDataService.shared.envVarId(), checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EEnvVar? {
+    func createEnvVar(name: String, value: String, id: String? = CoreDataService.shared.envVarId(), checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EEnvVar? {
         var x: EEnvVar?
         let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
@@ -1982,7 +1983,7 @@ class CoreDataService {
         return x
     }
     
-    func createEnvVar(id: String? = CoreDataService.shared.envVarId(), checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) -> EEnvVar? {
+    func createEnvVar(id: String? = CoreDataService.shared.envVarId(), checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EEnvVar? {
         var x: EEnvVar?
         let date = Date()
         let moc = self.getMainMOC(ctx: ctx)
@@ -2001,22 +2002,72 @@ class CoreDataService {
     
     // MARK: - Save
     
+    func refreshAllCKManagedObjects() {
+        self.ckMainMOC.refreshAllObjects()
+    }
+    
+    func refreshAllLocalManagedObjects() {
+        self.localMainMOC.refreshAllObjects()
+    }
+    
     func saveMainContext(_ callback: ((Bool) -> Void)? = nil) {
-        Log.debug("save main context")
-        if AppState.isRequestEdit { Log.debug("Edit request in progress. Skipping main context save."); callback?(false); return }
-        self.mainMOC.perform {
+        Task {
+            let ckStatus = await saveCKMainContext()
+            let localStatus = await saveLocalMainContext()
+            callback?(ckStatus && localStatus)
+        }
+    }
+    
+    func saveCKMainContext() async -> Bool {
+        await withCheckedContinuation { continuation in
+            self.saveCKMainContext { status in
+                continuation.resume(returning: status)
+            }
+        }
+    }
+    
+    func saveCKMainContext(_ callback: ((Bool) -> Void)? = nil) {
+        Log.debug("ck save main context")
+        self.ckMainMOC.perform {
             do {
-                if !self.mainMOC.hasChanges { Log.debug("main context does not have changes"); callback?(true); return }
+                if !self.ckMainMOC.hasChanges { Log.debug("ck main context does not have changes"); callback?(true); return }
                 Log.debug("main context has changes")
-                try self.mainMOC.save()
-                self.mainMOC.processPendingChanges()
+                try self.ckMainMOC.save()
+                self.ckMainMOC.processPendingChanges()
+                Log.debug("ck main context saved")
+                callback?(true)
+            } catch {
+                let nserror = error as NSError
+                Log.error("Persistence error \(nserror), \(nserror.userInfo)")
+                callback?(false)
+            }
+        }
+    }
+    
+    func saveLocalMainContext() async -> Bool {
+        await withCheckedContinuation { continuation in
+            self.saveLocalMainContext { status in
+                continuation.resume(returning: status)
+            }
+        }
+    }
+    
+    func saveLocalMainContext(_ callback: ((Bool) -> Void)? = nil) {
+        Log.debug("local save main context")
+        // TODO: remove this global check
+        // if AppState.isRequestEdit { Log.debug("Edit request in progress. Skipping main context save."); callback?(false); return }
+        self.localMainMOC.perform {
+            do {
+                if !self.localMainMOC.hasChanges { Log.debug("local main context does not have changes"); callback?(true); return }
+                Log.debug("local main context has changes")
+                try self.localMainMOC.save()
+                self.localMainMOC.processPendingChanges()
                 Log.debug("main context saved")
                 callback?(true)
             } catch {
                 let nserror = error as NSError
                 Log.error("Persistence error \(nserror), \(nserror.userInfo)")
                 callback?(false)
-                return
             }
         }
     }
@@ -2029,8 +2080,8 @@ class CoreDataService {
         let fn: () -> Void = {
             do {
                 Log.debug("bg context has changes")
-                try self.bgMOC.save()
-                self.bgMOC.processPendingChanges()
+                try self.localBgMOC.save()
+                self.localBgMOC.processPendingChanges()
                 callback?(true)
             } catch {
                 status = false
@@ -2040,7 +2091,7 @@ class CoreDataService {
                 return
             }
         }
-        isForceSave ? self.bgMOC.performAndWait { fn() } : self.bgMOC.perform { fn() }
+        isForceSave ? self.localBgMOC.performAndWait { fn() } : self.localBgMOC.perform { fn() }
     }
     
     func saveChildContext(_ ctx: NSManagedObjectContext) {

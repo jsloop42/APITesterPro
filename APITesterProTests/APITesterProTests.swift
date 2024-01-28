@@ -73,7 +73,7 @@ class APITesterProTests: XCTestCase {
         let exp = expectation(description: "background context")
         self.localdb.setup(storeType: NSSQLiteStoreType) {
             self.serialQueue.async {
-                XCTAssertEqual(self.localdb.bgMOC.concurrencyType, .privateQueueConcurrencyType)
+                XCTAssertEqual(self.localdb.localBgMOC.concurrencyType, .privateQueueConcurrencyType)
                 exp.fulfill()
             }
         }
@@ -84,7 +84,7 @@ class APITesterProTests: XCTestCase {
         let exp = expectation(description: "main context")
         self.localdb.setup(storeType: NSSQLiteStoreType) {
             self.serialQueue.async {
-                XCTAssertEqual(self.localdb.mainMOC.concurrencyType, .mainQueueConcurrencyType)
+                XCTAssertEqual(self.localdb.localMainMOC.concurrencyType, .mainQueueConcurrencyType)
                 exp.fulfill()
             }
         }
@@ -115,7 +115,7 @@ class APITesterProTests: XCTestCase {
             self.serialQueue.async {
                 let wsname = "test-ws"
                 let wsId = wsname
-                let ctx = self.localdb.bgMOC
+                let ctx = self.localdb.localBgMOC
                 let rws = self.localdb.createWorkspace(id: wsId, name: wsname, desc: "", isSyncEnabled: false, ctx: ctx)
                 XCTAssertNotNil(rws)
                 guard let ws = rws else { return }
@@ -177,8 +177,8 @@ class APITesterProTests: XCTestCase {
                 self.localdb.deleteEntity(ws, ctx: ctx)
                 self.localdb.deleteEntity(ws, ctx: ctx)
                 self.localdb.saveBackgroundContext()
-                self.localdb.discardChanges(in: self.localdb.bgMOC)
-                self.localdb.discardChanges(in: self.localdb.mainMOC)
+                self.localdb.discardChanges(in: self.localdb.localBgMOC)
+                self.localdb.discardChanges(in: self.localdb.localMainMOC)
                 exp.fulfill()
             }
         }
@@ -189,7 +189,7 @@ class APITesterProTests: XCTestCase {
         let exp = expectation(description: "Test core data CRUD")
         self.localdb.setup(storeType: NSSQLiteStoreType) {
             self.serialQueue.async {
-                let moc = self.localdb.bgMOC
+                let moc = self.localdb.localBgMOC
                 let wsId = "test-ws"
                 let mreq = self.localdb.createRequest(id: "edit-req", wsId: wsId, name: "Edit request", ctx: moc)
                 XCTAssertNotNil(mreq)
@@ -310,7 +310,7 @@ class APITesterProTests: XCTestCase {
         let exp = expectation(description: "Test core data CRUD")
         self.localdb.setup(storeType: NSSQLiteStoreType) {
             self.serialQueue.async {
-                let ctx = self.localdb.bgMOC
+                let ctx = self.localdb.localBgMOC
                 let wsId = "test-ws"
                 let file = self.localdb.createFile(data: Data(), wsId: wsId, name: "test-file", path: URL(fileURLWithPath: "/tmp"), checkExists: false, ctx: ctx)
                 XCTAssertNotNil(file)
@@ -341,7 +341,7 @@ class APITesterProTests: XCTestCase {
         let exp = expectation(description: "Test request did change")
         self.localdb.setup(storeType: NSSQLiteStoreType) {
             self.serialQueue.async {
-                let ctx = self.localdb.bgMOC
+                let ctx = self.localdb.localBgMOC
                 let wsId = "test-ws"
                 let req = self.localdb.createRequest(id: self.localdb.requestId(), wsId: wsId, name: "test-request-change", project: nil, checkExists: false, ctx: ctx)
                 XCTAssertNotNil(req)
@@ -382,7 +382,7 @@ class APITesterProTests: XCTestCase {
         let exp = expectation(description: "Test setting to-many to a new set deletes the contained entities")
         self.localdb.setup(storeType: NSSQLiteStoreType) {
             self.serialQueue.async {
-                let moc = self.localdb.bgMOC
+                let moc = self.localdb.localBgMOC
                 let wsId = "test-ws"
                 let mreq = self.localdb.createRequest(id: "edit-req", wsId: wsId, name: "Edit request", ctx: moc)
                 XCTAssertNotNil(mreq)
@@ -452,7 +452,7 @@ class APITesterProTests: XCTestCase {
     func testCoreDataEnvVarSecureTransformer() {
         let exp = expectation(description: "test core data envvar secure transformer")
         self.localdb.setup(storeType: NSSQLiteStoreType) {
-            let ctx = self.localdb.mainMOC
+            let ctx = self.localdb.localMainMOC
             ctx.perform {
                 let lws = self.localdb.createWorkspace(id: "test-ws", name: "test-ws", desc: "", isSyncEnabled: false, ctx: ctx)
                 XCTAssertNotNil(lws)
@@ -487,7 +487,7 @@ class APITesterProTests: XCTestCase {
     func testGetCKRecordForWorspace() {
         let exp = expectation(description: "test getting CKRecord from EWorkspace")
         self.localdb.setup(storeType: NSSQLiteStoreType) {
-            let ctx = self.localdb.mainMOC
+            let ctx = self.localdb.localMainMOC
             ctx.perform {
                 let wsId = "ws-ck-record-get-test"
                 let ws = self.localdb.createWorkspace(id: wsId, name: wsId, desc: "", isSyncEnabled: true, ctx: ctx)
@@ -512,7 +512,7 @@ class APITesterProTests: XCTestCase {
     func testEntityReference() {
         let exp = expectation(description: "test core data entity referencing")
         self.localdb.setup(storeType: NSSQLiteStoreType) {
-            let ctx = self.localdb.mainMOC
+            let ctx = self.localdb.localMainMOC
             ctx.perform {
                 let wsId = "ws-backref-test"
                 let projId = "pj-backref-test"
@@ -541,7 +541,7 @@ class APITesterProTests: XCTestCase {
     func testCascadeDeleteTest() {
         let exp = expectation(description: "test core data entities cascade delete")
         self.localdb.setup(storeType: NSSQLiteStoreType) {
-            let ctx = self.localdb.mainMOC
+            let ctx = self.localdb.localMainMOC
             ctx.perform {
                 /*
                  ws (ws delete should cascade delete all *) - direct delete
@@ -742,7 +742,7 @@ class APITesterProTests: XCTestCase {
     func testEntitiesDeletionOnDisabledZoneSync() {
         let exp = expectation(description: "test deletion of workspace and all entities in it when a disabled zone record gets synced")
         self.localdb.setup(storeType: NSSQLiteStoreType) {
-            let ctx = self.localdb.mainMOC
+            let ctx = self.localdb.localMainMOC
             ctx.perform {
                 let wsId = "ws-sync-delete-test"
                 let envId = "en-sync-delete-test"

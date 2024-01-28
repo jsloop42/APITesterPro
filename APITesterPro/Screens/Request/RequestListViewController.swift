@@ -77,18 +77,18 @@ class RequestListViewController: APITesterProViewController {
     func initData() {
         if self.frc == nil, let projId = self.project?.getId() {
             let predicate = self.getFRCPredicate(projId)
-            if let _frc = self.localdb.getFetchResultsController(obj: ERequest.self, predicate: predicate, ctx: self.localdb.mainMOC) as? NSFetchedResultsController<ERequest> {
+            if let _frc = self.localdb.getFetchResultsController(obj: ERequest.self, predicate: predicate, ctx: self.localdb.localMainMOC) as? NSFetchedResultsController<ERequest> {
                 self.frc = _frc
                 self.frc.delegate = self
             }
-            self.methods = self.localdb.getRequestMethodData(projId: projId, ctx: self.localdb.mainMOC)
+            self.methods = self.localdb.getRequestMethodData(projId: projId, ctx: self.localdb.localMainMOC)
         }
         self.reloadData()
     }
     
     func updateData() {
         guard let projId = self.project?.getId() else { return }
-        self.methods = self.localdb.getRequestMethodData(projId: projId, ctx: self.localdb.mainMOC)
+        self.methods = self.localdb.getRequestMethodData(projId: projId, ctx: self.localdb.localMainMOC)
         if self.frc == nil { return }
         self.frc.delegate = nil
         try? self.frc.performFetch()

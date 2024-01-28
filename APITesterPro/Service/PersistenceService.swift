@@ -17,14 +17,12 @@ class PersistenceService {
     
     // MARK: - Create entities
     
-    func createWorkspace(name: String, desc: String, isSyncEnabled: Bool, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
+    func createWorkspace(name: String, desc: String, isSyncEnabled: Bool) {
         let order = self.db.getOrderOfLastWorkspace().inc()
+        let ctx = isSyncEnabled ? self.db.ckMainMOC : self.db.localMainMOC
         if let ws = self.db.createWorkspace(id: self.db.workspaceId(), name: name, desc: desc, isSyncEnabled: isSyncEnabled, ctx: ctx) {
             ws.order = order
             self.db.saveMainContext()
-            if isSyncEnabled {
-                // self.ckSvc.saveWorkspace(ws)
-            }
         }
     }
     

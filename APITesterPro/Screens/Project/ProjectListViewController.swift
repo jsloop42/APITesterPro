@@ -82,7 +82,7 @@ class ProjectListViewController: APITesterProViewController {
         self.workspace = self.app.getSelectedWorkspace()
         if self.frc == nil, let wsId = self.workspace.id {
             let predicate = self.getFRCPredicate(wsId)
-            if let _frc = self.localdb.getFetchResultsController(obj: EProject.self, predicate: predicate, ctx: self.localdb.mainMOC) as? NSFetchedResultsController<EProject> {
+            if let _frc = self.localdb.getFetchResultsController(obj: EProject.self, predicate: predicate, ctx: self.localdb.localMainMOC) as? NSFetchedResultsController<EProject> {
                 self.frc = _frc
                 self.frc.delegate = self
             }
@@ -152,7 +152,7 @@ class ProjectListViewController: APITesterProViewController {
         self.workspace = ws
         if let wsId = ws.id {
             let predicate = self.getFRCPredicate(wsId)
-            if let _frc = self.localdb.updateFetchResultsController(self.frc as! NSFetchedResultsController<NSFetchRequestResult>, predicate: predicate, ctx: self.localdb.mainMOC) as? NSFetchedResultsController<EProject> {
+            if let _frc = self.localdb.updateFetchResultsController(self.frc as! NSFetchedResultsController<NSFetchRequestResult>, predicate: predicate, ctx: self.localdb.localMainMOC) as? NSFetchedResultsController<EProject> {
                 self.frc = _frc
                 self.frc.delegate = self
                 self.reloadData()

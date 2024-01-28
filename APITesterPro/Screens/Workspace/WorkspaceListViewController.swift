@@ -79,8 +79,9 @@ class WorkspaceListViewController: APITesterProViewController {
     }
     
     func initData() {
+        // TODO: keep two frcs and two sections
         if self.frc == nil {
-            if let _frc = self.db.getFetchResultsController(obj: EWorkspace.self, predicate: NSPredicate(format: "markForDelete == %hhd AND name != %@", false, ""), ctx: self.db.mainMOC) as? NSFetchedResultsController<EWorkspace> {
+            if let _frc = self.db.getFetchResultsController(obj: EWorkspace.self, predicate: NSPredicate(format: "markForDelete == %hhd AND name != %@", false, ""), ctx: self.db.ckMainMOC) as? NSFetchedResultsController<EWorkspace> {
                 self.frc = _frc
                 self.frc.delegate = self
             }
@@ -277,7 +278,7 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
         let delete = UIContextualAction(style: .destructive, title: "Delete") { action, view, completion in
             Log.debug("delete row: \(indexPath)")
             if ws == self.wsSelected {  // Reset selection to the default workspace
-                let wss = self.db.getAllWorkspaces(offset: 0, limit: 1, isMarkForDelete: false, ctx: self.db.mainMOC)
+                let wss = self.db.getAllWorkspaces(offset: 0, limit: 1, isMarkForDelete: false, ctx: self.db.ckMainMOC)
                 self.wsSelected = !wss.isEmpty ? wss.first! : self.db.getDefaultWorkspace()
             }
             self.dbSvc.deleteEntity(ws: ws)
