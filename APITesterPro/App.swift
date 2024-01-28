@@ -240,7 +240,7 @@ class App {
     /// Returns the current workspace
     func getSelectedWorkspace() -> EWorkspace {
         if AppState.currentWorkspace != nil { return AppState.currentWorkspace! }
-        var wsId = self.utils.getValue(Const.selectedWorkspaceIdKey) as? String ?? ""
+        let wsId = self.utils.getValue(Const.selectedWorkspaceIdKey) as? String ?? ""
         if !wsId.isEmpty, let ws = self.localdb.getWorkspace(id: wsId) {
             AppState.currentWorkspace = ws
             return ws

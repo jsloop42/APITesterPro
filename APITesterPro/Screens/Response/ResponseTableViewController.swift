@@ -552,13 +552,14 @@ class ResponseTableViewController: APITesterProTableViewController {
     func initData() {
         Log.debug("response vc - initData")
         guard let req = (self.viewType == .requestResponse ? self.tabbarController?.getRequest() : self.request) else { return }
+        guard let ctx = req.managedObjectContext else { return }
         if self.viewType == .requestResponse {
             self.data = self.tabbarController?.responseData
         } else {
             self.data?.request = self.request
         }
         if self.data == nil {
-            if let history = self.localdb.getLatestHistory(reqId: req.getId(), isMarkForDelete: nil, ctx: self.localdb.localMainMOC) {
+            if let history = self.localdb.getLatestHistory(reqId: req.getId(), isMarkForDelete: nil, ctx: ctx) {
                 self.data = ResponseData(history: history)
                 self.data?.history = history
                 self.data?.request = req

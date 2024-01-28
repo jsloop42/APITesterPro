@@ -66,6 +66,9 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     private let utils = EAUtils.shared
     private lazy var localdb = { CoreDataService.shared }()
     private lazy var localdbSvc = { PersistenceService.shared }()
+    var cdContainer: CoreDataContainer!  // This will be updated in bootstrap
+    /// The workspace to which the project, request belongs. This is used to identify the container. Using this variable instead of accessing global App state for scalability.
+    var workspace: EWorkspace!
     /// The projectId to which the request belongs
     var projectId: String!
     /// The project to which the request belongs. We need to load the project using the background context to assign it to request.
@@ -184,11 +187,17 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         Log.debug("edit request view will appear")
     }
     
-    func bootstrap(projectId: String, requestId: String? = nil) {
+    func updateCoreDataContainer(ws: EWorkspace) {
+        guard let wsCtx = ws.managedObjectContext else { return }
+        self.cdContainer = self.localdb.getContainer(wsCtx)
+    }
+    
+    func bootstrap(ws: EWorkspace, projectId: String, requestId: String? = nil) {
         self.projectId = projectId
         self.requestId = requestId
+        self.updateCoreDataContainer(ws: ws)
         if self.ctx == nil {
-            self.ctx = self.localdb.getChildMOC()
+            self.ctx = self.localdb.getChildMOC(container: self.cdContainer)
         }
         if self.project == nil {
             self.project = self.localdb.getProject(id: self.projectId, ctx: self.ctx)
@@ -213,11 +222,18 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         if self.request == nil && self.requestId != nil {  // loading edit for the first time
             Log.debug("request not present loading..")
             if self.ctx == nil {
-                self.ctx = self.localdb.getChildMOC()
+                if self.workspace != nil {
+                    self.updateCoreDataContainer(ws: self.workspace)
+                    self.ctx = self.localdb.getChildMOC(container: self.cdContainer)
+                }
             }
-            self.request = self.localdb.getRequest(id: self.requestId, ctx: self.ctx)
-            self.entityDict = self.localdb.requestToDictionary(self.request)  // FIXME: remove
-            Log.debug("initial entity dic: \(self.entityDict)")
+            if self.ctx != nil {
+                self.request = self.localdb.getRequest(id: self.requestId, ctx: self.ctx)
+                self.entityDict = self.localdb.requestToDictionary(self.request)  // FIXME: remove
+                Log.debug("initial entity dic: \(self.entityDict)")
+            } else {
+                Log.error("Error getting ctx")
+            }
         }
     }
     
@@ -406,8 +422,8 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
             self.localdb.saveMainContext()
             self.requestTracker.deletedEntites.removeAll()
             self.isDirty = false
-            if let tabvc = self.tabBarController as? RequestTabBarController {
-                tabvc.updateRequest(reqId: data.getId())
+            if let tabvc = self.tabBarController as? RequestTabBarController, let ctx = data.managedObjectContext {
+                tabvc.updateRequest(reqId: data.getId(), ctx: ctx)
             }
             // TODO: save to cloud
             // self.db.saveRequestToCloud(data)

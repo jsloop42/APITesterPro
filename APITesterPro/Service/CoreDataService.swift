@@ -127,6 +127,11 @@ public enum SortOrder: String {
     case created = "created"
 }
 
+public enum CoreDataContainer {
+    case local
+    case cloud
+}
+
 class CoreDataService {
     static let shared = CoreDataService()
     private var storeType: String! = NSSQLiteStoreType
@@ -262,12 +267,20 @@ class CoreDataService {
     }
     
     /// Returns a child managed object context.
-    func getChildMOC() -> NSManagedObjectContext {
+    func getChildMOC(container: CoreDataContainer) -> NSManagedObjectContext {
         let moc = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.privateQueueConcurrencyType)
-        moc.parent = self.localMainMOC
+        moc.parent = container == .cloud ? self.ckMainMOC : self.localMainMOC
         moc.automaticallyMergesChangesFromParent = true
         moc.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         return moc
+    }
+    
+    /// Return the Core Data container for the given managed object context
+    func getContainer(_ moc: NSManagedObjectContext) -> CoreDataContainer {
+        if moc == self.ckMainMOC || moc == self.ckBgMOC {
+            return CoreDataContainer.cloud
+        }
+        return CoreDataContainer.local
     }
     
     func workspaceId() -> String {
@@ -2072,14 +2085,60 @@ class CoreDataService {
         }
     }
     
-    /// Save the managed object context associated with the given entity and remove it from the cache.
     func saveBackgroundContext(isForce: Bool? = false, callback: ((Bool) -> Void)? = nil) {
-        Log.debug("save bg context")
+        Task {
+            let ckStatus = await saveCKBackgroundContext(isForce: isForce)
+            let localStatus = await saveLocalBackgroundContext(isForce: isForce)
+            callback?(ckStatus && localStatus)
+        }
+    }
+    
+    func saveCKBackgroundContext(isForce: Bool? = false) async -> Bool {
+        await withCheckedContinuation { continuation in
+            self.saveCKBackgroundContext(isForce: isForce) { status in
+                continuation.resume(returning: status)
+            }
+        }
+    }
+    
+    /// Save the cloud managed object context associated with the given entity.
+    func saveCKBackgroundContext(isForce: Bool? = false, callback: ((Bool) -> Void)? = nil) {
+        Log.debug("ck save bg context")
         var status = true
         let isForceSave = isForce ?? false
         let fn: () -> Void = {
             do {
-                Log.debug("bg context has changes")
+                Log.debug("ck bg context has changes")
+                try self.localBgMOC.save()
+                self.localBgMOC.processPendingChanges()
+                callback?(true)
+            } catch {
+                status = false
+                let nserror = error as NSError
+                Log.error("Persistence error \(nserror), \(nserror.userInfo)")
+                callback?(status)
+                return
+            }
+        }
+        isForceSave ? self.localBgMOC.performAndWait { fn() } : self.localBgMOC.perform { fn() }
+    }
+    
+    func saveLocalBackgroundContext(isForce: Bool? = false) async -> Bool {
+        await withCheckedContinuation { continuation in
+            self.saveLocalBackgroundContext(isForce: isForce) { status in
+                continuation.resume(returning: status)
+            }
+        }
+    }
+    
+    /// Save the local managed object context associated with the given entity.
+    func saveLocalBackgroundContext(isForce: Bool? = false, callback: ((Bool) -> Void)? = nil) {
+        Log.debug("save local bg context")
+        var status = true
+        let isForceSave = isForce ?? false
+        let fn: () -> Void = {
+            do {
+                Log.debug("bg local context has changes")
                 try self.localBgMOC.save()
                 self.localBgMOC.processPendingChanges()
                 callback?(true)

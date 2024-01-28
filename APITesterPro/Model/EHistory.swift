@@ -15,8 +15,8 @@ public class EHistory: NSManagedObject, Entity {
     static var ck: EACloudKit = { EACloudKit.shared }()
     public var recordType: String { return "History" }
     
-    static func initFromResponseData(_ respData: ResponseData) -> EHistory {
-        let history = EHistory(context: Self.db.localMainMOC)
+    static func initFromResponseData(_ respData: ResponseData, ctx: NSManagedObjectContext) -> EHistory {
+        let history = EHistory(context: ctx)
         let date = Date()
         history.created = date
         history.modified = date
