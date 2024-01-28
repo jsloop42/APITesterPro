@@ -76,9 +76,9 @@ public class ERequestMethodData: NSManagedObject, Entity {
         return meth
     }
     
-    public static func fromDictionary(_ dict: [String: Any]) -> ERequestMethodData? {
+    public static func fromDictionary(_ dict: [String: Any], ctx: NSManagedObjectContext) -> ERequestMethodData? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
-        guard let method = self.db.createRequestMethodData(id: id, wsId: wsId, name: "", ctx: self.db.mainMOC) else { return nil }
+        guard let method = self.db.createRequestMethodData(id: id, wsId: wsId, name: "", ctx: ctx) else { return nil }
         if let x = dict["created"] as? String { method.created = Date.toUTCDate(x) }
         if let x = dict["modified"] as? String { method.modified = Date.toUTCDate(x) }
         if let x = dict["name"] as? String { method.name = x }

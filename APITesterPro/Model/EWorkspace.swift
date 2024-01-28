@@ -81,12 +81,13 @@ public class EWorkspace: NSManagedObject, Entity {
     
     public static func fromDictionary(_ dict: [String: Any]) -> EWorkspace? {
         guard let id = dict["id"] as? String else { return nil }
-        let ctx = self.db.mainMOC
-        guard let ws = self.db.createWorkspace(id: id, name: "", desc: "", isSyncEnabled: false, ctx: ctx) else { return nil }
+        let isSyncEnabled = dict["isSyncEnabled"] as? Bool ?? true
+        let ctx = isSyncEnabled ? self.db.ckMainMOC : self.db.localMainMOC
+        guard let ws = self.db.createWorkspace(id: id, name: "", desc: "", isSyncEnabled: isSyncEnabled, ctx: ctx) else { return nil }
         if let x = dict["created"] as? String { ws.created = Date.toUTCDate(x) }
         if let x = dict["desc"] as? String { ws.desc = x }
         if let x = dict["isActive"] as? Bool { ws.isActive = x }
-        if let x = dict["isSyncEnabled"] as? Bool { ws.isSyncEnabled = x }
+        ws.isSyncEnabled = isSyncEnabled
         if let x = dict["modified"] as? String { ws.modified = Date.toUTCDate(x) }
         if let x = dict["name"] as? String { ws.name = x }
         if let x = dict["order"] as? NSDecimalNumber { ws.order = x }
@@ -96,19 +97,19 @@ public class EWorkspace: NSManagedObject, Entity {
         self.db.saveMainContext()
         if let xs = dict["projects"] as? [[String: Any]] {
             xs.forEach { x in
-                if let proj = EProject.fromDictionary(x) {
+                if let proj = EProject.fromDictionary(x, ctx: ctx) {
                     proj.workspace = ws
                 }
             }
         }
         if let xs = dict["envs"] as? [[String: Any]] {
             xs.forEach { dict in
-                _ = EEnv.fromDictionary(dict)
+                _ = EEnv.fromDictionary(dict, ctx: ctx)
             }
         }
         ws.markForDelete = false
         self.db.saveMainContext()
-        self.db.mainMOC.refreshAllObjects()
+        isSyncEnabled ? self.db.refreshAllCKManagedObjects() : self.db.refreshAllLocalManagedObjects()
         return ws
     }
     

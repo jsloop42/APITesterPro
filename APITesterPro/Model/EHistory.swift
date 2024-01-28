@@ -16,7 +16,7 @@ public class EHistory: NSManagedObject, Entity {
     public var recordType: String { return "History" }
     
     static func initFromResponseData(_ respData: ResponseData) -> EHistory {
-        let history = EHistory(context: Self.db.mainMOC)
+        let history = EHistory(context: Self.db.localMainMOC)
         let date = Date()
         history.created = date
         history.modified = date

@@ -74,9 +74,9 @@ public class ERequestBodyData: NSManagedObject, Entity {
         return bodyData
     }
     
-    public static func fromDictionary(_ dict: [String: Any]) -> ERequestBodyData? {
+    public static func fromDictionary(_ dict: [String: Any], ctx: NSManagedObjectContext) -> ERequestBodyData? {
         guard let id = dict["id"] as? String, let wsId = dict["wsId"] as? String else { return nil }
-        guard let body = self.db.createRequestBodyData(id: id, wsId: wsId, ctx: self.db.mainMOC) else { return nil }
+        guard let body = self.db.createRequestBodyData(id: id, wsId: wsId, ctx: ctx) else { return nil }
         if let x = dict["created"] as? String { body.created = Date.toUTCDate(x) }
         if let x = dict["modified"] as? String { body.modified = Date.toUTCDate(x) }
         if let x = dict["json"] as? String { body.json = x }
@@ -85,19 +85,19 @@ public class ERequestBodyData: NSManagedObject, Entity {
         if let x = dict["xml"] as? String { body.xml = x }
         if let x = dict["version"] as? Int64 { body.version = x }
         if let hm = dict["binary"] as? [String: Any] {
-            body.binary = ERequestData.fromDictionary(hm)
+            body.binary = ERequestData.fromDictionary(hm, ctx: ctx)
             body.binary?.binary = body
         }
         if let xs = dict["form"] as? [[String: Any]] {
             xs.forEach { hm in
-                if let form = ERequestData.fromDictionary(hm) {
+                if let form = ERequestData.fromDictionary(hm, ctx: ctx) {
                     form.form = body
                 }
             }
         }
         if let xs = dict["multipart"] as? [[String: Any]] {
             xs.forEach { hm in
-                if let mp = ERequestData.fromDictionary(hm) {
+                if let mp = ERequestData.fromDictionary(hm, ctx: ctx) {
                     mp.multipart = body
                 }
             }

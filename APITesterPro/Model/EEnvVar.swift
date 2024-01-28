@@ -67,9 +67,9 @@ public class EEnvVar: NSManagedObject, Entity {
         //if self.modified < AppState.editRequestSaveTs { self.modified = AppState.editRequestSaveTs }
     }
     
-    public static func fromDictionary(_ dict: [String: Any]) -> EEnvVar? {
+    public static func fromDictionary(_ dict: [String: Any], ctx: NSManagedObjectContext) -> EEnvVar? {
         guard let id = dict["id"] as? String else { return nil }
-        guard let envVar = self.db.createEnvVar(name: "", value: "", id: id, checkExists: true, ctx: self.db.mainMOC) else { return nil }
+        guard let envVar = self.db.createEnvVar(name: "", value: "", id: id, checkExists: true, ctx: ctx) else { return nil }
         if let x = dict["created"] as? String { envVar.created = Date.toUTCDate(x) }
         if let x = dict["modified"] as? String { envVar.modified = Date.toUTCDate(x) }
         if let x = dict["name"] as? String { envVar.name = x }
