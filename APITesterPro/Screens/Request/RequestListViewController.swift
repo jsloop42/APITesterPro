@@ -75,20 +75,20 @@ class RequestListViewController: APITesterProViewController {
     }
     
     func initData() {
-        if self.frc == nil, let projId = self.project?.getId() {
+        if self.frc == nil, let projId = self.project?.getId(), let ctx = self.project?.managedObjectContext {
             let predicate = self.getFRCPredicate(projId)
-            if let _frc = self.localdb.getFetchResultsController(obj: ERequest.self, predicate: predicate, ctx: self.localdb.localMainMOC) as? NSFetchedResultsController<ERequest> {
+            if let _frc = self.localdb.getFetchResultsController(obj: ERequest.self, predicate: predicate, ctx: ctx) as? NSFetchedResultsController<ERequest> {
                 self.frc = _frc
                 self.frc.delegate = self
             }
-            self.methods = self.localdb.getRequestMethodData(projId: projId, ctx: self.localdb.localMainMOC)
+            self.methods = self.localdb.getRequestMethodData(projId: projId, ctx: ctx)
         }
         self.reloadData()
     }
     
     func updateData() {
-        guard let projId = self.project?.getId() else { return }
-        self.methods = self.localdb.getRequestMethodData(projId: projId, ctx: self.localdb.localMainMOC)
+        guard let projId = self.project?.getId(), let ctx = self.project?.managedObjectContext else { return }
+        self.methods = self.localdb.getRequestMethodData(projId: projId, ctx: ctx)
         if self.frc == nil { return }
         self.frc.delegate = nil
         try? self.frc.performFetch()
@@ -146,8 +146,8 @@ class RequestListViewController: APITesterProViewController {
     
     @objc func addBtnDidTap(_ sender: Any) {
         Log.debug("add btn did tap")
-        if let vc = UIStoryboard.editRequestVC, let projId = self.project?.getId() {
-            vc.bootstrap(projectId: projId)
+        if let vc = UIStoryboard.editRequestVC, let projId = self.project?.getId(), let ws = self.project?.workspace {
+            vc.bootstrap(ws: ws, projectId: projId)
             self.navigationController!.pushViewController(vc, animated: true)
         }
     }
@@ -205,8 +205,8 @@ extension RequestListViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let req = self.frc.object(at: indexPath)
-        if let vc = UIStoryboard.requestTabBar {
-            vc.updateRequest(reqId: req.getId())
+        if let vc = UIStoryboard.requestTabBar, let ctx = req.managedObjectContext {
+            vc.updateRequest(reqId: req.getId(), ctx: ctx)
             self.navigationController!.pushViewController(vc, animated: true)
         }
     }

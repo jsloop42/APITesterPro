@@ -50,8 +50,8 @@ class EnvironmentVariableTableViewController: UITableViewController {
     }
     
     func initData() {
-        guard self.frc == nil, let envId = self.env?.getId() else { return }
-        if let _frc = self.localdb.getFetchResultsController(obj: EEnvVar.self, predicate: NSPredicate(format: "env.id == %@ AND markForDelete == %hhd", envId, false), ctx: self.localdb.localMainMOC) as? NSFetchedResultsController<EEnvVar> {
+        guard self.frc == nil, let envId = self.env?.getId(), let ctx = self.env?.managedObjectContext else { return }
+        if let _frc = self.localdb.getFetchResultsController(obj: EEnvVar.self, predicate: NSPredicate(format: "env.id == %@ AND markForDelete == %hhd", envId, false), ctx: ctx) as? NSFetchedResultsController<EEnvVar> {
             self.frc = _frc
             self.frc.delegate = self
             try? self.frc.performFetch()

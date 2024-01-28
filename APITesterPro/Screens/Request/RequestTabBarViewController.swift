@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 extension Notification.Name {
     static let requestVCShouldPresent = Notification.Name("request-vc-should-present")
@@ -76,9 +77,8 @@ class RequestTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     /// Get the request from Core Data using the main context based on the given Id. The request is loaded because edits are made in a different context and we cannot set the request object from edit as it's in another context.
     /// Set this which will be accessed by request view (RequestTableViewController).
-    func updateRequest(reqId: String) {
-        let ctx = self.localdb.localMainMOC
-        self.request = self.localdb.getRequest(id: reqId, ctx: ctx)
+    func updateRequest(reqId: String, ctx: NSManagedObjectContext) {
+        self.request = self.localdb.getRequest(id: reqId, ctx: ctx)  // FIXME: ctx 
     }
     
     @objc func responseDidReceive(_ notif: Notification) {

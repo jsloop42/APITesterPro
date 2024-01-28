@@ -244,9 +244,9 @@ class RequestTableViewController: APITesterProTableViewController {
     @objc func requestDidChange(_ notif: Notification) {
         Log.debug("request did change notif")
         DispatchQueue.main.async {
-            if let info = notif.userInfo as? [String: Any], let req = info["request"] as? ERequest, req.getId() == self.request?.getId() {
+            if let info = notif.userInfo as? [String: Any], let req = info["request"] as? ERequest, req.getId() == self.request?.getId(), let ctx = self.request?.managedObjectContext {
                 self.request = req
-                self.tabbarController.updateRequest(reqId: req.getId())
+                self.tabbarController.updateRequest(reqId: req.getId(), ctx: ctx)
                 Log.debug("current request did change - reloading views")
                 if let reqMan = AppState.getFromRequestState(req.getId()) {  // On edit request, cancel existing one and remove the current manager from state
                     reqMan.cancelRequest()
@@ -345,8 +345,8 @@ class RequestTableViewController: APITesterProTableViewController {
     
     func viewEditRequestVC() {
         Log.debug("view edit request vc")
-        if let vc = UIStoryboard.editRequestVC, let req = self.request, let projId = req.project?.getId() {
-            vc.bootstrap(projectId: projId, requestId: req.getId())
+        if let vc = UIStoryboard.editRequestVC, let req = self.request, let projId = req.project?.getId(), let ws = req.project?.workspace {
+            vc.bootstrap(ws: ws, projectId: projId, requestId: req.getId())
             self.tabbarController.navigationController?.pushViewController(vc, animated: true)
         }
     }
@@ -359,7 +359,7 @@ class RequestTableViewController: APITesterProTableViewController {
         self.params = self.localdb.getParamsRequestData(reqId)
         self.headerKVTableViewManager.kvTableView?.resetMeta()
         self.paramsKVTableViewManager.kvTableView?.resetMeta()
-        guard let proj = request.project else { return }
+        guard request.project != nil else { return }
         self.methodLabel.text = request.method?.name ?? "GET"
         self.urlLabel.text = request.url
         self.nameLabel.text = request.name

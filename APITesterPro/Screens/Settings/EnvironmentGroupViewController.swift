@@ -48,8 +48,8 @@ class EnvironmentGroupViewController: UIViewController {
     func initData() {
         guard self.frc == nil else { return }
         if self.workspace == nil { self.workspace = self.app.getSelectedWorkspace() }
-        guard let wsId = self.workspace?.getId() else { return }
-        if let _frc = self.localdb.getFetchResultsController(obj: EEnv.self, predicate: NSPredicate(format: "wsId == %@ AND markForDelete == %hhd", wsId, false), ctx: self.localdb.localMainMOC) as? NSFetchedResultsController<EEnv> {
+        guard let wsId = self.workspace?.getId(), let ctx = self.workspace?.managedObjectContext else { return }
+        if let _frc = self.localdb.getFetchResultsController(obj: EEnv.self, predicate: NSPredicate(format: "wsId == %@ AND markForDelete == %hhd", wsId, false), ctx: ctx) as? NSFetchedResultsController<EEnv> {
             self.frc = _frc
             self.frc.delegate = self
             try? self.frc.performFetch()

@@ -56,9 +56,10 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func initData() {
+        guard let ctx = self.request?.managedObjectContext else { return }
         if self.todayFrc == nil {
             if let _frc = self.localdb.getFetchResultsController(obj: EHistory.self, predicate: self.getTodayPredicate(), sortDesc: self.getSortDescriptors(),
-                                                                 ctx: self.localdb.localMainMOC) as? NSFetchedResultsController<EHistory> {
+                                                                 ctx: ctx) as? NSFetchedResultsController<EHistory> {
                 self.todayFrc = _frc
                 self.todayFrc.delegate = self
                 try? self.todayFrc.performFetch()
@@ -66,7 +67,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         if self.pastFrc == nil {
             if let _frc = self.localdb.getFetchResultsController(obj: EHistory.self, predicate: self.getPastPredicate(), sortDesc: self.getSortDescriptors(),
-                                                                 ctx: self.localdb.localMainMOC) as? NSFetchedResultsController<EHistory> {
+                                                                 ctx: ctx) as? NSFetchedResultsController<EHistory> {
                 self.pastFrc = _frc
                 self.pastFrc.delegate = self
                 try? self.pastFrc.performFetch()
