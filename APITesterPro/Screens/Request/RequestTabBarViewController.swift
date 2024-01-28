@@ -77,7 +77,7 @@ class RequestTabBarController: UITabBarController, UITabBarControllerDelegate {
     /// Get the request from Core Data using the main context based on the given Id. The request is loaded because edits are made in a different context and we cannot set the request object from edit as it's in another context.
     /// Set this which will be accessed by request view (RequestTableViewController).
     func updateRequest(reqId: String) {
-        let ctx = self.localdb.mainMOC
+        let ctx = self.localdb.localMainMOC
         self.request = self.localdb.getRequest(id: reqId, ctx: ctx)
     }
     

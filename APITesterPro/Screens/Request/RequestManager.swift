@@ -98,7 +98,7 @@ final class RequestManager {
     }
     
     func saveResponse(_ info: inout ResponseData) {
-        let ctx = self.localdb.mainMOC
+        let ctx = self.localdb.localMainMOC
         ctx.performAndWait {
             var info = info
             Log.debug("[req-man] save-response - \(info)")
