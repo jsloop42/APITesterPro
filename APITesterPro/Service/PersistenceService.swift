@@ -18,8 +18,8 @@ class PersistenceService {
     // MARK: - Create entities
     
     func createWorkspace(name: String, desc: String, isSyncEnabled: Bool) {
-        let order = self.db.getOrderOfLastWorkspace().inc()
         let ctx = isSyncEnabled ? self.db.ckMainMOC : self.db.localMainMOC
+        let order = self.db.getOrderOfLastWorkspace(ctx: ctx).inc()
         if let ws = self.db.createWorkspace(id: self.db.workspaceId(), name: name, desc: desc, isSyncEnabled: isSyncEnabled, ctx: ctx) {
             ws.order = order
             self.db.saveMainContext()

@@ -12,7 +12,6 @@ import UIKit
 struct AppState {
     static var workspaces: [EWorkspace] = []
     static var selectedWorkspace: Int = 0
-    static var totalworkspaces = 0
     static var selectedProject: Int? = nil
     static var isKeyboardActive = false
     static var keyboardHeight: CGFloat = 0.0

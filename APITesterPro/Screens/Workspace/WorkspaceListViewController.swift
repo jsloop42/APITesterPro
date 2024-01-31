@@ -30,8 +30,8 @@ class WorkspaceListViewController: APITesterProViewController {
     private let nc = NotificationCenter.default
     private lazy var db = { CoreDataService.shared }()
     private lazy var dbSvc = { PersistenceService.shared }()
-    private var frc: NSFetchedResultsController<EWorkspace>!
-    // private lazy var db = { PersistenceService.shared }()
+    private var ckFrc: NSFetchedResultsController<EWorkspace>!
+    private var localFrc: NSFetchedResultsController<EWorkspace>!
     private var wsSelected: EWorkspace!
     
     deinit {
@@ -79,21 +79,34 @@ class WorkspaceListViewController: APITesterProViewController {
     }
     
     func initData() {
-        // TODO: keep two frcs and two sections
-        if self.frc == nil {
-            if let _frc = self.db.getFetchResultsController(obj: EWorkspace.self, predicate: NSPredicate(format: "markForDelete == %hhd AND name != %@", false, ""), ctx: self.db.ckMainMOC) as? NSFetchedResultsController<EWorkspace> {
-                self.frc = _frc
-                self.frc.delegate = self
+        // iCloud workspace
+        if self.ckFrc == nil {
+            if let _frc = self.db.getFetchResultsController(obj: EWorkspace.self, predicate: NSPredicate(format: "name != %@", ""), ctx: self.db.ckMainMOC) as? NSFetchedResultsController<EWorkspace> {
+                self.ckFrc = _frc
+                self.ckFrc.delegate = self
+            }
+        }
+        // local workspace
+        if self.localFrc == nil {
+            if let _frc = self.db.getFetchResultsController(obj: EWorkspace.self, predicate: NSPredicate(format: "name != %@", ""), ctx: self.db.localMainMOC) as? NSFetchedResultsController<EWorkspace> {
+                self.localFrc = _frc
+                self.localFrc.delegate = self
             }
         }
         self.reloadData()
     }
     
     func updateData() {
-        if self.frc == nil { return }
-        self.frc.delegate = nil
-        try? self.frc.performFetch()
-        self.frc.delegate = self
+        // ck frc
+        if self.ckFrc == nil { return }
+        self.ckFrc.delegate = nil
+        try? self.ckFrc.performFetch()
+        self.ckFrc.delegate = self
+        // local frc
+        if self.localFrc == nil { return }
+        self.localFrc.delegate = nil
+        try? self.localFrc.performFetch()
+        self.localFrc.delegate = self
         self.tableView.reloadData()
     }
     
@@ -111,22 +124,35 @@ class WorkspaceListViewController: APITesterProViewController {
     }
     
     @objc func databaseWillUpdate(_ notif: Notification) {
-        DispatchQueue.main.async { self.frc.delegate = nil }
+        DispatchQueue.main.async {
+            self.ckFrc.delegate = nil
+            self.localFrc.delegate = nil
+        }
     }
     
     @objc func databaseDidUpdate(_ notif: Notification) {
         DispatchQueue.main.async {
-            self.frc.delegate = self
+            self.ckFrc.delegate = self
+            self.localFrc.delegate = self
             self.reloadData()
         }
     }
     
     func reloadData() {
         self.wsSelected = self.app.getSelectedWorkspace()
-        if self.frc == nil { return }
         do {
-            try self.frc.performFetch()
-            self.tableView.reloadData()
+            var shouldReload = false
+            if self.ckFrc != nil {
+                shouldReload = true
+                try self.ckFrc.performFetch()
+            }
+            if self.localFrc != nil {
+                shouldReload = true
+                try self.localFrc.performFetch()
+            }
+            if shouldReload {
+                self.tableView.reloadData()
+            }
         } catch let error {
             Log.error("Error fetching: \(error)")
         }
@@ -216,7 +242,6 @@ class WorkspaceListViewController: APITesterProViewController {
     }
     
     func addWorkspace(name: String, desc: String, isSyncEnabled: Bool) {
-        AppState.totalworkspaces = self.frc.numberOfRows(in: 0)
         self.dbSvc.createWorkspace(name: name, desc: desc, isSyncEnabled: isSyncEnabled)
         self.reloadData()
     }
@@ -237,13 +262,30 @@ class WorkspaceCell: UITableViewCell {
 }
 
 extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSource {
+    // One for iCloud and another for local workspaces listing
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.frc.numberOfRows(in: section)
+        return section == 0 ? self.ckFrc.numberOfRows(in: 0) : self.localFrc.numberOfRows(in: 0)
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return section == 0 ? "iCloud Workspaces" : "Local Workspaces"
+    }
+    
+    func getWorkspace(indexPath: IndexPath) -> EWorkspace {
+        if indexPath.section == 0 {
+            return self.ckFrc.object(at: indexPath)
+        }
+        let idxPath = IndexPath(row: indexPath.row, section: 0)
+        return self.localFrc.object(at: idxPath)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TableCellId.workspaceCell.rawValue, for: indexPath) as! WorkspaceCell
-        let ws = self.frc.object(at: indexPath)
+        let ws = self.getWorkspace(indexPath: indexPath)
         cell.accessoryType = .none
         if ws.id == self.wsSelected.id { cell.accessoryType = .checkmark }
         cell.nameLbl.text = ws.name
@@ -260,7 +302,7 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         Log.debug("workspace cell did select \(indexPath.row)")
-        let ws = self.frc.object(at: indexPath)
+        let ws = self.getWorkspace(indexPath: indexPath)
         self.app.setSelectedWorkspace(ws)
         self.nc.post(name: .workspaceDidChange, object: self, userInfo: ["workspace": ws])
         self.close()
@@ -268,7 +310,7 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
     
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let ws = self.frc.object(at: indexPath)
+        let ws = self.getWorkspace(indexPath: indexPath)
         let edit = UIContextualAction(style: .normal, title: "Edit") { action, view, completion in
             Log.debug("edit row: \(indexPath)")
             self.viewEditPopup(ws)
@@ -293,7 +335,7 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let ws = self.frc.object(at: indexPath)
+        let ws = self.getWorkspace(indexPath: indexPath)
         let name = ws.name ?? ""
         let desc = self.getDesc(ws: ws)
         let w = tableView.frame.width - 15
