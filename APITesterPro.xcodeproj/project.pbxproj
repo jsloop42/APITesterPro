@@ -108,6 +108,7 @@
 		9ED969A82AF5A38B0029E83E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A72AF5A38B0029E83E /* CloudKit.framework */; };
 		9EDDE3B72B1BC0A20074141A /* EditRequestTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDE3B62B1BC0A20074141A /* EditRequestTracker.swift */; };
 		9EDDE3B92B1C4C8B0074141A /* EALogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EDDE3B82B1C4C8B0074141A /* EALogger.swift */; };
+		9EE60B0D2B6F82A0006A5D77 /* EmptyMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE60B0C2B6F82A0006A5D77 /* EmptyMessageCell.swift */; };
 		9EEA0E2A2B152E0200DFB42B /* EABackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EEA0E292B152E0200DFB42B /* EABackgroundWorker.swift */; };
 /* End PBXBuildFile section */
 
@@ -238,6 +239,7 @@
 		9ED969A72AF5A38B0029E83E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		9EDDE3B62B1BC0A20074141A /* EditRequestTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRequestTracker.swift; sourceTree = "<group>"; };
 		9EDDE3B82B1C4C8B0074141A /* EALogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EALogger.swift; sourceTree = "<group>"; };
+		9EE60B0C2B6F82A0006A5D77 /* EmptyMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyMessageCell.swift; sourceTree = "<group>"; };
 		9EEA0E292B152E0200DFB42B /* EABackgroundWorker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EABackgroundWorker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -442,6 +444,7 @@
 				9E81D1242AF45241004095CF /* OptionsPickerViewController.swift */,
 				9E81D1232AF45241004095CF /* PopupViewController.swift */,
 				9E81D1282AF45241004095CF /* UI.swift */,
+				9EE60B0C2B6F82A0006A5D77 /* EmptyMessageCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -702,6 +705,7 @@
 				9E81D10B2AF45218004095CF /* EnvironmentPickerViewController.swift in Sources */,
 				9E81D0D22AF451EA004095CF /* EAFileManager.swift in Sources */,
 				9E81D0A52AF44F4F004095CF /* AppState.swift in Sources */,
+				9EE60B0D2B6F82A0006A5D77 /* EmptyMessageCell.swift in Sources */,
 				9E81D0F72AF451FF004095CF /* ERequestBodyData.swift in Sources */,
 				9E81D09B2AF44F4F004095CF /* SceneDelegate.swift in Sources */,
 				9E04F4F62B122577007A0773 /* EACloudKit.swift in Sources */,

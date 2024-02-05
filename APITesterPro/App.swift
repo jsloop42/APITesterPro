@@ -430,6 +430,7 @@ class App {
 
 enum TableCellId: String {
     case workspaceCell
+    case emptyMessageCell
 }
 
 enum StoryboardId: String {

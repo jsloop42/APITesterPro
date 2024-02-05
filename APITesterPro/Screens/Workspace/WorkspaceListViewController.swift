@@ -60,6 +60,7 @@ class WorkspaceListViewController: APITesterProViewController {
     }
 
     func initUI() {
+        self.tableView.register(EmptyMessageCell.self, forCellReuseIdentifier: TableCellId.emptyMessageCell.rawValue)
         self.app.updateViewBackground(self.view)
         self.app.updateNavigationControllerBackground(self.navigationController)
         if #available(iOS 13.0, *) {
@@ -268,7 +269,7 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? self.ckFrc.numberOfRows(in: 0) : self.localFrc.numberOfRows(in: 0)
+        return section == 0 ? max(1, self.ckFrc.numberOfRows(in: 0)) : max(1, self.localFrc.numberOfRows(in: 0))
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -283,66 +284,93 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
         return self.localFrc.object(at: idxPath)
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: TableCellId.workspaceCell.rawValue, for: indexPath) as! WorkspaceCell
-        let ws = self.getWorkspace(indexPath: indexPath)
-        cell.accessoryType = .none
-        if ws.id == self.wsSelected.id { cell.accessoryType = .checkmark }
-        cell.nameLbl.text = ws.name
-        let desc = self.getDesc(ws: ws)
-        cell.descLbl.text = desc
-        if !desc.isEmpty {
-            cell.descLbl.isHidden = false
-        } else {
-            cell.descLbl.isHidden = true
+    func getWorkspaceCount(indexPath: IndexPath) -> Int {
+        if indexPath.section == 0 {
+            return self.ckFrc.numberOfRows(in: 0)
         }
-        cell.displayBottomBorder()
-        return cell
+        return self.localFrc.numberOfRows(in: 0)
+    }
+    
+    func sectionType(indexPath: IndexPath) -> String {
+        return indexPath.section == 0 ? "iCloud" : "Local"
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let wsCount = self.getWorkspaceCount(indexPath: indexPath)
+        if wsCount > 0 {
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: TableCellId.workspaceCell.rawValue, for: indexPath) as! WorkspaceCell
+            let ws = self.getWorkspace(indexPath: indexPath)
+            cell.accessoryType = .none
+            if ws.id == self.wsSelected.id { cell.accessoryType = .checkmark }
+            cell.nameLbl.text = ws.name
+            let desc = self.getDesc(ws: ws)
+            cell.descLbl.text = desc
+            if !desc.isEmpty {
+                cell.descLbl.isHidden = false
+            } else {
+                cell.descLbl.isHidden = true
+            }
+            cell.displayBottomBorder()
+            return cell
+        }
+        let emptyMsgCell = self.tableView.dequeueReusableCell(withIdentifier: TableCellId.emptyMessageCell.rawValue, for: indexPath) as! EmptyMessageCell
+        emptyMsgCell.updateMessage(self.sectionType(indexPath: indexPath) == "iCloud" ? "No iCloud workspaces found" : "No Local workspaces found")
+        emptyMsgCell.isUserInteractionEnabled = false
+        return emptyMsgCell
+        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         Log.debug("workspace cell did select \(indexPath.row)")
-        let ws = self.getWorkspace(indexPath: indexPath)
-        self.app.setSelectedWorkspace(ws)
-        self.nc.post(name: .workspaceDidChange, object: self, userInfo: ["workspace": ws])
-        self.close()
+        if self.getWorkspaceCount(indexPath: indexPath) > 0 {
+            let ws = self.getWorkspace(indexPath: indexPath)
+            self.app.setSelectedWorkspace(ws)
+            self.nc.post(name: .workspaceDidChange, object: self, userInfo: ["workspace": ws])
+            self.close()
+        }
     }
     
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let ws = self.getWorkspace(indexPath: indexPath)
-        let edit = UIContextualAction(style: .normal, title: "Edit") { action, view, completion in
-            Log.debug("edit row: \(indexPath)")
-            self.viewEditPopup(ws)
-            completion(true)
-        }
-        edit.backgroundColor = App.Color.lightPurple
-        let delete = UIContextualAction(style: .destructive, title: "Delete") { action, view, completion in
-            Log.debug("delete row: \(indexPath)")
-            if ws == self.wsSelected {  // Reset selection to the default workspace
-                let wss = self.db.getAllWorkspaces(offset: 0, limit: 1, isMarkForDelete: false, ctx: self.db.ckMainMOC)
-                self.wsSelected = !wss.isEmpty ? wss.first! : self.db.getDefaultWorkspace()
+        if self.getWorkspaceCount(indexPath: indexPath) > 0 {
+            let ws = self.getWorkspace(indexPath: indexPath)
+            let edit = UIContextualAction(style: .normal, title: "Edit") { action, view, completion in
+                Log.debug("edit row: \(indexPath)")
+                self.viewEditPopup(ws)
+                completion(true)
             }
-            self.dbSvc.deleteEntity(ws: ws)
-            // TODO: ck: delete ws marked for delete
-            // self.db.deleteDataMarkedForDelete(ws, ctx: self.localdb.mainMOC)
-            self.updateData()
-            completion(true)
+            edit.backgroundColor = App.Color.lightPurple
+            let delete = UIContextualAction(style: .destructive, title: "Delete") { action, view, completion in
+                Log.debug("delete row: \(indexPath)")
+                if ws == self.wsSelected {  // Reset selection to the default workspace
+                    let wss = self.db.getAllWorkspaces(offset: 0, limit: 1, isMarkForDelete: false, ctx: self.db.ckMainMOC)
+                    self.wsSelected = !wss.isEmpty ? wss.first! : self.db.getDefaultWorkspace()
+                }
+                self.dbSvc.deleteEntity(ws: ws)
+                // TODO: ck: delete ws marked for delete
+                // self.db.deleteDataMarkedForDelete(ws, ctx: self.localdb.mainMOC)
+                self.updateData()
+                completion(true)
+            }
+            let swipeActionConfig = UISwipeActionsConfiguration(actions: ws.isInDefaultMode ? [edit] : [delete, edit])
+            swipeActionConfig.performsFirstActionWithFullSwipe = false
+            return swipeActionConfig
         }
-        let swipeActionConfig = UISwipeActionsConfiguration(actions: ws.isInDefaultMode ? [edit] : [delete, edit])
-        swipeActionConfig.performsFirstActionWithFullSwipe = false
-        return swipeActionConfig
+        return nil
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let ws = self.getWorkspace(indexPath: indexPath)
-        let name = ws.name ?? ""
-        let desc = self.getDesc(ws: ws)
-        let w = tableView.frame.width - 15
-        let h1 = name.height(width: w, font: App.Font.font17) + 18
-        let h2: CGFloat =  desc.isEmpty ? 0 : desc.height(width: w, font: App.Font.font15) + 8
-        Log.debug("row: \(indexPath.row) -> \(h1 + h2)")
-        return max(h1 + h2, 46)
+        if self.getWorkspaceCount(indexPath: indexPath) > 0 {
+            let ws = self.getWorkspace(indexPath: indexPath)
+            let name = ws.name ?? ""
+            let desc = self.getDesc(ws: ws)
+            let w = tableView.frame.width - 15
+            let h1 = name.height(width: w, font: App.Font.font17) + 18
+            let h2: CGFloat =  desc.isEmpty ? 0 : desc.height(width: w, font: App.Font.font15) + 8
+            Log.debug("row: \(indexPath.row) -> \(h1 + h2)")
+            return max(h1 + h2, 46)
+        }
+        return UITableView.automaticDimension
     }
     
     func getDesc(ws: EWorkspace) -> String {
