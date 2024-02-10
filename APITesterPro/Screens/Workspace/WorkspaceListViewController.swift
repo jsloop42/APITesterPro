@@ -310,7 +310,7 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
             } else {
                 cell.descLbl.isHidden = true
             }
-            cell.displayBottomBorder()
+            // cell.displayBottomBorder()
             return cell
         }
         let emptyMsgCell = self.tableView.dequeueReusableCell(withIdentifier: TableCellId.emptyMessageCell.rawValue, for: indexPath) as! EmptyMessageCell
