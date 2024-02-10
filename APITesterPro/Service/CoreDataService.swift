@@ -697,23 +697,6 @@ class CoreDataService {
         return xs
     }
     
-    func getProjectsToSync(wsId: String, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [EProject] {
-        var xs: [EProject] = []
-        let moc = self.getMainMOC(ctx: ctx)
-        moc.performAndWait {
-            let fr = NSFetchRequest<EProject>(entityName: "EProject")
-            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "isSynced == %hhd AND workspace.id == %@", false, wsId)
-                : NSPredicate(format: "isSynced == %hhd AND workspace.id == %@ AND markForDelete == %hhd", false, wsId, isMarkForDelete!)
-            fr.fetchBatchSize = 4
-            do {
-                xs = try moc.fetch(fr)
-            } catch let error {
-                Log.error("Error fetching projects yet to sync: \(error)")
-            }
-        }
-        return xs
-    }
-    
     /// Get the order of the last project in the given workspace. If no projects are found the order will be -1 so that inc() will work properly throughout.
     /// - Parameter wsId: The workspace Id
     /// - Parameter ctx: The managed object context
@@ -1549,101 +1532,6 @@ class CoreDataService {
             }
         }
         return xs
-    }
-    
-    // MARK: - Entities to sync
-    
-    func getWorkspacesToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSFetchedResultsController<EWorkspace> {
-        let moc = self.getMainMOC(ctx: ctx)
-        let fr = NSFetchRequest<EWorkspace>(entityName: "EWorkspace")
-        fr.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
-            NSPredicate(format: "isSynced == %hhd AND isActive == %hhd AND isZoneSynced == %hhd", false, true, true),
-            NSPredicate(format: "isActive == %hhd AND isZoneSynced == %hhd", true, false)  // ws synced but zone did not get created
-        ])
-        fr.sortDescriptors = [NSSortDescriptor(key: "created", ascending: true)]
-        fr.fetchBatchSize = self.fetchBatchSize
-        let frc = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
-        do {
-            try frc.performFetch()
-        } catch let error {
-            Log.error("Error performing fetch: \(error)")
-        }
-        return frc
-    }
-    
-    func getProjectsToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSFetchedResultsController<EProject> {
-        let moc = self.getMainMOC(ctx: ctx)
-        let fr = NSFetchRequest<EProject>(entityName: "EProject")
-        fr.predicate = NSPredicate(format: "isSynced == %hhd AND markForDelete == %hhd", false, false)  // Deleted items will be fetched separately
-        fr.sortDescriptors = [NSSortDescriptor(key: "workspace.created", ascending: true)]
-        fr.fetchBatchSize = self.fetchBatchSize
-        let frc = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: moc, sectionNameKeyPath: "workspace.created", cacheName: nil)
-        do {
-            try frc.performFetch()
-        } catch let error {
-            Log.error("Error performing fetch: \(error)")
-        }
-        return frc
-    }
-    
-    func getRequestsToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSFetchedResultsController<ERequest> {
-        let moc = self.getMainMOC(ctx: ctx)
-        let fr = NSFetchRequest<ERequest>(entityName: "ERequest")
-        fr.predicate = NSPredicate(format: "isSynced == %hhd AND markForDelete == %hhd", false, false)
-        fr.sortDescriptors = [NSSortDescriptor(key: "project.created", ascending: true)]
-        fr.fetchBatchSize = self.fetchBatchSize
-        let frc = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: moc, sectionNameKeyPath: "project.created", cacheName: nil)
-        do {
-            try frc.performFetch()
-        } catch let error {
-            Log.error("Error performing fetch: \(error)")
-        }
-        return frc
-    }
-    
-    func getHistoriesToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSFetchedResultsController<EHistory> {
-        let moc = self.getMainMOC(ctx: ctx)
-        let fr = NSFetchRequest<EHistory>(entityName: "EHistory")
-        fr.predicate = NSPredicate(format: "isSynced == %hhd AND markForDelete == %hhd", false, false)
-        fr.sortDescriptors = [NSSortDescriptor(key: "created", ascending: true)]
-        fr.fetchBatchSize = self.fetchBatchSize
-        let frc = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: moc, sectionNameKeyPath: "created", cacheName: nil)
-        do {
-            try frc.performFetch()
-        } catch let error {
-            Log.error("Error performing fetch: \(error)")
-        }
-        return frc
-    }
-    
-    func getEnvsToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSFetchedResultsController<EEnv> {
-        let moc = self.getMainMOC(ctx: ctx)
-        let fr = NSFetchRequest<EEnv>(entityName: "EEnv")
-        fr.predicate = NSPredicate(format: "isSynced == %hhd AND markForDelete == %hhd", false, false)
-        fr.sortDescriptors = [NSSortDescriptor(key: "created", ascending: true)]
-        fr.fetchBatchSize = self.fetchBatchSize
-        let frc = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: moc, sectionNameKeyPath: "created", cacheName: nil)
-        do {
-            try frc.performFetch()
-        } catch let error {
-            Log.error("Error performing fetch: \(error)")
-        }
-        return frc
-    }
-    
-    func getEnvVarsToSync(ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSFetchedResultsController<EEnvVar> {
-        let moc = self.getMainMOC(ctx: ctx)
-        let fr = NSFetchRequest<EEnvVar>(entityName: "EEnvVar")
-        fr.predicate = NSPredicate(format: "isSynced == %hhd AND markForDelete == %hhd", false, false)
-        fr.sortDescriptors = [NSSortDescriptor(key: "created", ascending: true)]
-        fr.fetchBatchSize = self.fetchBatchSize
-        let frc = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: moc, sectionNameKeyPath: "created", cacheName: nil)
-        do {
-            try frc.performFetch()
-        } catch let error {
-            Log.error("Error performing fetch: \(error)")
-        }
-        return frc
     }
     
     func getDataMarkedForDelete(obj: any Entity.Type, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> NSFetchedResultsController<NSFetchRequestResult> {
