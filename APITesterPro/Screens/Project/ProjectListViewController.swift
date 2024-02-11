@@ -19,7 +19,12 @@ class ProjectListViewController: APITesterProViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var workspaceBtn: UIButton!
     @IBOutlet weak var helpTextLabel: UILabel!
-    private var workspace: EWorkspace!
+    private var workspace: EWorkspace! {
+        didSet {
+            self.container = self.localdb.getContainer(self.workspace.managedObjectContext!)
+        }
+    }
+    private var container: CoreDataContainer = .cloud
     private var popupBottomContraints: NSLayoutConstraint?
     private var isKeyboardActive = false
     private var keyboardHeight: CGFloat = 0.0
@@ -28,7 +33,8 @@ class ProjectListViewController: APITesterProViewController {
     private let nc = NotificationCenter.default
     private lazy var localdb = { CoreDataService.shared }()
     private lazy var localdbSvc = { PersistenceService.shared }()
-    private var frc: NSFetchedResultsController<EProject>!
+    private var localFrc: NSFetchedResultsController<EProject>!
+    private var ckFrc: NSFetchedResultsController<EProject>!
     private let cellReuseId = "projectCell"
     
     deinit {
@@ -93,38 +99,56 @@ class ProjectListViewController: APITesterProViewController {
     
     func initData() {
         self.workspace = self.app.getSelectedWorkspace()
-        if self.frc == nil, let wsId = self.workspace.id, let ctx = self.workspace.managedObjectContext {
-            let predicate = self.getFRCPredicate(wsId)
-            if let _frc = self.localdb.getFetchResultsController(obj: EProject.self, predicate: predicate, ctx: ctx) as? NSFetchedResultsController<EProject> {
-                self.frc = _frc
-                self.frc.delegate = self
-            }
-        }
+        guard let wsId = self.workspace.id else { return }
+        let predicate = self.getFRCPredicate(wsId)
+        self.ckFrc = self.localdb.getFetchResultsController(obj: EProject.self, predicate: predicate, ctx: self.localdb.ckMainMOC) as? NSFetchedResultsController<EProject>
+        self.localFrc = self.localdb.getFetchResultsController(obj: EProject.self, predicate: predicate, ctx: self.localdb.localMainMOC) as? NSFetchedResultsController<EProject>
+        self.ckFrc.delegate = self
+        self.localFrc.delegate = self
         self.reloadData()
     }
     
     func updateData() {
-        if self.frc == nil { return }
-        self.frc.delegate = nil
-        try? self.frc.performFetch()
-        self.frc.delegate = self
+        if self.container == .cloud {
+            if self.ckFrc == nil { return }
+            self.ckFrc.delegate = nil
+            try? self.ckFrc.performFetch()
+            self.ckFrc.delegate = self
+        } else {
+            if self.localFrc == nil { return }
+            self.localFrc.delegate = nil
+            try? self.localFrc.performFetch()
+            self.localFrc.delegate = self
+        }
         self.checkHelpShouldDisplay()
         self.tableView.reloadData()
     }
     
     @objc func databaseWillUpdate(_ notif: Notification) {
-        DispatchQueue.main.async { self.frc.delegate = nil }
+        DispatchQueue.main.async {
+            if self.container == .cloud {
+                self.ckFrc.delegate = nil
+            } else {
+                self.localFrc.delegate = nil
+            }
+        }
     }
     
     @objc func databaseDidUpdate(_ notif: Notification) {
         DispatchQueue.main.async {
-            self.frc.delegate = self
+            if self.container == .cloud {
+                self.ckFrc.delegate = self
+            } else {
+                self.localFrc.delegate = self
+            }
             self.reloadData()
         }
     }
     
     func checkHelpShouldDisplay() {
-        if self.frc.numberOfRows(in: 0) == 0 {
+        let frc = self.container == .cloud ? self.ckFrc : self.localFrc
+        let count = frc!.numberOfRows(in: 0)
+        if count == 0 {
             self.displayHelpText()
         } else {
             self.hideHelpText()
@@ -132,9 +156,10 @@ class ProjectListViewController: APITesterProViewController {
     }
     
     func reloadData() {
-        if self.frc == nil { return }
+        let frc = container == .cloud ? self.ckFrc : self.localFrc
+        if frc == nil { return }
         do {
-            try self.frc.performFetch()
+            try frc!.performFetch()
             self.checkHelpShouldDisplay()
             self.tableView.reloadData()
         } catch let error {
@@ -187,14 +212,20 @@ class ProjectListViewController: APITesterProViewController {
     func updateListingWorkspace(_ ws: EWorkspace) {
         if self.workspace == ws { return }
         self.workspace = ws
-        if let wsId = ws.id, let ctx = self.workspace.managedObjectContext {
-            let predicate = self.getFRCPredicate(wsId)
-            if let _frc = self.localdb.updateFetchResultsController(self.frc as! NSFetchedResultsController<NSFetchRequestResult>, predicate: predicate, ctx: ctx) as? NSFetchedResultsController<EProject> {
-                self.frc = _frc
-                self.frc.delegate = self
-                self.reloadData()
+        guard let wsId = ws.id, let ctx = self.workspace.managedObjectContext else { return }
+        let predicate = self.getFRCPredicate(wsId)
+        let frc = self.container == .cloud ? self.ckFrc : self.localFrc
+        if let _frc = self.localdb.updateFetchResultsController(frc as! NSFetchedResultsController<NSFetchRequestResult>, predicate: predicate, ctx: ctx) as? NSFetchedResultsController<EProject> {
+            if self.container == .cloud {
+                self.ckFrc = _frc
+                self.ckFrc.delegate = self
+            } else {
+                self.localFrc = _frc
+                self.localFrc.delegate = self
             }
         }
+        self.reloadData()
+        
     }
     
     func addSettingsBarButton() -> UIBarButtonItem {
@@ -348,13 +379,15 @@ extension ProjectListViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.frc == nil { return 0 }
-            return self.frc.numberOfRows(in: section)
+        let frc = self.container == .cloud ? self.ckFrc : self.localFrc
+        if frc == nil { return 0 }
+        return frc!.numberOfRows(in: section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: self.cellReuseId, for: indexPath) as! ProjectCell
-        let proj = self.frc.object(at: indexPath)
+        let frc = self.container == .cloud ? self.ckFrc : self.localFrc
+        let proj = frc!.object(at: indexPath)
         cell.nameLbl.text = proj.name
         let desc = self.getDesc(proj: proj)
         cell.descLbl.text = desc
@@ -369,7 +402,8 @@ extension ProjectListViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let proj = self.frc.object(at: indexPath)
+        let frc = self.container == .cloud ? self.ckFrc : self.localFrc
+        let proj = frc!.object(at: indexPath)
         AppState.currentProject = proj  // TODO: remove AppState.currentProject
         DispatchQueue.main.async {
             if let vc = UIStoryboard.requestListVC {
@@ -380,16 +414,17 @@ extension ProjectListViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let frc = self.container == .cloud ? self.ckFrc : self.localFrc
         let edit = UIContextualAction(style: .normal, title: "Edit") { action, view, completion in
             Log.debug("edit row: \(indexPath)")
-            let proj = self.frc.object(at: indexPath)
+            let proj = frc!.object(at: indexPath)
             self.viewEditPopup(proj)
             completion(true)
         }
         edit.backgroundColor = App.Color.lightPurple
         let delete = UIContextualAction(style: .destructive, title: "Delete") { action, view, completion in
             Log.debug("delete row: \(indexPath)")
-            let proj = self.frc.object(at: indexPath)
+            let proj = frc!.object(at: indexPath)
             self.localdbSvc.deleteEntity(proj: proj)
             // TODO: ck: delete project from cloud
             // self.db.deleteDataMarkedForDelete(proj, ctx: self.localdb.mainMOC)
@@ -402,7 +437,8 @@ extension ProjectListViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let proj = self.frc.object(at: indexPath)
+        let frc = self.container == .cloud ? self.ckFrc : self.localFrc
+        let proj = frc!.object(at: indexPath)
         let name = proj.name ?? ""
         let desc = self.getDesc(proj: proj)
         let w = tableView.frame.width
