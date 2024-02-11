@@ -592,7 +592,7 @@ class CoreDataService {
         var x: EWorkspace!
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
-            if let ws = self.getWorkspace(id: self.defaultWorkspaceId) {
+            if let ws = self.getWorkspace(id: self.defaultWorkspaceId, ctx: moc) {
                 x = ws
             } else {
                 // We create the default workspace with active flag as false. Only if any change by the user gets made, the flag is enabled. This helps in syncing from cloud.
