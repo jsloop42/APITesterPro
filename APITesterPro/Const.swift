@@ -31,6 +31,7 @@ struct Const {
     
     // User defaults keys
     static let selectedWorkspaceIdKey = "selectedWorkspaceId"
+    static let selectedWorkspaceContainerKey = "selectedWorkspaceContainer"
     /// The selected segment index in response screen.
     static let responseSegmentIndexKey = "responseSegmentIndex"
     
