@@ -231,6 +231,10 @@ class EACloudKit {
         }
     }
     
+    func isiCloudAvailable() async throws -> Bool {
+        return try await self.accountStatus() == CKAccountStatus.available
+    }
+    
     /// Returns whether the zone has been created for the given zone ID.
     func isZoneCreated(_ zoneID: CKRecordZone.ID) -> Bool {
         let key = "\(zoneID.zoneName)-created"

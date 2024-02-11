@@ -30,6 +30,7 @@ class WorkspaceListViewController: APITesterProViewController {
     private let nc = NotificationCenter.default
     private lazy var db = { CoreDataService.shared }()
     private lazy var dbSvc = { PersistenceService.shared }()
+    private lazy var ck = { EACloudKit.shared }()
     private var ckFrc: NSFetchedResultsController<EWorkspace>!
     private var localFrc: NSFetchedResultsController<EWorkspace>!
     private var wsSelected: EWorkspace!
@@ -245,6 +246,20 @@ class WorkspaceListViewController: APITesterProViewController {
     func addWorkspace(name: String, desc: String, isSyncEnabled: Bool) {
         self.dbSvc.createWorkspace(name: name, desc: desc, isSyncEnabled: isSyncEnabled)
         self.reloadData()
+        if isSyncEnabled {
+            self.checkIfiCloudEnabled()
+        }
+    }
+    
+    func checkIfiCloudEnabled() {
+        Task {
+            let iCloudAvailable = try? await self.ck.isiCloudAvailable() 
+            if !(iCloudAvailable ?? false) {
+                DispatchQueue.main.async {
+                    UI.viewToast("iCloud account not available. Sync will continue once account is available.", hideSec: 3.5, vc: self)
+                }
+            }
+        }
     }
 }
 
