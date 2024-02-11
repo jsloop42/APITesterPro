@@ -23,7 +23,6 @@ class App {
     var popupBottomContraints: NSLayoutConstraint?
     // private var dbSvc = PersistenceService.shared
     private lazy var localdb = { CoreDataService.shared }()
-    private lazy var ckSvc = { CloudSyncService.shared }()
     private let utils = EAUtils.shared
     private let nc = NotificationCenter.default
     private var appLaunched = false
@@ -66,7 +65,6 @@ class App {
     private func didFinishLaunchingImpl(window: UIWindow) {
         if !self.appLaunched {
             //self.localdb.bootstrap()
-            self.ckSvc.bootstrap()
             self.initUI(window.rootViewController as! UINavigationController)
             self.appLaunched = true
         }
