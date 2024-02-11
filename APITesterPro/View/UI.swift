@@ -383,9 +383,14 @@ class UI {
         return UIDevice.current.userInterfaceIdiom
     }
     
-    /// Returns the current device orientation. Portrait or Landscape.
+    /// Returns the current device orientation. Portrait, Landscape, FaceUp etc based on ground.
     static func getCurrentDeviceOrientation() -> UIDeviceOrientation {
         return UIDevice.current.orientation
+    }
+    
+    /// Get interface orientation. Returns Portrait or Landscape.
+    static func getInterfaceOrientation() -> UIInterfaceOrientation {
+        return UIApplication.shared.windows.first?.windowScene?.interfaceOrientation ?? UIInterfaceOrientation.portrait
     }
 }
 

@@ -195,7 +195,7 @@ class ProjectListViewController: APITesterProViewController {
             if self.workspace.isSyncEnabled {
                 return "icloud"
             }
-            let orientation = UI.getCurrentDeviceOrientation()
+            let orientation = UI.getInterfaceOrientation()
             if (orientation == .landscapeLeft || orientation == .landscapeRight) {
                 if (UI.getDeviceType() == .phone) {
                     return "iphone.landscape"
