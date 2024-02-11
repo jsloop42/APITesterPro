@@ -2052,6 +2052,7 @@
                                     <constraint firstAttribute="height" constant="44" id="a2U-fl-VeC"/>
                                 </constraints>
                                 <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="a1X-iS-4sn"/>
                                     <barButtonItem style="plain" id="LUC-jo-ub8">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="tailTruncation" id="Dd9-wm-Fq0">
                                             <rect key="frame" x="20" y="2.5" width="374" height="39"/>
@@ -2065,6 +2066,7 @@
                                             </connections>
                                         </button>
                                     </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="j6E-3B-j6k"/>
                                 </items>
                             </toolbar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="TNG-MA-upU">
