@@ -316,7 +316,7 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
             let cell = self.tableView.dequeueReusableCell(withIdentifier: TableCellId.workspaceCell.rawValue, for: indexPath) as! WorkspaceCell
             let ws = self.getWorkspace(indexPath: indexPath)
             cell.accessoryType = .none
-            if ws.id == self.wsSelected.id { cell.accessoryType = .checkmark }
+            if ws.id == self.wsSelected.id && ws.isSyncEnabled == self.wsSelected.isSyncEnabled { cell.accessoryType = .checkmark }
             cell.nameLbl.text = ws.name
             let desc = self.getDesc(ws: ws)
             cell.descLbl.text = desc
