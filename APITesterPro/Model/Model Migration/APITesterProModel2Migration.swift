@@ -21,6 +21,9 @@ class APITesterProModel2WorkspaceMigration: NSEntityMigrationPolicy {
             // Since we are creating new object, we need to copy all properties from the source to the new destination object manually.
             // If we want to instead update only one property we can also use the FUNCTION in the attribute mapping in the mapping file.
             var dInstance = NSEntityDescription.insertNewObject(forEntityName: mapping.destinationEntityName!, into: manager.destinationContext)
+            if sInstance.value(forKey: "syncDisabled") == nil {
+                sInstance.setValue(Date(), forKey: "syncDisabled")
+            }
             dInstance = cdUtils.copyAttributeValues(src: sInstance, dest: dInstance)
             // migrating this to value set as false
             dInstance.setValue(false, forKey: "isSyncEnabled")
