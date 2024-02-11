@@ -235,24 +235,24 @@ class CoreDataService {
         self.containerName = containerName
         self.bootstrap()
     }
-
+    
     func bootstrap() {
-        #if DEBUG
+#if DEBUG
         self.initCloudKitSchema()
-        #endif
+#endif
         try? self.ckMainMOC.save()
     }
     
     func initCloudKitSchema() {
-        #if DEBUG
-//        do {
-//            // Use the cloud container to initialize the development schema.
-//            Log.debug("ck: initializing cloudkit schema in dev mode")
-//            try self.ckPersistentContainer.initializeCloudKitSchema(options: [])
-//        } catch let error {
-//            Log.error(error)
-//        }
-        #endif
+#if DEBUG
+        //        do {
+        //            // Use the cloud container to initialize the development schema.
+        //            Log.debug("ck: initializing cloudkit schema in dev mode")
+        //            try self.ckPersistentContainer.initializeCloudKitSchema(options: [])
+        //        } catch let error {
+        //            Log.error(error)
+        //        }
+#endif
     }
     
     /// Returns the context if present or the cloudkit main context
@@ -466,7 +466,7 @@ class CoreDataService {
         }
         return frc
     }
-        
+    
     /// Updates the given fetch results controller predicate.
     /// - Parameters:
     ///   - frc: The fetch results controller.
@@ -941,8 +941,7 @@ class CoreDataService {
                     return "form.id"
                 }
             }()
-            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "%K == %@ AND type == %d", relKey, bodyDataId, _type)
-                : NSPredicate(format: "%K == %@ AND type == %d AND markForDelete == %hhd", relKey, bodyDataId, _type, isMarkForDelete!)  // ERequestBodyData.id
+            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "%K == %@ AND type == %d", relKey, bodyDataId, _type) : NSPredicate(format: "%K == %@ AND type == %d AND markForDelete == %hhd", relKey, bodyDataId, _type, isMarkForDelete!)  // ERequestBodyData.id
             fr.sortDescriptors = [NSSortDescriptor(key: "created", ascending: true)]
             fr.fetchBatchSize = self.fetchBatchSize
             do {
@@ -962,8 +961,7 @@ class CoreDataService {
     ///   - isMarkForDelete: Whether to include entities marked for deletion.
     ///   - ctx: The managed object context.
     /// - Returns: The request data entity.
-    func getFormRequestData(at index: Int, bodyDataId: String, type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC)
-        -> ERequestData? {
+    func getFormRequestData(at index: Int, bodyDataId: String, type: RequestDataType, isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> ERequestData? {
         var x: ERequestData?
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
@@ -975,8 +973,7 @@ class CoreDataService {
             }()
             let fr = NSFetchRequest<ERequestData>(entityName: "ERequestData")
             let _type = type.rawValue.toInt32()
-            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "%K == %@ AND type == %d", typeKey, bodyDataId, _type)
-                : NSPredicate(format: "%K == %@ AND type == %d AND markForDelete == %hhd", typeKey, bodyDataId, _type, isMarkForDelete!)
+            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "%K == %@ AND type == %d", typeKey, bodyDataId, _type) : NSPredicate(format: "%K == %@ AND type == %d AND markForDelete == %hhd", typeKey, bodyDataId, _type, isMarkForDelete!)
             fr.sortDescriptors = [NSSortDescriptor(key: "created", ascending: true)]
             do {
                 let xs = try moc.fetch(fr)
@@ -1182,8 +1179,7 @@ class CoreDataService {
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             let fr = NSFetchRequest<ERequest>(entityName: "ERequest")
-            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "id == %@ AND project.id == %@", reqMethId, projId)
-                : NSPredicate(format: "id == %@ AND markForDelete == %hhd AND project.id == %@", reqMethId, isMarkForDelete!, projId)
+            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "id == %@ AND project.id == %@", reqMethId, projId) : NSPredicate(format: "id == %@ AND markForDelete == %hhd AND project.id == %@", reqMethId, isMarkForDelete!, projId)
             do {
                 x = try moc.count(for: fr)
             } catch let error {
@@ -1278,8 +1274,7 @@ class CoreDataService {
         moc.performAndWait {
             let fr = NSFetchRequest<EFile>(entityName: "EFile")
             let _type = type.rawValue.toInt32()
-            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "requestData.id == %@ AND type == %d", reqDataId, _type)
-                : NSPredicate(format: "requestData.id == %@ AND type == %d AND markForDelete == %hdd", reqDataId, _type, isMarkForDelete!)
+            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "requestData.id == %@ AND type == %d", reqDataId, _type) : NSPredicate(format: "requestData.id == %@ AND type == %d AND markForDelete == %hdd", reqDataId, _type, isMarkForDelete!)
             fr.sortDescriptors = [NSSortDescriptor(key: "created", ascending: true)]
             do {
                 x = try moc.count(for: fr)
@@ -1303,8 +1298,7 @@ class CoreDataService {
         moc.performAndWait {
             let fr = NSFetchRequest<EFile>(entityName: "EFile")
             let _type = type.rawValue.toInt32()
-            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "requestData.id == %@ AND type == %d AND markForDelete == %hhd", reqDataId, _type)
-                : NSPredicate(format: "requestData.id == %@ AND type == %d AND markForDelete == %hhd", reqDataId, type.rawValue.toInt32(), isMarkForDelete!)
+            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "requestData.id == %@ AND type == %d AND markForDelete == %hhd", reqDataId, _type) : NSPredicate(format: "requestData.id == %@ AND type == %d AND markForDelete == %hhd", reqDataId, type.rawValue.toInt32(), isMarkForDelete!)
             fr.sortDescriptors = [NSSortDescriptor(key: "created", ascending: true)]
             fr.fetchBatchSize = self.fetchBatchSize
             do {
@@ -1328,8 +1322,7 @@ class CoreDataService {
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             let fr = NSFetchRequest<EFile>(entityName: "EFile")
-            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "requestData.id == %@", reqDataId)
-                : NSPredicate(format: "requestData.id == %@ AND markForDelete == %hhd", reqDataId, isMarkForDelete!)
+            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "requestData.id == %@", reqDataId) : NSPredicate(format: "requestData.id == %@ AND markForDelete == %hhd", reqDataId, isMarkForDelete!)
             fr.sortDescriptors = [NSSortDescriptor(key: "created", ascending: true)]
             do {
                 let xs = try moc.fetch(fr)
@@ -1352,8 +1345,7 @@ class CoreDataService {
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             let fr = NSFetchRequest<EFile>(entityName: "EFile")
-            fr.predicate = isMarkForDelete == nil ?  NSPredicate(format: "id == %@", id)
-                : NSPredicate(format: "id == %@ AND markForDelete == %hhd", id, isMarkForDelete!)
+            fr.predicate = isMarkForDelete == nil ?  NSPredicate(format: "id == %@", id) : NSPredicate(format: "id == %@ AND markForDelete == %hhd", id, isMarkForDelete!)
             do {
                 x = try moc.fetch(fr).first
             } catch let error {
@@ -1392,8 +1384,7 @@ class CoreDataService {
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             let fr = NSFetchRequest<EImage>(entityName: "EImage")
-            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "id == %@", id)
-                : NSPredicate(format: "id == %@ AND markForDelete == %hhd", id, isMarkForDelete!)
+            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "id == %@", id) : NSPredicate(format: "id == %@ AND markForDelete == %hhd", id, isMarkForDelete!)
             do {
                 x = try moc.fetch(fr).first
             } catch let error {
@@ -1410,8 +1401,7 @@ class CoreDataService {
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             let fr = NSFetchRequest<EHistory>(entityName: "EHistory")
-            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "id == %@", id)
-                : NSPredicate(format: "id == %@ AND markForDelete == %hhd", id, isMarkForDelete!)
+            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "id == %@", id) : NSPredicate(format: "id == %@ AND markForDelete == %hhd", id, isMarkForDelete!)
             do {
                 x = try moc.fetch(fr).first
             } catch let error {
@@ -1426,8 +1416,7 @@ class CoreDataService {
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             let fr = NSFetchRequest<EHistory>(entityName: "EHistory")
-            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "request.id == %@", reqId)
-                : NSPredicate(format: "request.id == %@ AND markForDelete == %hhd", reqId, isMarkForDelete!)
+            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "request.id == %@", reqId) : NSPredicate(format: "request.id == %@ AND markForDelete == %hhd", reqId, isMarkForDelete!)
             fr.sortDescriptors = [NSSortDescriptor(key: "created", ascending: false)]
             fr.fetchLimit = 1
             do {
@@ -1446,8 +1435,7 @@ class CoreDataService {
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             let fr = NSFetchRequest<EEnv>(entityName: "EEnv")
-            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "id == %@", id)
-                : NSPredicate(format: "id == %@ AND markForDelete == %hhd", id, isMarkForDelete!)
+            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "id == %@", id) : NSPredicate(format: "id == %@ AND markForDelete == %hhd", id, isMarkForDelete!)
             fr.fetchLimit = 1
             do {
                 x = try moc.fetch(fr).first
@@ -1457,7 +1445,7 @@ class CoreDataService {
         }
         return x
     }
-
+    
     func getEnvs(isMarkForDelete: Bool? = false, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> [EEnv] {
         var xs: [EEnv] = []
         let moc = self.getMainMOC(ctx: ctx)
@@ -1502,8 +1490,7 @@ class CoreDataService {
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             let fr = NSFetchRequest<EEnvVar>(entityName: "EEnvVar")
-            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "id == %@", id)
-                : NSPredicate(format: "id == %@ AND markForDelete == %hhd", id, isMarkForDelete!)
+            fr.predicate = isMarkForDelete == nil ? NSPredicate(format: "id == %@", id) : NSPredicate(format: "id == %@ AND markForDelete == %hhd", id, isMarkForDelete!)
             fr.fetchLimit = 1
             do {
                 x = try moc.fetch(fr).first
@@ -1586,29 +1573,6 @@ class CoreDataService {
         return x
     }
     
-    /// Removes duplicate default workspace from iCloud store. If there is not workspace a default workspace will be created in cloud store during app init. If a default workspace was already synced to iCloud before, it will get synced once the app starts running. But the default workspace has already been created with the same id.
-    /// So if it gets synced multiple workspaces with the same default Id will be created. Since projects refers to workspace using workspace Id, choosing any of the default workspace will list the projects. So we can safely delete duplicate default workspaces.
-    func deduplicateDefaultWorkspace() {
-        let moc = self.ckMainMOC
-        moc.performAndWait {
-            let fr = NSFetchRequest<EWorkspace>(entityName: "EWorkspace")
-            fr.predicate = NSPredicate(format: "id == %@", self.defaultWorkspaceId)
-            fr.sortDescriptors = [NSSortDescriptor(key: "modified", ascending: false)]
-            do {
-                var xs: [EWorkspace] = []
-                xs = try moc.fetch(fr)
-                let acc = xs.dropFirst()
-                acc.forEach { ws in
-                    Log.debug("ws: deleting duplicate default workspace from cloud store")
-                    self.deleteEntity(ws)
-                }
-                self.saveMainContext()
-            } catch let error {
-                Log.error("Error deduplicating workspace: \(error)")
-            }
-        }
-    }
-    
     func setWorkspaceSyncEnabled(_ state: Bool, ws: EWorkspace, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) {
         let moc = self.getMainMOC(ctx: ctx)
         let date = Date()
@@ -1685,7 +1649,7 @@ class CoreDataService {
         }
         return x
     }
-        
+    
     /// Create request data.
     /// - Parameters:
     ///   - id: The request data Id.
@@ -1888,7 +1852,7 @@ class CoreDataService {
         }
         return x
     }
-
+    
     func createEnvVar(name: String, value: String, id: String? = CoreDataService.shared.envVarId(), checkExists: Bool? = true, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EEnvVar? {
         var x: EEnvVar?
         let date = Date()
@@ -2073,17 +2037,39 @@ class CoreDataService {
             } catch let error { Log.error("Error saving child context: \(error)") }
         }
     }
-        
+    
     // MARK: - Delete
     
-//    func markEntityForDelete(_ entity: (any Entity)?) {
-//        guard let entity = entity else { return }
-//        entity.managedObjectContext?.performAndWait {
-//            entity.setMarkedForDelete(true)
-//            let ts = Date().currentTimeNanos()
-//            entity.setModified(ts)
-//        }
-//    }
+    /// Removes duplicate default workspace from iCloud store. If there is not workspace a default workspace will be created in cloud store during app init. If a default workspace was already synced to iCloud before, it will get synced once the app starts running. But the default workspace has already been created with the same id.
+    /// So if it gets synced multiple workspaces with the same default Id will be created. Here we keep the latest modified workspace and assigns all projects in other workspaces to this workspace and then deletes the extra workspace. This way the internal zworkspace id points to the right workspace in SQLite schema.
+    func deduplicateDefaultWorkspace() {
+        let moc = self.ckMainMOC
+        moc.performAndWait {
+            let fr = NSFetchRequest<EWorkspace>(entityName: "EWorkspace")
+            fr.predicate = NSPredicate(format: "id == %@", self.defaultWorkspaceId)
+            fr.sortDescriptors = [NSSortDescriptor(key: "modified", ascending: false)]
+            do {
+                var xs: [EWorkspace] = []
+                xs = try moc.fetch(fr)
+                if xs.count <= 1 { return }
+                let dws = xs.first
+                let acc = xs.dropFirst()
+                acc.forEach { ws in
+                    Log.debug("ws: deleting duplicate default workspace from cloud store")
+                    ws.projects?.allObjects.forEach({ proj in
+                        if let p = proj as? EProject {
+                            p.workspace = dws
+                        }
+                    })
+                    self.saveMainContext()
+                    self.deleteEntity(ws)
+                }
+                self.saveMainContext()
+            } catch let error {
+                Log.error("Error deduplicating workspace: \(error)")
+            }
+        }
+    }
     
     /// Resets the context to its base state if there are any changes.
     func discardChanges(in context: NSManagedObjectContext) {
@@ -2114,87 +2100,4 @@ class CoreDataService {
             moc.performAndWait { moc.delete(x) }
         }
     }
-    
-//    func deleteWorkspace(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-//        let moc = self.getMainMOC(ctx: ctx)
-//        self.deleteEntity(self.getWorkspace(id: id, isMarkForDelete: nil, ctx: moc))
-//    }
-//    
-//    func deleteProject(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-//        let moc = self.getMainMOC(ctx: ctx)
-//        self.deleteEntity(self.getProject(id: id, isMarkForDelete: nil, ctx: moc))
-//    }
-//    
-//    func deleteRequest(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-//        let moc = self.getMainMOC(ctx: ctx)
-//        self.deleteEntity(self.getRequest(id: id, isMarkForDelete: nil, ctx: moc))
-//    }
-//    
-//    func deleteRequestBodyData(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-//        let moc = self.getMainMOC(ctx: ctx)
-//        self.deleteEntity(self.getRequestBodyData(id: id, isMarkForDelete: nil, ctx: moc))
-//    }
-//    
-//    func deleteRequestData(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-//        let moc = self.getMainMOC(ctx: ctx)
-//        self.deleteEntity(self.getRequestData(id: id, isMarkForDelete: nil, ctx: moc))
-//    }
-//    
-//    func deleteRequestMethodData(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-//        let moc = self.getMainMOC(ctx: ctx)
-//        self.deleteEntity(self.getRequestMethodData(id: id, isMarkForDelete: nil, ctx: moc))
-//    }
-//    
-//    func deleteFileData(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-//        let moc = self.getMainMOC(ctx: ctx)
-//        self.deleteEntity(self.getFileData(id: id, isMarkForDelete: nil, ctx: moc))
-//    }
-//    
-//    func deleteImageData(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-//        let moc = self.getMainMOC(ctx: ctx)
-//        self.deleteEntity(self.getImageData(id: id, isMarkForDelete: nil, ctx: moc))
-//    }
-//    
-//    func deleteHistory(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-//        let moc = self.getMainMOC(ctx: ctx)
-//        self.deleteEntity(self.getHistory(id: id, isMarkForDelete: nil, ctx: moc))
-//    }
-//    
-//    func deleteEnv(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-//        let moc = self.getMainMOC(ctx: ctx)
-//        self.deleteEntity(self.getEnv(id: id, isMarkForDelete: nil, ctx: moc))
-//    }
-//    
-//    func deleteEnvVar(id: String, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-//        let moc = self.getMainMOC(ctx: ctx)
-//        self.deleteEntity(self.getEnvVar(id: id, isMarkForDelete: nil, ctx: moc))
-//    }
-//    
-//    /// Delete the entity with the given id.
-//    /// - Parameters:
-//    ///   - dataId: The entity id. If the entity could be `RequestData` or `RequestBodyData`.
-//    ///   - req: The request to which the entity belongs.
-//    ///   - type: The entity type.
-//    ///   - ctx: The managed object context.
-//    func deleteRequestData(dataId: String, req: ERequest, type: RequestCellType, ctx: NSManagedObjectContext? = CoreDataService.shared.mainMOC) {
-//        let moc = self.getMainMOC(ctx: ctx)
-//        moc.performAndWait {
-//            var x: Entity?
-//            switch type {
-//            case .header:
-//                x = self.getRequestData(id: dataId, isMarkForDelete: nil, ctx: moc)
-//                if let y = x as? ERequestData { req.removeFromHeaders(y) }
-//            case .param:
-//                x = self.getRequestData(id: dataId, isMarkForDelete: nil, ctx: ctx)
-//                if let y = x as? ERequestData { req.removeFromParams(y) }
-//            case .body:
-//                x = self.getRequestBodyData(id: dataId, isMarkForDelete: nil, ctx: moc)
-//                if x != nil { req.body = nil }
-//            default:
-//                break
-//            }
-//            if let y = x { moc.delete(y) }
-//            Log.debug("Deleted data id: \(dataId)")
-//        }
-//    }
 }
