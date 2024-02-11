@@ -15,7 +15,6 @@
 		9E23EAB92B63F885008B6374 /* APITesterProModel2Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E23EAB82B63F885008B6374 /* APITesterProModel2Migration.swift */; };
 		9E23EABB2B640039008B6374 /* APITesterPro2MappingModel.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 9E23EABA2B640039008B6374 /* APITesterPro2MappingModel.xcmappingmodel */; };
 		9E23EABD2B64F471008B6374 /* EACoreDataUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E23EABC2B64F471008B6374 /* EACoreDataUtils.swift */; };
-		9E419AF42B407075002FA0D1 /* CloudSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E419AF32B407075002FA0D1 /* CloudSyncService.swift */; };
 		9E4875E72AF56DD000D624DA /* APITesterPro.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9E4875E52AF56DD000D624DA /* APITesterPro.xcdatamodeld */; };
 		9E4875E82AF5856A00D624DA /* AppDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D0812AF44CBF004095CF /* AppDelegateMock.swift */; };
 		9E571CE62B24B7F60090F1CF /* EAExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E571CE52B24B7F60090F1CF /* EAExtensionsTests.swift */; };
@@ -138,7 +137,6 @@
 		9E23EAB82B63F885008B6374 /* APITesterProModel2Migration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITesterProModel2Migration.swift; sourceTree = "<group>"; };
 		9E23EABA2B640039008B6374 /* APITesterPro2MappingModel.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = APITesterPro2MappingModel.xcmappingmodel; sourceTree = "<group>"; };
 		9E23EABC2B64F471008B6374 /* EACoreDataUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EACoreDataUtils.swift; sourceTree = "<group>"; };
-		9E419AF32B407075002FA0D1 /* CloudSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSyncService.swift; sourceTree = "<group>"; };
 		9E4875E62AF56DD000D624DA /* APITesterPro.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = APITesterPro.xcdatamodel; sourceTree = "<group>"; };
 		9E4875EB2AF590A300D624DA /* APITesterPro.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = APITesterPro.xctestplan; sourceTree = "<group>"; };
 		9E571CE52B24B7F60090F1CF /* EAExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EAExtensionsTests.swift; sourceTree = "<group>"; };
@@ -427,7 +425,6 @@
 			children = (
 				9E81D0D62AF451F7004095CF /* CoreDataService.swift */,
 				9E04F4FC2B138F38007A0773 /* PersistenceService.swift */,
-				9E419AF32B407075002FA0D1 /* CloudSyncService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -742,7 +739,6 @@
 				9E81D1222AF45235004095CF /* WorkspaceListViewController.swift in Sources */,
 				9E81D1132AF45221004095CF /* ResponseTableViewController.swift in Sources */,
 				9ECA32FF2B417D4000B4B937 /* EAPopQueue.swift in Sources */,
-				9E419AF42B407075002FA0D1 /* CloudSyncService.swift in Sources */,
 				9E81D1102AF45218004095CF /* RequestListViewController.swift in Sources */,
 				9E81D12F2AF45241004095CF /* UI.swift in Sources */,
 				9E81D0CD2AF451EA004095CF /* EARepeatTimer.swift in Sources */,

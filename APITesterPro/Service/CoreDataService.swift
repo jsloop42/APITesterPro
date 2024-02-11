@@ -238,18 +238,22 @@ class CoreDataService {
 
     func bootstrap() {
         #if DEBUG
-        do {
-            // Use the cloud container to initialize the development schema.
-            Log.debug("ck: initializing cloudkit schema in dev mode")
-            try self.ckPersistentContainer.initializeCloudKitSchema(options: [])
-        } catch let error {
-            Log.error(error)
-        }
+        self.initCloudKitSchema()
         #endif
-        // test
-        Log.debug("ck \(self.ckPersistentContainer)")
         try? self.ckMainMOC.save()
         // end test
+    }
+    
+    func initCloudKitSchema() {
+        #if DEBUG
+//        do {
+//            // Use the cloud container to initialize the development schema.
+//            Log.debug("ck: initializing cloudkit schema in dev mode")
+//            try self.ckPersistentContainer.initializeCloudKitSchema(options: [])
+//        } catch let error {
+//            Log.error(error)
+//        }
+        #endif
     }
     
     /// Returns the context if present or the cloudkit main context

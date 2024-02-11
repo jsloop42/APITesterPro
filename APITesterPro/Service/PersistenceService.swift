@@ -13,7 +13,6 @@ import CoreData
 class PersistenceService {
     static var shared = PersistenceService()
     private lazy var db = { CoreDataService.shared }()
-    private lazy var ckSvc = { CloudSyncService.shared }()
     
     // MARK: - Create entities
     
