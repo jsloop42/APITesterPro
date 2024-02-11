@@ -245,6 +245,7 @@ class ProjectListViewController: APITesterProViewController {
     @objc func workspaceDidChange(_ notif: Notification) {
         Log.debug("workspace did change notif")
         if let info = notif.userInfo, let ws = info["workspace"] as? EWorkspace {
+            self.app.setSelectedWorkspace(ws)
             self.updateListingWorkspace(ws)
             self.updateWorkspaceTitle(ws.getName())
             self.updateWorkspaceTypeIcon()
