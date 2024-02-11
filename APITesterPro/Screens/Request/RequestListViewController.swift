@@ -217,8 +217,6 @@ extension RequestListViewController: UITableViewDelegate, UITableViewDataSource 
             let req = self.frc.object(at: indexPath)
             self.localdbSvc.deleteEntity(req: req)
             self.localdb.saveMainContext()
-            // TODO: ck: delete data marked for delete request
-            // self.db.deleteDataMarkedForDelete(req, ctx: self.localdb.mainMOC)
             self.updateData()
             completion(true)
         }

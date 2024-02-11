@@ -429,8 +429,6 @@ extension ProjectListViewController: UITableViewDelegate, UITableViewDataSource 
             Log.debug("delete row: \(indexPath)")
             let proj = frc!.object(at: indexPath)
             self.localdbSvc.deleteEntity(proj: proj)
-            // TODO: ck: delete project from cloud
-            // self.db.deleteDataMarkedForDelete(proj, ctx: self.localdb.mainMOC)
             self.updateData()
             completion(true)
         }
