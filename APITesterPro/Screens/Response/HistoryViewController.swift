@@ -245,8 +245,6 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
             let history = self.historyForRow(row, isToday: isToday)
             self.localdbSvc.deleteEntity(history: history)
             self.localdb.saveMainContext()
-            // TODO: delete data marked for delete history
-            // self.db.deleteDataMarkedForDelete(history: history, wsId: history.getWsId(), ctx: self.localDB.mainMOC)
             self.updateData()
             completion(true)
         }

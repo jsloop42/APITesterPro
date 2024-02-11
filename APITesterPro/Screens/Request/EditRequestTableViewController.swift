@@ -425,10 +425,6 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
             if let tabvc = self.tabBarController as? RequestTabBarController, let ctx = data.managedObjectContext {
                 tabvc.updateRequest(reqId: data.getId(), ctx: ctx)
             }
-            // TODO: save to cloud
-            // self.db.saveRequestToCloud(data)
-            // TODO: delete data marked for delete
-            // self.db.deleteDataMarkedForDelete(self.app.editReqDelete)
             self.nc.post(name: .requestDidChange, object: self, userInfo: ["request": data])
             self.shouldPop = true
             self.close()

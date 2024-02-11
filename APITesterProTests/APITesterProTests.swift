@@ -793,8 +793,6 @@ class APITesterProTests: XCTestCase {
                 XCTAssertEqual(req!.body!.form!.count, 1)
                 self.localdb.saveMainContext()
                 // delete entities starting from workspace
-                // TODO: fix me
-                // self.dbSvc.deleteDataMarkedForDelete(ws!, isDeleteFromCloud: false, ctx: ctx)
                 // ensure entities are deleted
                 let ws1 = self.localdb.getWorkspace(id: wsId, ctx: ctx)
                 XCTAssertNil(ws1)

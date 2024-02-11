@@ -114,8 +114,6 @@ extension EnvironmentGroupViewController: UITableViewDelegate, UITableViewDataSo
             let env = self.frc.object(at: indexPath)
             self.localdbSvc.deleteEntity(env: env)
             self.localdb.saveMainContext()
-            // TODO: delete data marked for delete env
-            // self.db.deleteDataMarkedForDelete(env, ctx: self.localDB.mainMOC)
             self.updateData()
             completion(true)
         }

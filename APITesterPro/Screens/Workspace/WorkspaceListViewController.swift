@@ -362,8 +362,6 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
                     self.wsSelected = !wss.isEmpty ? wss.first! : self.db.getDefaultWorkspace()
                 }
                 self.dbSvc.deleteEntity(ws: ws)
-                // TODO: ck: delete ws marked for delete
-                // self.db.deleteDataMarkedForDelete(ws, ctx: self.localdb.mainMOC)
                 self.updateData()
                 completion(true)
             }

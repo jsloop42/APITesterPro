@@ -108,8 +108,6 @@ class EnvironmentVariableTableViewController: UITableViewController {
             let envVar = self.frc.object(at: indexPath)
             self.localdbSvc.deleteEntity(envVar: envVar)
             self.localdb.saveMainContext()
-            // TODO: delete data marked for delete envvar
-            // self.db.deleteDataMarkedForDelete(envVar, ctx: self.localDB.mainMOC)
             self.updateData()
             completion(true)
         }
