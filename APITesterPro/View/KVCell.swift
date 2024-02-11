@@ -12,8 +12,8 @@ import UIKit
 /// A cell with two column layout which can be used for displaying key value pair data.
 /// Example usage: display response header key value pairs.
 class KVCell: UITableViewCell {
-    @IBOutlet weak var keyLabel: UILabel!
-    @IBOutlet weak var valueLabel: UILabel!
+    @IBOutlet weak var keyLabel: EACopiableLabel!
+    @IBOutlet weak var valueLabel: EACopiableLabel!
     @IBOutlet weak var borderView: UIView!
     
     func hideBorder() {
