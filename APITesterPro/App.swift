@@ -308,6 +308,12 @@ class App {
         }
         return color!
     }
+    
+    func getWorkspaceTypeString(_ ws: EWorkspace) -> String {
+        let container = self.localdb.getContainer(ws.managedObjectContext!)
+        if (container == .cloud) { return "iCloud" }
+        return "Local"
+    }
 
     // MARK: - Theme
     public struct Color {

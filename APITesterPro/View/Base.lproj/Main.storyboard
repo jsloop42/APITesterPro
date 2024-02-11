@@ -930,22 +930,25 @@
                                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="yay-7d-mzJ">
                                                             <rect key="frame" x="18" y="0.0" width="378" height="53"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sync Workspace" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mo6-iF-p9J" userLabel="Sync workspace label">
-                                                                    <rect key="frame" x="0.0" y="17.5" width="321" height="18"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Workspace Type" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mo6-iF-p9J" userLabel="Sync workspace label">
+                                                                    <rect key="frame" x="0.0" y="17.5" width="326" height="18"/>
                                                                     <color key="backgroundColor" name="table-view-cell-bg"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cqP-nE-XVj" userLabel="Sync workspace switch">
-                                                                    <rect key="frame" x="329" y="11" width="51" height="31"/>
-                                                                    <color key="backgroundColor" name="table-view-cell-bg"/>
-                                                                </switch>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="iCloud" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Xd-Zr-sLQ">
+                                                                    <rect key="frame" x="334" y="17.5" width="44" height="18"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
                                                             </subviews>
                                                             <constraints>
-                                                                <constraint firstItem="cqP-nE-XVj" firstAttribute="leading" secondItem="Mo6-iF-p9J" secondAttribute="trailing" constant="8" id="7GE-ZR-hft"/>
+                                                                <constraint firstItem="1Xd-Zr-sLQ" firstAttribute="centerY" secondItem="yay-7d-mzJ" secondAttribute="centerY" id="An4-BH-Ko8"/>
                                                                 <constraint firstItem="Mo6-iF-p9J" firstAttribute="centerY" secondItem="yay-7d-mzJ" secondAttribute="centerY" id="BVS-um-dnu"/>
                                                                 <constraint firstItem="Mo6-iF-p9J" firstAttribute="leading" secondItem="yay-7d-mzJ" secondAttribute="leading" id="DJe-w2-Vj7"/>
+                                                                <constraint firstItem="1Xd-Zr-sLQ" firstAttribute="leading" secondItem="Mo6-iF-p9J" secondAttribute="trailing" constant="8" id="K8q-7L-h71"/>
                                                             </constraints>
                                                         </stackView>
                                                     </subviews>
@@ -1518,7 +1521,7 @@
                     <connections>
                         <outlet property="aboutTitle" destination="ICp-ab-cHz" id="oIq-R9-F7A"/>
                         <outlet property="saveHistorySwitch" destination="5sE-E6-Dy6" id="7qZ-ca-muF"/>
-                        <outlet property="syncWorkspaceSwitch" destination="cqP-nE-XVj" id="UwJ-GH-er4"/>
+                        <outlet property="workspaceTypeLabel" destination="1Xd-Zr-sLQ" id="lfj-Vm-11b"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LTw-9g-cdj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
