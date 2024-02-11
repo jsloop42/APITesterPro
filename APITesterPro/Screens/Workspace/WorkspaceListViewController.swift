@@ -367,7 +367,7 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
                 self.updateData()
                 completion(true)
             }
-            let swipeActionConfig = UISwipeActionsConfiguration(actions: ws.isInDefaultMode ? [edit] : [delete, edit])
+            let swipeActionConfig = UISwipeActionsConfiguration(actions: [delete, edit])
             swipeActionConfig.performsFirstActionWithFullSwipe = false
             return swipeActionConfig
         }
