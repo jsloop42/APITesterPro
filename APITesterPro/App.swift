@@ -241,23 +241,32 @@ class App {
     func getSelectedWorkspace() -> EWorkspace {
         if AppState.currentWorkspace != nil { return AppState.currentWorkspace! }
         let wsId = self.utils.getValue(Const.selectedWorkspaceIdKey) as? String ?? ""
-        if !wsId.isEmpty, let ws = self.localdb.getWorkspace(id: wsId) {
+        let container = self.utils.getValue(Const.selectedWorkspaceContainerKey) as? String ?? CoreDataContainer.cloud.rawValue
+        if !wsId.isEmpty, let ws = self.localdb.getWorkspace(id: wsId, ctx: container == CoreDataContainer.cloud.rawValue ? self.localdb.ckMainMOC : self.localdb.localMainMOC) {
             AppState.currentWorkspace = ws
             return ws
         }
         let ws = self.localdb.getDefaultWorkspace()
         Log.debug("ws: \(ws)")
         self.saveSelectedWorkspaceId(ws.getId())
+        self.saveSelectedWorkspaceContainer(self.localdb.getContainer(ws.managedObjectContext!))
         return ws
     }
     
     func setSelectedWorkspace(_ ws: EWorkspace) {
         AppState.currentWorkspace = ws
-        if let wsId = ws.id { self.saveSelectedWorkspaceId(wsId) }
+        if let wsId = ws.id {
+            self.saveSelectedWorkspaceId(wsId)
+            self.saveSelectedWorkspaceContainer(self.localdb.getContainer(ws.managedObjectContext!))
+        }
     }
     
     func saveSelectedWorkspaceId(_ id: String) {
         self.utils.setValue(key: Const.selectedWorkspaceIdKey, value: id)
+    }
+    
+    func saveSelectedWorkspaceContainer(_ container: CoreDataContainer) {
+        self.utils.setValue(key: Const.selectedWorkspaceContainerKey, value: container.rawValue)
     }
     
     func didReceiveMemoryWarning() {

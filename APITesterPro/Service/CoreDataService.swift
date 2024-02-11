@@ -127,9 +127,9 @@ public enum SortOrder: String {
     case created = "created"
 }
 
-public enum CoreDataContainer {
-    case local
-    case cloud
+public enum CoreDataContainer: String {
+    case local = "local"
+    case cloud = "cloud"
 }
 
 class CoreDataService {
@@ -248,8 +248,6 @@ class CoreDataService {
         #endif
         // test
         Log.debug("ck \(self.ckPersistentContainer)")
-        let ws = self.createWorkspace(id: "ck-ws-test", name: "ck-ws-test", desc: "", isSyncEnabled: true, ctx: self.ckMainMOC)
-        Log.debug("ws: \(ws)")
         try? self.ckMainMOC.save()
         // end test
     }
