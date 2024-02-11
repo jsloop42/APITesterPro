@@ -377,6 +377,16 @@ class UI {
                 .last { $0.isKeyWindow }
         }
     }
+    
+    /// Returns the current device type. iPhone or iPad.
+    static func getDeviceType() -> UIUserInterfaceIdiom {
+        return UIDevice.current.userInterfaceIdiom
+    }
+    
+    /// Returns the current device orientation. Portrait or Landscape.
+    static func getCurrentDeviceOrientation() -> UIDeviceOrientation {
+        return UIDevice.current.orientation
+    }
 }
 
 extension UIView {

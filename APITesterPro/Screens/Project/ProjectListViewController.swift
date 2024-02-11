@@ -65,6 +65,18 @@ class ProjectListViewController: APITesterProViewController {
         self.tableView.estimatedRowHeight = 44
         self.tableView.rowHeight = UITableView.automaticDimension
         self.app.updateNavigationControllerBackground(self.navigationController)
+        // workspace type button configuration
+        if #available(iOS 15.0, *) {
+            var config = UIButton.Configuration.plain()
+            config.buttonSize = .small
+            config.imagePadding = 4
+            config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(scale: .medium)
+            self.workspaceBtn.configuration = config
+            self.workspaceBtn.imageView?.contentMode = .scaleAspectFit
+        } else {
+            self.workspaceBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 8)
+        }
+        self.updateWorkspaceTypeIcon()
     }
     
     func initEvent() {
@@ -72,6 +84,7 @@ class ProjectListViewController: APITesterProViewController {
         self.nc.addObserver(self, selector: #selector(self.databaseDidUpdate(_:)), name: .databaseDidUpdate, object: nil)
         self.nc.addObserver(self, selector: #selector(self.workspaceDidSync(_:)), name: .workspaceDidSync, object: nil)
         self.nc.addObserver(self, selector: #selector(self.workspaceDidChange(_:)), name: .workspaceDidChange, object: nil)
+        self.nc.addObserver(self, selector: #selector(self.orientationDidChange), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     func getFRCPredicate(_ wsId: String) -> NSPredicate {
@@ -144,7 +157,31 @@ class ProjectListViewController: APITesterProViewController {
     }
     
     func updateWorkspaceTitle(_ name: String) {
-        DispatchQueue.main.async { self.workspaceBtn.setTitle(name, for: .normal) }
+        DispatchQueue.main.async { 
+            self.workspaceBtn.setTitle(name, for: .normal)
+            self.workspaceBtn.titleLabel?.font = App.Font.font15
+        }
+    }
+    
+    func updateWorkspaceTypeIcon() {
+        let imageName: String = {
+            if self.workspace.isSyncEnabled {
+                return "icloud"
+            }
+            let orientation = UI.getCurrentDeviceOrientation()
+            if (orientation == .landscapeLeft || orientation == .landscapeRight) {
+                if (UI.getDeviceType() == .phone) {
+                    return "iphone.landscape"
+                }
+                return "ipad.landscape"
+            }
+            if (UI.getDeviceType() == .phone) {
+                return "iphone"
+            }
+            return "ipad"
+        }()
+        self.workspaceBtn.setImage(UIImage(systemName: imageName), for: .normal)
+        
     }
     
     func updateListingWorkspace(_ ws: EWorkspace) {
@@ -208,9 +245,15 @@ class ProjectListViewController: APITesterProViewController {
     @objc func workspaceDidChange(_ notif: Notification) {
         Log.debug("workspace did change notif")
         if let info = notif.userInfo, let ws = info["workspace"] as? EWorkspace {
-            self.updateWorkspaceTitle(ws.getName())
             self.updateListingWorkspace(ws)
+            self.updateWorkspaceTitle(ws.getName())
+            self.updateWorkspaceTypeIcon()
         }
+    }
+    
+    @objc func orientationDidChange() {
+        Log.debug("orientation changed")
+        self.updateWorkspaceTypeIcon()
     }
     
     @IBSegueAction func workspaceSegue(_ coder: NSCoder) -> WorkspaceListViewController? {

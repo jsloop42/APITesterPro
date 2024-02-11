@@ -424,6 +424,7 @@ class App {
             return UIFont(name: "Menlo-Regular", size: 14)!
         }()
         static let font17 = UIFont.systemFont(ofSize: 17)
+        static let font16 = UIFont.systemFont(ofSize: 16)
         static let font15 = UIFont.systemFont(ofSize: 15)
     }
 }
