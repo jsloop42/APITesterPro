@@ -339,7 +339,9 @@ public extension Date {
         let df = DateFormatter()
         df.timeZone = .current
         df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
-        return df.date(from: str)!
+        let d = df.date(from: str)
+        if d == nil { return Date() }
+        return d!
     }
     
     /// Converts the date string to UTC date
@@ -347,7 +349,9 @@ public extension Date {
         let df = DateFormatter()
         df.timeZone = TimeZone(abbreviation: "UTC")
         df.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
-        return df.date(from: str)!
+        let d = df.date(from: str)
+        if d == nil { return Date() }
+        return d!
     }
     
     /// Converts a date in local time zone to UTC date
