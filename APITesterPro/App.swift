@@ -239,9 +239,10 @@ class App {
     
     /// Returns the current workspace
     func getSelectedWorkspace() -> EWorkspace {
-        if AppState.currentWorkspace != nil { return AppState.currentWorkspace! }
+        // if AppState.currentWorkspace != nil { return AppState.currentWorkspace! }
         let wsId = self.utils.getValue(Const.selectedWorkspaceIdKey) as? String ?? ""
         let container = self.utils.getValue(Const.selectedWorkspaceContainerKey) as? String ?? CoreDataContainer.cloud.rawValue
+        Log.debug("ws: selected container: \(container)")
         if !wsId.isEmpty, let ws = self.localdb.getWorkspace(id: wsId, ctx: container == CoreDataContainer.cloud.rawValue ? self.localdb.ckMainMOC : self.localdb.localMainMOC) {
             AppState.currentWorkspace = ws
             return ws

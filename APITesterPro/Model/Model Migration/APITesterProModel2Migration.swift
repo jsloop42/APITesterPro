@@ -11,6 +11,9 @@ import CoreData
 
 class APITesterProModel2WorkspaceMigration: NSEntityMigrationPolicy {
     private let cdUtils = EACoreDataUtils.shared
+    private lazy var app = { App.shared }()
+    private lazy var localdb = { CoreDataService.shared }()
+    private let nc = NotificationCenter.default
     
     override func createDestinationInstances(forSource sInstance: NSManagedObject, in mapping: NSEntityMapping, manager: NSMigrationManager) throws {
         Log.debug("cd: model migration from v1 to v2")
@@ -22,6 +25,10 @@ class APITesterProModel2WorkspaceMigration: NSEntityMigrationPolicy {
             // migrating this to value set as false
             dInstance.setValue(false, forKey: "isSyncEnabled")
             Log.debug("cd: model migration workspace: set isSyncEnabled to false for \(String(describing: sInstance.value(forKey: "name")))")
+            AppState.currentWorkspace = nil
+            self.app.saveSelectedWorkspaceId(self.localdb.defaultWorkspaceId)
+            self.app.saveSelectedWorkspaceContainer(.local)
+            self.nc.post(name: .workspaceDidSync, object: self)
             manager.associate(sourceInstance: sInstance, withDestinationInstance: dInstance, for: mapping)
         } else {
              Log.debug("cd: model migration: no custom change")

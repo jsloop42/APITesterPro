@@ -22,6 +22,7 @@ class ProjectListViewController: APITesterProViewController {
     private var workspace: EWorkspace! {
         didSet {
             self.container = self.localdb.getContainer(self.workspace.managedObjectContext!)
+            self.reloadData()
         }
     }
     private var container: CoreDataContainer = .cloud
@@ -161,6 +162,7 @@ class ProjectListViewController: APITesterProViewController {
         do {
             try frc!.performFetch()
             self.checkHelpShouldDisplay()
+            self.updateWorkspaceTypeIcon()
             self.tableView.reloadData()
         } catch let error {
             Log.error("Error fetching: \(error)")
@@ -239,6 +241,7 @@ class ProjectListViewController: APITesterProViewController {
         DispatchQueue.main.async {
             self.workspace = self.app.getSelectedWorkspace()
             self.updateWorkspaceTitle(self.workspace.name ?? "")
+            self.updateWorkspaceTypeIcon()
         }
     }
     
