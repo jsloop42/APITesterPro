@@ -33,10 +33,10 @@ class EmptyMessageCell: UITableViewCell {
     func initUI() {
         self.addSubview(self.messageLabel)
         NSLayoutConstraint.activate([
-            self.messageLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            self.messageLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
             self.messageLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             self.messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            self.messageLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
+            self.messageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
         ])
     }
     
