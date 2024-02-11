@@ -81,6 +81,8 @@ class WorkspaceListViewController: APITesterProViewController {
     }
     
     func initData() {
+        // remove any duplicate default workspace from iCloud syncing
+        self.db.deduplicateDefaultWorkspace()
         // iCloud workspace
         if self.ckFrc == nil {
             if let _frc = self.db.getFetchResultsController(obj: EWorkspace.self, predicate: NSPredicate(format: "name != %@", ""), ctx: self.db.ckMainMOC) as? NSFetchedResultsController<EWorkspace> {

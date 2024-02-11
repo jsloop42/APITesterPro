@@ -20,6 +20,16 @@ public class EWorkspace: NSManagedObject, Entity {
         return self.id == Self.db.defaultWorkspaceId && self.name == Self.db.defaultWorkspaceName && self.desc == Self.db.defaultWorkspaceDesc && (self.projects == nil || self.projects!.isEmpty)
     }
     
+    public override func awakeFromInsert() {
+        Log.debug("workspace is created \(self)")
+        super.awakeFromInsert()
+    }
+    
+    public override func willSave() {
+        Log.debug("worspace will save: \(self)")
+        super.willSave()
+    }
+    
     public func getId() -> String {
         return self.id ?? ""
     }
@@ -66,10 +76,6 @@ public class EWorkspace: NSManagedObject, Entity {
     
     public func setMarkedForDelete(_ status: Bool) {
         self.markForDelete = status
-    }
-    
-    public override func willSave() {
-        //if self.modified < AppState.editRequestSaveTs { self.modified = AppState.editRequestSaveTs }
     }
     
     static func getWorkspace(_ record: CKRecord, ctx: NSManagedObjectContext) -> EWorkspace? {
