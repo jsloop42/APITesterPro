@@ -14,7 +14,7 @@ import MessageUI
 class SettingsTableViewController: APITesterProTableViewController {
     private let app = App.shared
     @IBOutlet weak var saveHistorySwitch: UISwitch!
-    @IBOutlet weak var syncWorkspaceSwitch: UISwitch!
+    @IBOutlet weak var workspaceTypeLabel: UILabel!
     private lazy var localDB = { CoreDataService.shared }()
     // private lazy var db = { PersistenceService.shared }()
     private lazy var workspace = { self.app.getSelectedWorkspace() }()
@@ -62,7 +62,7 @@ class SettingsTableViewController: APITesterProTableViewController {
         self.tableView.estimatedRowHeight = 44
         self.tableView.rowHeight = UITableView.automaticDimension
         self.saveHistorySwitch.isOn = self.workspace.saveResponse
-        self.syncWorkspaceSwitch.isOn = self.workspace.isSyncEnabled
+        self.workspaceTypeLabel.text = self.app.getWorkspaceTypeString(self.workspace)
         self.updateAbout()
     }
     
@@ -74,7 +74,6 @@ class SettingsTableViewController: APITesterProTableViewController {
     
     func initEvents() {
         self.saveHistorySwitch.addTarget(self, action: #selector(self.saveHistorySwitchDidChange(_:)), for: .valueChanged)
-        self.syncWorkspaceSwitch.addTarget(self, action: #selector(self.syncWorkspaceSwitchDidChange(_:)), for: .valueChanged)
     }
     
     func rateApp() {
@@ -111,20 +110,6 @@ class SettingsTableViewController: APITesterProTableViewController {
                 }
             }
             self.present(activityVC, animated: true, completion: nil)
-        }
-    }
-    
-    @objc func syncWorkspaceSwitchDidChange(_ sender: UISwitch) {
-        Log.debug("sync workspace switch did change")
-        self.workspace.isSyncEnabled = self.syncWorkspaceSwitch.isOn
-        self.localDB.saveMainContext()
-        // TODO: save workspace to cloud
-        // self.db.saveWorkspaceToCloud(self.workspace)
-        if self.workspace.isSyncEnabled {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {  // sync any pending changes
-                // TODO: ck: sync enabled for workspace. Queue it
-                // self.db.syncToCloud()
-            }
         }
     }
     
