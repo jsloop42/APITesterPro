@@ -100,6 +100,7 @@
 		9E81D14D2AF452DE004095CF /* EARepeatTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1472AF452DE004095CF /* EARepeatTimerTests.swift */; };
 		9E81D14E2AF452DE004095CF /* EAUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1482AF452DE004095CF /* EAUtilsTests.swift */; };
 		9E81D14F2AF452DE004095CF /* EAQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1492AF452DE004095CF /* EAQueueTests.swift */; };
+		9EBE3C8C2B79363600EE8A0B /* EACopiableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE3C8B2B79363600EE8A0B /* EACopiableLabel.swift */; };
 		9ECA32FD2B415F5700B4B937 /* CloudSyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECA32FC2B415F5700B4B937 /* CloudSyncTests.swift */; };
 		9ECA32FF2B417D4000B4B937 /* EAPopQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECA32FE2B417D4000B4B937 /* EAPopQueue.swift */; };
 		9ECA33012B41825100B4B937 /* EAPopQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECA33002B41825100B4B937 /* EAPopQueueTests.swift */; };
@@ -229,6 +230,7 @@
 		9E81D1492AF452DE004095CF /* EAQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAQueueTests.swift; sourceTree = "<group>"; };
 		9E81D1502AF45302004095CF /* APITesterProTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "APITesterProTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		9EBAD0992B60D76F00E172A1 /* APITesterPro 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "APITesterPro 2.xcdatamodel"; sourceTree = "<group>"; };
+		9EBE3C8B2B79363600EE8A0B /* EACopiableLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EACopiableLabel.swift; sourceTree = "<group>"; };
 		9ECA32FC2B415F5700B4B937 /* CloudSyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSyncTests.swift; sourceTree = "<group>"; };
 		9ECA32FE2B417D4000B4B937 /* EAPopQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EAPopQueue.swift; sourceTree = "<group>"; };
 		9ECA33002B41825100B4B937 /* EAPopQueueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EAPopQueueTests.swift; sourceTree = "<group>"; };
@@ -434,6 +436,7 @@
 			children = (
 				9E81D1312AF45253004095CF /* LaunchScreen.storyboard */,
 				9E81D1332AF45253004095CF /* Main.storyboard */,
+				9EBE3C8B2B79363600EE8A0B /* EACopiableLabel.swift */,
 				9E81D1252AF45241004095CF /* EADynamicSizeTableView.swift */,
 				9E81D1272AF45241004095CF /* EATextField.swift */,
 				9E81D1292AF45241004095CF /* EATextView.swift */,
@@ -734,6 +737,7 @@
 				9E81D12B2AF45241004095CF /* OptionsPickerViewController.swift in Sources */,
 				9E81D10A2AF45218004095CF /* RequestTabBarViewController.swift in Sources */,
 				9E81D0D02AF451EA004095CF /* EAExtensions.swift in Sources */,
+				9EBE3C8C2B79363600EE8A0B /* EACopiableLabel.swift in Sources */,
 				9EEA0E2A2B152E0200DFB42B /* EABackgroundWorker.swift in Sources */,
 				9E81D1092AF45218004095CF /* RequestStates.swift in Sources */,
 				9E81D1222AF45235004095CF /* WorkspaceListViewController.swift in Sources */,
