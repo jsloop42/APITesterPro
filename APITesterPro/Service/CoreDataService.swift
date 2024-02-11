@@ -241,7 +241,6 @@ class CoreDataService {
         self.initCloudKitSchema()
         #endif
         try? self.ckMainMOC.save()
-        // end test
     }
     
     func initCloudKitSchema() {
