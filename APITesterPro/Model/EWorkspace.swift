@@ -176,7 +176,7 @@ public class EWorkspace: NSManagedObject, Entity {
         dict["name"] = self.name
         dict["order"] = self.order
         dict["saveResponse"] = self.saveResponse
-        dict["syncDisabled"] = self.syncDisabled
+        dict["syncDisabled"] = self.syncDisabled?.toUTCStr()
         dict["version"] = self.version
         var xs: [[String: Any]] = []
         let projs = Self.db.getProjects(wsId: self.getId())
