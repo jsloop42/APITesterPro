@@ -98,7 +98,7 @@ public class EWorkspace: NSManagedObject, Entity {
         if let x = dict["name"] as? String { ws.name = x }
         if let x = dict["order"] as? NSDecimalNumber { ws.order = x }
         if let x = dict["saveResponse"] as? Bool { ws.saveResponse = x }
-        if let x = dict["syncDisabled"] as? Date { ws.syncDisabled = x }
+        if let x = dict["syncDisabled"] as? String { ws.syncDisabled = Date.toUTCDate(x) }
         if let x = dict["version"] as? Int64 { ws.version = x }
         self.db.saveMainContext()
         if let xs = dict["projects"] as? [[String: Any]] {
@@ -115,6 +115,7 @@ public class EWorkspace: NSManagedObject, Entity {
         }
         ws.markForDelete = false
         self.db.saveMainContext()
+        Log.debug("dict: \(dict)")
         isSyncEnabled ? self.db.refreshAllCKManagedObjects() : self.db.refreshAllLocalManagedObjects()
         return ws
     }
