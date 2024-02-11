@@ -1587,6 +1587,29 @@ class CoreDataService {
         return x
     }
     
+    /// Removes duplicate default workspace from iCloud store. If there is not workspace a default workspace will be created in cloud store during app init. If a default workspace was already synced to iCloud before, it will get synced once the app starts running. But the default workspace has already been created with the same id.
+    /// So if it gets synced multiple workspaces with the same default Id will be created. Since projects refers to workspace using workspace Id, choosing any of the default workspace will list the projects. So we can safely delete duplicate default workspaces.
+    func deduplicateDefaultWorkspace() {
+        let moc = self.ckMainMOC
+        moc.performAndWait {
+            let fr = NSFetchRequest<EWorkspace>(entityName: "EWorkspace")
+            fr.predicate = NSPredicate(format: "id == %@", self.defaultWorkspaceId)
+            fr.sortDescriptors = [NSSortDescriptor(key: "modified", ascending: false)]
+            do {
+                var xs: [EWorkspace] = []
+                xs = try moc.fetch(fr)
+                let acc = xs.dropFirst()
+                acc.forEach { ws in
+                    Log.debug("ws: deleting duplicate default workspace from cloud store")
+                    self.deleteEntity(ws)
+                }
+                self.saveMainContext()
+            } catch let error {
+                Log.error("Error deduplicating workspace: \(error)")
+            }
+        }
+    }
+    
     func setWorkspaceSyncEnabled(_ state: Bool, ws: EWorkspace, ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) {
         let moc = self.getMainMOC(ctx: ctx)
         let date = Date()

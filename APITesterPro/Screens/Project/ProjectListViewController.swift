@@ -54,6 +54,7 @@ class ProjectListViewController: APITesterProViewController {
             self.reloadData()
             self.tableView.reloadData()
         }
+        self.localdb.deduplicateDefaultWorkspace()
     }
 
     override func viewDidLoad() {
