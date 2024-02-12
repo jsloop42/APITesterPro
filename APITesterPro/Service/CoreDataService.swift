@@ -586,16 +586,15 @@ class CoreDataService {
         return x
     }
     
-    /// Default entities will have the id `default`.
-    func getDefaultWorkspace(ctx: NSManagedObjectContext? = CoreDataService.shared.ckMainMOC) -> EWorkspace {
+    /// Default entities will have the id `default`. Default workspaces are local to the device to prevent duplicate workspace sync issue with iCloud.
+    func getDefaultWorkspace(ctx: NSManagedObjectContext? = CoreDataService.shared.localMainMOC) -> EWorkspace {
         var x: EWorkspace!
         let moc = self.getMainMOC(ctx: ctx)
         moc.performAndWait {
             if let ws = self.getWorkspace(id: self.defaultWorkspaceId, ctx: moc) {
                 x = ws
             } else {
-                // We create the default workspace with active flag as false. Only if any change by the user gets made, the flag is enabled. This helps in syncing from cloud.
-                let ws: EWorkspace! = self.createWorkspace(id: self.defaultWorkspaceId, name: self.defaultWorkspaceName, desc: self.defaultWorkspaceDesc, isSyncEnabled: true, isActive: false, ctx: moc)
+                let ws: EWorkspace! = self.createWorkspace(id: self.defaultWorkspaceId, name: self.defaultWorkspaceName, desc: self.defaultWorkspaceDesc, isSyncEnabled: false, isActive: true, ctx: moc)
                 ws.order = 0
                 self.saveMainContext()
                 x = ws
@@ -2039,37 +2038,6 @@ class CoreDataService {
     }
     
     // MARK: - Delete
-    
-    /// Removes duplicate default workspace from iCloud store. If there is not workspace a default workspace will be created in cloud store during app init. If a default workspace was already synced to iCloud before, it will get synced once the app starts running. But the default workspace has already been created with the same id.
-    /// So if it gets synced multiple workspaces with the same default Id will be created. Here we keep the latest modified workspace and assigns all projects in other workspaces to this workspace and then deletes the extra workspace. This way the internal zworkspace id points to the right workspace in SQLite schema.
-    func deduplicateDefaultWorkspace() {
-        let moc = self.ckMainMOC
-        moc.performAndWait {
-            let fr = NSFetchRequest<EWorkspace>(entityName: "EWorkspace")
-            fr.predicate = NSPredicate(format: "id == %@", self.defaultWorkspaceId)
-            fr.sortDescriptors = [NSSortDescriptor(key: "modified", ascending: false)]
-            do {
-                var xs: [EWorkspace] = []
-                xs = try moc.fetch(fr)
-                if xs.count <= 1 { return }
-                let dws = xs.first
-                let acc = xs.dropFirst()
-                acc.forEach { ws in
-                    Log.debug("ws: deleting duplicate default workspace from cloud store")
-                    ws.projects?.allObjects.forEach({ proj in
-                        if let p = proj as? EProject {
-                            p.workspace = dws
-                        }
-                    })
-                    self.saveMainContext()
-                    self.deleteEntity(ws)
-                }
-                self.saveMainContext()
-            } catch let error {
-                Log.error("Error deduplicating workspace: \(error)")
-            }
-        }
-    }
     
     /// Resets the context to its base state if there are any changes.
     func discardChanges(in context: NSManagedObjectContext) {
