@@ -25,7 +25,7 @@ class ProjectListViewController: APITesterProViewController {
             self.reloadData()
         }
     }
-    private var container: CoreDataContainer = .cloud
+    private var container: CoreDataContainer = .local
     private var popupBottomContraints: NSLayoutConstraint?
     private var isKeyboardActive = false
     private var keyboardHeight: CGFloat = 0.0
@@ -50,11 +50,11 @@ class ProjectListViewController: APITesterProViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.addBtnDidTap(_:)))
         self.workspace = self.app.getSelectedWorkspace()
         self.updateWorkspaceTitle(self.workspace.name ?? "")
+        self.updateWorkspaceTypeIcon()
         if !isRunningTests {
             self.reloadData()
             self.tableView.reloadData()
         }
-        self.localdb.deduplicateDefaultWorkspace()
     }
 
     override func viewDidLoad() {

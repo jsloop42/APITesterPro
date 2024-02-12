@@ -81,20 +81,18 @@ class WorkspaceListViewController: APITesterProViewController {
     }
     
     func initData() {
-        // remove any duplicate default workspace from iCloud syncing
-        self.db.deduplicateDefaultWorkspace()
-        // iCloud workspace
-        if self.ckFrc == nil {
-            if let _frc = self.db.getFetchResultsController(obj: EWorkspace.self, predicate: NSPredicate(format: "name != %@", ""), ctx: self.db.ckMainMOC) as? NSFetchedResultsController<EWorkspace> {
-                self.ckFrc = _frc
-                self.ckFrc.delegate = self
-            }
-        }
         // local workspace
         if self.localFrc == nil {
             if let _frc = self.db.getFetchResultsController(obj: EWorkspace.self, predicate: NSPredicate(format: "name != %@", ""), ctx: self.db.localMainMOC) as? NSFetchedResultsController<EWorkspace> {
                 self.localFrc = _frc
                 self.localFrc.delegate = self
+            }
+        }
+        // iCloud workspace
+        if self.ckFrc == nil {
+            if let _frc = self.db.getFetchResultsController(obj: EWorkspace.self, predicate: NSPredicate(format: "name != %@", ""), ctx: self.db.ckMainMOC) as? NSFetchedResultsController<EWorkspace> {
+                self.ckFrc = _frc
+                self.ckFrc.delegate = self
             }
         }
         self.reloadData()
