@@ -360,6 +360,7 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
                 if ws == self.wsSelected {  // Reset selection to the default workspace
                     let wss = self.db.getAllWorkspaces(offset: 0, limit: 1, isMarkForDelete: false, ctx: self.db.ckMainMOC)
                     self.wsSelected = !wss.isEmpty ? wss.first! : self.db.getDefaultWorkspace()
+                    self.app.setSelectedWorkspace(self.wsSelected)
                 }
                 self.dbSvc.deleteEntity(ws: ws)
                 self.updateData()
