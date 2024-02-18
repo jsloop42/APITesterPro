@@ -317,6 +317,32 @@ class UI {
         return frame.size.height
     }
     
+    /// Truncates the given text to fit the width if it's larger to hold.
+    static func truncatedTextToFitWidth(for text: String, width: CGFloat, height: CGFloat, font: UIFont) -> String {
+//        let attributedString = NSString(string: text)
+//        let boundingRect = attributedString.boundingRect(with: CGSize(width: width, height: 40),
+//                                                         options: [.usesLineFragmentOrigin, .usesFontLeading],
+//                                                         context: nil)
+//        let truncatedWidth = boundingRect.width
+//        Log.debug("toolbar: truncated width: \(truncatedWidth)")
+//        let ellipsisWidth = NSAttributedString(string: "…", attributes: [.font: font]).size().width
+//        let availableWidth = width - ellipsisWidth
+//
+//        if truncatedWidth > availableWidth {
+//            let characterCount = Int((availableWidth / truncatedWidth) * CGFloat(text.count / 6))
+//            return String(text.prefix(characterCount)) + "…"
+//        } else {
+//            return text
+//        }
+        let attributedString = NSAttributedString(string: text, attributes: [NSAttributedString.Key.font : font])
+        let frameSetterRef = CTFramesetterCreateWithAttributedString(attributedString as CFAttributedString)
+        var characterFitRange: CFRange = CFRangeMake(0, 0)
+        CTFramesetterSuggestFrameSizeWithConstraints(frameSetterRef, CFRangeMake(0, 0), nil, CGSize(width: width, height: height), &characterFitRange)
+        let num = Int(characterFitRange.length)
+        return text.take(n: num)
+    }
+
+    
     /// Returns the height of the navigation bar.
     /// - Parameter navVC: The current navigation controller (optional).
     static func getNavBarHeight(navVC: UINavigationController? = nil) -> CGFloat {
