@@ -378,9 +378,9 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
             let ws = self.getWorkspace(indexPath: indexPath)
             let name = ws.name ?? ""
             let desc = self.getDesc(ws: ws)
-            let w = tableView.frame.width - 15
-            let h1 = name.height(width: w, font: App.Font.font17) + 18
-            let h2: CGFloat =  desc.isEmpty ? 0 : desc.height(width: w, font: App.Font.font15) + 8
+            let w = tableView.frame.width - 32
+            let h1 = name.height(width: w, font: App.Font.font17) + 20
+            let h2: CGFloat =  desc.isEmpty ? 0 : desc.height(width: w, font: App.Font.font15) + 10
             Log.debug("row: \(indexPath.row) -> \(h1 + h2)")
             return max(h1 + h2, 46)
         }
