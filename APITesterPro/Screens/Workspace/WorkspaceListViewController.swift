@@ -378,11 +378,15 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
             let ws = self.getWorkspace(indexPath: indexPath)
             let name = ws.name ?? ""
             let desc = self.getDesc(ws: ws)
-            let w = tableView.frame.width - 32
-            let h1 = name.height(width: w, font: App.Font.font17) + 20
-            let h2: CGFloat =  desc.isEmpty ? 0 : desc.height(width: w, font: App.Font.font15) + 20
-            Log.debug("row: \(indexPath.row) -> \(h1 + h2)")
-            return max(h1 + h2, 46)
+            var widthOffset: CGFloat = 46  // The label view starts with 45 padding on leading
+            if self.wsSelected.getId() == ws.getId() {
+                widthOffset += 40  // account for accessary view tick mark
+            }
+            let w = tableView.frame.width - widthOffset
+            let h1 = UILabel.textHeight(text: name, font: App.Font.font17, width: w)
+            let h2 = UILabel.textHeight(text: desc, font: App.Font.font15, width: w)
+            Log.debug("row: \(indexPath.row) -> \(h1 + h2 + 32)")
+            return max(h1 + h2 + 32, 46)
         }
         return UITableView.automaticDimension
     }
