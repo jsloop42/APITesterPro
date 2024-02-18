@@ -319,21 +319,6 @@ class UI {
     
     /// Truncates the given text to fit the width if it's larger to hold.
     static func truncatedTextToFitWidth(for text: String, width: CGFloat, height: CGFloat, font: UIFont) -> String {
-//        let attributedString = NSString(string: text)
-//        let boundingRect = attributedString.boundingRect(with: CGSize(width: width, height: 40),
-//                                                         options: [.usesLineFragmentOrigin, .usesFontLeading],
-//                                                         context: nil)
-//        let truncatedWidth = boundingRect.width
-//        Log.debug("toolbar: truncated width: \(truncatedWidth)")
-//        let ellipsisWidth = NSAttributedString(string: "…", attributes: [.font: font]).size().width
-//        let availableWidth = width - ellipsisWidth
-//
-//        if truncatedWidth > availableWidth {
-//            let characterCount = Int((availableWidth / truncatedWidth) * CGFloat(text.count / 6))
-//            return String(text.prefix(characterCount)) + "…"
-//        } else {
-//            return text
-//        }
         let attributedString = NSAttributedString(string: text, attributes: [NSAttributedString.Key.font : font])
         let frameSetterRef = CTFramesetterCreateWithAttributedString(attributedString as CFAttributedString)
         var characterFitRange: CFRange = CFRangeMake(0, 0)
