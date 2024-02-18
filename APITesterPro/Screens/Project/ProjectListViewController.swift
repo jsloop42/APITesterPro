@@ -49,8 +49,8 @@ class ProjectListViewController: APITesterProViewController {
         self.navigationItem.leftBarButtonItem = self.addSettingsBarButton()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.addBtnDidTap(_:)))
         self.workspace = self.app.getSelectedWorkspace()
-        self.updateWorkspaceTitle(self.workspace.name ?? "")
         self.updateWorkspaceTypeIcon()
+        self.updateWorkspaceTitle(self.workspace.name ?? "")
         if !isRunningTests {
             self.reloadData()
             self.tableView.reloadData()
@@ -185,9 +185,35 @@ class ProjectListViewController: APITesterProViewController {
     }
     
     func updateWorkspaceTitle(_ name: String) {
-        DispatchQueue.main.async { 
-            self.workspaceBtn.setTitle(name, for: .normal)
+        DispatchQueue.main.async {
+//            Log.debug("toolbar width: \(self.toolbar.frame.width)")
+//            let txt = UI.truncatedTextToFitWidth(for: name, width: self.toolbar.frame.width - 64, font: App.Font.font15)
+//            Log.debug("toolbar text: \(txt)")
+//            Log.debug("toolbar name len: \(name.count) - txt len: \(txt.count)")
+//            self.workspaceBtn.setTitle(txt, for: .normal)
+            
             self.workspaceBtn.titleLabel?.font = App.Font.font15
+            self.workspaceBtn.titleLabel?.numberOfLines = 1
+            self.workspaceBtn.titleLabel?.lineBreakMode = .byTruncatingTail
+            // self.workspaceBtn.setTitle(name.take(n: 20), for: .normal)
+            self.workspaceBtn.titleLabel?.adjustsFontSizeToFitWidth = true
+            self.workspaceBtn.titleLabel?.baselineAdjustment = UIBaselineAdjustment.none
+            self.workspaceBtn.setTitle(name, for: .normal)
+            //let width = self.view.frame.width - (self.workspaceBtn.imageView!.frame.width + 32 )
+            let width = self.view.frame.width / 2 - (self.workspaceBtn.imageView!.frame.width + 32)
+            // let width = self.workspaceBtn.titleLabel!.frame.width * 2 - (self.workspaceBtn.imageView!.frame.width + 32)
+            var txt = UI.truncatedTextToFitWidth(for: name, width: width, height: 44, font: App.Font.font15)
+            if txt.count < name.count {
+                txt = "\(txt.takeFrom(start: 0, end: txt.count - 3))..."
+            }
+            // self.workspaceBtn.setTitle(txt, for: .normal)
+            self.workspaceBtn.setTitle(txt, for: .normal)
+            Log.debug("toolbar width: \(width)")
+            Log.debug("toolbar toolbar view width: \(self.view?.frame.width)")
+            Log.debug("toolbar toolbar width: \(self.toolbar?.frame.width)")
+            Log.debug("toolbar toolbar image width: \(self.workspaceBtn.imageView?.frame.width)")
+            Log.debug("toolbar label width: \(self.workspaceBtn.titleLabel?.frame.width)")
+            
         }
     }
     
@@ -282,14 +308,15 @@ class ProjectListViewController: APITesterProViewController {
         if let info = notif.userInfo, let ws = info["workspace"] as? EWorkspace {
             self.app.setSelectedWorkspace(ws)
             self.updateListingWorkspace(ws)
-            self.updateWorkspaceTitle(ws.getName())
             self.updateWorkspaceTypeIcon()
+            self.updateWorkspaceTitle(ws.getName())
         }
     }
     
     @objc func orientationDidChange() {
         Log.debug("orientation changed")
         self.updateWorkspaceTypeIcon()
+        self.updateWorkspaceTitle(self.workspace.getName())
     }
     
     @IBSegueAction func workspaceSegue(_ coder: NSCoder) -> WorkspaceListViewController? {

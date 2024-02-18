@@ -437,6 +437,24 @@ public extension String {
         }
         return nil
     }
+    
+    /// Returns a subscript within the given start and end index
+    func takeFrom(start: Int, end: Int) -> String {
+        var start = start
+        if start < 0 { start = 0 }
+        if start > end { return "" } 
+        var end = end
+        if end >= self.count {
+            end = self.count - 1
+        }
+        let range = start...end
+        return String(self[range])
+    }
+    
+    /// Return the string up to n length
+    func take(n: Int) -> String {
+        return self.takeFrom(start: 0, end: n)
+    }
 }
 
 /// This allows us to throw a string for exceptions

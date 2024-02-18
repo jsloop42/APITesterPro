@@ -27,4 +27,11 @@ class EAExtensionsTests: XCTestCase {
         Log.debug(localStr)
         XCTAssertEqual(localStr, "2023-12-09 05:30:00 +0530")
     }
+    
+    func testStringTake() {
+        let str = "hello world there"
+        XCTAssertEqual(str.takeFrom(start: 0, end: 4), "hello")
+        XCTAssertEqual(str.take(n: 4), "hello")
+        XCTAssertEqual(str.take(n: 50), str)
+    }
 }
