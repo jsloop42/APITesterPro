@@ -559,6 +559,16 @@ public extension UILabel {
         return ceil(labelSize.width)
     }
     
+    static func textHeight(text: String, font: UIFont, width: CGFloat) -> CGFloat {
+        let label:UILabel = UILabel(frame: CGRectMake(0, 0, width, CGFloat.greatestFiniteMagnitude))
+        label.numberOfLines = 0
+        label.lineBreakMode = NSLineBreakMode.byWordWrapping
+        label.font = font
+        label.text = text
+        label.sizeToFit()
+        return label.frame.height
+    }
+    
     func textHeight(width: CGFloat) -> CGFloat {
         guard let text = text else { return 0 }
         return text.height(width: width, font: font)
