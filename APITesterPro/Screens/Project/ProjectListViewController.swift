@@ -453,10 +453,12 @@ extension ProjectListViewController: UITableViewDelegate, UITableViewDataSource 
         let proj = frc!.object(at: indexPath)
         let name = proj.name ?? ""
         let desc = self.getDesc(proj: proj)
-        let w = tableView.frame.width
-        let h1 = name.height(width: w, font: App.Font.font17) + 20
-        let h2: CGFloat =  desc.isEmpty ? 0 : desc.height(width: w, font: App.Font.font15) + 10
-        return max(h1 + h2, 46)
+        let widthOffset: CGFloat = 46 + 16  // The label view starts with 45 padding on leading and 16 trailing
+        let w = tableView.frame.width - widthOffset
+        let h1 = UILabel.textHeight(text: name, font: App.Font.font17, width: w)
+        let h2 = UILabel.textHeight(text: desc, font: App.Font.font15, width: w)
+        Log.debug("row: \(indexPath.row) -> \(h1 + h2 + 32)")
+        return max(h1 + h2 + 32, 46)
     }
 }
 
