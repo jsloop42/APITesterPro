@@ -257,4 +257,11 @@ public final class EAUtils {
         guard let b64 = base64 else { return nil }
         return Data(base64Encoded: b64)
     }
+    
+    /// Returns a truncated text with ellipsis at the end.
+    func truncateText(_ text: String, len: Int) -> String {
+        if text.isEmpty { return text }
+        let str = text.take(n: len)
+        return text.count > len ? "\(str)..." : str
+    }
 }

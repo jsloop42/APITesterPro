@@ -34,6 +34,7 @@ class WorkspaceListViewController: APITesterProViewController {
     private var ckFrc: NSFetchedResultsController<EWorkspace>!
     private var localFrc: NSFetchedResultsController<EWorkspace>!
     private var wsSelected: EWorkspace!
+    private let truncateLength = 277
     
     deinit {
         self.nc.post(name: .workspaceWillClose, object: self)
@@ -317,8 +318,9 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
             let ws = self.getWorkspace(indexPath: indexPath)
             cell.accessoryType = .none
             if ws.id == self.wsSelected.id && ws.isSyncEnabled == self.wsSelected.isSyncEnabled { cell.accessoryType = .checkmark }
-            cell.nameLbl.text = ws.name
-            let desc = self.getDesc(ws: ws)
+            let name = self.utils.truncateText(ws.name ?? "", len: self.truncateLength)
+            let desc = self.utils.truncateText(self.getDesc(ws: ws), len: self.truncateLength)
+            cell.nameLbl.text = name
             cell.descLbl.text = desc
             if !desc.isEmpty {
                 cell.descLbl.isHidden = false
@@ -376,16 +378,16 @@ extension WorkspaceListViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if self.getWorkspaceCount(indexPath: indexPath) > 0 {
             let ws = self.getWorkspace(indexPath: indexPath)
-            let name = ws.name ?? ""
-            let desc = self.getDesc(ws: ws)
-            var widthOffset: CGFloat = 46  // The label view starts with 45 padding on leading
+            let name = self.utils.truncateText(ws.name ?? "", len: self.truncateLength)
+            let desc = self.utils.truncateText(self.getDesc(ws: ws), len: self.truncateLength)
+            var widthOffset: CGFloat = 45  // The label view starts with 45 padding on leading
             if self.wsSelected.getId() == ws.getId() {
-                widthOffset += 40  // account for accessary view tick mark
+                widthOffset += 46  // account for accessary view tick mark
             }
-            let w = tableView.frame.width - widthOffset
+            let w = tableView.frame.width - widthOffset  // padding of 32
             let h1 = UILabel.textHeight(text: name, font: App.Font.font17, width: w)
             let h2 = UILabel.textHeight(text: desc, font: App.Font.font15, width: w)
-            Log.debug("row: \(indexPath.row) -> \(h1 + h2 + 32)")
+            Log.debug("row: \(indexPath.row) -> \(h1 + h2)")
             return max(h1 + h2 + 32, 46)
         }
         return UITableView.automaticDimension
