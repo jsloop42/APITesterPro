@@ -101,6 +101,7 @@
 		9E81D14E2AF452DE004095CF /* EAUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1482AF452DE004095CF /* EAUtilsTests.swift */; };
 		9E81D14F2AF452DE004095CF /* EAQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1492AF452DE004095CF /* EAQueueTests.swift */; };
 		9EBE3C8C2B79363600EE8A0B /* EACopiableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE3C8B2B79363600EE8A0B /* EACopiableLabel.swift */; };
+		9EC705762BA6E8E500CF4DE3 /* editor.html in Resources */ = {isa = PBXBuildFile; fileRef = 9EC705752BA6E8E500CF4DE3 /* editor.html */; };
 		9ECA32FF2B417D4000B4B937 /* EAPopQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECA32FE2B417D4000B4B937 /* EAPopQueue.swift */; };
 		9ECA33012B41825100B4B937 /* EAPopQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECA33002B41825100B4B937 /* EAPopQueueTests.swift */; };
 		9ED969A42AF5A35F0029E83E /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A32AF5A35F0029E83E /* WebKit.framework */; };
@@ -230,6 +231,7 @@
 		9E81D1502AF45302004095CF /* APITesterProTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "APITesterProTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		9EBAD0992B60D76F00E172A1 /* APITesterPro 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "APITesterPro 2.xcdatamodel"; sourceTree = "<group>"; };
 		9EBE3C8B2B79363600EE8A0B /* EACopiableLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EACopiableLabel.swift; sourceTree = "<group>"; };
+		9EC705752BA6E8E500CF4DE3 /* editor.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editor.html; sourceTree = "<group>"; };
 		9ECA32FE2B417D4000B4B937 /* EAPopQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EAPopQueue.swift; sourceTree = "<group>"; };
 		9ECA33002B41825100B4B937 /* EAPopQueueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EAPopQueueTests.swift; sourceTree = "<group>"; };
 		9ED969A32AF5A35F0029E83E /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
@@ -396,6 +398,7 @@
 		9E81D0A82AF44FB7004095CF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9EC705742BA6E8C600CF4DE3 /* editor */,
 				9E81D1372AF4529D004095CF /* preview.html */,
 				9E81D13C2AF4529D004095CF /* prism-dark.css */,
 				9E81D13A2AF4529D004095CF /* prism-light.css */,
@@ -526,6 +529,14 @@
 			path = EALibTests;
 			sourceTree = "<group>";
 		};
+		9EC705742BA6E8C600CF4DE3 /* editor */ = {
+			isa = PBXGroup;
+			children = (
+				9EC705752BA6E8E500CF4DE3 /* editor.html */,
+			);
+			path = editor;
+			sourceTree = "<group>";
+		};
 		9ED969A22AF5A35F0029E83E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -648,6 +659,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E81D1362AF45253004095CF /* Main.storyboard in Resources */,
+				9EC705762BA6E8E500CF4DE3 /* editor.html in Resources */,
 				9E81D13D2AF4529D004095CF /* preview.html in Resources */,
 				9E81D0A42AF44F4F004095CF /* Assets.xcassets in Resources */,
 				9E81D1402AF4529D004095CF /* prism-light.css in Resources */,
@@ -948,7 +960,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = APITesterPro/APITesterPro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = TPAP6QPH98;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = APITesterPro/Info.plist;
@@ -966,7 +978,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = net.jsloop.APITesterPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -985,7 +997,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = APITesterPro/APITesterPro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = TPAP6QPH98;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = APITesterPro/Info.plist;
@@ -1003,7 +1015,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = net.jsloop.APITesterPro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
