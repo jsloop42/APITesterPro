@@ -18,8 +18,9 @@ struct EditRequestInfo: Hashable {
     var isDelete: Bool = false
 }
 
-class App {
-    static let shared: App = App()
+@objc
+class App: NSObject {
+    @objc static let shared: App = App()
     var popupBottomContraints: NSLayoutConstraint?
     // private var dbSvc = PersistenceService.shared
     private lazy var localdb = { CoreDataService.shared }()
@@ -154,6 +155,7 @@ class App {
     }
     
     /// Fixes appearance of a translucent background during transition
+    @objc
     func updateNavigationControllerBackground(_ navVC: UINavigationController?) {
         if #available(iOS 13.0, *) {
             navVC?.view.backgroundColor = UIColor.systemBackground
@@ -161,11 +163,13 @@ class App {
             navVC?.view.backgroundColor = UIColor.white
         }
     }
-    
+
+    @objc
     func updateWindowBackground(_ window: UIWindow?) {
         window?.backgroundColor = UIColor.clear
     }
     
+    @objc
     func updateViewBackground(_ view: UIView?) {
         if #available(iOS 13.0, *) {
             view?.backgroundColor = UIColor.systemBackground

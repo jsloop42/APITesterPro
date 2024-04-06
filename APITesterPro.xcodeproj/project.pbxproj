@@ -100,6 +100,7 @@
 		9E81D14D2AF452DE004095CF /* EARepeatTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1472AF452DE004095CF /* EARepeatTimerTests.swift */; };
 		9E81D14E2AF452DE004095CF /* EAUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1482AF452DE004095CF /* EAUtilsTests.swift */; };
 		9E81D14F2AF452DE004095CF /* EAQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1492AF452DE004095CF /* EAQueueTests.swift */; };
+		9EACC4982BC16879006E2A63 /* WebCodeEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EACC4972BC16879006E2A63 /* WebCodeEditor.m */; };
 		9EBE3C8C2B79363600EE8A0B /* EACopiableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE3C8B2B79363600EE8A0B /* EACopiableLabel.swift */; };
 		9EC705762BA6E8E500CF4DE3 /* editor.html in Resources */ = {isa = PBXBuildFile; fileRef = 9EC705752BA6E8E500CF4DE3 /* editor.html */; };
 		9EC7057B2BA6F5BD00CF4DE3 /* codemirror.min.css in Resources */ = {isa = PBXBuildFile; fileRef = 9EC705772BA6F5BD00CF4DE3 /* codemirror.min.css */; };
@@ -233,6 +234,8 @@
 		9E81D1482AF452DE004095CF /* EAUtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAUtilsTests.swift; sourceTree = "<group>"; };
 		9E81D1492AF452DE004095CF /* EAQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAQueueTests.swift; sourceTree = "<group>"; };
 		9E81D1502AF45302004095CF /* APITesterProTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "APITesterProTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		9EACC4962BC16879006E2A63 /* WebCodeEditor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebCodeEditor.h; sourceTree = "<group>"; };
+		9EACC4972BC16879006E2A63 /* WebCodeEditor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebCodeEditor.m; sourceTree = "<group>"; };
 		9EBAD0992B60D76F00E172A1 /* APITesterPro 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "APITesterPro 2.xcdatamodel"; sourceTree = "<group>"; };
 		9EBE3C8B2B79363600EE8A0B /* EACopiableLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EACopiableLabel.swift; sourceTree = "<group>"; };
 		9EC705752BA6E8E500CF4DE3 /* editor.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editor.html; sourceTree = "<group>"; };
@@ -453,6 +456,8 @@
 				9E81D1232AF45241004095CF /* PopupViewController.swift */,
 				9E81D1282AF45241004095CF /* UI.swift */,
 				9EE60B0C2B6F82A0006A5D77 /* EmptyMessageCell.swift */,
+				9EACC4962BC16879006E2A63 /* WebCodeEditor.h */,
+				9EACC4972BC16879006E2A63 /* WebCodeEditor.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -716,6 +721,7 @@
 				9E81D0CC2AF451EA004095CF /* EACrypto.swift in Sources */,
 				9E81D1202AF4522C004095CF /* EnvironmentEditViewController.swift in Sources */,
 				9E81D0FC2AF45208004095CF /* APITesterProNavigationController.swift in Sources */,
+				9EACC4982BC16879006E2A63 /* WebCodeEditor.m in Sources */,
 				9E81D1302AF45242004095CF /* EATextView.swift in Sources */,
 				9E81D11E2AF4522C004095CF /* EnvironmentVariableTableViewController.swift in Sources */,
 				9E81D12A2AF45241004095CF /* PopupViewController.swift in Sources */,
@@ -978,6 +984,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = TPAP6QPH98;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = APITesterPro/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "API Tester Pro";
@@ -1015,6 +1022,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = TPAP6QPH98;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = APITesterPro/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "API Tester Pro";
