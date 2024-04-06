@@ -106,7 +106,7 @@ public struct AESGCM {
         }
     }
     
-    /// Encrpt the given string. If meta is set this data will also be added to the tag
+    /// Encrypt the given string. If meta is set this data will also be added to the tag
     func encrypt(string: String) throws -> (cipher: Data, tag: Data)? {
         guard let data = string.data(using: .utf8) else { return nil }
         let sealedBox: AES.GCM.SealedBox
