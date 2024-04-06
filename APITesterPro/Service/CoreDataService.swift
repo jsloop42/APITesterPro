@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 /**
- Entites Association
+ Entities Association
  - EWorkspace
    - EEnv
      - EEnvVar
