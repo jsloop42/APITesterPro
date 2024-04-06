@@ -276,7 +276,9 @@ class ProjectListViewController: APITesterProViewController {
     
     @objc func addBtnDidTap(_ sender: Any) {
         Log.debug("add button did tap")
-        self.viewPopup()
+        let editor = WebCodeEditor()
+        // self.viewPopup() // TODO: test
+        self.navigationController!.pushViewController(editor, animated: true)
     }
     
     @IBAction func workspaceDidTap(_ sender: Any) {
