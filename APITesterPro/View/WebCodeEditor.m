@@ -9,6 +9,7 @@
 #import "WebCodeEditor.h"
 #import "APITesterPro-Swift.h"
 #import <WebKit/WebKit.h>
+#import "Utils.h"
 
 @interface WebCodeEditor ()
 @property (nonatomic, strong) App *app;
@@ -29,24 +30,22 @@
     [super viewDidLoad];
     [self.app updateViewBackground:self.view];
     [self.app updateNavigationControllerBackground:self.navigationController];
-    [Log debug:@"webcodeeditor view did load"];
+    debug(@"webcodeeditor view did load");
     [self initUI];
 }
 
 - (void)initUI {
-    // self.webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 50, 300, 300)];
     self.webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
     [self.webView setBackgroundColor:UIColor.blackColor];
     [self.view addSubview:self.webView];
     NSString *editorFile = [[NSBundle mainBundle] pathForResource:@"editor" ofType:@"html"];
-    NSLog(@"editor file %@", editorFile);
+    debug(@"editor file %@", editorFile);
     NSURL *htmlURL = [NSURL fileURLWithPath:editorFile];
     if (htmlURL) {
         NSURL *baseURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
         [self.webView loadFileURL:htmlURL allowingReadAccessToURL:baseURL];
-        NSLog(@"File loaded in webview");
     } else {
-        NSLog(@"Error getting URL from editor file");
+        error(@"Error getting URL from editor file");
     }
 }
 
