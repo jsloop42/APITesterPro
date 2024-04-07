@@ -100,13 +100,10 @@
 		9E81D14D2AF452DE004095CF /* EARepeatTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1472AF452DE004095CF /* EARepeatTimerTests.swift */; };
 		9E81D14E2AF452DE004095CF /* EAUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1482AF452DE004095CF /* EAUtilsTests.swift */; };
 		9E81D14F2AF452DE004095CF /* EAQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1492AF452DE004095CF /* EAQueueTests.swift */; };
+		9EA431C32BC2A429001E1508 /* editor.html in Resources */ = {isa = PBXBuildFile; fileRef = 9EC705752BA6E8E500CF4DE3 /* editor.html */; };
+		9EA431C52BC2AC7C001E1508 /* 5.65.16 in Resources */ = {isa = PBXBuildFile; fileRef = 9EA431C42BC2AC7C001E1508 /* 5.65.16 */; };
 		9EACC4982BC16879006E2A63 /* WebCodeEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EACC4972BC16879006E2A63 /* WebCodeEditor.m */; };
 		9EBE3C8C2B79363600EE8A0B /* EACopiableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE3C8B2B79363600EE8A0B /* EACopiableLabel.swift */; };
-		9EC705762BA6E8E500CF4DE3 /* editor.html in Resources */ = {isa = PBXBuildFile; fileRef = 9EC705752BA6E8E500CF4DE3 /* editor.html */; };
-		9EC7057B2BA6F5BD00CF4DE3 /* codemirror.min.css in Resources */ = {isa = PBXBuildFile; fileRef = 9EC705772BA6F5BD00CF4DE3 /* codemirror.min.css */; };
-		9EC7057C2BA6F5BD00CF4DE3 /* ayu-dark.min.css in Resources */ = {isa = PBXBuildFile; fileRef = 9EC705782BA6F5BD00CF4DE3 /* ayu-dark.min.css */; };
-		9EC7057D2BA6F5BD00CF4DE3 /* javascript.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 9EC705792BA6F5BD00CF4DE3 /* javascript.min.js */; };
-		9EC7057E2BA6F5BD00CF4DE3 /* codemirror.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 9EC7057A2BA6F5BD00CF4DE3 /* codemirror.min.js */; };
 		9ECA32FF2B417D4000B4B937 /* EAPopQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECA32FE2B417D4000B4B937 /* EAPopQueue.swift */; };
 		9ECA33012B41825100B4B937 /* EAPopQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECA33002B41825100B4B937 /* EAPopQueueTests.swift */; };
 		9ED969A42AF5A35F0029E83E /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED969A32AF5A35F0029E83E /* WebKit.framework */; };
@@ -234,15 +231,12 @@
 		9E81D1482AF452DE004095CF /* EAUtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAUtilsTests.swift; sourceTree = "<group>"; };
 		9E81D1492AF452DE004095CF /* EAQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAQueueTests.swift; sourceTree = "<group>"; };
 		9E81D1502AF45302004095CF /* APITesterProTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "APITesterProTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		9EA431C42BC2AC7C001E1508 /* 5.65.16 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = 5.65.16; sourceTree = "<group>"; };
 		9EACC4962BC16879006E2A63 /* WebCodeEditor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebCodeEditor.h; sourceTree = "<group>"; };
 		9EACC4972BC16879006E2A63 /* WebCodeEditor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebCodeEditor.m; sourceTree = "<group>"; };
 		9EBAD0992B60D76F00E172A1 /* APITesterPro 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "APITesterPro 2.xcdatamodel"; sourceTree = "<group>"; };
 		9EBE3C8B2B79363600EE8A0B /* EACopiableLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EACopiableLabel.swift; sourceTree = "<group>"; };
 		9EC705752BA6E8E500CF4DE3 /* editor.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = editor.html; sourceTree = "<group>"; };
-		9EC705772BA6F5BD00CF4DE3 /* codemirror.min.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = codemirror.min.css; sourceTree = "<group>"; };
-		9EC705782BA6F5BD00CF4DE3 /* ayu-dark.min.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "ayu-dark.min.css"; sourceTree = "<group>"; };
-		9EC705792BA6F5BD00CF4DE3 /* javascript.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = javascript.min.js; sourceTree = "<group>"; };
-		9EC7057A2BA6F5BD00CF4DE3 /* codemirror.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = codemirror.min.js; sourceTree = "<group>"; };
 		9ECA32FE2B417D4000B4B937 /* EAPopQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EAPopQueue.swift; sourceTree = "<group>"; };
 		9ECA33002B41825100B4B937 /* EAPopQueueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EAPopQueueTests.swift; sourceTree = "<group>"; };
 		9ED969A32AF5A35F0029E83E /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
@@ -545,10 +539,7 @@
 		9EC705742BA6E8C600CF4DE3 /* editor */ = {
 			isa = PBXGroup;
 			children = (
-				9EC705782BA6F5BD00CF4DE3 /* ayu-dark.min.css */,
-				9EC705772BA6F5BD00CF4DE3 /* codemirror.min.css */,
-				9EC7057A2BA6F5BD00CF4DE3 /* codemirror.min.js */,
-				9EC705792BA6F5BD00CF4DE3 /* javascript.min.js */,
+				9EA431C42BC2AC7C001E1508 /* 5.65.16 */,
 				9EC705752BA6E8E500CF4DE3 /* editor.html */,
 			);
 			path = editor;
@@ -675,18 +666,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9EC7057D2BA6F5BD00CF4DE3 /* javascript.min.js in Resources */,
+				9EA431C32BC2A429001E1508 /* editor.html in Resources */,
 				9E81D1362AF45253004095CF /* Main.storyboard in Resources */,
-				9EC705762BA6E8E500CF4DE3 /* editor.html in Resources */,
 				9E81D13D2AF4529D004095CF /* preview.html in Resources */,
 				9E81D0A42AF44F4F004095CF /* Assets.xcassets in Resources */,
-				9EC7057B2BA6F5BD00CF4DE3 /* codemirror.min.css in Resources */,
 				9E81D1402AF4529D004095CF /* prism-light.css in Resources */,
 				9E81D1412AF4529D004095CF /* rawview.html in Resources */,
-				9EC7057C2BA6F5BD00CF4DE3 /* ayu-dark.min.css in Resources */,
 				9E81D13E2AF4529D004095CF /* styles.css in Resources */,
-				9EC7057E2BA6F5BD00CF4DE3 /* codemirror.min.js in Resources */,
 				9E81D13F2AF4529D004095CF /* prism.js in Resources */,
+				9EA431C52BC2AC7C001E1508 /* 5.65.16 in Resources */,
 				9E81D1352AF45253004095CF /* LaunchScreen.storyboard in Resources */,
 				9E81D1422AF4529D004095CF /* prism-dark.css in Resources */,
 			);
