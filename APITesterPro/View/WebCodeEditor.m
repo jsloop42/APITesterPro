@@ -35,9 +35,46 @@
 }
 
 - (void)initUI {
-    self.webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
-    [self.webView setBackgroundColor:UIColor.blackColor];
+    self.webView = [[WKWebView alloc] init];
+    [self.webView setBackgroundColor:UIColor.blackColor];  // TODO: fix
+    self.webView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:self.webView];
+    
+    NSLayoutConstraint *topConstraint = [NSLayoutConstraint constraintWithItem:self.webView
+                                                                     attribute:NSLayoutAttributeTop
+                                                                     relatedBy:NSLayoutRelationEqual
+                                                                        toItem:self.view
+                                                                     attribute:NSLayoutAttributeTop
+                                                                    multiplier:1.0
+                                                                      constant:0.0];
+
+    NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:self.webView
+                                                                         attribute:NSLayoutAttributeLeading
+                                                                         relatedBy:NSLayoutRelationEqual
+                                                                            toItem:self.view
+                                                                         attribute:NSLayoutAttributeLeading
+                                                                        multiplier:1.0
+                                                                          constant:0.0];
+
+    NSLayoutConstraint *trailingConstraint = [NSLayoutConstraint constraintWithItem:self.webView
+                                                                          attribute:NSLayoutAttributeTrailing
+                                                                          relatedBy:NSLayoutRelationEqual
+                                                                             toItem:self.view
+                                                                          attribute:NSLayoutAttributeTrailing
+                                                                         multiplier:1.0
+                                                                           constant:0.0];
+    
+    NSLayoutConstraint *bottomConstraint = [NSLayoutConstraint constraintWithItem:self.webView
+                                                                        attribute:NSLayoutAttributeBottom
+                                                                        relatedBy:NSLayoutRelationEqual
+                                                                           toItem:self.view
+                                                                        attribute:NSLayoutAttributeBottom
+                                                                       multiplier:1.0
+                                                                         constant:0.0];
+
+    [self.view addConstraints:@[topConstraint, bottomConstraint, leadingConstraint, trailingConstraint]];
+
+    
     NSString *editorFile = [[NSBundle mainBundle] pathForResource:@"editor" ofType:@"html"];
     debug(@"editor file %@", editorFile);
     NSURL *htmlURL = [NSURL fileURLWithPath:editorFile];

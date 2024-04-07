@@ -1,45 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="user-scalable=no,width=device-width" />
-    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor</title>
     <link rel="stylesheet" href="5.65.16/codemirror.min.css"/>
     <link rel="stylesheet" href="5.65.16/ayu-dark.min.css"/>
     <script type="text/javascript" src="5.65.16/codemirror.min.js"></script>
     <script type="text/javascript" src="5.65.16/mode/javascript.min.js"></script>
     <script type="text/javascript" src="5.65.16/mode/xml.min.js"></script>
     <style>
-        html,
-        body,
-        form {
-            background: black;
-            font-family: monospace;
+        html, body {
+            height: 100%;
             margin: 0;
             padding: 0;
-        }
-        section,
-        article {
-            display: block;
-            padding: 0;
-        }
-        .CodeMirror * {
+            background: black;
             font-family: "Andale Mono", "Menlo", "SF Mono", "Monaco", "Consolas", "Courier", monospace;
-            font-size: "16px";
+        }
+        #editor {
+            height: 100%;
+        }
+        .CodeMirror {
+            height: 100%;
+            border: none;
         }
     </style>
 </head>
 <body>
-    <div id="editor">
-    </div>
+    <div id="editor"></div>
     <script>
-    CodeMirror(document.querySelector("#editor"), {
-      lineNumbers: true,
-      tabSize: 2,
-      indentUnit: 2,
-      mode: 'application/json',
-      theme: 'ayu-dark'
-    });
+        var editor = CodeMirror(document.querySelector("#editor"), {
+            lineNumbers: true,
+            tabSize: 2,
+            indentUnit: 2,
+            mode: 'application/json',
+            theme: 'ayu-dark',
+            matchBrackets: true,
+            autoCloseBrackets: true
+        });
     </script>
 </body>
 </html>
