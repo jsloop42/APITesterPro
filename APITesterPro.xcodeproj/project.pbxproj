@@ -102,6 +102,7 @@
 		9E81D14F2AF452DE004095CF /* EAQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E81D1492AF452DE004095CF /* EAQueueTests.swift */; };
 		9EA431C32BC2A429001E1508 /* editor.html in Resources */ = {isa = PBXBuildFile; fileRef = 9EC705752BA6E8E500CF4DE3 /* editor.html */; };
 		9EA431C52BC2AC7C001E1508 /* 5.65.16 in Resources */ = {isa = PBXBuildFile; fileRef = 9EA431C42BC2AC7C001E1508 /* 5.65.16 */; };
+		9EA431C82BC2E578001E1508 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA431C72BC2E578001E1508 /* Utils.m */; };
 		9EACC4982BC16879006E2A63 /* WebCodeEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EACC4972BC16879006E2A63 /* WebCodeEditor.m */; };
 		9EBE3C8C2B79363600EE8A0B /* EACopiableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE3C8B2B79363600EE8A0B /* EACopiableLabel.swift */; };
 		9ECA32FF2B417D4000B4B937 /* EAPopQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECA32FE2B417D4000B4B937 /* EAPopQueue.swift */; };
@@ -232,6 +233,8 @@
 		9E81D1492AF452DE004095CF /* EAQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EAQueueTests.swift; sourceTree = "<group>"; };
 		9E81D1502AF45302004095CF /* APITesterProTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "APITesterProTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		9EA431C42BC2AC7C001E1508 /* 5.65.16 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = 5.65.16; sourceTree = "<group>"; };
+		9EA431C62BC2E578001E1508 /* Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		9EA431C72BC2E578001E1508 /* Utils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
 		9EACC4962BC16879006E2A63 /* WebCodeEditor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebCodeEditor.h; sourceTree = "<group>"; };
 		9EACC4972BC16879006E2A63 /* WebCodeEditor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebCodeEditor.m; sourceTree = "<group>"; };
 		9EBAD0992B60D76F00E172A1 /* APITesterPro 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "APITesterPro 2.xcdatamodel"; sourceTree = "<group>"; };
@@ -373,6 +376,8 @@
 				9E81D0C42AF451E9004095CF /* EASystem.swift */,
 				9E81D0BF2AF451E9004095CF /* EAUtils.swift */,
 				9EDDE3B82B1C4C8B0074141A /* EALogger.swift */,
+				9EA431C62BC2E578001E1508 /* Utils.h */,
+				9EA431C72BC2E578001E1508 /* Utils.m */,
 			);
 			path = EALib;
 			sourceTree = "<group>";
@@ -705,6 +710,7 @@
 				9E81D10D2AF45218004095CF /* RequestManager.swift in Sources */,
 				9E81D0F12AF451FF004095CF /* EEnv.swift in Sources */,
 				9E81D12E2AF45241004095CF /* EATextField.swift in Sources */,
+				9EA431C82BC2E578001E1508 /* Utils.m in Sources */,
 				9E4875E82AF5856A00D624DA /* AppDelegateMock.swift in Sources */,
 				9E81D0CC2AF451EA004095CF /* EACrypto.swift in Sources */,
 				9E81D1202AF4522C004095CF /* EnvironmentEditViewController.swift in Sources */,
