@@ -6,6 +6,7 @@
     <title>Editor</title>
     <link rel="stylesheet" href="5.65.16/codemirror.min.css"/>
     <link rel="stylesheet" href="5.65.16/ayu-dark.min.css"/>
+    <link rel="stylesheet" href="5.65.16/mdn-like.min.css"/>
     <script type="text/javascript" src="5.65.16/codemirror.min.js"></script>
     <script type="text/javascript" src="5.65.16/mode/javascript.min.js"></script>
     <script type="text/javascript" src="5.65.16/mode/xml.min.js"></script>
@@ -14,7 +15,7 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            background: black;
+            /* background: white; */
             font-family: "Andale Mono", "Menlo", "SF Mono", "Monaco", "Consolas", "Courier", monospace;
         }
         #editor {
@@ -29,15 +30,38 @@
 <body>
     <div id="editor"></div>
     <script>
-        var editor = CodeMirror(document.querySelector("#editor"), {
+        var OB = {};
+
+        OB.editor = CodeMirror(document.querySelector("#editor"), {
             lineNumbers: true,
             tabSize: 2,
             indentUnit: 2,
-            mode: 'application/json',
-            theme: 'ayu-dark',
+            mode: "application/json",
+            theme: "ayu-dark",
             matchBrackets: true,
             autoCloseBrackets: true
         });
+
+        OB.getBackgroundColor = function(theme) {
+            if (theme == "dark") {
+                return "black";
+            }
+            return "white";
+        }
+
+        OB.getEditorTheme = function(theme) {
+            if (theme == "dark") {
+                return "ayu-dark";
+            }
+            return "mdn-like";
+        }
+
+        /// Updates the editor and webview theme.
+        /// @param {string} theme: Takes the "dark" or "light".
+        OB.updateTheme = function(theme) {
+            document.body.style.backgroundColor = OB.getBackgroundColor(theme);
+            editor.setOption("theme", OB.getEditorTheme(theme));
+        }
     </script>
 </body>
 </html>

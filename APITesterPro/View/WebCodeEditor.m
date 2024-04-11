@@ -14,6 +14,11 @@
 @interface WebCodeEditor ()
 @property (nonatomic, strong) App *app;
 @property (nonatomic, strong) WKWebView *webView;
+
+typedef NS_ENUM(NSInteger, WCEditorTheme) {
+    WCEditorThemeLight,
+    WCEditorThemeDark
+};
 @end
 
 @implementation WebCodeEditor
@@ -28,15 +33,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.app updateViewBackground:self.view];
-    [self.app updateNavigationControllerBackground:self.navigationController];
     debug(@"webcodeeditor view did load");
     [self initUI];
 }
 
 - (void)initUI {
+    //[self.app updateViewBackground:self.view];
+    //[self.app updateNavigationControllerBackground:self.navigationController];
+    [self.view setBackgroundColor:UIColor.whiteColor];
+    [self.navigationController.view setBackgroundColor:UIColor.whiteColor];
     self.webView = [[WKWebView alloc] init];
-    [self.webView setBackgroundColor:UIColor.blackColor];  // TODO: fix
+    //[self updateTheme:[self.app getCurrentUIStyle] == UIUserInterfaceStyleDark ? WCEditorThemeDark : WCEditorThemeLight];
+    debug(@"theme dark?: %d", (long)[self.app getCurrentUIStyle] == UIUserInterfaceStyleDark);
     self.webView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:self.webView];
     
@@ -83,6 +91,30 @@
         [self.webView loadFileURL:htmlURL allowingReadAccessToURL:baseURL];
     } else {
         error(@"Error getting URL from editor file");
+    }
+}
+
+- (void)executeJavaScript:(NSString *)fnName completionHandler:(void (^)(id _Nullable, NSError * _Nullable))completionHandler {
+    [self.webView evaluateJavaScript:fnName completionHandler:completionHandler];
+}
+
+- (void)updateTheme:(WCEditorTheme)theme {
+//    [self.webView setBackgroundColor:[self.app getBackgroundColor]];
+//    NSString *fn = theme == WCEditorThemeDark ? @"changeTheme('ayu-dark')" : @"changeTheme('mdn-like')";
+//    [self executeJavaScript:fn completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+//        debug(@"error: %@", error);
+//        debug(@"result: %@", result);
+//    }];
+}
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+    debug(@"uitrait collection did change");
+    if (previousTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
+        debug(@"dark style");
+        [self updateTheme:WCEditorThemeDark];
+    } else {
+        debug(@"light style");
+        [self updateTheme:WCEditorThemeLight];
     }
 }
 

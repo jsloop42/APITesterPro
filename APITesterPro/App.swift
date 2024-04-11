@@ -178,6 +178,22 @@ class App: NSObject {
         }
     }
     
+    @objc
+    func getBackgroundColor() -> UIColor {
+        if #available(iOS 13.0, *) {
+            return UIColor.systemBackground
+        } else {
+            return UIColor.white
+        }
+    }
+    
+    @objc
+    @available(iOS 13.0, *)
+    /// Returns current system display appearance. Light or dark mode.
+    func getCurrentUIStyle() -> UIUserInterfaceStyle {
+        return UIScreen.main.traitCollection.userInterfaceStyle
+    }
+    
     func viewError(_ error: Error, vc: UIViewController) {
         UI.viewToast(self.getErrorMessage(for: error), vc: vc)
     }
