@@ -29,39 +29,6 @@
 </head>
 <body>
     <div id="editor"></div>
-    <script>
-        var OB = {};
-
-        OB.editor = CodeMirror(document.querySelector("#editor"), {
-            lineNumbers: true,
-            tabSize: 2,
-            indentUnit: 2,
-            mode: "application/json",
-            theme: "ayu-dark",
-            matchBrackets: true,
-            autoCloseBrackets: true
-        });
-
-        OB.getBackgroundColor = function(theme) {
-            if (theme == "dark") {
-                return "black";
-            }
-            return "white";
-        }
-
-        OB.getEditorTheme = function(theme) {
-            if (theme == "dark") {
-                return "ayu-dark";
-            }
-            return "mdn-like";
-        }
-
-        /// Updates the editor and webview theme.
-        /// @param {string} theme: Takes the "dark" or "light".
-        OB.updateTheme = function(theme) {
-            document.body.style.backgroundColor = OB.getBackgroundColor(theme);
-            editor.setOption("theme", OB.getEditorTheme(theme));
-        }
-    </script>
+    <script type="text/javascript" src="editor.js"></script>
 </body>
 </html>
