@@ -12,25 +12,26 @@ ob.setupEditor = function() {
     });
 }
 
-ob.getBackgroundColor = function(theme) {
-    if (theme == "dark") {
+ob.getBackgroundColor = function(mode) {
+    if (mode == "dark") {
         return "black";
     }
     return "white";
 }
 
-ob.getEditorTheme = function(theme) {
-    if (theme == "dark") {
+ob.getEditorTheme = function(mode) {
+    if (mode == "dark") {
         return "ayu-dark";
     }
     return "mdn-like";
 }
 
-/// Updates the editor and webview theme.
-/// @param {string} theme: Takes the "dark" or "light".
-ob.updateTheme = function(theme) {
-    document.body.style.backgroundColor = ob.getBackgroundColor(theme);
-    editor.setOption("theme", ob.getEditorTheme(theme));
+/// Updates the editor and webview theme based on the given display mode.
+/// @param {string} mode: Takes "dark" or "light".
+ob.updateTheme = function(args) {
+    var mode = args["mode"] || "dark";
+    document.body.style.backgroundColor = ob.getBackgroundColor(mode);
+    ob.editor.setOption("theme", ob.getEditorTheme(mode));
 }
 
 ob.test = function() {
@@ -40,7 +41,6 @@ ob.test = function() {
 }
 
 window.onload = function() {
-    console.log("editor loaded");
     ob.setupEditor();
     ob.greet();
 }
