@@ -14,6 +14,8 @@
 @property (nonatomic, strong) App *app;
 @property (nonatomic, strong) WKWebView *webView;
 @property (nonatomic, strong) UINavigationBar *navBar;
+@property (nonatomic, strong) NSNotificationCenter *nc;
+@property (nonatomic, strong, readonly) NSString *editorTextDidChangeKey;
 
 typedef NS_ENUM(NSInteger, WCEditorTheme) {
     WCEditorThemeLight,
@@ -28,6 +30,8 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
     if (self) {
         self.app = [App shared];
         _text = @"";
+        self.nc = [NSNotificationCenter defaultCenter];
+        _editorTextDidChangeKey = @"editor-text-did-change";
     }
     return self;
 }
@@ -140,6 +144,24 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
     [self updateEditorText:text];
 }
 
+- (void)getEditorText:(void (^)(NSString *))completionHandler {
+    WebCodeEditorViewController * __weak weakSelf = self;
+    [self executeJavaScriptFn:@"ob.getText" params:nil completionHandler:^(id _Nullable result, NSError * _Nullable err) {
+        if (err) {
+            error(@"error getting editor content: %@", err);
+            return;
+        }
+        NSString *text = @"";
+        if ([result isKindOfClass:[NSString class]]) {
+            text = (NSString *)result;
+        }
+        WebCodeEditorViewController *this = weakSelf;
+        this->_text = text;
+        [self.nc postNotificationName:self.editorTextDidChangeKey object:nil userInfo:@{@"text": text}];
+        if (completionHandler) completionHandler(text);
+    }];
+}
+
 /*!
  Executes the given JavaScript function with arguments in the web view
  */
@@ -196,7 +218,9 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
 
 - (void)saveBtnDidTap {
     debug(@"save btn did tap");
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self getEditorText:^(NSString *text) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }];
 }
 
 #pragma mark WKNavigationDelegate

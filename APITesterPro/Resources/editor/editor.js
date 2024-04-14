@@ -39,6 +39,10 @@ ob.updateText = function(args) {
     ob.editor.setValue(text);
 }
 
+ob.getText = function() {
+    return ob.editor.getValue() || "";
+}
+
 ob.test = function() {
     console.log("hello test");
     ob.msg.postMessage({"fn": "test", "ret": "hello test"});

@@ -568,10 +568,8 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     @objc func presentWebCodeEditor(_ notif: Notification) {
         Log.debug("present web code editor")
         let editor = WebCodeEditorViewController()
-        var text = """
-                   {"hello": "foo"}
-                   """
-        // if let info = notif.userInfo, let txt = info["text"] as? String { text = txt }
+        var text = ""
+        if let info = notif.userInfo, let txt = info["text"] as? String { text = txt }
         editor.text = text
         self.navigationController?.present(editor, animated: true)
     }
@@ -1005,12 +1003,26 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
         self.binaryTextFieldView.addGestureRecognizer(binTap)
         let rawTextViewTap = UITapGestureRecognizer(target: self, action: #selector(self.rawTextViewDidTap(_:)))
         self.rawTextView.addGestureRecognizer(rawTextViewTap)
+        self.nc.addObserver(self, selector: #selector(self.webEditorTextDidChange(_:)), name: Notification.Name("editor-text-did-change"), object: nil)
+    }
+    
+    @objc func webEditorTextDidChange(_ notif: Notification) {
+        Log.debug("web editor text did change notification")
+        if let info = notif.userInfo, let text = info["text"] as? String {
+            self.rawTextView.text = text
+            self.rawTextViewText = text
+            if let editTVDelegate = self.editTVDelegate {
+                let request = editTVDelegate.getRequest()
+                request.body?.json = text
+                editTVDelegate.didRequestChange(request, callback: { status in editTVDelegate.getVC().updateDoneButton(status) })
+            }
+        }
     }
     
     @objc func rawTextViewDidTap(_ recog: UITapGestureRecognizer) {
         Log.debug("raw text view did tap")
         // present web code editor
-        self.nc.post(name: .codeEditorShouldPresent, object: self, userInfo: ["text": self.rawTextView.text])
+        self.nc.post(name: .codeEditorShouldPresent, object: self, userInfo: ["text": self.rawTextView.text ?? ""])
     }
     
     @objc func binaryFieldViewDidTap(_ recog: UITapGestureRecognizer) {
