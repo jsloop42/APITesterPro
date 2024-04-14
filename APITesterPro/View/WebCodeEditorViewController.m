@@ -37,13 +37,10 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
 }
 
 - (void)setupUI {
-    //[self.app updateViewBackground:self.view];
-    //[self.app updateNavigationControllerBackground:self.navigationController];
-    [self.view setBackgroundColor:UIColor.whiteColor];
-    [self.navigationController.view setBackgroundColor:UIColor.whiteColor];
-     self.webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:[self setupMessageHandler]];
-//    self.webView = [[WKWebView alloc] init];
-    //[self updateTheme:[self.app getCurrentUIStyle] == UIUserInterfaceStyleDark ? WCEditorThemeDark : WCEditorThemeLight];
+    [self.view setBackgroundColor:[self.app getBackgroundColor]];
+    [self.navigationController.view setBackgroundColor:[self.app getBackgroundColor]];
+    self.webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:[self setupMessageHandler]];
+    [self updateTheme:[self currentEditorTheme]];
     debug(@"theme dark?: %d", (long)[self.app getCurrentUIStyle] == UIUserInterfaceStyleDark);
     self.webView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:self.webView];
@@ -94,7 +91,7 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
     }
 }
 
--(WKWebViewConfiguration *)setupMessageHandler {
+- (WKWebViewConfiguration *)setupMessageHandler {
     NSString *script = [self userScript];
     WKUserScript *userScript = [[WKUserScript alloc] initWithSource:script injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
     WKUserContentController *ctrlr = [[WKUserContentController alloc] init];
@@ -105,7 +102,7 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
     return config;
 }
 
--(NSString *)userScript {
+- (NSString *)userScript {
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     NSURL *url = [bundle URLForResource:@"userscript" withExtension:@"js"];
     NSString *script = @"";
@@ -122,7 +119,7 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
 /*!
  Executes the given JavaScript function with arguments in the web view
  */
-- (void)executeJavaScript:(NSString *)fnName params:(NSDictionary *)params completionHandler:(void (^)(id _Nullable, NSError * _Nullable))completionHandler {
+- (void)executeJavaScriptFn:(NSString *)fnName params:(NSDictionary *)params completionHandler:(void (^)(id _Nullable, NSError * _Nullable))completionHandler {
     NSError *err;
     NSData *jsonData;
     if (params != nil) {
@@ -143,14 +140,13 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
     [self.webView evaluateJavaScript:fnWithArgs completionHandler:completionHandler];
 }
 
+- (WCEditorTheme)currentEditorTheme {
+    return [self.app getCurrentUIStyle] == UIUserInterfaceStyleDark ? WCEditorThemeDark : WCEditorThemeLight;
+}
+
 
 - (void)updateTheme:(WCEditorTheme)theme {
-//    [self.webView setBackgroundColor:[self.app getBackgroundColor]];
-//    NSString *fn = theme == WCEditorThemeDark ? @"changeTheme('ayu-dark')" : @"changeTheme('mdn-like')";
-//    [self executeJavaScript:fn completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-//        debug(@"error: %@", error);
-//        debug(@"result: %@", result);
-//    }];
+    [self executeJavaScriptFn:@"ob.updateTheme" params:@{@"mode": theme == WCEditorThemeDark ? @"dark" : @"light"} completionHandler:nil];
 }
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
@@ -166,9 +162,10 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
 
 #pragma mark WKNavigationDelegate
 
--(void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     debug(@"webview loaded html");
-    [self executeJavaScript:@"ob.test" params:nil completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+    [self updateTheme:[self currentEditorTheme]];
+    [self executeJavaScriptFn:@"ob.test" params:nil completionHandler:^(id _Nullable result, NSError * _Nullable error) {
         debug(@"result: %@", result);  // return value of the function if any
     }];
 }
