@@ -144,6 +144,11 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
     [self updateEditorText:text];
 }
 
+- (void)setMode:(NSString *)mode {
+    _mode = mode;
+    [self updateEditorMode:mode];
+}
+
 - (void)getEditorText:(void (^)(NSString *))completionHandler {
     WebCodeEditorViewController * __weak weakSelf = self;
     [self executeJavaScriptFn:@"ob.getText" params:nil completionHandler:^(id _Nullable result, NSError * _Nullable err) {
@@ -157,7 +162,8 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
         }
         WebCodeEditorViewController *this = weakSelf;
         this->_text = text;
-        [self.nc postNotificationName:self.editorTextDidChangeKey object:nil userInfo:@{@"text": text}];
+        [self.nc postNotificationName:self.editorTextDidChangeKey object:nil 
+                             userInfo:@{@"text": text, @"mode": this.mode}];
         if (completionHandler) completionHandler(text);
     }];
 }
@@ -192,6 +198,10 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
 
 - (void)updateEditorText:(NSString *)text {
     [self executeJavaScriptFn:@"ob.updateText" params:@{@"text": text} completionHandler:nil];
+}
+
+- (void)updateEditorMode:(NSString *)mode {
+    [self executeJavaScriptFn:@"ob.updateMode" params:@{@"mode": mode} completionHandler:nil];
 }
 
 - (void)updateTheme:(WCEditorTheme)theme {
@@ -229,6 +239,7 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
     debug(@"webview loaded html");
     [self updateTheme:[self currentEditorTheme]];
     [self setText:self.text];
+    if (self.mode) [self updateEditorMode:self.mode];
     [self executeJavaScriptFn:@"ob.test" params:nil completionHandler:^(id _Nullable result, NSError * _Nullable error) {
         debug(@"result: %@", result);  // return value of the function if any
     }];
