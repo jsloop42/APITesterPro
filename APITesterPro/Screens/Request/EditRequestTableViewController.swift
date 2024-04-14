@@ -16,6 +16,7 @@ extension Notification.Name {
     static let requestDidChange = Notification.Name("request-did-change")
     static let validateSSLDidChange = Notification.Name("validate-ssl-did-change")
     static let editRequestVCShouldPresent = Notification.Name("edit-request-vc-should-present")
+    static let codeEditorShouldPresent = Notification.Name("web-code-editor-should-present")
 }
 
 class ValidateSSLCell: UITableViewCell {
@@ -307,6 +308,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         self.nc.addObserver(self, selector: #selector(self.presentDocumentPicker(_:)), name: .documentPickerShouldPresent, object: nil)
         self.nc.addObserver(self, selector: #selector(self.presentImagePicker(_:)), name: .imagePickerShouldPresent, object: nil)
         self.nc.addObserver(self, selector: #selector(self.validateSSLDidChange(_:)), name: .validateSSLDidChange, object: nil)
+        self.nc.addObserver(self, selector: #selector(self.presentWebCodeEditor(_:)), name: .codeEditorShouldPresent, object: nil)
         // self.cancelBtn.addTarget(self, action: #selector(self.cancelDidTap(_:)), for: .touchUpInside)
         // self.doneBtn.addTarget(self, action: #selector(self.doneDidTap(_:)), for: .touchUpInside)
     }
@@ -561,6 +563,17 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
     
     @objc func presentImagePicker(_ notif: Notification) {
         self.docPicker.presentPhotoPicker(navVC: self.navigationController!, isCamera: DocumentPickerState.isCameraMode, vc: self, completion: nil)
+    }
+    
+    @objc func presentWebCodeEditor(_ notif: Notification) {
+        Log.debug("present web code editor")
+        let editor = WebCodeEditorViewController()
+        var text = """
+                   {"hello": "foo"}
+                   """
+        // if let info = notif.userInfo, let txt = info["text"] as? String { text = txt }
+        editor.text = text
+        self.navigationController?.present(editor, animated: true)
     }
     
     @objc func endEditing() {
@@ -990,6 +1003,14 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
         self.typeLabel.addGestureRecognizer(typeLabelTap)
         let binTap = UITapGestureRecognizer(target: self, action: #selector(self.binaryFieldViewDidTap(_:)))
         self.binaryTextFieldView.addGestureRecognizer(binTap)
+        let rawTextViewTap = UITapGestureRecognizer(target: self, action: #selector(self.rawTextViewDidTap(_:)))
+        self.rawTextView.addGestureRecognizer(rawTextViewTap)
+    }
+    
+    @objc func rawTextViewDidTap(_ recog: UITapGestureRecognizer) {
+        Log.debug("raw text view did tap")
+        // present web code editor
+        self.nc.post(name: .codeEditorShouldPresent, object: self, userInfo: ["text": self.rawTextView.text])
     }
     
     @objc func binaryFieldViewDidTap(_ recog: UITapGestureRecognizer) {

@@ -13,6 +13,7 @@
 @interface WebCodeEditorViewController ()
 @property (nonatomic, strong) App *app;
 @property (nonatomic, strong) WKWebView *webView;
+@property (nonatomic, strong) UINavigationBar *navBar;
 
 typedef NS_ENUM(NSInteger, WCEditorTheme) {
     WCEditorThemeLight,
@@ -26,6 +27,7 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
     self = [super init];
     if (self) {
         self.app = [App shared];
+        _text = @"";
     }
     return self;
 }
@@ -39,6 +41,23 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
 - (void)setupUI {
     [self.view setBackgroundColor:[self.app getBackgroundColor]];
     [self.navigationController.view setBackgroundColor:[self.app getBackgroundColor]];
+    [self setupNavbar];
+    [self setupWebView];
+}
+
+- (void)setupNavbar {
+    self.navBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+    self.navBar.backgroundColor = [self.app getBackgroundColor];
+    [self.view addSubview:self.navBar];
+    UINavigationItem *navItem = [[UINavigationItem alloc] init];
+    UIBarButtonItem *cancelBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelBtnDidTap)];
+    UIBarButtonItem *saveBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveBtnDidTap)];
+    navItem.leftBarButtonItem = cancelBtn;
+    navItem.rightBarButtonItem = saveBtn;
+    [self.navBar setItems:@[navItem] animated:NO];
+}
+
+- (void)setupWebView {
     self.webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:[self setupMessageHandler]];
     [self updateTheme:[self currentEditorTheme]];
     debug(@"theme dark?: %d", (long)[self.app getCurrentUIStyle] == UIUserInterfaceStyleDark);
@@ -48,8 +67,8 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
     NSLayoutConstraint *topConstraint = [NSLayoutConstraint constraintWithItem:self.webView
                                                                      attribute:NSLayoutAttributeTop
                                                                      relatedBy:NSLayoutRelationEqual
-                                                                        toItem:self.view
-                                                                     attribute:NSLayoutAttributeTop
+                                                                        toItem:self.navBar
+                                                                     attribute:NSLayoutAttributeBottom
                                                                     multiplier:1.0
                                                                       constant:0.0];
 
@@ -116,6 +135,11 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
     return script;
 }
 
+- (void)setText:(NSString *)text {
+    _text = text;
+    [self updateEditorText:text];
+}
+
 /*!
  Executes the given JavaScript function with arguments in the web view
  */
@@ -144,6 +168,9 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
     return [self.app getCurrentUIStyle] == UIUserInterfaceStyleDark ? WCEditorThemeDark : WCEditorThemeLight;
 }
 
+- (void)updateEditorText:(NSString *)text {
+    [self executeJavaScriptFn:@"ob.updateText" params:@{@"text": text} completionHandler:nil];
+}
 
 - (void)updateTheme:(WCEditorTheme)theme {
     [self executeJavaScriptFn:@"ob.updateTheme" params:@{@"mode": theme == WCEditorThemeDark ? @"dark" : @"light"} completionHandler:nil];
@@ -160,11 +187,24 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
     }
 }
 
+#pragma mark Event handlers
+
+- (void)cancelBtnDidTap {
+    debug(@"cancel btn did tap");
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)saveBtnDidTap {
+    debug(@"save btn did tap");
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 #pragma mark WKNavigationDelegate
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     debug(@"webview loaded html");
     [self updateTheme:[self currentEditorTheme]];
+    [self setText:self.text];
     [self executeJavaScriptFn:@"ob.test" params:nil completionHandler:^(id _Nullable result, NSError * _Nullable error) {
         debug(@"result: %@", result);  // return value of the function if any
     }];
