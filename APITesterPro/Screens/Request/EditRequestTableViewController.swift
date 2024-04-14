@@ -569,8 +569,11 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         Log.debug("present web code editor")
         let editor = WebCodeEditorViewController()
         var text = ""
+        var mode = "json"
         if let info = notif.userInfo, let txt = info["text"] as? String { text = txt }
+        if let info = notif.userInfo, let _mode = info["mode"] as? String { mode = _mode }
         editor.text = text
+        editor.mode = mode
         editor.isModalInPresentation = true
         self.navigationController?.present(editor, animated: true)
     }
@@ -1009,12 +1012,16 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
     
     @objc func webEditorTextDidChange(_ notif: Notification) {
         Log.debug("web editor text did change notification")
-        if let info = notif.userInfo, let text = info["text"] as? String {
+        if let info = notif.userInfo, let text = info["text"] as? String, let mode = info["mode"] as? String {
             self.rawTextView.text = text
             self.rawTextViewText = text
             if let editTVDelegate = self.editTVDelegate {
                 let request = editTVDelegate.getRequest()
-                request.body?.json = text
+                if mode == "json" {
+                    request.body?.json = text
+                } else if mode == "xml" {
+                    request.body?.xml = text
+                }
                 editTVDelegate.didRequestChange(request, callback: { status in editTVDelegate.getVC().updateDoneButton(status) })
             }
         }
@@ -1022,8 +1029,20 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
     
     @objc func rawTextViewDidTap(_ recog: UITapGestureRecognizer) {
         Log.debug("raw text view did tap")
+        var mode = "json"
+        if let editTVDelegate = self.editTVDelegate {
+            let idx = editTVDelegate.getRequest().body!.selected
+            if idx == 0 {
+                mode = "json"
+            } else if idx == 1 {
+                mode = "xml"
+            }
+        }
         // present web code editor
-        self.nc.post(name: .codeEditorShouldPresent, object: self, userInfo: ["text": self.rawTextView.text ?? ""])
+        self.nc.post(name: .codeEditorShouldPresent, object: self, userInfo: [
+            "text": self.rawTextView.text ?? "",
+            "mode": mode
+        ])
     }
     
     @objc func binaryFieldViewDidTap(_ recog: UITapGestureRecognizer) {

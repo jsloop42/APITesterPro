@@ -26,6 +26,12 @@ ob.getEditorTheme = function(mode) {
     return "mdn-like";
 }
 
+/// Update the code mirror language
+ob.updateMode = function(args) {
+    var mode = args["mode"] || "application/json";
+    ob.editor.setOption("mode", mode);
+}
+
 /// Updates the editor and webview theme based on the given display mode.
 /// @param {string} mode: Takes "dark" or "light".
 ob.updateTheme = function(args) {
