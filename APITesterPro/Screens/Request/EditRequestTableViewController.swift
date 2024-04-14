@@ -571,6 +571,7 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         var text = ""
         if let info = notif.userInfo, let txt = info["text"] as? String { text = txt }
         editor.text = text
+        editor.isModalInPresentation = true
         self.navigationController?.present(editor, animated: true)
     }
     
