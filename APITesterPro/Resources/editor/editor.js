@@ -34,6 +34,11 @@ ob.updateTheme = function(args) {
     ob.editor.setOption("theme", ob.getEditorTheme(mode));
 }
 
+ob.updateText = function(args) {
+    var text = args["text"] || "";
+    ob.editor.setValue(text);
+}
+
 ob.test = function() {
     console.log("hello test");
     ob.msg.postMessage({"fn": "test", "ret": "hello test"});

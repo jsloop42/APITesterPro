@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
  Code editor using a web view.
  */
 @interface WebCodeEditorViewController : UIViewController<WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler>
-
+@property (nonatomic, strong) NSString *text;
 @end
 
 NS_ASSUME_NONNULL_END
