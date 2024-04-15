@@ -574,7 +574,9 @@ class EditRequestTableViewController: APITesterProTableViewController, UITextFie
         if let info = notif.userInfo, let _mode = info["mode"] as? String { mode = _mode }
         editor.text = text
         editor.mode = mode
-        editor.isModalInPresentation = true
+//        if UI.getDeviceType() == .phone {
+//            editor.isModalInPresentation = true
+//        }
         self.navigationController?.present(editor, animated: true)
     }
     

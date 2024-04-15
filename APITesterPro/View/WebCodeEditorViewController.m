@@ -50,14 +50,52 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
 }
 
 - (void)setupNavbar {
+//    self.navBar = [[UINavigationBar alloc] initWithFrame:CGRectZero];
     self.navBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
     self.navBar.backgroundColor = [self.app getBackgroundColor];
+//    self.navBar.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:self.navBar];
+    
+//    NSLayoutConstraint *topConstraint = [NSLayoutConstraint constraintWithItem:self.navBar
+//                                                                     attribute:NSLayoutAttributeTop
+//                                                                     relatedBy:NSLayoutRelationEqual
+//                                                                        toItem:self.view
+//                                                                     attribute:NSLayoutAttributeBottom
+//                                                                    multiplier:1.0
+//                                                                      constant:0.0];
+//
+//    NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:self.navBar
+//                                                                         attribute:NSLayoutAttributeLeading
+//                                                                         relatedBy:NSLayoutRelationEqual
+//                                                                            toItem:self.view
+//                                                                         attribute:NSLayoutAttributeLeading
+//                                                                        multiplier:1.0
+//                                                                          constant:0.0];
+//
+//    NSLayoutConstraint *trailingConstraint = [NSLayoutConstraint constraintWithItem:self.navBar
+//                                                                          attribute:NSLayoutAttributeTrailing
+//                                                                          relatedBy:NSLayoutRelationEqual
+//                                                                             toItem:self.view
+//                                                                          attribute:NSLayoutAttributeTrailing
+//                                                                         multiplier:1.0
+//                                                                           constant:0.0];
+//    
+//    NSLayoutConstraint *heightConstraint = [NSLayoutConstraint constraintWithItem:self.navBar
+//                                                                        attribute:NSLayoutAttributeHeight
+//                                                                        relatedBy:NSLayoutRelationEqual
+//                                                                           toItem:nil
+//                                                                        attribute:NSLayoutAttributeNotAnAttribute
+//                                                                       multiplier:1.0
+//                                                                         constant:44];
+//
+//    [self.view addConstraints:@[topConstraint, leadingConstraint, trailingConstraint, heightConstraint]];
+    
     UINavigationItem *navItem = [[UINavigationItem alloc] init];
-    UIBarButtonItem *cancelBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelBtnDidTap)];
+    //UIBarButtonItem *cancelBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelBtnDidTap)];
     UIBarButtonItem *saveBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveBtnDidTap)];
-    navItem.leftBarButtonItem = cancelBtn;
-    navItem.rightBarButtonItem = saveBtn;
+    //navItem.leftBarButtonItem = cancelBtn;
+    //navItem.rightBarButtonItem = saveBtn;
+    navItem.leftBarButtonItem = saveBtn;
     [self.navBar setItems:@[navItem] animated:NO];
 }
 
@@ -71,10 +109,10 @@ typedef NS_ENUM(NSInteger, WCEditorTheme) {
     NSLayoutConstraint *topConstraint = [NSLayoutConstraint constraintWithItem:self.webView
                                                                      attribute:NSLayoutAttributeTop
                                                                      relatedBy:NSLayoutRelationEqual
-                                                                        toItem:self.navBar
-                                                                     attribute:NSLayoutAttributeBottom
+                                                                        toItem:self.view
+                                                                     attribute:NSLayoutAttributeTop
                                                                     multiplier:1.0
-                                                                      constant:0.0];
+                                                                      constant:44.0];
 
     NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:self.webView
                                                                          attribute:NSLayoutAttributeLeading
