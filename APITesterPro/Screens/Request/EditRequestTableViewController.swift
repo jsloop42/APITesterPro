@@ -1024,6 +1024,7 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
                 }
                 editTVDelegate.didRequestChange(request, callback: { status in editTVDelegate.getVC().updateDoneButton(status) })
             }
+            self.editTVDelegate?.reloadData()
         }
     }
     
