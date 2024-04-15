@@ -29,6 +29,7 @@ ob.getEditorTheme = function(mode) {
 /// Update the code mirror language
 ob.updateMode = function(args) {
     var mode = args["mode"] || "application/json";
+    if (mode == "json") mode = "application/json";
     ob.editor.setOption("mode", mode);
 }
 
