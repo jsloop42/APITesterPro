@@ -1,4 +1,5 @@
 var ob = ob || {};
+ob.jsonMode = "application/json";
 
 ob.setupEditor = function() {
     ob.editor = CodeMirror(document.querySelector("#editor"), {
@@ -28,8 +29,8 @@ ob.getEditorTheme = function(mode) {
 
 /// Update the code mirror language
 ob.updateMode = function(args) {
-    var mode = args["mode"] || "application/json";
-    if (mode == "json") mode = "application/json";
+    var mode = args["mode"] || ob.jsonMode;
+    if (mode == "json" || mode == "raw") mode = ob.jsonMode;
     ob.editor.setOption("mode", mode);
 }
 

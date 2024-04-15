@@ -1023,6 +1023,8 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
                     request.body?.json = text
                 } else if mode == "xml" {
                     request.body?.xml = text
+                } else if mode == "raw" {
+                    request.body?.raw = text
                 }
                 editTVDelegate.didRequestChange(request, callback: { status in editTVDelegate.getVC().updateDoneButton(status) })
             }
@@ -1039,6 +1041,8 @@ class KVEditBodyContentCell: UITableViewCell, KVEditContentCellType, UICollectio
                 mode = "json"
             } else if idx == 1 {
                 mode = "xml"
+            } else if idx == 2 {
+                mode = "raw"
             }
         }
         // present web code editor
