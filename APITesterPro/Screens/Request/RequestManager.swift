@@ -210,7 +210,8 @@ final class RequestManager {
         Log.debug("[req-man] request-to-url-request")
         guard let url = try self.getURL(req.url) else { return nil }
         guard var urlComp = URLComponents(string: url.absoluteString) else { return nil }
-        let qp = self.localdb.getParamsRequestData(request.getId())
+        guard let ctx = req.managedObjectContext else { return nil }
+        let qp = self.localdb.getParamsRequestData(request.getId(), ctx: ctx)
         if !qp.isEmpty {
             urlComp.queryItems = try qp.map({ data -> URLQueryItem in
                 let nameExp = try self.checkExtrapolationResult(self.extrapolate(data.key ?? ""))
@@ -219,7 +220,7 @@ final class RequestManager {
             })
         }
         var headers: [String: String] = [:]
-        let _headers = self.localdb.getHeadersRequestData(request.getId())
+        let _headers = self.localdb.getHeadersRequestData(request.getId(), ctx: ctx)
         if !_headers.isEmpty {
             try _headers.forEach { data in
                 if let name = data.key, let val = data.value {
@@ -268,9 +269,9 @@ final class RequestManager {
     
     func getFormData(_ req: ERequest, urlReq: URLRequest) -> URLRequest {
         Log.debug("[req-man] get-form-data")
-        guard let body = req.body else { return urlReq }
+        guard let body = req.body, let ctx = body.managedObjectContext else { return urlReq }
         let bodyId = body.getId()
-        let forms = self.localdb.getFormRequestData(bodyId, type: .form)
+        let forms = self.localdb.getFormRequestData(bodyId, type: .form, ctx: ctx)
         let boundary = "Boundary-\(UUID().uuidString)"
         var acc: String!
         forms.forEach { data in
@@ -284,7 +285,7 @@ final class RequestManager {
                 if format == .text {
                     acc += "\r\n\r\n\(val)\r\n"
                 } else {
-                    let files = self.localdb.getFiles(data.getId(), type: .form)
+                    let files = self.localdb.getFiles(data.getId(), type: .form, ctx: ctx)
                     files.forEach { file in
                         if let fdata = file.data, let fname = file.name {
                             acc += "; filename=\"\(fname)\"\r\n" +
@@ -309,9 +310,9 @@ final class RequestManager {
     
     func getMultipartData(_ req: ERequest, urlReq: URLRequest) -> URLRequest {
         Log.debug("[req-man] get-multipart-data")
-        guard let body = req.body else { return urlReq }
+        guard let body = req.body, let ctx = body.managedObjectContext else { return urlReq }
         let bodyId = body.getId()
-        let mpart = self.localdb.getFormRequestData(bodyId, type: .multipart)
+        let mpart = self.localdb.getFormRequestData(bodyId, type: .multipart, ctx: ctx)
         var acc: String!
         mpart.enumerated().forEach { iter in
             let idx = iter.offset
