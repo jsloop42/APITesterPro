@@ -118,7 +118,7 @@ class RequestTableViewController: APITesterProTableViewController {
     
     func initData() {
         self.request = self.tabbarController.getRequest()
-        if let envId = self.request?.envId, let env = self.localdb.getEnv(id: envId) {
+        if let envId = self.request?.envId, let ctx = self.request?.managedObjectContext, let env = self.localdb.getEnv(id: envId, ctx: ctx) {
             self.env = env
             self.updateEnv()
         }
@@ -353,10 +353,10 @@ class RequestTableViewController: APITesterProTableViewController {
     
     func updateData() {
         Log.debug("request vc - \(String(describing: self.request))")
-        guard let request = self.request else { return }
+        guard let request = self.request, let ctx = request.managedObjectContext else { return }
         let reqId = request.getId()
-        self.headers = self.localdb.getHeadersRequestData(reqId)
-        self.params = self.localdb.getParamsRequestData(reqId)
+        self.headers = self.localdb.getHeadersRequestData(reqId, ctx: ctx)
+        self.params = self.localdb.getParamsRequestData(reqId, ctx: ctx)
         self.headerKVTableViewManager.kvTableView?.resetMeta()
         self.paramsKVTableViewManager.kvTableView?.resetMeta()
         guard request.project != nil else { return }
@@ -375,14 +375,14 @@ class RequestTableViewController: APITesterProTableViewController {
         self.binaryCollectionView.dataSource = nil
         self.binaryImageView.isHidden = true
         if bodyType == .form {
-            self.bodyForms = self.localdb.getFormRequestData(body.getId(), type: .form)
+            self.bodyForms = self.localdb.getFormRequestData(body.getId(), type: .form, ctx: ctx)
         } else if bodyType == .multipart {
-            self.multipart = self.localdb.getFormRequestData(body.getId(), type: .multipart)
+            self.multipart = self.localdb.getFormRequestData(body.getId(), type: .multipart, ctx: ctx)
         } else if bodyType == .binary {
             if let bin = body.binary {
                 self.binary = bin
                 if let files = bin.files, !files.isEmpty {
-                    self.binaryFiles = self.localdb.getFiles(bin.getId(), type: .binary)
+                    self.binaryFiles = self.localdb.getFiles(bin.getId(), type: .binary, ctx: ctx)
                 }
             }
         }
