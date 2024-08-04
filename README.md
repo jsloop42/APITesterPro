@@ -32,7 +32,7 @@ api tester pro, http api testing, api tester, rest api, https api tester, http, 
 
 ## Copyright
 
-2023 Jaseem Valiya Valappil
+2023 Jaseem Valiya Valappil  
 All Rights Reserved.
 
 ## SKU
