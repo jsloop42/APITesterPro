@@ -540,7 +540,7 @@ public enum HTTPStatusCode: Int {
     case c415_unsupportedMediaType = 415
     case c416_requestedRangeNotSatisfiable = 416
     case c417_expectationFailed = 417
-    case c418_iAmATeampot = 418
+    case c418_iAmATeapot = 418
     case c421_misdirectedRequest = 421
     case c422_unprocessableEntity = 422
     case c423_locked = 423
@@ -611,7 +611,7 @@ public enum HTTPStatusCode: Int {
         case .c415_unsupportedMediaType: return "Unsupported Media Type"
         case .c416_requestedRangeNotSatisfiable: return "Requested Range Not Satisfiable"
         case .c417_expectationFailed: return "Expectation Failed"
-        case .c418_iAmATeampot: return "I'm a Teampot"
+        case .c418_iAmATeapot: return "I'm a Teapot"
         case .c421_misdirectedRequest: return "Misdirected Request"
         case .c422_unprocessableEntity: return "Unprocessable Entity"
         case .c423_locked: return "Locked"
